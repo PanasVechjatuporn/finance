@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
-
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
@@ -20,6 +20,19 @@ function App() {
       </header>
     </div>
   );
+}
+
+
+import { useEffect } from 'react';
+import '..backend/routes/testApi.js'
+function testAPI() {
+  const [serverUrl, setServerUrl] = useState('http://localhost:8888/testAPI');
+  useEffect(() => {
+  })
+  return (
+    <div>
+    </div>
+  )
 }
 
 export default App;
