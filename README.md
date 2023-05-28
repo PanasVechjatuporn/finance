@@ -1,2 +1,1 @@
-# authentication-module
-authentication module for capstone engineering project using Firebase
+# Web Modules, Capstone Engineering Project
