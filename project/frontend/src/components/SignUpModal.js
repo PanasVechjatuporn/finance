@@ -1,5 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { signInWithGoogle } from '../services/firebase';
+
 function SignUpModal({ show, setShow }) {
     const handleClose = () => setShow(false);
     const handleSignIn = () => {
@@ -11,7 +13,7 @@ function SignUpModal({ show, setShow }) {
                 <Modal.Title>จ่อย</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Button variant="primary" onClick={handleSignIn}>
+                <Button variant="primary" onClick={signInWithGoogle}>
                     Some Button for Google Sign-in I guess?
                 </Button>
             </Modal.Body>
