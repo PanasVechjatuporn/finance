@@ -1,18 +1,19 @@
 import Carousel from 'react-bootstrap/Carousel';
+import './Carousel.css';
 //import ExampleCarouselImage from 'components/ExampleCarouselImage';
 
 function IndividualIntervalsExample() {
   return (
-    <Carousel>
-      <Carousel.Item interval={1000}>
+    <Carousel data-bs-theme="light">
+      <Carousel.Item>
         <h1>THIS IS TEST MESSAGE 1</h1>
         {/* <ExampleCarouselImage text="First slide" /> */}
-        <Carousel.Caption>
+        <Carousel.Caption className="Slide">
           <h3>First slide label</h3>
           <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
         </Carousel.Caption>
       </Carousel.Item>
-      <Carousel.Item interval={500}>
+      <Carousel.Item>
       <h1>THIS IS TEST MESSAGE 2</h1>
       {/* <ExampleCarouselImage text="Second slide" /> */}
         <Carousel.Caption>
