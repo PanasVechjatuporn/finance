@@ -26,9 +26,6 @@ console.log(user);
         <Navigate />
       </div>
       <div>
-        <FormTextExample />
-      </div>
-      <div>
         <IndividualIntervalsExample/>
       </div>
     </div>
