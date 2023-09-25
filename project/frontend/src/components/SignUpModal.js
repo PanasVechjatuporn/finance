@@ -1,6 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { signInWithGoogle } from '../services/firebase';
+import EmailFormTextExample from './email_form_text';
+import PasswordFormTextExample from './pw_form_text';
 
 function SignUpModal({ show, setShow }) {
     const handleClose = () => setShow(false);
@@ -13,10 +15,14 @@ function SignUpModal({ show, setShow }) {
                 <Modal.Title>จ่อย</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <EmailFormTextExample></EmailFormTextExample>
+                <PasswordFormTextExample></PasswordFormTextExample>
+            </Modal.Body>
+                <br></br>
                 <Button variant="primary" onClick={signInWithGoogle}>
                     Some Button for Google Sign-in I guess?
                 </Button>
-            </Modal.Body>
+
             <Modal.Footer>
                 <Button variant="primary" onClick={handleClose}>
                     Close

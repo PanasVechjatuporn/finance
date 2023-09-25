@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import login from './components/login';
 // import Home from './components/home';
 import firebase from './services/firebase';
-import FormTextExample from './components/form_text';
 
 function App() {
 
