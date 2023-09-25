@@ -3,7 +3,6 @@ import './App.css';
 import Navigate from './components/Navbar';
 import IndividualIntervalsExample from './components/Carousel';
 import { useState, useEffect } from 'react';
-import login from './components/login';
 // import Home from './components/home';
 import firebase from './services/firebase';
 

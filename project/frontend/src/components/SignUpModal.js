@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { signInWithGoogle } from '../services/firebase';
+import { signInWithGoogle, singInWithFacebook } from '../services/firebase';
 import EmailFormTextExample from './email_form_text';
 import PasswordFormTextExample from './pw_form_text';
 
@@ -20,7 +20,11 @@ function SignUpModal({ show, setShow }) {
             </Modal.Body>
                 <br></br>
                 <Button variant="primary" onClick={signInWithGoogle}>
-                    Some Button for Google Sign-in I guess?
+                    Sign up with Google
+                </Button>
+                <br></br>
+                <Button variant="primary" onClick={singInWithFacebook}>
+                    Sign up with Facebook
                 </Button>
 
             <Modal.Footer>

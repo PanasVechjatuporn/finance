@@ -2,6 +2,8 @@
 //   ref: https://stackoverflow.com/questions/68929593/vue-2-export-default-imported-as-firebase-was-not-found-in-firebase-app
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+// import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,11 +22,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 export const auth = firebase.auth();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({
+// Initialize google authentication module
+const provider_google = new firebase.auth.GoogleAuthProvider();
+provider_google.setCustomParameters({
     prompt: "select_account"
 });
+export const signInWithGoogle = () => auth.signInWithPopup(provider_google);
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+// Initialize facebook authentication module
+const provider_facebook = new firebase.auth.FacebookAuthProvider();
+provider_facebook.setCustomParameters({
+  prompt: "select_account"
+});
+export const singInWithFacebook = () => auth.signInWithPopup(provider_facebook);
+
+
 
 export default firebase;
