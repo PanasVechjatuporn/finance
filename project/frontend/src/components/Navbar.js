@@ -12,38 +12,42 @@ function Navigate() {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="light" fixed="top">
       <Container>
-        <Navbar.Brand href="#home">Some BS Project LOL</Navbar.Brand>
+        <Navbar.Brand href="#home">Finance made easy</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">XD</Nav.Link>
-            <NavDropdown title="DropDownGoesHere" id="collasible-nav-dropdown">
+            <Nav.Link href="#manual">Manual</Nav.Link>
+            <NavDropdown title="More" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">
-                GAY
+                temp1
               </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
-                R3t@rd
+                temp2
               </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">
-                I'm Bored
+                temp2
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
-                Help
+                More help
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets"><>
+            <Nav.Link href="#sign_up"><>
               <Button variant="primary" onClick={handleShow}>
                 Sign Up
               </Button>
               <SignUpModal show={show} setShow={setShow}/>
             </></Nav.Link>
-            {/* <Nav.Link eventKey={2} href="#memes">
-              Sign In
-            </Nav.Link> */}
+            <Nav.Link eventKey={2} href="sign_in">
+              <Button variant="outline-dark" onClick={handleShow}>
+                  Sign In
+              </Button>
+              <SignUpModal show={show} setShow={setShow}/>
+
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

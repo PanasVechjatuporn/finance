@@ -6,7 +6,7 @@ function IndividualIntervalsExample() {
   return (
     <Carousel data-bs-theme="light">
       <Carousel.Item>
-        <h1>THIS IS TEST MESSAGE 1</h1>
+        <h1>Dashboard</h1>
         {/* <ExampleCarouselImage text="First slide" /> */}
         <Carousel.Caption className="Slide">
           <h3>First slide label</h3>
@@ -14,7 +14,7 @@ function IndividualIntervalsExample() {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-      <h1>THIS IS TEST MESSAGE 2</h1>
+      <h1>Services</h1>
       {/* <ExampleCarouselImage text="Second slide" /> */}
         <Carousel.Caption>
           <h3>Second slide label</h3>
@@ -22,7 +22,7 @@ function IndividualIntervalsExample() {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-      <h1>THIS IS TEST MESSAGE 3</h1>
+      <h1>About us</h1>
         {/* <ExampleCarouselImage text="Third slide" /> */}
         <Carousel.Caption>
           <h3>Third slide label</h3>

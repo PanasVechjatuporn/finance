@@ -14,7 +14,7 @@ function SignUpModal({ show, setShow }) {
     return (
         <Modal show={show} >
             <Modal.Header closeButton onHide={handleClose}>
-                <Modal.Title>จ่อย</Modal.Title>
+                <Modal.Title>Sign Up</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <EmailFormTextExample></EmailFormTextExample>
@@ -25,7 +25,7 @@ function SignUpModal({ show, setShow }) {
                 <GoogleButton onClick={signInWithGoogle} />
             </div>
             <br></br>
-            <div class='btn-wrapper'>
+            {/* <div class='btn-wrapper'>
                 <FacebookLogin
                     onClick={singInWithFacebook}
                     appId='1292285361653293'
@@ -34,10 +34,10 @@ function SignUpModal({ show, setShow }) {
                     icon="fa-facebook"
                 >
                 </FacebookLogin>
-            </div>
+            </div> */}
             <Modal.Footer>
                 <Button variant="primary" onClick={handleClose}>
-                    Close
+                    Submit
                 </Button>
             </Modal.Footer>
         </Modal>
