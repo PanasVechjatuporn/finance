@@ -25,16 +25,17 @@ function SignUpModal({ show, setShow }) {
                 <GoogleButton onClick={signInWithGoogle} />
             </div>
             <br></br>
-            {/* <div class='btn-wrapper'>
+            <div class='btn-wrapper'>
                 <FacebookLogin
                     onClick={singInWithFacebook}
                     appId='1292285361653293'
                     autoLoad={true}
                     fields="name,email,picture"
                     icon="fa-facebook"
+                    cssClass="fb-btn"
                 >
                 </FacebookLogin>
-            </div> */}
+            </div>
             <Modal.Footer>
                 <Button variant="primary" onClick={handleClose}>
                     Submit
