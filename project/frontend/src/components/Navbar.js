@@ -5,6 +5,9 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import SignUpModal from './SignUpModal';
+
+import { Link } from 'react-router-dom';
+
 function Navigate() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
