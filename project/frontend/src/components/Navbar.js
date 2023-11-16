@@ -5,6 +5,12 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import SignUpModal from './SignUpModal';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+
+<Link to={"./Dashboard"}>
+  Dashboard
+</Link>
 function Navigate() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -18,6 +24,9 @@ function Navigate() {
           <Nav className="me-auto">
             <Nav.Link href="#features">Features</Nav.Link>
             <Nav.Link href="#manual">Manual</Nav.Link>
+            <Nav.Link ><Link to={"./Dashboard"}>
+              Dashboard
+            </Link></Nav.Link>
             <NavDropdown title="More" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">
                 temp1
@@ -39,13 +48,13 @@ function Navigate() {
               <Button variant="primary" onClick={handleShow}>
                 Sign Up
               </Button>
-              <SignUpModal show={show} setShow={setShow}/>
+              <SignUpModal show={show} setShow={setShow} />
             </></Nav.Link>
             <Nav.Link eventKey={2} href="sign_in">
               <Button variant="outline-dark" onClick={handleShow}>
-                  Sign In
+                Sign In
               </Button>
-              <SignUpModal show={show} setShow={setShow}/>
+              <SignUpModal show={show} setShow={setShow} />
 
             </Nav.Link>
           </Nav>
