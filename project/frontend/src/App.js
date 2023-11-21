@@ -1,5 +1,6 @@
 //import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Route, Routes } from 'react-router-dom';
 import Navigate from './components/Navbar';
 import IndividualIntervalsExample from './components/Carousel';
 import { useState, useEffect } from 'react';

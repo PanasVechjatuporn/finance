@@ -1,8 +1,10 @@
 import Carousel from 'react-bootstrap/Carousel';
 import './Carousel.css';
-//import ExampleCarouselImage from 'components/ExampleCarouselImage';
+
 
 function IndividualIntervalsExample() {
+
+
   return (
     <Carousel data-bs-theme="light">
       <Carousel.Item>
