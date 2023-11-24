@@ -14,7 +14,7 @@ function Navigate() {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="light" fixed="top">
       <Container>
-        <Navbar.Brand href="#home">Finance made easy</Navbar.Brand>
+        <Navbar.Brand href="/">Finance made easy</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">

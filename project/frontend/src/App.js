@@ -15,7 +15,7 @@ function App() {
     })
   }, []);
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <div>
@@ -30,10 +30,10 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
 export default App;

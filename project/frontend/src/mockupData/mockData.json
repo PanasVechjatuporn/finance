@@ -1,0 +1,38 @@
+[
+  {
+    "date": "2023-10",
+    "income": "25000",
+    "expense": {
+      "fixed_expense": "9000",
+      "variable_expense": "10000"
+    },
+    "investment": "9000"
+  },
+  {
+    "date": "2023-11",
+    "income": "30000",
+    "expense": {
+      "fixed_expense": "9000",
+      "variable_expense": "11000"
+    },
+    "investment": "9500"
+  },
+  {
+    "date": "2023-12",
+    "income": "30000",
+    "expense": {
+      "fixed_expense": "9000",
+      "variable_expense": "12000"
+    },
+    "investment": "10000"
+  },
+  {
+    "date": "2024-1",
+    "income": "30000",
+    "expense": {
+      "fixed_expense": "9000",
+      "variable_expense": "12000"
+    },
+    "investment": "10000"
+  }
+]
