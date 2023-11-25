@@ -7,17 +7,24 @@ import './dashboard.css';
 import mockData from '../mockupData/mockData.json';
 let data = mockData;
 export const Dashboard = () => {
-    const [startDate, setStartDate] = useState('2023-10');
-    const [endDate, setEndDate] = useState('2023-12');
-
-    const handleStartDateChange = (selectedDate) => {
-        setStartDate(selectedDate);
+    const dateObjects = data.map(item => new Date(item.date));
+  
+    let selectOption = [];
+    dateObjects.forEach(element => {
+      selectOption.push(
+        element.toISOString().slice(0, 7)
+      );
+    });
+  
+    const [startDate, setStartDate] = useState(selectOption[0]);
+    const [endDate, setEndDate] = useState(selectOption[selectOption.length - 1]);
+    const updateStartDate = (newStartDate) => {
+        setStartDate(newStartDate);
     };
 
-    const handleEndDateChange = (selectedDate) => {
-        setEndDate(selectedDate);
+    const updateEndDate = (newEndDate) => {
+        setEndDate(newEndDate);
     };
-
     return (
         <React.Fragment>
             <div className='header'>
@@ -28,15 +35,15 @@ export const Dashboard = () => {
                     data={data}
                     startDate={startDate}
                     endDate={endDate}
-                    onStartDateChange={handleStartDateChange}
-                    onEndDateChange={handleEndDateChange}
+                    onUpdateStartDate={updateStartDate}
+                    onUpdateEndDate={updateEndDate}
                 />
             </div>
             <div className="object-2">
-                <Piechart
-                    data={data}
-                    startDate={startDate}
-                    endDate={endDate}
+                <Piechart 
+                   data={data}
+                   startDate={startDate}
+                   endDate={endDate}
                 />
             </div>
             <div className="object-3">

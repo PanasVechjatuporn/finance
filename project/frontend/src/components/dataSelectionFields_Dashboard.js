@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const SelectionFields = (data) => {
-    const mockData = data.data;
-    const dateObjects = mockData.map(item => new Date(item.date));
+export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, onUpdateEndDate }) => {
+    const dateObjects = data.map(item => new Date(item.date));
   
     let selectOption = [];
     dateObjects.forEach(element => {
@@ -13,21 +12,16 @@ export const SelectionFields = (data) => {
       );
     });
   
-    const [startDate, setStartDate] = useState(selectOption[0]);
-    const [endDate, setEndDate] = useState(selectOption[selectOption.length - 1]);
     const [sumAmount, setSumAmount] = useState(0);
   
     useEffect(() => {
       handleDateChange(startDate, endDate);
     }, [startDate, endDate]);
   
-    const handleDateChange = (start, end) => {
-  
+    const handleDateChange = () => {
       const [startYear, startMonth] = startDate.split('-').map(Number);
       const [endYear, endMonth] = endDate.split('-').map(Number);
-  
-      // Calculate the sum of income for objects within the specified date range
-      const calculatedSum = mockData
+      const calculatedSum = data
         .filter(item => {
           const [itemYear, itemMonth] = item.date.split('-').map(Number);
           return (
@@ -38,22 +32,17 @@ export const SelectionFields = (data) => {
         })
         .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
   
-      // Update the state with the calculated sum
       setSumAmount(calculatedSum);
+      onUpdateStartDate(startDate);
+      onUpdateEndDate(endDate);
     };
   
     const handleStartDateChange = (selectedDate) => {
-      setStartDate(selectedDate);
-      if (selectOption.indexOf(selectedDate) > selectOption.indexOf(endDate)) {
-        setEndDate(selectedDate);
-      }
+      onUpdateStartDate(selectedDate);
     };
   
     const handleEndDateChange = (selectedDate) => {
-      setEndDate(selectedDate);
-      if (selectOption.indexOf(selectedDate) < selectOption.indexOf(startDate)) {
-        setStartDate(selectedDate);
-      }
+      onUpdateEndDate(selectedDate);
     };
   
     return (
@@ -84,7 +73,7 @@ export const SelectionFields = (data) => {
         </div>
       </div>
     );
-  }
+  };
 
 
 export default SelectionFields
