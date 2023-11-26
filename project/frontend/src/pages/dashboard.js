@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Navigate from "../components/Navbar";
-import SelectionFields from "../components/dataSelectionFields_Dashboard";
-import Piechart from "../components/dataPiechart_Dashboard";
-import DataTableMonth from "../components/dataMonthTable_Dashboard";
+import SelectionFields from "../components/DataSelectionFields_Dashboard";
+import Piechart from "../components/DataPiechart_Dashboard";
+import DataTableMonth from "../components/DataMonthTable_Dashboard";
 import './dashboard.css';
 import mockData from '../mockupData/mockData.json';
 let data = mockData;
