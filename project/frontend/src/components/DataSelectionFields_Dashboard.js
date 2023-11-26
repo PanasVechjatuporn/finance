@@ -15,7 +15,7 @@ export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, o
   
     useEffect(() => {
       handleDateChange(startDate, endDate);
-    }, [startDate, endDate]);
+    });
   
     const handleDateChange = () => {
       const [startYear, startMonth] = startDate.split('-').map(Number);

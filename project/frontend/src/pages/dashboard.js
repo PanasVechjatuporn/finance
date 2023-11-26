@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import Navigate from "../components/Navbar";
-import SelectionFields from "../components/DataSelectionFields_Dashboard";
-import Piechart from "../components/DataPiechart_Dashboard";
-import DataTableMonth from "../components/DataMonthTable_Dashboard";
-import './dashboard.css';
 import mockData from '../mockupData/mockData.json';
+import DataTableMonth from "../components/DataMonthTable_Dashboard";
+import Piechart from "../components/DataPiechart_Dashboard";
+import SelectionFields from "../components/DataSelectionFields_Dashboard";
+import './dashboard.css';
 let data = mockData;
 export const Dashboard = () => {
     const dateObjects = data.map(item => new Date(item.date));
-  
+
     let selectOption = [];
     dateObjects.forEach(element => {
-      selectOption.push(
-        element.toISOString().slice(0, 7)
-      );
+        selectOption.push(
+            element.toISOString().slice(0, 7)
+        );
     });
-  
+
     const [startDate, setStartDate] = useState(selectOption[0]);
     const [endDate, setEndDate] = useState(selectOption[selectOption.length - 1]);
     const updateStartDate = (newStartDate) => {
@@ -40,10 +40,10 @@ export const Dashboard = () => {
                 />
             </div>
             <div className="object-2">
-                <Piechart 
-                   data={data}
-                   startDate={startDate}
-                   endDate={endDate}
+                <Piechart
+                    data={data}
+                    startDate={startDate}
+                    endDate={endDate}
                 />
             </div>
             <div className="object-3">
