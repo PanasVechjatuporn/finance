@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 
 export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, onUpdateEndDate }) => {
     const dateObjects = data.map(item => new Date(item.date));
