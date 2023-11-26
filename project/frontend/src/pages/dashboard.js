@@ -4,6 +4,9 @@ import mockData from '../mockupData/mockData.json';
 import DataTableMonth from "../components/DataMonthTable_Dashboard";
 import Piechart from "../components/DataPiechart_Dashboard";
 import SelectionFields from "../components/DataSelectionFields_Dashboard";
+import Nav from 'react-bootstrap/Nav';
+import { Link } from 'react-router-dom'
+import Button from 'react-bootstrap/Button';
 import './dashboard.css';
 let data = mockData;
 export const Dashboard = () => {
@@ -48,6 +51,11 @@ export const Dashboard = () => {
             </div>
             <div className="object-3">
                 <DataTableMonth data={data} />
+            </div>
+            <div className="btn">
+                <Button variant="danger"><Link to={"./edit-form"}  style={{ textDecoration: 'none' , color: "white"}}>
+                Edit
+                </Link></Button>{' '}
             </div>
         </React.Fragment>
     );

@@ -7,6 +7,7 @@ export const Piechart = ({ data, startDate, endDate }) => {
         const objDate = new Date(obj.date).getTime();
         return objDate >= start && objDate <= end;
     });
+
     const sumIncome = dataArray.reduce((sum, obj) => sum + parseInt(obj.income), 0);
     const sumInvest = dataArray.reduce((sum, obj) => sum + parseInt(obj.investment), 0);
     const sumFixedExpense = dataArray.reduce((sum, obj) => sum + parseInt(obj.expense.fixed_expense), 0);
@@ -44,8 +45,8 @@ export const Piechart = ({ data, startDate, endDate }) => {
                 }}
                 {...size}
             />
-            <p>{startDate}</p>
-            <p>{endDate}</p>
+            {/* <p>{startDate}</p>
+            <p>{endDate}</p> */}
         </div>
     )
 }
