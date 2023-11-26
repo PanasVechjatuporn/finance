@@ -34,5 +34,14 @@
       "variable_expense": "12000"
     },
     "investment": "10000"
+  },
+  {
+    "date": "2024-2",
+    "income": "12000",
+    "expense": {
+      "fixed_expense": "9000",
+      "variable_expense": "12000"
+    },
+    "investment": "2000"
   }
 ]

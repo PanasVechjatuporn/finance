@@ -1,6 +1,7 @@
 .object-1{
     position: relative;
     top: 100px;
+    border: black;
 }
 
 .object-2{
