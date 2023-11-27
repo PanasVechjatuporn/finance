@@ -6,10 +6,11 @@
 
 .object-2{
     position: relative;
-    top: 600px;
+    margin: 10px;
+    top: 400px;
 }
 
 .object-3{
     position: relative;
-    top: 1100px;
+    top: 800px;
 }

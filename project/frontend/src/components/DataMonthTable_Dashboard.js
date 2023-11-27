@@ -5,5 +5,4 @@ export const DataTableMonth = (data) => {
         </div>
     )
 }
-
 export default DataTableMonth

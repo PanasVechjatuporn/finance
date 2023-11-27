@@ -1,11 +1,10 @@
-//import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
-// import Home from './components/home';
 import firebase from './services/firebase';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Dashboard } from './pages/dashboard'
 import { Home } from './pages/homepage'
+import { EditFormPage } from './pages/editpages_form'
 function App() {
   const [user, setUser] = useState(null);
 
@@ -15,22 +14,14 @@ function App() {
     })
   }, []);
 
-  // console.log(user);
 
   return (
     <div>
-      {/* <AppRoutes>
-      <div className='header'>
-        <Navigate />
-      </div>
-      <div>
-        <CarouselInterval/>
-      </div>
-      </AppRoutes> */}
       <BrowserRouter>
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/dashboard/edit-form" element={<EditFormPage/>}/>
         </Routes>
       </BrowserRouter>
     </div>

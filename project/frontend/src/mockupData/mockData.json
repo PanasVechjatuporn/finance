@@ -12,7 +12,7 @@
     "date": "2023-11",
     "income": "30000",
     "expense": {
-      "fixed_expense": "9000",
+      "fixed_expense": "9500",
       "variable_expense": "11000"
     },
     "investment": "9500"
@@ -22,7 +22,7 @@
     "income": "30000",
     "expense": {
       "fixed_expense": "9000",
-      "variable_expense": "12000"
+      "variable_expense": "11000"
     },
     "investment": "10000"
   },
@@ -30,18 +30,18 @@
     "date": "2024-1",
     "income": "30000",
     "expense": {
-      "fixed_expense": "9000",
+      "fixed_expense": "8000",
       "variable_expense": "12000"
     },
     "investment": "10000"
   },
   {
     "date": "2024-2",
-    "income": "12000",
+    "income": "30000",
     "expense": {
       "fixed_expense": "9000",
       "variable_expense": "12000"
     },
-    "investment": "2000"
+    "investment": "9000"
   }
 ]
