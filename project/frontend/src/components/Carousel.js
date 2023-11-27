@@ -1,5 +1,5 @@
-import Carousel from 'react-bootstrap/Carousel';
-import './Carousel.css';
+import Carousel from "react-bootstrap/Carousel";
+import "components/Carousel.css";
 
 function CarouselInterval() {
   return (
@@ -13,15 +13,15 @@ function CarouselInterval() {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-      <h1>Services</h1>
-      {/* <ExampleCarouselImage text="Second slide" /> */}
+        <h1>Services</h1>
+        {/* <ExampleCarouselImage text="Second slide" /> */}
         <Carousel.Caption>
           <h3>Second slide label</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-      <h1>About us</h1>
+        <h1>About us</h1>
         {/* <ExampleCarouselImage text="Third slide" /> */}
         <Carousel.Caption>
           <h3>Third slide label</h3>

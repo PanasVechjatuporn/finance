@@ -1,19 +1,22 @@
+import React, { useState, useEffect } from "react";
 
-import React, { useState, useEffect } from 'react';
-
-export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, onUpdateEndDate }) => {
-  const dateObjects = data.map(item => new Date(item.date));
+export const SelectionFields = ({
+  data,
+  startDate,
+  endDate,
+  onUpdateStartDate,
+  onUpdateEndDate,
+}) => {
+  const dateObjects = data.map((item) => new Date(item.date));
 
   let selectOption = [];
-  dateObjects.forEach(element => {
+  dateObjects.forEach((element) => {
     const date = new Date(element);
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1);
-    const formattedDate = `${year}-${month.toString().padStart(2, '0')}`;
+    const month = date.getMonth() + 1;
+    const formattedDate = `${year}-${month.toString().padStart(2, "0")}`;
 
-    selectOption.push(
-      String(formattedDate)
-    );
+    selectOption.push(String(formattedDate));
   });
 
   const [sumAmount, setSumAmount] = useState(0);
@@ -23,16 +26,17 @@ export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, o
   });
 
   const handleDateChange = () => {
-    const [startYear, startMonth] = startDate.split('-').map(Number);
-    const [endYear, endMonth] = endDate.split('-').map(Number);
+    const [startYear, startMonth] = startDate.split("-").map(Number);
+    const [endYear, endMonth] = endDate.split("-").map(Number);
     const calculatedSum = data
-      .filter(item => {
-        const [itemYear, itemMonth] = item.date.split('-').map(Number);
+      .filter((item) => {
+        const [itemYear, itemMonth] = item.date.split("-").map(Number);
         return (
-          itemYear > startYear || (itemYear === startYear && itemMonth >= startMonth)
-        ) && (
-            itemYear < endYear || (itemYear === endYear && itemMonth <= endMonth)
-          );
+          (itemYear > startYear ||
+            (itemYear === startYear && itemMonth >= startMonth)) &&
+          (itemYear < endYear ||
+            (itemYear === endYear && itemMonth <= endMonth))
+        );
       })
       .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
 
@@ -53,7 +57,10 @@ export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, o
     <div>
       <div>
         <label>From</label>
-        <select value={startDate} onChange={(e) => handleStartDateChange(e.target.value)}>
+        <select
+          value={startDate}
+          onChange={(e) => handleStartDateChange(e.target.value)}
+        >
           {selectOption.map((date) => (
             <option key={date} value={date} disabled={date >= endDate}>
               {date}
@@ -63,7 +70,10 @@ export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, o
       </div>
       <div>
         <label>To</label>
-        <select value={endDate} onChange={(e) => handleEndDateChange(e.target.value)}>
+        <select
+          value={endDate}
+          onChange={(e) => handleEndDateChange(e.target.value)}
+        >
           {selectOption.map((date) => (
             <option key={date} value={date} disabled={date <= startDate}>
               {date}
@@ -79,5 +89,4 @@ export const SelectionFields = ({ data, startDate, endDate, onUpdateStartDate, o
   );
 };
 
-
-export default SelectionFields
+export default SelectionFields;
