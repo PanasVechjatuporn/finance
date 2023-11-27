@@ -8,12 +8,12 @@
 .panels {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 225px auto auto;
+  grid-template-columns: 200px 500px 600px;
   grid-template-rows: auto auto;
 }
 
 .panel-info {
-  grid-row: span 2;
+  grid-row: span 1;
 }
 
 .panel-positions {
