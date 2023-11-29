@@ -27,7 +27,7 @@ function Navigate() {
             <Nav.Link href="#features">Features</Nav.Link>
             <Nav.Link href="#manual">Manual</Nav.Link>
             <Nav.Link>
-              <Link to={"./Dashboard"}>Dashboard</Link>
+              <Link to={"/Dashboard"}>Dashboard</Link>
             </Nav.Link>
             <NavDropdown title="More" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">temp1</NavDropdown.Item>
