@@ -21,6 +21,9 @@ version: '3.1'
 #     environment:
 #       PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.com
 #       PGADMIN_DEFAULT_PASSWORD: pgadmin
+
+# https://medium.com/@vishal.sharma./run-postgresql-and-pgadmin-using-docker-compose-34120618bcf9
+
 services:
   db:
     image: postgres

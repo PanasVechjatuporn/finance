@@ -46,7 +46,7 @@ function Navigate() {
                 <SignUpModal show={show} setShow={setShow} />
               </>
             </Nav.Link>
-            <Nav.Link eventKey={2} href="sign_in">
+            <Nav.Link eventKey={2} href="#sign_in">
               <Button variant="outline-dark" onClick={handleShow}>
                 Sign In
               </Button>
