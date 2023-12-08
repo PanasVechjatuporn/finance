@@ -28,17 +28,36 @@ export const SelectionFields = ({
   const handleDateChange = () => {
     const [startYear, startMonth] = startDate.split("-").map(Number);
     const [endYear, endMonth] = endDate.split("-").map(Number);
-    const calculatedSum = data
-      .filter((item) => {
-        const [itemYear, itemMonth] = item.date.split("-").map(Number);
-        return (
-          (itemYear > startYear ||
-            (itemYear === startYear && itemMonth >= startMonth)) &&
-          (itemYear < endYear ||
-            (itemYear === endYear && itemMonth <= endMonth))
-        );
-      })
-      .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
+    const dataArray = data
+    .filter((item) => {
+      const [itemYear, itemMonth] = item.date.split("-").map(Number);
+      return (
+        (itemYear > startYear ||
+          (itemYear === startYear && itemMonth >= startMonth)) &&
+        (itemYear < endYear ||
+          (itemYear === endYear && itemMonth <= endMonth))
+      );
+    })
+
+    let sum_income = 0;
+    dataArray.forEach(record => {
+      const income_list = record.income;
+
+      sum_income += parseInt(income_list.reduce((sum, income) => sum + parseInt(income.amount),0));
+    });
+
+    const calculatedSum = sum_income;
+    // const calculatedSum = data
+    //   .filter((item) => {
+    //     const [itemYear, itemMonth] = item.date.split("-").map(Number);
+    //     return (
+    //       (itemYear > startYear ||
+    //         (itemYear === startYear && itemMonth >= startMonth)) &&
+    //       (itemYear < endYear ||
+    //         (itemYear === endYear && itemMonth <= endMonth))
+    //     );
+    //   })
+    //   .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
 
     setSumAmount(calculatedSum);
     onUpdateStartDate(startDate);
