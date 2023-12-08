@@ -1,0 +1,41 @@
+# https://hub.docker.com/_/postgres
+# Use postgres/example user/password credentials
+version: '3.1'
+
+# services:
+
+#   db:
+#     image: postgres
+#     restart: always
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       POSTGRES_USER: pgadmin
+#       POSTGRES_PASSWORD: pgadmin
+
+#   pgadmin:
+#     image: dpage/pgadmin4
+#     restart: always
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.com
+#       PGADMIN_DEFAULT_PASSWORD: pgadmin
+
+# https://medium.com/@vishal.sharma./run-postgresql-and-pgadmin-using-docker-compose-34120618bcf9
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pgadmin
+      POSTGRES_PASSWORD: pgadmin
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin

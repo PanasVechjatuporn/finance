@@ -27,7 +27,7 @@ function Navigate() {
             <Nav.Link href="#features">Features</Nav.Link>
             <Nav.Link href="#manual">Manual</Nav.Link>
             <Nav.Link>
-              <Link to={"/Dashboard"}>Dashboard</Link>
+              <Link to={"./Dashboard"}>Dashboard</Link>
             </Nav.Link>
             <NavDropdown title="More" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">temp1</NavDropdown.Item>
@@ -46,7 +46,7 @@ function Navigate() {
                 <SignUpModal show={show} setShow={setShow} />
               </>
             </Nav.Link>
-            <Nav.Link eventKey={2} href="sign_in">
+            <Nav.Link eventKey={2} href="#sign_in">
               <Button variant="outline-dark" onClick={handleShow}>
                 Sign In
               </Button>

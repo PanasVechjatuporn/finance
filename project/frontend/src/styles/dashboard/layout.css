@@ -1,0 +1,43 @@
+/* styles.css */
+
+.panels > div {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  margin-top: 100px
+}
+
+.panels {
+  display: grid;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  grid-gap: 10px;
+  grid-template-columns: 200px 500px ;
+  grid-template-rows: auto auto ;
+}
+
+.panel-info {
+  grid-row: span 1;
+}
+
+.panel-positions {
+  grid-column: span 2;
+}
+
+@media (max-width: 750px) {
+  .panels {
+    grid-template-columns: 225px auto;
+    grid-template-rows: auto auto auto;
+  }
+  .panel-positions {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 500px) {
+  .panels {
+    grid-template-columns: auto;
+  }
+  .panel-positions {
+    grid-column: span 1;
+  }
+}

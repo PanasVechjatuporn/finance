@@ -28,17 +28,36 @@ export const SelectionFields = ({
   const handleDateChange = () => {
     const [startYear, startMonth] = startDate.split("-").map(Number);
     const [endYear, endMonth] = endDate.split("-").map(Number);
-    const calculatedSum = data
-      .filter((item) => {
-        const [itemYear, itemMonth] = item.date.split("-").map(Number);
-        return (
-          (itemYear > startYear ||
-            (itemYear === startYear && itemMonth >= startMonth)) &&
-          (itemYear < endYear ||
-            (itemYear === endYear && itemMonth <= endMonth))
-        );
-      })
-      .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
+    const dataArray = data
+    .filter((item) => {
+      const [itemYear, itemMonth] = item.date.split("-").map(Number);
+      return (
+        (itemYear > startYear ||
+          (itemYear === startYear && itemMonth >= startMonth)) &&
+        (itemYear < endYear ||
+          (itemYear === endYear && itemMonth <= endMonth))
+      );
+    })
+
+    let sum_income = 0;
+    dataArray.forEach(record => {
+      const income_list = record.income;
+
+      sum_income += parseInt(income_list.reduce((sum, income) => sum + parseInt(income.amount),0));
+    });
+
+    const calculatedSum = sum_income;
+    // const calculatedSum = data
+    //   .filter((item) => {
+    //     const [itemYear, itemMonth] = item.date.split("-").map(Number);
+    //     return (
+    //       (itemYear > startYear ||
+    //         (itemYear === startYear && itemMonth >= startMonth)) &&
+    //       (itemYear < endYear ||
+    //         (itemYear === endYear && itemMonth <= endMonth))
+    //     );
+    //   })
+    //   .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
 
     setSumAmount(calculatedSum);
     onUpdateStartDate(startDate);
@@ -54,36 +73,84 @@ export const SelectionFields = ({
   };
 
   return (
-    <div>
-      <div>
-        <label>From</label>
-        <select
-          value={startDate}
-          onChange={(e) => handleStartDateChange(e.target.value)}
-        >
-          {selectOption.map((date) => (
-            <option key={date} value={date} disabled={date >= endDate}>
-              {date}
-            </option>
-          ))}
-        </select>
+    // <div>
+    //   <div>
+    //     <label>From</label>
+    //     <select value={startDate} onChange={(e) => handleStartDateChange(e.target.value)}>
+    //       {selectOption.map((date) => (
+    //         <option key={date} value={date} disabled={date >= endDate}>
+    //           {date}
+    //         </option>
+    //       ))}
+    //     </select>
+    //   </div>
+    //   <div>
+    //     <label>To</label>
+    //     <select value={endDate} onChange={(e) => handleEndDateChange(e.target.value)}>
+    //       {selectOption.map((date) => (
+    //         <option key={date} value={date} disabled={date <= startDate}>
+    //           {date}
+    //         </option>
+    //       ))}
+    //     </select>
+    //   </div>
+    //   <div>
+    //     <label>Amount of Income</label>
+    //     <p>{sumAmount}</p>
+    //   </div>
+    // </div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
+      >
+        <div>
+          <label>From</label>
+          <select
+            value={startDate}
+            onChange={(e) => handleStartDateChange(e.target.value)}
+          >
+            {selectOption.map((date) => (
+              <option key={date} value={date} disabled={date >= endDate}>
+                {date}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>To</label>
+          <select
+            value={endDate}
+            onChange={(e) => handleEndDateChange(e.target.value)}
+          >
+            {selectOption.map((date) => (
+              <option key={date} value={date} disabled={date <= startDate}>
+                {date}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-      <div>
-        <label>To</label>
-        <select
-          value={endDate}
-          onChange={(e) => handleEndDateChange(e.target.value)}
-        >
-          {selectOption.map((date) => (
-            <option key={date} value={date} disabled={date <= startDate}>
-              {date}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
+      <div style={{ marginLeft: "auto", textAlign: "right" }}>
         <label>Amount of Income</label>
-        <p>{sumAmount}</p>
+        <p
+          style={{
+            border: "1px solid #000",
+            padding: "5px",
+            textAlign: "right",
+          }}
+        >
+          {sumAmount}
+        </p>
       </div>
     </div>
   );
