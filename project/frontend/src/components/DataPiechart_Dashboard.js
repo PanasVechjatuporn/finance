@@ -10,7 +10,7 @@ export const Piechart = ({ data, startDate, endDate }) => {
 
     let sum_income = 0;
     let sum_investment = 0;
-    let sum_fixed_expense = dataArray.reduce((sum, record) => sum + parseInt(record.expense.variable_expense), 0);
+    let sum_fixed_expense = dataArray.reduce((sum, record) => sum + parseInt(record.expense.fixed_expense), 0);
     let sum_variable_expense = dataArray.reduce((sum, record) => sum + parseInt(record.expense.variable_expense), 0);
     
     dataArray.forEach(record => {

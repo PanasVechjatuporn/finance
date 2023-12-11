@@ -5,6 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal'; // Import Modal from react-bootstrap
 import "pages/editpages_form.css";
 import mockData from "mockupData/mockData.json";
+import Form from "react-bootstrap/Form";
 
 let data = mockData;
 
@@ -50,7 +51,6 @@ export const EditFormPage = () => {
   };
 
   const handleCloseModal = () => {
-    setClickedMonth(null);
     setShowModal(false);
   };
 
@@ -100,7 +100,23 @@ export const EditFormPage = () => {
         <Modal.Body>
           <p>Year: {selectedYear}</p>
           <p>Month: {clickedMonth}</p>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Disabled input</Form.Label>
+            <Form.Control placeholder="Disabled input" disabled />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Disabled select menu</Form.Label>
+            <Form.Select disabled>
+              <option>Disabled select</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Check type="checkbox" label="Can't check this" disabled />
+          </Form.Group>
+          
           {
+            //จัดหมวด 
             console.log(monthNameToNumber(clickedMonth))
           }
         </Modal.Body>
