@@ -11,6 +11,7 @@ let data = mockData;
 export const EditFormPage = () => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [clickedMonth, setClickedMonth] = useState(null);
 
   const months = Array.from({ length: 12 }, (_, monthIndex) => {
     const monthDate = new Date(0, monthIndex, 1);
@@ -25,14 +26,15 @@ export const EditFormPage = () => {
   };
 
   const handleButtonClick = (month) => {
-    // Handle logic to open modal with the selectedYear and month
+    // Set the clicked month in the state
+    setClickedMonth(month);
+    // Open the modal
     setShowModal(true);
-    // Add your logic to handle the modal data or open your modal here
-    console.log('Selected Year:', selectedYear);
-    console.log('Selected Month:', month);
   };
 
   const handleCloseModal = () => {
+    // Reset the clicked month when the modal is closed
+    setClickedMonth(null);
     setShowModal(false);
   };
 
@@ -81,11 +83,17 @@ export const EditFormPage = () => {
         </Modal.Header>
         <Modal.Body>
           <p>Selected Year: {selectedYear}</p>
-          {/* Add additional modal content here */}
+          <p>Clicked Month: {clickedMonth}</p>
+          {
+            
+          }
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseModal}>
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
