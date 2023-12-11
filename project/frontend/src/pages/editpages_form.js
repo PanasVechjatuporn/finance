@@ -19,6 +19,25 @@ export const EditFormPage = () => {
     return monthName;
   });
 
+  const monthNameToNumber = (monthName) => {
+    const monthMap = {
+      January: '01',
+      February: '02',
+      March: '03',
+      April: '04',
+      May: '05',
+      June: '06',
+      July: '07',
+      August: '08',
+      September: '09',
+      October: '10',
+      November: '11',
+      December: '12',
+    };
+
+    return monthMap[monthName] || '';
+  };
+
   const years = Array.from(Array(new Date().getFullYear() - 2010), (_, i) => (i + 2011).toString());
 
   const handleYearSelect = (year) => {
@@ -26,14 +45,11 @@ export const EditFormPage = () => {
   };
 
   const handleButtonClick = (month) => {
-    // Set the clicked month in the state
     setClickedMonth(month);
-    // Open the modal
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    // Reset the clicked month when the modal is closed
     setClickedMonth(null);
     setShowModal(false);
   };
@@ -79,13 +95,13 @@ export const EditFormPage = () => {
       {/* Modal for displaying additional information */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal Title</Modal.Title>
+          <Modal.Title>Editing {clickedMonth} of {selectedYear} </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Selected Year: {selectedYear}</p>
-          <p>Clicked Month: {clickedMonth}</p>
+          <p>Year: {selectedYear}</p>
+          <p>Month: {clickedMonth}</p>
           {
-            
+            console.log(monthNameToNumber(clickedMonth))
           }
         </Modal.Body>
         <Modal.Footer>
