@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navigate from "components/Navbar";
 import Button from "react-bootstrap/Button";
 import Dropdown from 'react-bootstrap/Dropdown';
-import Modal from 'react-bootstrap/Modal'; // Import Modal from react-bootstrap
+import Modal from 'react-bootstrap/Modal';
 import "pages/editpages_form.css";
 import mockData from "mockupData/mockData.json";
 import Form from "react-bootstrap/Form";
@@ -13,31 +13,14 @@ export const EditFormPage = () => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [clickedMonth, setClickedMonth] = useState(null);
+  const [showYearSelectionModal, setShowYearSelectionModal] = useState(false);
+  const [dataStatus, setDataStatus] = useState({});
 
   const months = Array.from({ length: 12 }, (_, monthIndex) => {
     const monthDate = new Date(0, monthIndex, 1);
     const monthName = monthDate.toLocaleString('en-US', { month: 'long' });
     return monthName;
   });
-
-  const monthNameToNumber = (monthName) => {
-    const monthMap = {
-      January: '01',
-      February: '02',
-      March: '03',
-      April: '04',
-      May: '05',
-      June: '06',
-      July: '07',
-      August: '08',
-      September: '09',
-      October: '10',
-      November: '11',
-      December: '12',
-    };
-
-    return monthMap[monthName] || '';
-  };
 
   const years = Array.from(Array(new Date().getFullYear() - 2010), (_, i) => (i + 2011).toString());
 
@@ -46,13 +29,43 @@ export const EditFormPage = () => {
   };
 
   const handleButtonClick = (month) => {
-    setClickedMonth(month);
-    setShowModal(true);
+    if (selectedYear) {
+      setClickedMonth(month);
+      setShowModal(true);
+    } else {
+      setShowYearSelectionModal(true);
+    }
+  };
+
+  const handleCloseYearSelectionModal = () => {
+    setShowYearSelectionModal(false);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const checkDataStatus = () => {
+      const status = {};
+
+      data.forEach((entry) => {
+        const dateParts = entry.date.split('-');
+        const year = dateParts[0];
+        const month = dateParts[1];
+
+        if (!status[year]) {
+          status[year] = {};
+        }
+
+        status[year][month] = true;
+      });
+
+      setDataStatus(status);
+    };
+
+    checkDataStatus();
+  }, []);
 
   return (
     <React.Fragment>
@@ -82,7 +95,7 @@ export const EditFormPage = () => {
             {months.map((month, index) => (
               <Button
                 key={month}
-                variant="primary"
+                variant={dataStatus[selectedYear]?.[index + 1] ? 'success' : 'danger'}
                 style={{ marginRight: '8px', padding: '10px', border: '1px solid #ccc' }}
                 onClick={() => handleButtonClick(month)}
               >
@@ -92,6 +105,19 @@ export const EditFormPage = () => {
           </div>
         </>
       </div>
+      <Modal show={showYearSelectionModal} onHide={handleCloseYearSelectionModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Please select a year first</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Please choose a year before selecting a month.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseYearSelectionModal}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {/* Modal for displaying additional information */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -114,10 +140,9 @@ export const EditFormPage = () => {
           <Form.Group className="mb-3">
             <Form.Check type="checkbox" label="Can't check this" disabled />
           </Form.Group>
-          
+
           {
             //จัดหมวด 
-            console.log(monthNameToNumber(clickedMonth))
           }
         </Modal.Body>
         <Modal.Footer>
