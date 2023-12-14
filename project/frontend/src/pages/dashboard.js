@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import Navigate from "components/Navbar";
 import mockData from "mockupData/mockData.json";
-import DataTableMonth from "components/DataMonthTable_Dashboard";
 import Piechart from "components/DataPiechart_Dashboard";
-import CollapsibleTable from "components/DataTable_Dashboard";
+import MonthDataTable from "components/DataTable_Dashboard";
 import SelectionFields from "components/DataSelectionFields_Dashboard";
-import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import "styles/dashboard/dashboard.css";
@@ -48,7 +46,7 @@ export const Dashboard = () => {
                     <Piechart data={data} startDate={startDate} endDate={endDate} />
                 </div>
                 <div className="panel-positions">
-                    <CollapsibleTable data={data} />
+                    <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
                 </div>
             </div>
 

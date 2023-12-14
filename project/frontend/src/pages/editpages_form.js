@@ -22,7 +22,7 @@ export const EditFormPage = () => {
     return monthName;
   });
 
-  const years = Array.from(Array(new Date().getFullYear() - 2010), (_, i) => (i + 2011).toString());
+  const years = Array.from(Array(new Date().getFullYear() - 2010), (_, i) => (i + 2012).toString());
 
   const handleYearSelect = (year) => {
     setSelectedYear(year);

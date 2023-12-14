@@ -54,42 +54,41 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.date}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.sumOfIncome}</TableCell>
+        <TableCell align="right">{row.sumOfInvestment}</TableCell>
+        <TableCell align="right">{row.sumOfExpense}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                {row.date}
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell align="center">Income</TableCell>
+                    <TableCell align="center">Investment</TableCell>
+                    <TableCell align="center">Expense</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                  {/* {row.dropdown.map((dropdownColumns) => (
+                    <TableRow key={dropdownColumns.date}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {dropdownColumns.date}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                      <TableCell>{dropdownColumns.customerId}</TableCell>
+                      <TableCell align="right">{dropdownColumns.amount}</TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {Math.round(dropdownColumns.amount * row.price * 100) / 100}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
                 </TableBody>
               </Table>
             </Box>
@@ -102,10 +101,10 @@ function Row(props) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
+    sumOfIncome: PropTypes.number.isRequired,
+    sumOfInvestment: PropTypes.number.isRequired,
+    sumOfExpense: PropTypes.number.isRequired,
+    dropdown: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
         customerId: PropTypes.string.isRequired,
@@ -118,31 +117,62 @@ Row.propTypes = {
   }).isRequired,
 };
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-];
+function digestDataFromStartDateEndDate(data, startDate, endDate) {
+  const start = new Date(startDate).getTime();
+  const end = new Date(endDate).getTime();
 
-export default function CollapsibleTable() {
+  const dataArray = data.filter(obj => {
+    const objDate = new Date(obj.date).getTime();
+    return objDate >= start && objDate <= end;
+  });
+  let tmpArray = []
+  dataArray.forEach(element => {
+    let sumOfIncome = 0
+    let sumOfInvestment = 0
+    let sumOFExpense = parseFloat(element.expense.fixed_expense) + parseFloat(element.expense.variable_expense)
+    element.income.forEach(obj => {
+      sumOfIncome += parseFloat(obj.amount)
+    })
+    element.investment.forEach(obj => {
+      sumOfInvestment += parseFloat(obj.amount)
+    })
+    tmpArray.push({
+      'date': element.date,
+      'sumOfIncome': sumOfIncome,
+      'sumOfInvestment': sumOfInvestment,
+      'sumOfExpense': sumOFExpense,
+      'dropdown': [
+        { 'income': [
+          element.income
+        ] },
+        { 'investment': [
+          element.investment
+        ] },
+        { 'expense': [
+          element.expense
+        ] }
+      ]
+    })
+  })
+  return tmpArray
+}
+export default function MonthDataTable({ data, startDate, endDate }) {
+  const rows = digestDataFromStartDateEndDate(data, startDate, endDate)
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Month</TableCell>
+            <TableCell align="right">Income</TableCell>
+            <TableCell align="right">Investment</TableCell>
+            <TableCell align="right">Expense</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.name} row={row} />
+            <Row key={row.date} row={row} />
           ))}
         </TableBody>
       </Table>
