@@ -5,7 +5,12 @@
       {
         "type": "1",
         "sub_type": "1",
-        "amount": "25000"
+        "amount": "12500"
+      },
+      {
+        "type": "2",
+        "sub_type": "2",
+        "amount": "12500"
       }
     ],
     "expense": {
@@ -18,7 +23,7 @@
         "amount": "4000"
       },
       {
-        "name": "C",
+        "name": "B",
         "amount": "2000"
       }]
   },

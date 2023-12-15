@@ -13,29 +13,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  };
-}
+import { TabUnselected } from '@mui/icons-material';
 
 function Row(props) {
   const { row } = props;
@@ -67,28 +45,83 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 {row.date}
               </Typography>
-              <Table size="small">
+              <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell align="center">Income</TableCell>
-                    <TableCell align="center">Investment</TableCell>
-                    <TableCell align="center">Expense</TableCell>
+                    <TableCell align="center" colSpan={3}>Income</TableCell>
+                    <TableCell align="center" colSpan={2}>Investment</TableCell>
+                    <TableCell align="center" colSpan={2}>Expense</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/* {row.dropdown.map((dropdownColumns) => (
-                    <TableRow key={dropdownColumns.date}>
-                      <TableCell component="th" scope="row">
-                        {dropdownColumns.date}
-                      </TableCell>
-                      <TableCell>{dropdownColumns.customerId}</TableCell>
-                      <TableCell align="right">{dropdownColumns.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(dropdownColumns.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))} */}
+                  {
+                    row.dropdown.map((dropdownColumns) => (
+                      <React.Fragment key={dropdownColumns.name}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="center">Type</TableCell>
+                            <TableCell align="center">SubType</TableCell>
+                            <TableCell align="center">Amount</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell align="center">Name</TableCell>
+                            <TableCell align="center">Amount</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell align="center">Fixed Expense</TableCell>
+                            <TableCell align="center">Variable Expense</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        {dropdownColumns.data.map((dataItem) => (
+                          (dropdownColumns.name === "Income") ?
+                            <Table align="left" stickyHeader aria-label="sticky table">
+
+                              <TableBody>
+                                <TableRow>
+                                  {dataItem.map((dataEntry) => (
+                                    <TableCell align="center">{dataEntry.type}</TableCell>
+                                  ))}
+                                </TableRow>
+                                {dataItem.map((dataEntry) => (
+                                  <TableCell align="center">{dataEntry.sub_type}</TableCell>
+                                ))}
+                                <TableRow>
+                                  {dataItem.map((dataEntry) => (
+                                    <TableCell align="center">{dataEntry.amount}</TableCell>
+                                  ))}
+                                </TableRow>
+                              </TableBody>
+                            </Table>
+                            : (dropdownColumns.name === "Expense") ?
+                              <Table align="left" stickyHeader aria-label="sticky table">
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell align="center">{dataItem.fixed_expense}</TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell align="center">{dataItem.variable_expense}</TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                              : <Table align="left" stickyHeader aria-label="sticky table">
+                                <TableHead>
+
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    {dataItem.map((dataEntry) => (
+                                      <TableCell align="center">{dataEntry.name}</TableCell>
+                                    ))}
+                                    {dataItem.map((dataEntry) => (
+                                      <TableCell align="center">{dataEntry.amount}</TableCell>
+                                    ))}
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                        ))}
+                      </React.Fragment>
+                    ))
+                  }
                 </TableBody>
               </Table>
             </Box>
@@ -106,14 +139,8 @@ Row.propTypes = {
     sumOfExpense: PropTypes.number.isRequired,
     dropdown: PropTypes.arrayOf(
       PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
       }),
     ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
   }).isRequired,
 };
 
@@ -142,40 +169,52 @@ function digestDataFromStartDateEndDate(data, startDate, endDate) {
       'sumOfInvestment': sumOfInvestment,
       'sumOfExpense': sumOFExpense,
       'dropdown': [
-        { 'income': [
-          element.income
-        ] },
-        { 'investment': [
-          element.investment
-        ] },
-        { 'expense': [
-          element.expense
-        ] }
+        {
+          'name': 'Income',
+          'data': [
+            element.income
+          ]
+        },
+        {
+          'name': 'Investment',
+          'data': [
+            element.investment
+          ]
+        },
+        {
+          'name': 'Expense',
+          'data': [
+            element.expense
+          ]
+        }
       ]
     })
   })
+  console.log(tmpArray)
   return tmpArray
 }
 export default function MonthDataTable({ data, startDate, endDate }) {
   const rows = digestDataFromStartDateEndDate(data, startDate, endDate)
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Month</TableCell>
-            <TableCell align="right">Income</TableCell>
-            <TableCell align="right">Investment</TableCell>
-            <TableCell align="right">Expense</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.date} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Paper sx={{ width: '100%' }}>
+      <TableContainer >
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Month</TableCell>
+              <TableCell align="right">Income</TableCell>
+              <TableCell align="right">Investment</TableCell>
+              <TableCell align="right">Expense</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <Row key={row.date} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
