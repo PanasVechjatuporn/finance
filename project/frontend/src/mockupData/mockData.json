@@ -10,7 +10,12 @@
       {
         "type": "2",
         "sub_type": "2",
-        "amount": "12500"
+        "amount": "6250"
+      },
+      {
+        "type": "3",
+        "sub_type": "3",
+        "amount": "6250"
       }
     ],
     "expense": {

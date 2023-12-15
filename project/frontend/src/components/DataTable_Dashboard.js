@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TabUnselected } from '@mui/icons-material';
+import "components/DataTable_Dashboard";
 
 function Row(props) {
   const { row } = props;
@@ -45,85 +45,101 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 {row.date}
               </Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center" colSpan={3}>Income</TableCell>
-                    <TableCell align="center" colSpan={2}>Investment</TableCell>
-                    <TableCell align="center" colSpan={2}>Expense</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    row.dropdown.map((dropdownColumns) => (
-                      <React.Fragment key={dropdownColumns.name}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center">Type</TableCell>
-                            <TableCell align="center">SubType</TableCell>
-                            <TableCell align="center">Amount</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center">Amount</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell align="center">Fixed Expense</TableCell>
-                            <TableCell align="center">Variable Expense</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        {dropdownColumns.data.map((dataItem) => (
-                          (dropdownColumns.name === "Income") ?
-                            <Table align="left" stickyHeader aria-label="sticky table">
-
-                              <TableBody>
-                                <TableRow>
-                                  {dataItem.map((dataEntry) => (
-                                    <TableCell align="center">{dataEntry.type}</TableCell>
-                                  ))}
-                                </TableRow>
-                                {dataItem.map((dataEntry) => (
-                                  <TableCell align="center">{dataEntry.sub_type}</TableCell>
-                                ))}
-                                <TableRow>
-                                  {dataItem.map((dataEntry) => (
-                                    <TableCell align="center">{dataEntry.amount}</TableCell>
-                                  ))}
-                                </TableRow>
-                              </TableBody>
-                            </Table>
-                            : (dropdownColumns.name === "Expense") ?
-                              <Table align="left" stickyHeader aria-label="sticky table">
-                                <TableBody>
-                                  <TableRow>
-                                    <TableCell align="center">{dataItem.fixed_expense}</TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell align="center">{dataItem.variable_expense}</TableCell>
-                                  </TableRow>
-                                </TableBody>
-                              </Table>
-                              : <Table align="left" stickyHeader aria-label="sticky table">
-                                <TableHead>
-
-                                </TableHead>
-                                <TableBody>
-                                  <TableRow>
-                                    {dataItem.map((dataEntry) => (
-                                      <TableCell align="center">{dataEntry.name}</TableCell>
-                                    ))}
-                                    {dataItem.map((dataEntry) => (
+              <div style={{ display: 'flex' }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" colSpan={3}>Income</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="center">Type</TableCell>
+                      <TableCell align="center">SubType</TableCell>
+                      <TableCell align="center">Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                    {
+                      row.dropdown.map((dropdownColumn) => (
+                        <React.Fragment key={dropdownColumn.name+row.date}>
+                          {dropdownColumn.data.map((dataItem) => (
+                            (dropdownColumn.name === "Income") ?
+                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfIncome}>
+                                {
+                                  dataItem.map((dataEntry) => (
+                                    <TableRow>
+                                      <TableCell align="center">{dataEntry.type}</TableCell>
+                                      <TableCell align="center">{dataEntry.sub_type}</TableCell>
                                       <TableCell align="center">{dataEntry.amount}</TableCell>
-                                    ))}
-                                  </TableRow>
-                                </TableBody>
-                              </Table>
-                        ))}
-                      </React.Fragment>
-                    ))
-                  }
-                </TableBody>
-              </Table>
+                                    </TableRow>
+                                  ))
+                                }
+                              </React.Fragment>
+                              : <></>
+                          ))}
+                        </React.Fragment>
+                      ))
+                    }
+                </Table>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" colSpan={2}>Investment</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="center">Name</TableCell>
+                      <TableCell align="center">Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                    {
+                      row.dropdown.map((dropdownColumn) => (
+                        <React.Fragment key={dropdownColumn.name+row.date}>
+                          {dropdownColumn.data.map((dataItem) => (
+                            (dropdownColumn.name === "Investment") ?
+                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfInvestment}>
+                                {
+                                  dataItem.map((dataEntry) => (
+                                    <TableRow>
+                                      <TableCell align="center">{dataEntry.name}</TableCell>
+                                      <TableCell align="center">{dataEntry.amount}</TableCell>
+                                    </TableRow>
+                                  ))
+                                }
+                              </React.Fragment>
+                              : <></>
+                          ))}
+                        </React.Fragment>
+                      ))
+                    }
+                </Table>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" colSpan={2}>Expense</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="center">Fixed Expense</TableCell>
+                      <TableCell align="center">Variable Expense</TableCell>
+                    </TableRow>
+                  </TableHead>
+                    {
+                      row.dropdown.map((dropdownColumn) => (
+                        <React.Fragment key={dropdownColumn.name+row.date}>
+                          {dropdownColumn.data.map((dataItem) => (
+                            (dropdownColumn.name === "Expense") ?
+                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfExpense}>
+                                {
+                                    <TableRow>
+                                      <TableCell align="center">{dataItem.fixed_expense}</TableCell>
+                                      <TableCell align="center">{dataItem.variable_expense}</TableCell>
+                                    </TableRow>
+                                }
+                              </React.Fragment>
+                              : <></>
+                          ))}
+                        </React.Fragment>
+                      ))
+                    }
+                </Table>
+              </div>
             </Box>
           </Collapse>
         </TableCell>
