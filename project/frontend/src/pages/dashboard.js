@@ -45,6 +45,9 @@ export const Dashboard = () => {
                 <div className="panel-info">
                     <Piechart data={data} startDate={startDate} endDate={endDate} />
                 </div>
+                
+            </div>
+            <div className="panels-table">
                 <div className="panel-positions">
                     <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
                 </div>

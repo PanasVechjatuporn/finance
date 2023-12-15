@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import "components/DataTable_Dashboard";
+import "components/DataTable_Dashboard.css";
 
 function Row(props) {
   const { row } = props;
@@ -34,9 +34,9 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.date}
         </TableCell>
-        <TableCell align="right">{row.sumOfIncome}</TableCell>
-        <TableCell align="right">{row.sumOfInvestment}</TableCell>
-        <TableCell align="right">{row.sumOfExpense}</TableCell>
+        <TableCell align="center">{row.sumOfIncome}</TableCell>
+        <TableCell align="center">{row.sumOfInvestment}</TableCell>
+        <TableCell align="center">{row.sumOfExpense}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -45,8 +45,9 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 {row.date}
               </Typography>
-              <div style={{ display: 'flex' }}>
-                <Table>
+              <div style={{ display : 'flex'}}>
+                {/* Sub Tabel Income, Investment, Expense */}
+                <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
                       <TableCell align="center" colSpan={3}>Income</TableCell>
@@ -57,29 +58,30 @@ function Row(props) {
                       <TableCell align="center">Amount</TableCell>
                     </TableRow>
                   </TableHead>
-                    {
-                      row.dropdown.map((dropdownColumn) => (
-                        <React.Fragment key={dropdownColumn.name+row.date}>
-                          {dropdownColumn.data.map((dataItem) => (
-                            (dropdownColumn.name === "Income") ?
-                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfIncome}>
-                                {
-                                  dataItem.map((dataEntry) => (
-                                    <TableRow>
-                                      <TableCell align="center">{dataEntry.type}</TableCell>
-                                      <TableCell align="center">{dataEntry.sub_type}</TableCell>
-                                      <TableCell align="center">{dataEntry.amount}</TableCell>
-                                    </TableRow>
-                                  ))
-                                }
-                              </React.Fragment>
-                              : <></>
-                          ))}
-                        </React.Fragment>
-                      ))
-                    }
+                  {
+                    row.dropdown.map((dropdownColumn) => (
+                      <React.Fragment key={dropdownColumn.name + row.date}>
+                        {dropdownColumn.data.map((dataItem) => (
+                          (dropdownColumn.name === "Income") ?
+                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfIncome}>
+                              {
+                                dataItem.map((dataEntry) => (
+                                  <TableRow>
+                                    <TableCell align="center">{dataEntry.type}</TableCell>
+                                    <TableCell align="center">{dataEntry.sub_type}</TableCell>
+                                    <TableCell align="center">{dataEntry.amount}</TableCell>
+                                  </TableRow>
+                                ))
+                              }
+                            </React.Fragment>
+                            : <></>
+                        ))}
+                      </React.Fragment>
+                    ))
+                  }
                 </Table>
-                <Table>
+
+                <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
                       <TableCell align="center" colSpan={2}>Investment</TableCell>
@@ -89,28 +91,29 @@ function Row(props) {
                       <TableCell align="center">Amount</TableCell>
                     </TableRow>
                   </TableHead>
-                    {
-                      row.dropdown.map((dropdownColumn) => (
-                        <React.Fragment key={dropdownColumn.name+row.date}>
-                          {dropdownColumn.data.map((dataItem) => (
-                            (dropdownColumn.name === "Investment") ?
-                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfInvestment}>
-                                {
-                                  dataItem.map((dataEntry) => (
-                                    <TableRow>
-                                      <TableCell align="center">{dataEntry.name}</TableCell>
-                                      <TableCell align="center">{dataEntry.amount}</TableCell>
-                                    </TableRow>
-                                  ))
-                                }
-                              </React.Fragment>
-                              : <></>
-                          ))}
-                        </React.Fragment>
-                      ))
-                    }
+                  {
+                    row.dropdown.map((dropdownColumn) => (
+                      <React.Fragment key={dropdownColumn.name + row.date}>
+                        {dropdownColumn.data.map((dataItem) => (
+                          (dropdownColumn.name === "Investment") ?
+                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfInvestment}>
+                              {
+                                dataItem.map((dataEntry) => (
+                                  <TableRow>
+                                    <TableCell align="center">{dataEntry.name}</TableCell>
+                                    <TableCell align="center">{dataEntry.amount}</TableCell>
+                                  </TableRow>
+                                ))
+                              }
+                            </React.Fragment>
+                            : <></>
+                        ))}
+                      </React.Fragment>
+                    ))
+                  }
                 </Table>
-                <Table>
+
+                <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
                       <TableCell align="center" colSpan={2}>Expense</TableCell>
@@ -120,24 +123,24 @@ function Row(props) {
                       <TableCell align="center">Variable Expense</TableCell>
                     </TableRow>
                   </TableHead>
-                    {
-                      row.dropdown.map((dropdownColumn) => (
-                        <React.Fragment key={dropdownColumn.name+row.date}>
-                          {dropdownColumn.data.map((dataItem) => (
-                            (dropdownColumn.name === "Expense") ?
-                              <React.Fragment key={dropdownColumn.name+row.date+row.sumOfExpense}>
-                                {
-                                    <TableRow>
-                                      <TableCell align="center">{dataItem.fixed_expense}</TableCell>
-                                      <TableCell align="center">{dataItem.variable_expense}</TableCell>
-                                    </TableRow>
-                                }
-                              </React.Fragment>
-                              : <></>
-                          ))}
-                        </React.Fragment>
-                      ))
-                    }
+                  {
+                    row.dropdown.map((dropdownColumn) => (
+                      <React.Fragment key={dropdownColumn.name + row.date}>
+                        {dropdownColumn.data.map((dataItem) => (
+                          (dropdownColumn.name === "Expense") ?
+                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfExpense}>
+                              {
+                                <TableRow>
+                                  <TableCell align="center">{dataItem.fixed_expense}</TableCell>
+                                  <TableCell align="center">{dataItem.variable_expense}</TableCell>
+                                </TableRow>
+                              }
+                            </React.Fragment>
+                            : <></>
+                        ))}
+                      </React.Fragment>
+                    ))
+                  }
                 </Table>
               </div>
             </Box>
@@ -214,14 +217,14 @@ export default function MonthDataTable({ data, startDate, endDate }) {
   return (
     <Paper sx={{ width: '100%' }}>
       <TableContainer >
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" className='main-table'>
           <TableHead>
             <TableRow>
               <TableCell />
               <TableCell>Month</TableCell>
-              <TableCell align="right">Income</TableCell>
-              <TableCell align="right">Investment</TableCell>
-              <TableCell align="right">Expense</TableCell>
+              <TableCell align="center">Income</TableCell>
+              <TableCell align="center">Investment</TableCell>
+              <TableCell align="center">Expense</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

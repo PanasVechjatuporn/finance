@@ -1,0 +1,15 @@
+.sub-table {
+    table-layout: fixed;
+    height: 20px;
+    overflow: hidden;
+  }
+
+.sub-table > .MuiTableHead-root{
+    background-color: #e6e4f1;
+    width: 100%;
+    border: 1px black;
+}
+
+.main-table > .MuiTableHead-root{
+    background-color: #e6e4f1;
+}
