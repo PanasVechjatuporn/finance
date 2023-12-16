@@ -50,7 +50,7 @@ function Row(props) {
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={3}>Income</TableCell>
+                      <TableCell align="center" colSpan={3} style={{fontSize: '12pt'}}>Income</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Type</TableCell>
@@ -84,7 +84,7 @@ function Row(props) {
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={2}>Investment</TableCell>
+                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Investment</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Name</TableCell>
@@ -116,7 +116,7 @@ function Row(props) {
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={2}>Expense</TableCell>
+                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Expense</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Fixed Expense</TableCell>
@@ -212,6 +212,11 @@ function digestDataFromStartDateEndDate(data, startDate, endDate) {
   console.log(tmpArray)
   return tmpArray
 }
+const styles = theme => ({
+  tablecell: {
+    fontSize: '40pt',
+  },
+});  
 export default function MonthDataTable({ data, startDate, endDate }) {
   const rows = digestDataFromStartDateEndDate(data, startDate, endDate)
   return (
@@ -219,12 +224,12 @@ export default function MonthDataTable({ data, startDate, endDate }) {
       <TableContainer >
         <Table aria-label="collapsible table" className='main-table'>
           <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Month</TableCell>
-              <TableCell align="center">Income</TableCell>
-              <TableCell align="center">Investment</TableCell>
-              <TableCell align="center">Expense</TableCell>
+            <TableRow align="center">
+              <TableCell/>
+              <TableCell style={{fontSize: '15pt'}}>Month</TableCell>
+              <TableCell align="center" style={{fontSize: '15pt'}}>Income</TableCell>
+              <TableCell align="center" style={{fontSize: '15pt'}}>Investment</TableCell>
+              <TableCell align="center" style={{fontSize: '15pt'}}>Expense</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

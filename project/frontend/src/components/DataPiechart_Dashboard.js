@@ -1,4 +1,9 @@
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { red, teal } from '@mui/material/colors';
+
+const color_investment = teal['A700']
+const color_fixed_exp = red[400]
+const color_variable_exp = red[300]
 export const Piechart = ({ data, startDate, endDate }) => {
     const start = new Date(startDate).getTime();
     const end = new Date(endDate).getTime();
@@ -22,17 +27,18 @@ export const Piechart = ({ data, startDate, endDate }) => {
         
     });
 
-    const percentInvest = Math.round((sum_investment / sum_income) * 100)
-    const percentFixedExpense = Math.round((sum_fixed_expense / sum_income) * 100)
-    const percentVariableExpense = Math.round((sum_variable_expense / sum_income) * 100)
+    const percentInvest = (((sum_investment+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
+    const percentFixedExpense = (((sum_fixed_expense+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
+    const percentVariableExpense = (((sum_variable_expense+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
+    // console.log('sum ::',(parseFloat(percentInvest)+parseFloat(percentFixedExpense)+parseFloat(percentVariableExpense)))
 
     data = [
-        { 'value': percentInvest, 'label': 'Investment' },
-        { 'value': percentFixedExpense, 'label': 'Fixed Expense' },
-        { 'value': percentVariableExpense, 'label': 'VariableExpense' },
+        { label: 'Investment', value: percentInvest, color: color_investment },
+        { label: 'Fixed Expense', value: percentFixedExpense, color: color_fixed_exp },
+        { label: 'VariableExpense', value: percentVariableExpense, color: color_variable_exp },
     ];
     const size = {
-        width: 400,
+        width: 600,
         height: 200,
     };
     return (
@@ -41,7 +47,7 @@ export const Piechart = ({ data, startDate, endDate }) => {
             <PieChart
                 series={[
                     {
-                        arcLabel: (item) => `${item.label} (${item.value})`,
+                        arcLabel: (item) => `${item.value} %`,
                         arcLabelMinAngle: 45,
                         data,
                     },
@@ -50,8 +56,16 @@ export const Piechart = ({ data, startDate, endDate }) => {
                     [`& .${pieArcLabelClasses.root}`]: {
                         fill: 'white',
                         fontWeight: 'bold',
+                        padding: '100px'
                     },
                 }}
+                slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'middle', horizontal: 'right' },
+                      padding: 60,
+                    },
+                  }}
                 {...size}
             />
             {/* <p>{startDate}</p>
