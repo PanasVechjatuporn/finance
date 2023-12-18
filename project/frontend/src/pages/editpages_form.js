@@ -4,122 +4,111 @@ import EditMonthDataModal from "components/editMonthDataModal";
 import Button from "react-bootstrap/Button";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
+import PropTypes from 'prop-types';
 import "pages/editpages_form.css";
 import mockData from "mockupData/mockData.json";
-
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
 let data = mockData;
 
-export const EditFormPage = () => {
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [clickedMonth, setClickedMonth] = useState(null);
-  const [showYearSelectionModal, setShowYearSelectionModal] = useState(false);
-  const [dataStatus, setDataStatus] = useState({});
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  console.log('row ::', row)
+  return (
+    <React.Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell align="center">
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row" align="center">
+          {row.year}
+        </TableCell>
 
-  const months = Array.from({ length: 12 }, (_, monthIndex) => {
-    const monthDate = new Date(0, monthIndex, 1);
-    const monthName = monthDate.toLocaleString('en-US', { month: 'long' });
-    return monthName;
-  });
+      </TableRow>
+      <TableRow>
 
-  const years = Array.from(Array(new Date().getFullYear() - 2010), (_, i) => (i + 2012).toString());
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Edit</TableCell>
+                  <TableCell align="center">Month</TableCell>
+                </TableRow>
+              </TableHead>
+                {row.months.map(month => (
+                  <TableRow>
+                    <TableCell  align="center"><EditIcon></EditIcon></TableCell>
+                    <TableCell  align="center">{month.date}</TableCell>
+                  </TableRow>
+                ))}
+            </Table>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
 
-  const handleYearSelect = (year) => {
-    setSelectedYear(year);
-  };
-
-  const handleButtonClick = (month) => {
-    if (selectedYear) {
-      setClickedMonth(month);
-      setShowModal(true);
-    } else {
-      setShowYearSelectionModal(true);
-    }
-  };
-
-  const handleCloseYearSelectionModal = () => {
-    setShowYearSelectionModal(false);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  useEffect(() => {
-    const checkDataStatus = () => {
-      const status = {};
-
-      data.forEach((entry) => {
-        const dateParts = entry.date.split('-');
-        const year = dateParts[0];
-        const month = dateParts[1];
-
-        if (!status[year]) {
-          status[year] = {};
-        }
-
-        status[year][month] = true;
-      });
-
-      setDataStatus(status);
+function digestData(data) {
+  const distinctYears = Array.from(new Set(data.map(entry => new Date(entry.date).getFullYear())));
+  const distinctYearsArrayData = distinctYears.map(year => {
+    return {
+      year: year,
+      months: data.filter(entry => new Date(entry.date).getFullYear() === year)
     };
+  });
+  return distinctYearsArrayData
+}
+Row.propTypes = {
 
-    checkDataStatus();
-  }, []);
-
+};
+export const EditFormPage = () => {
+  const rows = digestData(data)
   return (
     <React.Fragment>
       <div className="header">
         <Navigate />
       </div>
       <div className="content">
-        <Dropdown>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            {selectedYear || 'Choose year'}
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            {years.map((year) => (
-              <Dropdown.Item
-                key={year}
-                onClick={() => handleYearSelect(year)}
-                style={{ marginRight: '8px', padding: '10px', border: '1px solid #ccc' }}
-              >
-                {year}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-        <>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {months.map((month, index) => (
-              <Button
-                key={month}
-                variant={dataStatus[selectedYear]?.[index + 1] ? 'success' : 'danger'}
-                style={{ marginRight: '8px', padding: '10px', border: '1px solid #ccc' }}
-                onClick={() => handleButtonClick(month)}
-              >
-                {month}
-              </Button>
-            ))}
-          </div>
-        </>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center">Year</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <Row key={row.year} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
-      {/* Error no year selection */}
-      <Modal show={showYearSelectionModal} onHide={handleCloseYearSelectionModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Please select a year first</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Please choose a year before selecting a month.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseYearSelectionModal}>
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <EditMonthDataModal show={showModal} onClose={handleCloseModal} clickedMonth={clickedMonth} selectedYear={selectedYear} data={data} />
+
     </React.Fragment>
   );
 };

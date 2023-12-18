@@ -212,11 +212,7 @@ function digestDataFromStartDateEndDate(data, startDate, endDate) {
   console.log(tmpArray)
   return tmpArray
 }
-const styles = theme => ({
-  tablecell: {
-    fontSize: '40pt',
-  },
-});  
+
 export default function MonthDataTable({ data, startDate, endDate }) {
   const rows = digestDataFromStartDateEndDate(data, startDate, endDate)
   return (
