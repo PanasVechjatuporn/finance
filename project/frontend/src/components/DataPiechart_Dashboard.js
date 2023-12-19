@@ -30,7 +30,6 @@ export const Piechart = ({ data, startDate, endDate }) => {
     const percentInvest = (((sum_investment+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
     const percentFixedExpense = (((sum_fixed_expense+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
     const percentVariableExpense = (((sum_variable_expense+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
-    // console.log('sum ::',(parseFloat(percentInvest)+parseFloat(percentFixedExpense)+parseFloat(percentVariableExpense)))
 
     data = [
         { label: 'Investment', value: percentInvest, color: color_investment },
@@ -42,8 +41,6 @@ export const Piechart = ({ data, startDate, endDate }) => {
         height: 200,
     };
     return (
-        <div>
-            <h1>Piechart</h1>
             <PieChart
                 series={[
                     {
@@ -68,9 +65,6 @@ export const Piechart = ({ data, startDate, endDate }) => {
                   }}
                 {...size}
             />
-            {/* <p>{startDate}</p>
-            <p>{endDate}</p> */}
-        </div>
     )
 }
 

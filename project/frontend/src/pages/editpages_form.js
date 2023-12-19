@@ -23,12 +23,26 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import Container from '@mui/material/Container';
+import DeleteIcon from '@mui/icons-material/Delete';
 let data = mockData;
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  console.log('row ::', row)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clickedMonthData, setClickedMonthData] = useState(null);
+
+  const handleEditClick = (monthData) => {
+    setClickedMonthData(monthData);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setClickedMonthData(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -44,10 +58,8 @@ function Row(props) {
         <TableCell component="th" scope="row" align="center">
           {row.year}
         </TableCell>
-
       </TableRow>
       <TableRow>
-
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table>
@@ -57,16 +69,27 @@ function Row(props) {
                   <TableCell align="center">Month</TableCell>
                 </TableRow>
               </TableHead>
-                {row.months.map(month => (
-                  <TableRow>
-                    <TableCell  align="center"><EditIcon></EditIcon></TableCell>
-                    <TableCell  align="center">{month.date}</TableCell>
-                  </TableRow>
-                ))}
+              {row.months.map((month) => (
+                <TableRow key={month.date}>
+                  <TableCell align="center">
+                    <IconButton variant="outlined" onClick={() => handleEditClick(month)}>
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">{month.date}</TableCell>
+                </TableRow>
+              ))}
             </Table>
           </Collapse>
         </TableCell>
       </TableRow>
+
+      {/* Pass clickedMonthData as a prop to EditMonthDataModal */}
+      <EditMonthDataModal
+        show={isModalOpen}
+        onClose={handleCloseModal}
+        clickedMonth={clickedMonthData}
+      />
     </React.Fragment>
   );
 }
@@ -92,6 +115,8 @@ export const EditFormPage = () => {
         <Navigate />
       </div>
       <div className="content">
+      <Container fixed>
+      
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -107,6 +132,7 @@ export const EditFormPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        </Container>
       </div>
 
     </React.Fragment>

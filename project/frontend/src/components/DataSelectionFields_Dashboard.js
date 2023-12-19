@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 export const SelectionFields = ({
   data,
   startDate,
@@ -29,35 +33,24 @@ export const SelectionFields = ({
     const [startYear, startMonth] = startDate.split("-").map(Number);
     const [endYear, endMonth] = endDate.split("-").map(Number);
     const dataArray = data
-    .filter((item) => {
-      const [itemYear, itemMonth] = item.date.split("-").map(Number);
-      return (
-        (itemYear > startYear ||
-          (itemYear === startYear && itemMonth >= startMonth)) &&
-        (itemYear < endYear ||
-          (itemYear === endYear && itemMonth <= endMonth))
-      );
-    })
+      .filter((item) => {
+        const [itemYear, itemMonth] = item.date.split("-").map(Number);
+        return (
+          (itemYear > startYear ||
+            (itemYear === startYear && itemMonth >= startMonth)) &&
+          (itemYear < endYear ||
+            (itemYear === endYear && itemMonth <= endMonth))
+        );
+      })
 
     let sum_income = 0;
     dataArray.forEach(record => {
       const income_list = record.income;
 
-      sum_income += parseInt(income_list.reduce((sum, income) => sum + parseInt(income.amount),0));
+      sum_income += parseInt(income_list.reduce((sum, income) => sum + parseInt(income.amount), 0));
     });
 
     const calculatedSum = sum_income;
-    // const calculatedSum = data
-    //   .filter((item) => {
-    //     const [itemYear, itemMonth] = item.date.split("-").map(Number);
-    //     return (
-    //       (itemYear > startYear ||
-    //         (itemYear === startYear && itemMonth >= startMonth)) &&
-    //       (itemYear < endYear ||
-    //         (itemYear === endYear && itemMonth <= endMonth))
-    //     );
-    //   })
-    //   .reduce((sum, item) => sum + parseInt(item.income, 10), 0);
 
     setSumAmount(calculatedSum);
     onUpdateStartDate(startDate);
@@ -73,74 +66,46 @@ export const SelectionFields = ({
   };
 
   return (
-    // <div>
-    //   <div>
-    //     <label>From</label>
-    //     <select value={startDate} onChange={(e) => handleStartDateChange(e.target.value)}>
-    //       {selectOption.map((date) => (
-    //         <option key={date} value={date} disabled={date >= endDate}>
-    //           {date}
-    //         </option>
-    //       ))}
-    //     </select>
-    //   </div>
-    //   <div>
-    //     <label>To</label>
-    //     <select value={endDate} onChange={(e) => handleEndDateChange(e.target.value)}>
-    //       {selectOption.map((date) => (
-    //         <option key={date} value={date} disabled={date <= startDate}>
-    //           {date}
-    //         </option>
-    //       ))}
-    //     </select>
-    //   </div>
-    //   <div>
-    //     <label>Amount of Income</label>
-    //     <p>{sumAmount}</p>
-    //   </div>
-    // </div>
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "10px",
-        }}
-      >
-        <div>
-          <label>From</label>
-          <select
-            value={startDate}
+
+
+    <React.Fragment>
+      <Box>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-standard-label">From</InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
             onChange={(e) => handleStartDateChange(e.target.value)}
+            label="From"
           >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
             {selectOption.map((date) => (
-              <option key={date} value={date} disabled={date >= endDate}>
-                {date}
-              </option>
+
+              <MenuItem value={date} disabled={date >= endDate}> {date}</MenuItem>
             ))}
-          </select>
-        </div>
-        <div>
-          <label>To</label>
-          <select
-            value={endDate}
+          </Select>
+        </FormControl>
+        
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-standard-label">To</InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
             onChange={(e) => handleEndDateChange(e.target.value)}
+            label="To"
           >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
             {selectOption.map((date) => (
-              <option key={date} value={date} disabled={date <= startDate}>
-                {date}
-              </option>
+
+              <MenuItem value={date} disabled={date <= startDate}> {date}</MenuItem>
             ))}
-          </select>
-        </div>
-      </div>
-      <div style={{ marginLeft: "auto", textAlign: "right" }}>
+          </Select>
+        </FormControl>
+        
         <label>Amount of Income</label>
         <p
           style={{
@@ -151,8 +116,8 @@ export const SelectionFields = ({
         >
           {sumAmount}
         </p>
-      </div>
-    </div>
+      </Box>
+    </React.Fragment>
   );
 };
 

@@ -209,7 +209,6 @@ function digestDataFromStartDateEndDate(data, startDate, endDate) {
       ]
     })
   })
-  console.log(tmpArray)
   return tmpArray
 }
 

@@ -6,9 +6,10 @@ import MonthDataTable from "components/DataTable_Dashboard";
 import SelectionFields from "components/DataSelectionFields_Dashboard";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import "styles/dashboard/dashboard.css";
-import "styles/dashboard/layout.css";
-
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { Card, Nav } from "react-bootstrap";
 let data = mockData;
 export const Dashboard = () => {
     const dateObjects = data.map((item) => new Date(item.date));
@@ -29,31 +30,28 @@ export const Dashboard = () => {
     };
     return (
         <React.Fragment>
-            <div className="header">
-                <Navigate />
-            </div>
-            <div className="panels">
-                <div className="panel-info">
-                    <SelectionFields
-                        data={data}
-                        startDate={startDate}
-                        endDate={endDate}
-                        onUpdateStartDate={updateStartDate}
-                        onUpdateEndDate={updateEndDate}
-                    />
-                </div>
-                <div className="panel-info">
-                    <Piechart data={data} startDate={startDate} endDate={endDate} />
-                </div>
-                
-            </div>
-            <div className="panels-table">
-                <div className="panel-positions">
-                    <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
-                </div>
-            </div>
+            {/* <Navigate></Navigate> */}
+            <Grid container spacing={8}>
+                <Grid item xs={8}>
 
-            <div className="btn">
+                        <SelectionFields
+                            data={data}
+                            startDate={startDate}
+                            endDate={endDate}
+                            onUpdateStartDate={updateStartDate}
+                            onUpdateEndDate={updateEndDate}
+                        />
+
+                </Grid>
+                <Grid item xs={2}>
+                    <Piechart data={data} startDate={startDate} endDate={endDate} />
+                </Grid>
+            </Grid>
+
+            <Container>
+                <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
+            </Container>
+            <Container>
                 <Button variant="danger">
                     <Link
                         to={"./edit-form"}
@@ -61,8 +59,8 @@ export const Dashboard = () => {
                     >
                         Edit
                     </Link>
-                </Button>{" "}
-            </div>
+                </Button>
+            </Container>
         </React.Fragment>
     );
 };
