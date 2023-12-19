@@ -30,9 +30,9 @@ export const Dashboard = () => {
     };
     return (
         <React.Fragment>
-            {/* <Navigate></Navigate> */}
-            <Grid container spacing={8}>
-                <Grid item xs={8}>
+            <Navigate></Navigate>
+                <Grid container spacing={8}>
+                    <Grid item xs={8}>
 
                         <SelectionFields
                             data={data}
@@ -42,25 +42,25 @@ export const Dashboard = () => {
                             onUpdateEndDate={updateEndDate}
                         />
 
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Piechart data={data} startDate={startDate} endDate={endDate} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={2}>
-                    <Piechart data={data} startDate={startDate} endDate={endDate} />
-                </Grid>
-            </Grid>
 
-            <Container>
-                <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
-            </Container>
-            <Container>
-                <Button variant="danger">
-                    <Link
-                        to={"./edit-form"}
-                        style={{ textDecoration: "none", color: "white" }}
-                    >
-                        Edit
-                    </Link>
-                </Button>
-            </Container>
+                <Container>
+                    <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
+                </Container>
+                <Container>
+                    <Button variant="danger">
+                        <Link
+                            to={"./edit-form"}
+                            style={{ textDecoration: "none", color: "white" }}
+                        >
+                            Edit
+                        </Link>
+                    </Button>
+                </Container>
         </React.Fragment>
     );
 };

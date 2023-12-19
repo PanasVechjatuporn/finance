@@ -15,7 +15,6 @@ function App() {
   }, []);
 
   return (
-    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,7 +22,6 @@ function App() {
           <Route path="/dashboard/edit-form" element={<EditFormPage />} />
         </Routes>
       </BrowserRouter>
-    </div>
   );
 }
 export default App;

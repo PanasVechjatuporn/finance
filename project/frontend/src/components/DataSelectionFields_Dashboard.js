@@ -87,7 +87,7 @@ export const SelectionFields = ({
             ))}
           </Select>
         </FormControl>
-        
+
         <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="demo-simple-select-standard-label">To</InputLabel>
           <Select
@@ -105,7 +105,7 @@ export const SelectionFields = ({
             ))}
           </Select>
         </FormControl>
-        
+
         <label>Amount of Income</label>
         <p
           style={{

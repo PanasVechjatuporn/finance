@@ -111,9 +111,7 @@ export const EditFormPage = () => {
   const rows = digestData(data)
   return (
     <React.Fragment>
-      <div className="header">
         <Navigate />
-      </div>
       <div className="content">
       <Container fixed>
       
