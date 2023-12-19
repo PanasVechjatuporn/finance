@@ -32,9 +32,9 @@ export const Piechart = ({ data, startDate, endDate }) => {
     const percentVariableExpense = (((sum_variable_expense+ Number.EPSILON) / (sum_income+ Number.EPSILON)) * 100).toFixed(2)
 
     data = [
-        { label: 'Investment', value: percentInvest, color: color_investment },
-        { label: 'Fixed Expense', value: percentFixedExpense, color: color_fixed_exp },
-        { label: 'VariableExpense', value: percentVariableExpense, color: color_variable_exp },
+        { label: 'Investment', value: parseFloat(percentInvest), color: color_investment },
+        { label: 'Fixed Expense', value: parseFloat(percentFixedExpense), color: color_fixed_exp },
+        { label: 'VariableExpense', value: parseFloat(percentVariableExpense), color: color_variable_exp },
     ];
     const size = {
         width: 600,

@@ -4,6 +4,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 export const SelectionFields = ({
   data,
   startDate,
@@ -69,7 +71,7 @@ export const SelectionFields = ({
 
 
     <React.Fragment>
-      <Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="demo-simple-select-standard-label">From</InputLabel>
           <Select
@@ -100,22 +102,18 @@ export const SelectionFields = ({
               <em>None</em>
             </MenuItem>
             {selectOption.map((date) => (
-
               <MenuItem value={date} disabled={date <= startDate}> {date}</MenuItem>
             ))}
           </Select>
         </FormControl>
-
-        <label>Amount of Income</label>
-        <p
-          style={{
-            border: "1px solid #000",
-            padding: "5px",
-            textAlign: "right",
-          }}
-        >
-          {sumAmount}
-        </p>
+        <FormControl halfWidth sx={{ m: 1, minWidth: 140 }}>
+          <TextField
+            startAdornment={<InputAdornment position="End">฿</InputAdornment>}
+            label="Amount of Income"
+            InputProps={{ readOnly: true }}
+            value={startDate !== "" && endDate !== "" ? sumAmount : ""}
+          />
+        </FormControl>
       </Box>
     </React.Fragment>
   );

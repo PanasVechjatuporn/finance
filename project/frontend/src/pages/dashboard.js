@@ -31,8 +31,9 @@ export const Dashboard = () => {
     return (
         <React.Fragment>
             <Navigate></Navigate>
-                <Grid container spacing={8}>
-                    <Grid item xs={8}>
+            <Container style={{ marginTop: '20px' }}>
+                <Grid container spacing={10}>
+                    <Grid item xs={2}>
 
                         <SelectionFields
                             data={data}
@@ -47,20 +48,21 @@ export const Dashboard = () => {
                         <Piechart data={data} startDate={startDate} endDate={endDate} />
                     </Grid>
                 </Grid>
+            </Container>
+            <Container style={{ marginTop: '20px' }}>
+                <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
+            </Container>
+            <Container>
+                <Button variant="danger" style={{ marginTop: '20px' }}>
+                    <Link
+                        to={"./edit-form"}
+                        style={{ textDecoration: "none", color: "white" }}
+                    >
+                        Edit
+                    </Link>
+                </Button>
 
-                <Container>
-                    <MonthDataTable data={data} startDate={startDate} endDate={endDate} />
-                </Container>
-                <Container>
-                    <Button variant="danger">
-                        <Link
-                            to={"./edit-form"}
-                            style={{ textDecoration: "none", color: "white" }}
-                        >
-                            Edit
-                        </Link>
-                    </Button>
-                </Container>
+            </Container>
         </React.Fragment>
     );
 };
