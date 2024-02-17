@@ -4,12 +4,10 @@
     "income": [
       {
         "type": "1",
-        "sub_type": "1",
         "amount": "12500"
       },
       {
         "type": "2",
-        "sub_type": "2",
         "amount": "6250"
       },
       {

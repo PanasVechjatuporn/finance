@@ -1,0 +1,16 @@
+[
+    {
+        "Name": "ตั๋วเครื่องบิน",
+        "Period": "1 Year",
+        "Goal": "50,000",
+        "CreatedDate": "24 January 2024",
+        "Percentage": "50%"
+    },
+    {
+        "Name": "รถ",
+        "Period": "6 Year",
+        "Goal": "700,000",
+        "CreatedDate": "1 March 2024",
+        "Percentage": "50%"
+    }
+]

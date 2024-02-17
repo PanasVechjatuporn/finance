@@ -79,7 +79,7 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-           <Navbar.Brand href="/">Finance made easy</Navbar.Brand>
+            <Navbar.Brand href="/">Finance made easy</Navbar.Brand>
           </Typography>
           <Typography
             variant="h8"
@@ -93,7 +93,14 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-           <Navbar.Brand href="/Dashboard">Dashboard</Navbar.Brand>
+            <Navbar.Brand href="/Dashboard">Dashboard</Navbar.Brand>
+          </Typography>
+          <Typography
+            variant="h8"
+            component="div"
+            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
+          >
+            <Navbar.Brand href="/Goal-Based">Goal-Based</Navbar.Brand>
           </Typography>
           <Typography
             variant="h8"
