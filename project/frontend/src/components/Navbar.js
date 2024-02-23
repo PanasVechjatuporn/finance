@@ -132,10 +132,16 @@ function Navigate() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          {userStore.isLogIn ? (<Button variant="primary" onClick={() => {
-            dispatch(Logout())
-            localStorage.removeItem("userData");
-          }}>Logout</Button>) : (<Nav>
+          {userStore.isLogIn ? (
+            <>
+              <Button variant="primary" onClick={() => {
+                dispatch(Logout())
+                localStorage.removeItem("userData");
+              }}>Logout
+              </Button>
+              <Typography>{userStore.userName}</Typography>
+            </>
+          ) : (<Nav>
             <Nav.Link href="#sign_up">
               <>
                 <Button variant="primary" onClick={handleShowSignUp}>
