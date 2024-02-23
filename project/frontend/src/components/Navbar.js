@@ -15,6 +15,8 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { Logout } from "store/UserSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,6 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navigate() {
+  const userStore = useSelector(state => state.userStore)
+  const dispatch = useDispatch()
+  console.log(userStore.isLogIn)
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const handleCloseSignUp = () => setShowSignUp(false);
@@ -127,22 +132,25 @@ function Navigate() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Nav>
+          {userStore.isLogIn ? (<Button variant="primary" onClick={() => {
+            dispatch(Logout())
+            localStorage.removeItem("userData");
+          }}>Logout</Button>) : (<Nav>
             <Nav.Link href="#sign_up">
               <>
                 <Button variant="primary" onClick={handleShowSignUp}>
                   Sign Up
                 </Button>
-                <SignUpModal show={showSignUp} setShow={setShowSignUp} mode="signup"/>
+                <SignUpModal show={showSignUp} setShow={setShowSignUp} mode="signup" />
               </>
             </Nav.Link>
             <Nav.Link eventKey={2} href="#sign_in">
               <Button variant="secondary" onClick={handleShowSignIn}>
                 Sign In
               </Button>
-              <SignUpModal show={showSignIn} setShow={setShowSignIn} mode="signin"/>
+              <SignUpModal show={showSignIn} setShow={setShowSignIn} mode="signin" />
             </Nav.Link>
-          </Nav>
+          </Nav>)}
         </Toolbar>
       </AppBar>
     </Box>
