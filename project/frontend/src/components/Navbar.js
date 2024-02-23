@@ -58,9 +58,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navigate() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const handleCloseSignUp = () => setShowSignUp(false);
+  const handleShowSignUp = () => setShowSignUp(true);
+  const handleCloseSignIn = () => setShowSignIn(false);
+  const handleShowSignIn = () => setShowSignIn(true);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" style={{ background: '#2E3B55' }}>
@@ -127,17 +130,17 @@ function Navigate() {
           <Nav>
             <Nav.Link href="#sign_up">
               <>
-                <Button variant="primary" onClick={handleShow}>
+                <Button variant="primary" onClick={handleShowSignUp}>
                   Sign Up
                 </Button>
-                <SignUpModal show={show} setShow={setShow} />
+                <SignUpModal show={showSignUp} setShow={setShowSignUp} mode="signup"/>
               </>
             </Nav.Link>
             <Nav.Link eventKey={2} href="#sign_in">
-              <Button variant="secondary" onClick={handleShow}>
+              <Button variant="secondary" onClick={handleShowSignIn}>
                 Sign In
               </Button>
-              <SignUpModal show={show} setShow={setShow} />
+              <SignUpModal show={showSignIn} setShow={setShowSignIn} mode="signin"/>
             </Nav.Link>
           </Nav>
         </Toolbar>
