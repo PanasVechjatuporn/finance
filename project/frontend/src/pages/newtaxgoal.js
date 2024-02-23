@@ -16,6 +16,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Navigate from "components/Navbar";
 import TextField from '@mui/material/TextField';
+import data from "mockupData/mockData.json";
+import IncomeTable from 'components/IncomeTable';
 
 export function NewTaxGoal() {
 
@@ -61,6 +63,51 @@ export function NewTaxGoal() {
     );
 
 
+    // Object to store the sum of income amounts grouped by type and sub_type
+    const sumByType = {};
+
+
+    // Iterate over each object in the array
+    data.forEach(item => {
+        // Iterate over each income object within the item
+        item.income.forEach(incomeItem => {
+            const { type, sub_type, amount } = incomeItem;
+
+            if (sub_type) {
+
+                // Initialize nested object for type if not present
+                if (!sumByType[type]) {
+                    sumByType[type] = {};
+                }
+
+                // Initialize nested object for sub_type if not present
+                if (!sumByType[type][sub_type]) {
+                    sumByType[type][sub_type] = 0;
+                }
+
+
+                // Convert amount to number and add it to the sum corresponding to its type and sub_type
+                sumByType[type][sub_type] += parseInt(amount);
+            }
+            else {
+                // Initialize nested object for type if not present
+                if (!sumByType[type]) {
+                    sumByType[type] = {};
+                }
+
+                // Initialize nested object for sub_type if not present
+                if (!sumByType[type][0]) {
+                    sumByType[type][0] = 0;
+                }
+
+
+                // Convert amount to number and add it to the sum corresponding to its type and sub_type
+                sumByType[type][0] += parseInt(amount);
+            }
+        });
+    });
+
+    console.log(sumByType);
 
     return (
         <React.Fragment>
@@ -92,36 +139,7 @@ export function NewTaxGoal() {
                                 </TableCell>
                                 <TableCell style={{ width: "20%" }} align="center">50000</TableCell>
                             </TableRow>
-                            <TableRow >
-                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
-                                    <Collapse in={open} timeout="auto" unmountOnExit>
-                                        <Table>
-                                            <TableRow>
-                                                <TableCell style={{ width: "10%" }} />
-
-                                                <TableCell align="left" style={{ width: "70%" }}>
-                                                    ประเภทที่ 1
-                                                </TableCell>
-
-                                                <TableCell align="center" style={{ width: "20%" }} >
-                                                    25000
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell style={{ width: "10%" }} />
-
-                                                <TableCell align="left" style={{ width: "70%" }}>
-                                                    ประเภทที่ 2
-                                                </TableCell>
-
-                                                <TableCell align="center" style={{ width: "20%" }} >
-                                                    25000
-                                                </TableCell>
-                                            </TableRow>
-                                        </Table>
-                                    </Collapse>
-                                </TableCell>
-                            </TableRow>
+                            <IncomeTable sumByType={sumByType} open={open} />
 
                             {/*ค่าใช้จ่าย*/}
                             <TableRow sx={{ '& > *': { borderBottom: 'unset' }, width: '100%' }}>

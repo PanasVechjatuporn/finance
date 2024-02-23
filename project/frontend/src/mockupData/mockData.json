@@ -15,6 +15,12 @@
         "sub_type": "3",
         "amount": "6250"
       }
+      ,
+      {
+        "type": "3",
+        "sub_type": "2",
+        "amount": "1000"
+      }
     ],
     "expense": {
       "fixed_expense": "9000",
@@ -35,7 +41,6 @@
     "income": [
       {
         "type": "1",
-        "sub_type": "1",
         "amount": "30000"
       }
     ],
@@ -58,7 +63,6 @@
     "income": [
       {
         "type": "1",
-        "sub_type": "1",
         "amount": "30000"
       }
     ],
@@ -82,8 +86,12 @@
     "income": [
       {
         "type": "1",
-        "sub_type": "1",
         "amount": "30000"
+      },
+      {
+        "type": "3",
+        "sub_type": "2",
+        "amount": "1000"
       }
     ],
     "expense": {
@@ -106,8 +114,12 @@
     "income": [
       {
         "type": "1",
-        "sub_type": "1",
         "amount": "30000"
+      },
+      {
+        "type": "3",
+        "sub_type": "2",
+        "amount": "1000"
       }
     ],
     "expense": {
