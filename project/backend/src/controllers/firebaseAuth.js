@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '../.env' });
 const firebaseAdmin = require('../configs/firebaseConfig');
+const post_db = require('../controllers/postDatabase')
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -12,6 +13,8 @@ exports.signup = async (req, res) => {
     .then((userRecord) => {
       // See the UserRecord reference doc for the contents of userRecord.
       console.log('Successfully created new user:', userRecord.uid);
+      post_db.insert_one_user(userRecord)
+      // console.log(userRecord)
       res.status(200).json({ userRecord });
     })
     .catch((error) => {
@@ -39,7 +42,7 @@ exports.signin = async (req, res) => {
       throw new Error(errorData.error.message);
     }
     const signInData = await signInResponse.json();
-    console.log(signInData)
+    // console.log(signInData)
     res.status(200).json({ signInData });
   } catch (error) {
     console.error('Error signing in user:', error.message);
@@ -47,5 +50,7 @@ exports.signin = async (req, res) => {
   }
 };
 exports.signout = async (req, res) => {
-
 };
+exports.checkuid = async (req, res) => {
+
+}
