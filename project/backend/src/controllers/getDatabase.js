@@ -8,21 +8,19 @@ const client = new MongoClient(url);
 // Database Name
 const dbName = 'dev';
 
-exports.all_users = async() => {
-    await client.connect()
-        .then(console.log('Connected successfully to server'))
-        .catch(err => console.log(err))
+client.connect()
+    .then(console.log('Connected successfully to get server'))
+    .catch(err => console.log(err))
+
+
+exports.all_users = async () => {
     const db = client.db(dbName)
     const collection = db.collection('users')
     var getResult = await collection.find()
     console.log(getResult)
-    client.close()
 }
 
-exports.get_user = async() => {
-    await client.connect()
-        .then(console.log('Connected successfully to server'))
-        .catch(err => console.log(err))
+exports.get_user = async () => {
     const db = client.db(dbName)
     const collection = db.collection('users')
     var query = {}

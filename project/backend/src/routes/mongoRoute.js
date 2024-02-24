@@ -4,7 +4,7 @@ const get_db = require('../controllers/getDatabase')
 const post_db = require('../controllers/postDatabase')
 
 // Get route
-router.get('/all_users', async function(req, res){
+router.get('/all_users', async function (req, res) {
     try {
         const users = await get_db.all_users();
         res.status(200).send('Done')
@@ -14,21 +14,21 @@ router.get('/all_users', async function(req, res){
     }
 })
 
-router.get('/get_user', async function(req, res){
+router.get('/get_user', async function (req, res) {
     try {
-        
+
     } catch (error) {
-        
+
     }
 })
 
 
 // Post route
-router.post('/insert_one', async function(req, res){
+router.post('/insert_one', async function (req, res) {
     try {
         const user = await post_db.insert_one_user();
         res.status(200).send('Done')
-    } catch (error){
+    } catch (error) {
         console.error("Can't insert data")
         res.status(500).json("Can't insert data")
     }

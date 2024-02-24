@@ -8,18 +8,17 @@ const client = new MongoClient(url);
 // Database Name
 const dbName = 'dev';
 
+client.connect()
+    .then(console.log('Connected successfully to post server'))
+    .catch(err => console.log(err))
+
+
 exports.edit_dashboard = async () => {
-    await client.connect()
-        .then(console.log('Connected successfully to server'))
-        .catch(err => console.log(err))
     const db = client.db(dbName)
     const collection = db.collection('users')
 }
 
 exports.insert_one_user = async (user) => {
-    await client.connect()
-        .then(console.log('Connected successfully to server'))
-        .catch(err => console.log(err))
     const db = client.db(dbName)
     const collection = db.collection('users')
     try {
