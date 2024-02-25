@@ -13,40 +13,47 @@ import axios from 'axios';
 import { Login } from '../store/UserSlice';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-const baseURL = "http://localhost:8000/auth";
+const baseURL = "http://localhost:8000";
 
 function OverlayLoading({ isLoading }) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-      setOpen(isLoading);
+    setOpen(isLoading);
   }, [isLoading]);
 
   return (
-      <div>
-          <Backdrop
-              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-              open={open}
-          >
-              <CircularProgress color="inherit" />
-          </Backdrop>
-      </div>
+    <div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
   );
 }
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);
   const dispatch = useDispatch()
   const [email, setEmail] = React.useState('');
+  const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setisLoading] = React.useState(false);
   const SignInWithGoogle = async () => {
     setisLoading(true)
     await signInWithGooglePopup().then(response => {
-      let userData = response.user.reloadUserInfo;
-      dispatch(Login(userData));
-      localStorage.setItem('userData', JSON.stringify(response.user))
-      setisLoading(false)
-      handleClose()
+      axios.post(`${baseURL}/db/createuser_provider=google`, {
+        userData: JSON.stringify(response.user.reloadUserInfo)
+      }).then(response => {
+        let userData = response.data.userData;
+        dispatch(Login(userData));
+        localStorage.setItem('userData', JSON.stringify(response.user))
+        setisLoading(false)
+        handleClose()
+      }).catch(error => {
+        setisLoading(false)
+      })
     }).catch(error => {
       setisLoading(false)
       console.log(error)
@@ -54,9 +61,10 @@ function SignUpModal({ show, setShow, mode }) {
   }
   function register() {
     setisLoading(true)
-    axios.post(`${baseURL}/signup`, {
+    axios.post(`${baseURL}/auth/signup`, {
       email: email,
-      password: password
+      password: password,
+      displayName: userName
     })
       .then((response) => {
         dispatch(Login(response.data.userRecord))
@@ -71,7 +79,7 @@ function SignUpModal({ show, setShow, mode }) {
   }
   function signin() {
     setisLoading(true)
-    axios.post(`${baseURL}/signin`, {
+    axios.post(`${baseURL}/auth/signin`, {
       email: email,
       password: password
     })
@@ -97,10 +105,19 @@ function SignUpModal({ show, setShow, mode }) {
           <FormLabel>Email</FormLabel>
           <Input autoFocus required onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
+        {
+          mode === 'signup' ? (<>
+            <FormControl>
+              <FormLabel>Username</FormLabel>
+              <Input required onChange={(e) => setUserName(e.target.value)} />
+            </FormControl>
+          </>) : (<></>)
+        }
         <FormControl>
           <FormLabel>Password</FormLabel>
           <Input required onChange={(e) => setPassword(e.target.value)} type="password" />
         </FormControl>
+
       </Modal.Body>
       <br></br>
       <div className="btn-wrapper">
