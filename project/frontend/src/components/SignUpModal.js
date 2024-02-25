@@ -24,7 +24,8 @@ function SignUpModal({ show, setShow, mode }) {
   const SignInWithGoogle = async () => {
     setisLoading(true)
     await signInWithGooglePopup().then(response => {
-      dispatch(Login(response.user))
+      let userData = response.user.reloadUserInfo;
+      dispatch(Login(userData));
       localStorage.setItem('userData', JSON.stringify(response.user))
       setisLoading(false)
       handleClose()

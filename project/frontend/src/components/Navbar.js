@@ -62,7 +62,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Navigate() {
   const userStore = useSelector(state => state.userStore)
   const dispatch = useDispatch()
-  console.log(userStore.isLogIn)
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const handleCloseSignUp = () => setShowSignUp(false);
