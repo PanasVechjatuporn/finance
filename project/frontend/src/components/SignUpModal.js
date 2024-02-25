@@ -1,8 +1,6 @@
 import Button from "react-bootstrap/Button";
 import * as React from 'react';
 import Modal from "react-bootstrap/Modal";
-// import EmailFormTextExample from "components/email_form_text";
-// import PasswordFormTextExample from "components/pw_form_text";
 import Input from '@mui/joy/Input';
 import GoogleButton from "react-google-button";
 import FacebookLogin from "react-facebook-login";
@@ -13,11 +11,31 @@ import { signInWithGooglePopup } from "../utils/firebase.utils";
 import { useDispatch } from "react-redux";
 import axios from 'axios';
 import { Login } from '../store/UserSlice';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 const baseURL = "http://localhost:8000/auth";
+
+function OverlayLoading({ isLoading }) {
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+      setOpen(isLoading);
+  }, [isLoading]);
+
+  return (
+      <div>
+          <Backdrop
+              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={open}
+          >
+              <CircularProgress color="inherit" />
+          </Backdrop>
+      </div>
+  );
+}
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);
   const dispatch = useDispatch()
-  const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setisLoading] = React.useState(false);
@@ -29,7 +47,6 @@ function SignUpModal({ show, setShow, mode }) {
       localStorage.setItem('userData', JSON.stringify(response.user))
       setisLoading(false)
       handleClose()
-      setOpen(false)
     }).catch(error => {
       setisLoading(false)
       console.log(error)
@@ -46,7 +63,6 @@ function SignUpModal({ show, setShow, mode }) {
         localStorage.setItem('userData', JSON.stringify(response.data.userRecord))
         setisLoading(false)
         handleClose()
-        setOpen(false)
       })
       .catch(error => {
         setisLoading(false)
@@ -64,7 +80,6 @@ function SignUpModal({ show, setShow, mode }) {
         localStorage.setItem('userData', JSON.stringify(response.data.signInData))
         setisLoading(false)
         handleClose()
-        setOpen(false)
       })
       .catch(error => {
         setisLoading(false)
@@ -73,6 +88,7 @@ function SignUpModal({ show, setShow, mode }) {
   }
   return (
     <Modal show={show}>
+      <OverlayLoading isLoading={isLoading} />
       <Modal.Header closeButton onHide={handleClose}>
         <Modal.Title>{mode === 'signup' ? 'Sign Up' : 'Sign In'}</Modal.Title>
       </Modal.Header>
