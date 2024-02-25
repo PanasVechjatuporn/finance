@@ -48,7 +48,7 @@ function SignUpModal({ show, setShow, mode }) {
       }).then(response => {
         let userData = response.data.userData;
         dispatch(Login(userData));
-        localStorage.setItem('userData', JSON.stringify(response.user))
+        localStorage.setItem('userData', JSON.stringify(response.data.userData))
         setisLoading(false)
         handleClose()
       }).catch(error => {
