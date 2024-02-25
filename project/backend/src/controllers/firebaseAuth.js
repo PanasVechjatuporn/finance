@@ -1,19 +1,20 @@
 require('dotenv').config({ path: '../.env' });
 const firebaseAdmin = require('../configs/firebaseConfig');
-const post_db = require('../controllers/postDatabase')
+const mongoController = require('../controllers/mongoController')
 
 exports.signup = async (req, res) => {
   console.log(req.body)
-  const { email, password } = req.body;
+  const { email, password, displayName } = req.body;
   firebaseAdmin.auth()
     .createUser({
       email: email,
       password: password,
+      displayName: displayName
     })
     .then((userRecord) => {
       // See the UserRecord reference doc for the contents of userRecord.
       console.log('Successfully created new user:', userRecord.uid);
-      post_db.insert_one_user(userRecord)
+      mongoController.create_new_user(userRecord)
       // console.log(userRecord)
       res.status(200).json({ userRecord });
     })
