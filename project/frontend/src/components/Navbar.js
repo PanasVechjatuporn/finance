@@ -64,9 +64,7 @@ function Navigate() {
   const dispatch = useDispatch()
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
-  const handleCloseSignUp = () => setShowSignUp(false);
   const handleShowSignUp = () => setShowSignUp(true);
-  const handleCloseSignIn = () => setShowSignIn(false);
   const handleShowSignIn = () => setShowSignIn(true);
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -159,52 +157,6 @@ function Navigate() {
         </Toolbar>
       </AppBar>
     </Box>
-    // <Box sx={{ flexGrow: 1 }}>
-    //   <Navbar
-    //     collapseOnSelect
-    //     expand="lg"
-    //     className="bg-body-tertiary"
-    //     bg="light"
-    //     fixed="top"
-    //   >
-    //     <Container>
-    //       <Navbar.Brand href="/">Finance made easy</Navbar.Brand>
-    //       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-    //       <Navbar.Collapse id="responsive-navbar-nav">
-    //         <Nav className="me-auto">
-    //           <Nav.Link href="#features">Features</Nav.Link>
-    //           <Nav.Link href="#manual">Manual</Nav.Link>
-    //           <Nav.Link>
-    //             <Link to="/Dashboard">Dashboard</Link>
-    //           </Nav.Link>
-    //           <NavDropdown title="More" id="collasible-nav-dropdown">
-    //             <NavDropdown.Item href="#action/3.1">temp1</NavDropdown.Item>
-    //             <NavDropdown.Item href="#action/3.2">temp2</NavDropdown.Item>
-    //             <NavDropdown.Item href="#action/3.3">temp2</NavDropdown.Item>
-    //             <NavDropdown.Divider />
-    //             <NavDropdown.Item href="#action/3.4">More help</NavDropdown.Item>
-    //           </NavDropdown>
-    //         </Nav>
-    //         <Nav>
-    //           <Nav.Link href="#sign_up">
-    //             <>
-    //               <Button variant="primary" onClick={handleShow}>
-    //                 Sign Up
-    //               </Button>
-    //               <SignUpModal show={show} setShow={setShow} />
-    //             </>
-    //           </Nav.Link>
-    //           <Nav.Link eventKey={2} href="#sign_in">
-    //             <Button variant="outline-dark" onClick={handleShow}>
-    //               Sign In
-    //             </Button>
-    //             <SignUpModal show={show} setShow={setShow} />
-    //           </Nav.Link>
-    //         </Nav>
-    //       </Navbar.Collapse>
-    //     </Container>
-    //   </Navbar>
-    // </Box>
   );
 }
 
