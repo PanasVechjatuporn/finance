@@ -5,7 +5,6 @@ const client = require('../utils/mongoUtils')
 const dbName = 'dev';
 
 exports.create_new_user = async (user) => {
-    console.log(user)
     const db = client.db(dbName)
     const collection = db.collection('users')
     try {
@@ -28,6 +27,7 @@ exports.create_new_user = async (user) => {
         console.log('Error occured in mongoController.create_new_user: ', error)
     }
 }
+
 exports.create_new_user_provider = async (req, res) => {
     const userData = JSON.parse(req.body.userData)
     const provider = req.params.provider
@@ -61,3 +61,6 @@ exports.create_new_user_provider = async (req, res) => {
     }
 }
 
+exports.get_user_data_income_expense = async (req, res) => {
+    
+}

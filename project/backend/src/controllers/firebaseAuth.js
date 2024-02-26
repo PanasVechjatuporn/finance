@@ -12,10 +12,7 @@ exports.signup = async (req, res) => {
       displayName: displayName
     })
     .then((userRecord) => {
-      // See the UserRecord reference doc for the contents of userRecord.
-      console.log('Successfully created new user:', userRecord.uid);
       mongoController.create_new_user(userRecord)
-      // console.log(userRecord)
       res.status(200).json({ userRecord });
     })
     .catch((error) => {
@@ -43,15 +40,9 @@ exports.signin = async (req, res) => {
       throw new Error(errorData.error.message);
     }
     const signInData = await signInResponse.json();
-    // console.log(signInData)
     res.status(200).json({ signInData });
   } catch (error) {
     console.error('Error signing in user:', error.message);
     res.status(401).json({ message: 'Authentication failed' });
   }
 };
-exports.signout = async (req, res) => {
-};
-exports.checkuid = async (req, res) => {
-
-}
