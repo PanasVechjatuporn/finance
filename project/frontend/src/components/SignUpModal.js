@@ -44,7 +44,7 @@ function SignUpModal({ show, setShow, mode }) {
     setisLoading(true)
     await signInWithGooglePopup().then(response => {
       axios.post(`${baseURL}/db/createuser_provider=google`, {
-        userData: JSON.stringify(response.user.reloadUserInfo)
+        userData: response
       }).then(response => {
         let userData = response.data.userData;
         dispatch(Login(userData));
@@ -52,6 +52,7 @@ function SignUpModal({ show, setShow, mode }) {
         setisLoading(false)
         handleClose()
       }).catch(error => {
+        console.log(error)
         setisLoading(false)
       })
     }).catch(error => {
@@ -67,8 +68,8 @@ function SignUpModal({ show, setShow, mode }) {
       displayName: userName
     })
       .then((response) => {
-        dispatch(Login(response.data.userRecord))
-        localStorage.setItem('userData', JSON.stringify(response.data.userRecord))
+        console.log('register response :: ', response)
+        //Prompt popup modal to alert user register successfully
         setisLoading(false)
         handleClose()
       })
@@ -84,6 +85,7 @@ function SignUpModal({ show, setShow, mode }) {
       password: password
     })
       .then((response) => {
+        console.log('signing :: ', response)
         dispatch(Login(response.data.signInData))
         localStorage.setItem('userData', JSON.stringify(response.data.signInData))
         setisLoading(false)
