@@ -5,14 +5,17 @@ import { Home } from "pages/homepage";
 import { EditFormPage } from "pages/editpages_form";
 import { GoalBased } from "pages/goalbased";
 import { NewTaxGoal } from "pages/newtaxgoal";
-import { useDispatch } from "react-redux";
-import { Login } from './store/UserSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { LoginWithLocalData } from './store/UserSlice';
 function App() {
+  const userStore = useSelector(state => state.userStore)
   const dispatch = useDispatch()
   try {
-    const localUser = localStorage.getItem('userData')
-    if (localUser) {
-      dispatch(Login(JSON.parse(localUser)))
+    if (userStore.userId === null) {
+      const localUser = localStorage.getItem('userData')
+      if (localUser) {
+        dispatch(LoginWithLocalData(JSON.parse(localUser)))
+      }
     }
   } catch (e) {
     console.log(e)
