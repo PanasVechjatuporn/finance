@@ -1,20 +1,18 @@
 require('dotenv').config({ path: '../.env' });
 const firebaseAdmin = require('../configs/firebaseConfig');
-const post_db = require('../controllers/postDatabase')
+const mongoController = require('../controllers/mongoController')
 
 exports.signup = async (req, res) => {
   console.log(req.body)
-  const { email, password } = req.body;
+  const { email, password, displayName } = req.body;
   firebaseAdmin.auth()
     .createUser({
       email: email,
       password: password,
+      displayName: displayName
     })
     .then((userRecord) => {
-      // See the UserRecord reference doc for the contents of userRecord.
-      console.log('Successfully created new user:', userRecord.uid);
-      post_db.insert_one_user(userRecord)
-      // console.log(userRecord)
+      mongoController.create_new_user(userRecord)
       res.status(200).json({ userRecord });
     })
     .catch((error) => {
@@ -42,15 +40,9 @@ exports.signin = async (req, res) => {
       throw new Error(errorData.error.message);
     }
     const signInData = await signInResponse.json();
-    // console.log(signInData)
     res.status(200).json({ signInData });
   } catch (error) {
     console.error('Error signing in user:', error.message);
     res.status(401).json({ message: 'Authentication failed' });
   }
 };
-exports.signout = async (req, res) => {
-};
-exports.checkuid = async (req, res) => {
-
-}
