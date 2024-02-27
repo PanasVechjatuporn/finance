@@ -31,6 +31,7 @@ function OverlayLoading({ isLoading }) {
     </div>
   );
 }
+
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);
   const dispatch = useDispatch();
@@ -47,10 +48,10 @@ function SignUpModal({ show, setShow, mode }) {
         const userData = response.data.userData;
         dispatch(Login(userData))
         const storeObj = {
-          'userName' : userData.email,
-          'userId' : userData.uid,
-          'isLogIn' : true,
-          'userToken' : userData.stsTokenManager.accessToken
+          'userName': userData.email,
+          'userId': userData.uid,
+          'isLogIn': true,
+          'userToken': userData.stsTokenManager.accessToken
         }
         localStorage.setItem('userData', JSON.stringify(storeObj))
         setisLoading(false)
@@ -91,10 +92,10 @@ function SignUpModal({ show, setShow, mode }) {
         const userData = response.data.signInData
         dispatch(LoginEmailPassword(userData))
         const storeObj = {
-          'userName' : userData.email,
-          'userId' : userData.localId,
-          'isLogIn' : true,
-          'userToken' : userData.idToken
+          'userName': userData.email,
+          'userId': userData.localId,
+          'isLogIn': true,
+          'userToken': userData.idToken
         }
         localStorage.setItem('userData', JSON.stringify(storeObj))
         setisLoading(false)
