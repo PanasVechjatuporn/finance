@@ -2,12 +2,14 @@ const express = require("express");
 const firebaseRoute = require('./src/routes/firebaseRoute');
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const mongoRoute = require('./src/routes/mongoRoute');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/auth', firebaseRoute);
+app.use('/db', mongoRoute)
 
 module.exports = app;
 const PORT = process.env.PORT;

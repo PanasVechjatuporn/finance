@@ -12,7 +12,6 @@ function App() {
   const dispatch = useDispatch()
   try {
     const localUser = localStorage.getItem('userData')
-    console.log(localUser)
     if (localUser) {
       dispatch(Login(JSON.parse(localUser)))
     }

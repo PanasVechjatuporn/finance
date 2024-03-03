@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     userId: null,
     userName: null,
-    isLogIn: false
+    isLogIn: false,
+    userToken: null
 }
 
 export const userSlice = createSlice({
@@ -11,6 +12,7 @@ export const userSlice = createSlice({
     initialState: initialState,
     reducers: {
         Login: (state, action) => {
+            console.log(action.payload)
             let user_id
             if ('uid' in action.payload) {
                 user_id = action.payload.uid
@@ -26,6 +28,7 @@ export const userSlice = createSlice({
             state.userId = null;
             state.userName = null;
             state.isLogIn = false;
+            state.userToken = null;
         }
     }
 })
