@@ -7,6 +7,7 @@ import { GoalBased } from "pages/goalbased";
 import { NewTaxGoal } from "pages/newtaxgoal";
 import { useDispatch } from "react-redux";
 import { Login } from './store/UserSlice';
+import { SelectFund } from "pages/selectFund";
 function App() {
   const dispatch = useDispatch()
   try {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/dashboard/edit-form" element={<EditFormPage />} />
         <Route path="/Goal-Based" element={<GoalBased />} />
         <Route path="/Goal-Based/reduce-tax-goal" element={<NewTaxGoal />} />
+        <Route path="/Goal-Based/reduce-tax-goal/select-fund" element={<SelectFund />} />
       </Routes>
     </BrowserRouter>
   );
