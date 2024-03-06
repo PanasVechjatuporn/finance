@@ -107,10 +107,10 @@ function SignUpModal({ show, setShow, mode }) {
       });
   }
   return (
-    <Modal show={show}>
+    <Modal show={show} backdrop="static">
       <OverlayLoading isLoading={isLoading} />
       <Modal.Header closeButton onHide={handleClose}>
-        <Modal.Title>{mode === 'signup' ? 'Sign Up' : 'Sign In'}</Modal.Title>
+        <Modal.Title>{mode === 'signup' ? 'Sign Up' : mode === 'signin' ? 'Sign In' : 'Please Sign-in before using our service'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <FormControl>
