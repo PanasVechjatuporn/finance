@@ -9,6 +9,7 @@ var year
 var month
 
 const EditMonthDataModal = ({ show, onClose, clickedMonth }) => {
+    console.log('clickedMonth :: ',clickedMonth)
     if (show === true) {
         year = new Date(clickedMonth.date).getFullYear()
         month = new Date(clickedMonth.date).getMonth()
@@ -16,7 +17,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth }) => {
     }
 
     return (
-        <Modal show={show} onHide={onClose}>
+        <Modal show={show} onHide={onClose} backdrop="static">
             <Modal.Header closeButton>
                 <Modal.Title>Editing {monthString} of {year}</Modal.Title>
             </Modal.Header>

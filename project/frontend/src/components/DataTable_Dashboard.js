@@ -1,239 +1,132 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import Navigate from "components/Navbar";
+import { useSelector } from "react-redux";
+import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import "components/DataTable_Dashboard.css";
-
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.date}
-        </TableCell>
-        <TableCell align="center">{row.sumOfIncome}</TableCell>
-        <TableCell align="center">{row.sumOfInvestment}</TableCell>
-        <TableCell align="center">{row.sumOfExpense}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                {row.date}
-              </Typography>
-              <div style={{ display : 'flex'}}>
-                {/* Sub Tabel Income, Investment, Expense */}
-                <Table className='sub-table'>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center" colSpan={3} style={{fontSize: '12pt'}}>Income</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">Type</TableCell>
-                      <TableCell align="center">SubType</TableCell>
-                      <TableCell align="center">Amount</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  {
-                    row.dropdown.map((dropdownColumn) => (
-                      <React.Fragment key={dropdownColumn.name + row.date}>
-                        {dropdownColumn.data.map((dataItem) => (
-                          (dropdownColumn.name === "Income") ?
-                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfIncome}>
-                              {
-                                dataItem.map((dataEntry) => (
-                                  <TableRow>
-                                    <TableCell align="center">{dataEntry.type}</TableCell>
-                                    <TableCell align="center">{dataEntry.sub_type}</TableCell>
-                                    <TableCell align="center">{dataEntry.amount}</TableCell>
-                                  </TableRow>
-                                ))
-                              }
-                            </React.Fragment>
-                            : <></>
-                        ))}
-                      </React.Fragment>
-                    ))
-                  }
-                </Table>
-
-                <Table className='sub-table'>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Investment</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">Name</TableCell>
-                      <TableCell align="center">Amount</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  {
-                    row.dropdown.map((dropdownColumn) => (
-                      <React.Fragment key={dropdownColumn.name + row.date}>
-                        {dropdownColumn.data.map((dataItem) => (
-                          (dropdownColumn.name === "Investment") ?
-                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfInvestment}>
-                              {
-                                dataItem.map((dataEntry) => (
-                                  <TableRow>
-                                    <TableCell align="center">{dataEntry.name}</TableCell>
-                                    <TableCell align="center">{dataEntry.amount}</TableCell>
-                                  </TableRow>
-                                ))
-                              }
-                            </React.Fragment>
-                            : <></>
-                        ))}
-                      </React.Fragment>
-                    ))
-                  }
-                </Table>
-
-                <Table className='sub-table'>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Expense</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">Fixed Expense</TableCell>
-                      <TableCell align="center">Variable Expense</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  {
-                    row.dropdown.map((dropdownColumn) => (
-                      <React.Fragment key={dropdownColumn.name + row.date}>
-                        {dropdownColumn.data.map((dataItem) => (
-                          (dropdownColumn.name === "Expense") ?
-                            <React.Fragment key={dropdownColumn.name + row.date + row.sumOfExpense}>
-                              {
-                                <TableRow>
-                                  <TableCell align="center">{dataItem.fixed_expense}</TableCell>
-                                  <TableCell align="center">{dataItem.variable_expense}</TableCell>
-                                </TableRow>
-                              }
-                            </React.Fragment>
-                            : <></>
-                        ))}
-                      </React.Fragment>
-                    ))
-                  }
-                </Table>
-              </div>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { DataTableRow } from "components/DataTableRow";
+import mockData from "../mockupData/mockData";
+import { Button } from "react-bootstrap";
+const data = mockData;
+async function fetchUserData(userStore) {
+  // use axios to fetchUserData
+  return data;
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    sumOfIncome: PropTypes.number.isRequired,
-    sumOfInvestment: PropTypes.number.isRequired,
-    sumOfExpense: PropTypes.number.isRequired,
-    dropdown: PropTypes.arrayOf(
-      PropTypes.shape({
-      }),
-    ).isRequired,
-  }).isRequired,
+const groupDataByYear = (data) => {
+  return data.reduce((acc, item) => {
+      const year = item.date.split('-')[0];
+      const existingYear = acc.find(entry => entry.year === year);
+      if (existingYear) {
+          existingYear.data.push(item);
+      } else {
+          acc.push({ year, data: [item] });
+      }
+      return acc;
+  }, []);
 };
 
-function digestDataFromStartDateEndDate(data, startDate, endDate) {
-  const start = new Date(startDate).getTime();
-  const end = new Date(endDate).getTime();
+export default function MonthDataTable() {
+  const userStore = useSelector(state => state.userStore);
+    const [userData, setUserData] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [allYear, setAllYear] = useState(null);
+    const [currentYearData, setCurrentYearData] = useState(null);
 
-  const dataArray = data.filter(obj => {
-    const objDate = new Date(obj.date).getTime();
-    return objDate >= start && objDate <= end;
-  });
-  let tmpArray = []
-  dataArray.forEach(element => {
-    let sumOfIncome = 0
-    let sumOfInvestment = 0
-    let sumOFExpense = parseFloat(element.expense.fixed_expense) + parseFloat(element.expense.variable_expense)
-    element.income.forEach(obj => {
-      sumOfIncome += parseFloat(obj.amount)
-    })
-    element.investment.forEach(obj => {
-      sumOfInvestment += parseFloat(obj.amount)
-    })
-    tmpArray.push({
-      'date': element.date,
-      'sumOfIncome': sumOfIncome,
-      'sumOfInvestment': sumOfInvestment,
-      'sumOfExpense': sumOFExpense,
-      'dropdown': [
-        {
-          'name': 'Income',
-          'data': [
-            element.income
-          ]
-        },
-        {
-          'name': 'Investment',
-          'data': [
-            element.investment
-          ]
-        },
-        {
-          'name': 'Expense',
-          'data': [
-            element.expense
-          ]
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchUserData(userStore);
+                const groupedData = groupDataByYear(data)
+                const yearInData = groupedData.map(data => data.year)
+                if (yearInData.length > 0) {
+                    setSelectedYear(yearInData[0]);
+                    setCurrentYearData(groupedData.find(entry => entry.year === yearInData[0]));
+                }
+                setAllYear(yearInData)
+                setUserData(groupedData)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, [userStore]);
+
+    useEffect(() => {
+        if (userData && selectedYear) {
+            setCurrentYearData(userData.find(entry => entry.year === selectedYear));
         }
-      ]
-    })
-  })
-  return tmpArray
-}
+    }, [selectedYear, userData]);
 
-export default function MonthDataTable({ data, startDate, endDate }) {
-  const rows = digestDataFromStartDateEndDate(data, startDate, endDate)
+    if (!userData || !currentYearData) {
+        return (<div>Loading...</div>);
+    }
   return (
-    <Paper sx={{ width: '100%' }}>
-      <TableContainer >
-        <Table aria-label="collapsible table" className='main-table'>
-          <TableHead>
-            <TableRow align="center">
-              <TableCell/>
-              <TableCell style={{fontSize: '15pt'}}>Month</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Income</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Investment</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Expense</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <Row key={row.date} row={row} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <Container>
+                <Box style={{ marginTop: "5%" }}>
+                    <Paper style={{ position: "relative", paddingBottom: "70px" }}>
+                        <TableContainer style={{ height: "70vh" }}>
+                            <Table stickyHeader>
+                                <TableHead sx={{
+                                    "& th": {
+                                        color: "white",
+                                        backgroundColor: "orange"
+                                    }
+                                }} key={'table-header'}>
+                                    <TableRow key={'table-row-header'}>
+                                        <TableCell style={{ width: "1vh" }}></TableCell>
+                                        <TableCell style={{ width: "1vh" }}></TableCell>
+                                        <TableCell align="center" style={{ width: "10vh" }}>Month</TableCell>
+                                        <TableCell align="center">Income</TableCell>
+                                        <TableCell align="center">Investment</TableCell>
+                                        <TableCell align="center">Expense</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {currentYearData.data.map((monthData, index) => (
+                                        <DataTableRow key={`data-table-row-${index}`} dataMonth={monthData}></DataTableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Box style={{ position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "orange", display: "flex", justifyContent: "flex-end" }}>
+                            <Button style={{ marginRight: "12px" }}>New Month</Button>
+                            <FormControl variant="standard" style={{ marginLeft: "10px", marginRight: "12px" }}>
+                                <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                                <Select
+                                    labelId="year-selection"
+                                    id="year-selection"
+                                    value={selectedYear}
+                                    onChange={(e) => {
+                                        setSelectedYear(e.target.value);
+                                    }}
+                                >
+                                    {allYear.map((item, index) => (
+                                        <MenuItem key={index} value={item}>
+                                            {item}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <FormHelperText>Select year to create or edit data</FormHelperText>
+                            </FormControl>
+                            <Button>Save</Button>
+                        </Box>
+                    </Paper>
+                </Box>
+            </Container>
   );
 }
