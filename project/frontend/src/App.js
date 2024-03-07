@@ -8,11 +8,11 @@ import { NewTaxGoal } from "pages/newtaxgoal";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from './store/UserSlice';
 import axios from 'axios';
-const baseURL = "http://localhost:8000";
-import { useDispatch } from "react-redux";
 import { Login } from './store/UserSlice';
 import { Goal } from "pages/normalGoal";
 import { GoalFirst } from "pages/normalGoalFirst"
+const baseURL = "http://localhost:8000";
+
 
 function App() {
   const userStore = useSelector(state => state.userStore)
