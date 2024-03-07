@@ -108,7 +108,7 @@ export const DataTableRow = (dataMonth) => {
                     </Collapse>
                 </TableCell>
             </TableRow>
-            <EditMonthDataModal show={openModal} clickedMonth={monthData} onClose={handleEditClick}></EditMonthDataModal>
+            <EditMonthDataModal show={openModal} clickedMonth={monthData} onClose={handleEditClick} mode="editexisting"></EditMonthDataModal>
         </React.Fragment>
     );
 }
