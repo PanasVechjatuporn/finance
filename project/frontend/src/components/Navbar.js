@@ -64,6 +64,7 @@ function Navigate() {
   const dispatch = useDispatch()
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
   const handleShowSignUp = () => setShowSignUp(true);
   const handleShowSignIn = () => setShowSignIn(true);
   return (
@@ -98,14 +99,32 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href="/Dashboard">Dashboard</Navbar.Brand>
+            <Navbar.Brand href={'/Dashboard'} onClick={(e) => {
+              if (!userStore.isLogIn) {
+                setShowNotLoggedIn(true)
+                e.preventDefault();
+              }
+            }}
+            >
+              Dashboard
+            </Navbar.Brand>
+            <SignUpModal show={showNotLoggedIn} setShow={setShowNotLoggedIn} mode="notloggedin" />
           </Typography>
           <Typography
             variant="h8"
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href="/Goal-Based">Goal-Based</Navbar.Brand>
+            <Navbar.Brand href={'/Goal-Based'} onClick={(e) => {
+              if (!userStore.isLogIn) {
+                setShowNotLoggedIn(true)
+                e.preventDefault();
+              }
+            }}
+            >
+              Goal-Based
+            </Navbar.Brand>
+            <SignUpModal show={showNotLoggedIn} setShow={setShowNotLoggedIn} mode="notloggedin" />
           </Typography>
           <Typography
             variant="h8"

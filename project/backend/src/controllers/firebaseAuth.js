@@ -11,7 +11,7 @@ exports.signup = async (req, res) => {
       password: password,
       displayName: displayName
     })
-    .then((userRecord) => {
+    .then(async (userRecord) => {
       mongoController.create_new_user(userRecord)
       res.status(200).json({ userRecord });
     })
@@ -46,3 +46,32 @@ exports.signin = async (req, res) => {
     res.status(401).json({ message: 'Authentication failed' });
   }
 };
+
+exports.verifyIdToken = async (idToken, uid) => {
+  try {
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+    if (decodedToken.uid === uid) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.error('Error verifying token :: ', error);
+    throw error;
+  }
+}
+
+exports.verifyLocalUser = async (req, res) => {
+  try {
+    const localUser = JSON.parse(req.body.localUser)
+    const decodedUser = await firebaseAdmin.auth().verifyIdToken(localUser.userToken);
+    if (decodedUser.uid === localUser.userId) {
+      res.status(200).json({ message: 'Authenticated' })
+    } else {
+      res.status(401).json({ message: 'Please Login Again' })
+    }
+  } catch (error) {
+    console.error('Error validating local user :: ', error)
+    res.status(401).json({ message: 'Please Login Again' })
+  }
+}
