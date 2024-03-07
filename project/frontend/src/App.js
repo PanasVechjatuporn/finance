@@ -11,8 +11,8 @@ import axios from 'axios';
 const baseURL = "http://localhost:8000";
 function RequireAuth({ children, redirectTo }) {
   const localUser = JSON.parse(localStorage.getItem('userData'))
-  alert("Please Login")
   if (!localUser) {
+    alert("Please Login")
     return <Navigate to={redirectTo} />
   }
   return localUser.isLogIn ? children : <Navigate to={redirectTo} />;
@@ -27,8 +27,10 @@ function App() {
         axios.post(`${baseURL}/auth/veriylocaluser`, {
           localUser: localUser
         }).then(res => {
+          console.log('res :: ',res)
           dispatch(LoginWithLocalData(JSON.parse(localUser)))
         }).catch(e => {
+          localStorage.removeItem("userData");
           console.log(e)
         })
       }
