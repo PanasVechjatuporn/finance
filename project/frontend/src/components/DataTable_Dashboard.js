@@ -16,7 +16,6 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { DataTableRow } from "components/DataTableRow";
 import mockData from "../mockupData/mockData";
-import { Button } from "react-bootstrap";
 import EditMonthDataModal from "./editMonthDataModal";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -118,7 +117,7 @@ export default function MonthDataTable() {
                   <TableCell align="center" style={{ width: "10vh" }}>
                     Month
                   </TableCell>
-                  <TableCell align="center" >Income</TableCell>
+                  <TableCell align="center">Income</TableCell>
                   <TableCell align="center">Investment</TableCell>
                   <TableCell align="center">Expense</TableCell>
                 </TableRow>
@@ -200,6 +199,8 @@ export default function MonthDataTable() {
         show={openNewMonthModal}
         onClose={handleNewMonthClick}
         mode="newmonth"
+        currentYearData={currentYearData}
+        selectedYear={selectedYear}
       ></EditMonthDataModal>
     </Container>
   );
