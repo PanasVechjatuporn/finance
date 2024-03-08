@@ -14,15 +14,16 @@ import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { DataTableRow } from "components/DataTableRow";
-import mockData from "../mockupData/mockData";
-import EditMonthDataModal from "./editMonthDataModal";
+import { DataTableRow } from "components/DataTableRow_Dashboard";
+import mockData from "../mockupData/newMockMonthlyData";
+import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 const data = mockData;
 async function fetchUserData(userStore) {
   // use axios to fetchUserData
-  return data;
+  return [];
+  // return data;
 }
 
 const groupDataByYear = (data) => {
@@ -70,16 +71,28 @@ export default function MonthDataTable() {
     const fetchData = async () => {
       try {
         const data = await fetchUserData(userStore);
-        const groupedData = groupDataByYear(data);
-        const yearInData = groupedData.map((data) => data.year);
-        if (yearInData.length > 0) {
-          setSelectedYear(yearInData[0].toString());
-          setCurrentYearData(
-            groupedData.find((entry) => entry.year === yearInData[0])
-          );
+        if (data.length > 0) {
+          const groupedData = groupDataByYear(data);
+          const yearInData = groupedData.map((data) => data.year);
+          if (yearInData.length > 0) {
+            setSelectedYear(yearInData[0].toString());
+            setCurrentYearData(
+              groupedData.find((entry) => entry.year === yearInData[0])
+            );
+          }
+          setAllYear(yearInData);
+          setUserData(groupedData);
+        } else {
+          const currentDate = new Date();
+          const currentYearObj = {
+            data: [],
+            year: currentDate.getFullYear().toString(),
+          };
+          setSelectedYear(currentDate.getFullYear().toString());
+          setCurrentYearData(currentYearObj);
+          setAllYear([currentDate.getFullYear().toString()]);
+          setUserData([currentYearObj]);
         }
-        setAllYear(yearInData);
-        setUserData(groupedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -122,9 +135,13 @@ export default function MonthDataTable() {
                   <TableCell align="center">Expense</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBodyDashboard
-                currentYearData={currentYearData}
-              ></TableBodyDashboard>
+              {currentYearData.data.length > 0 ? (
+                <TableBodyDashboard
+                  currentYearData={currentYearData}
+                ></TableBodyDashboard>
+              ) : (
+                <></>
+              )}
               {currentYearData.data.length !== 12 ? (
                 <TableBody>
                   <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -191,7 +208,6 @@ export default function MonthDataTable() {
                 Select year to create or edit data
               </FormHelperText>
             </FormControl>
-            {/* <Button>Save</Button> */}
           </Box>
         </Paper>
       </Box>

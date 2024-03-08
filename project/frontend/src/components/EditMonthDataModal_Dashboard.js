@@ -12,7 +12,9 @@ import { Typography } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import "./editMonthDataModal.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import "./EditMonthDataModal_Dashboard.css";
 let monthString;
 let year;
 let month;
@@ -118,13 +120,49 @@ const EditMonthDataModal = ({
     const [expenseData, setExpenseData] = useState([]);
     const [investmentData, setInvestmentData] = useState([]);
 
+    const handleDeleteIncomeAtIndex = (index) => {
+        let tmpIncomeData = [...incomeData];
+        tmpIncomeData.splice(index, 1);
+        setIncomeData(tmpIncomeData);
+    };
+
     const handleAddIncomeData = () => {
         setIncomeData((prevIncomeData) => [...prevIncomeData, {}]);
     };
 
-    const handleIncomeAmountChange = (e, index) => { };
+    const handleIncomeAmountChange = (e, index) => {
+        let tmpIncomeData = [...incomeData];
+        tmpIncomeData[index].amount = e.target.value;
+        setIncomeData(tmpIncomeData);
+    };
 
-    const handleIncomeTypeChange = (e, index) => { };
+    const handleIncomeTypeChange = (e, index) => {
+        let tmpIncomeData = [...incomeData];
+        tmpIncomeData[index].type = e.target.value;
+        setIncomeData(tmpIncomeData);
+    };
+
+    const handleDeleteExpenseAtIndex = (index) => {
+        let tmpExpenseData = [...expenseData];
+        tmpExpenseData.splice(index, 1);
+        setExpenseData(tmpExpenseData);
+    };
+
+    const handleAddExpenseData = () => {
+        setExpenseData((prevExpenseData) => [...prevExpenseData, {}]);
+    };
+
+    const handleExpenseAmountChange = (e, index) => {
+        let tmpExpenseData = [...expenseData];
+        tmpExpenseData[index].amount = e.target.value;
+        setExpenseData(tmpExpenseData);
+    };
+
+    const handleExpenseTypeChange = (e, index) => {
+        let tmpExpenseData = [...expenseData];
+        tmpExpenseData[index].type = e.target.value;
+        setExpenseData(tmpExpenseData);
+    };
 
     if (show === true && mode === "editexisting") {
         year = new Date(clickedMonth.date).getFullYear();
@@ -160,6 +198,7 @@ const EditMonthDataModal = ({
             show={show}
             onHide={() => {
                 setIncomeData([]);
+                setExpenseData([]);
                 onClose();
             }}
             backdrop="static"
@@ -181,6 +220,7 @@ const EditMonthDataModal = ({
                     style={{ overflowY: "auto", maxHeight: `calc(100vh - 200px)` }}
                 >
                     <Row>
+                        {/* Income */}
                         <Col md={6}>
                             <div>
                                 <Typography
@@ -214,11 +254,9 @@ const EditMonthDataModal = ({
                                 {incomeData.length > 0 ? (
                                     incomeData.map((data, index) => (
                                         <Grid container spacing={2} key={index} alignItems="center">
-                                            {/* index */}
-                                            <Grid item>
+                                            {/* <Grid item>
                                                 <Typography>{index + 1 + "."}</Typography>
-                                            </Grid>
-                                            {/* income amount */}
+                                            </Grid> */}
                                             <Grid item>
                                                 <TextField
                                                     required
@@ -231,7 +269,6 @@ const EditMonthDataModal = ({
                                                     }}
                                                 />
                                             </Grid>
-                                            {/* income type */}
                                             <Grid item>
                                                 <FormControl
                                                     variant="standard"
@@ -250,14 +287,23 @@ const EditMonthDataModal = ({
                                                     >
                                                         {taxableIncome.map((type) => (
                                                             <MenuItem
-                                                                value={type.name}
+                                                                value={type.category}
                                                                 key={type.name + index}
                                                             >
-                                                                {type.name}{" "}
+                                                                {type.name}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
+                                            </Grid>
+                                            <Grid item>
+                                                <IconButton
+                                                    children={<DeleteIcon></DeleteIcon>}
+                                                    onClick={() => {
+                                                        console.log("handleDeleteIncomeAtIndex :: ");
+                                                        handleDeleteIncomeAtIndex(index);
+                                                    }}
+                                                ></IconButton>
                                             </Grid>
                                         </Grid>
                                     ))
@@ -266,14 +312,16 @@ const EditMonthDataModal = ({
                                 )}
                             </Container>
                             <Row>
-                                <Button
+                                <IconButton
                                     variant="text"
                                     children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
-                                    onClick={(e) => {
+                                    onClick={() => {
                                         handleAddIncomeData();
                                     }}
-                                ></Button>
+                                ></IconButton>
                             </Row>
+
+                            {/* Investment */}
                             <Typography
                                 variant="h4"
                                 style={{
@@ -300,6 +348,7 @@ const EditMonthDataModal = ({
                             </Typography>
                         </Col>
 
+                        {/* Expense */}
                         <Col md={6}>
                             <div>
                                 <Typography
@@ -326,6 +375,82 @@ const EditMonthDataModal = ({
                                 >
                                     Add/Edit Your Personal Expense
                                 </Typography>
+                                <Container>
+                                    {expenseData.length > 0 ? (
+                                        expenseData.map((data, index) => (
+                                            <Grid
+                                                container
+                                                spacing={2}
+                                                key={index}
+                                                alignItems="center"
+                                            >
+                                                {/* <Grid item>
+                                                <Typography>{index + 1 + "."}</Typography>
+                                            </Grid> */}
+                                                <Grid item>
+                                                    <TextField
+                                                        required
+                                                        id={"outlined-required" + index}
+                                                        label="รายจ่าย"
+                                                        size="small"
+                                                        margin="normal"
+                                                        onChange={(e) => {
+                                                            handleExpenseAmountChange(e, index);
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                {/* income type */}
+                                                <Grid item>
+                                                    <FormControl
+                                                        variant="standard"
+                                                        sx={{ m: 1, minWidth: 150 }}
+                                                    >
+                                                        <InputLabel id="demo-simple-select-standard-label">
+                                                            ประเภทของรายจ่าย
+                                                        </InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-standard-label"
+                                                            id="demo-simple-select-standard"
+                                                            onChange={(e) => { }}
+                                                            label="ประเภทของรายจ่าย"
+                                                        >
+                                                            {taxableIncome.map((type) => (
+                                                                <MenuItem
+                                                                    value={type.category}
+                                                                    key={type.name + index}
+                                                                >
+                                                                    {type.name}
+                                                                    {/* {type.name}{" "}{type.label} */}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                {/* delete button */}
+                                                <Grid item>
+                                                    <IconButton
+                                                        children={<DeleteIcon></DeleteIcon>}
+                                                        onClick={() => {
+                                                            console.log("handleDeleteExpenseAtIndex :: ");
+                                                            handleDeleteExpenseAtIndex(index);
+                                                        }}
+                                                    ></IconButton>
+                                                </Grid>
+                                            </Grid>
+                                        ))
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Container>
+                                <Row>
+                                    <IconButton
+                                        variant="text"
+                                        children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
+                                        onClick={() => {
+                                            handleAddExpenseData();
+                                        }}
+                                    ></IconButton>
+                                </Row>
                             </div>
                         </Col>
                     </Row>
@@ -336,6 +461,7 @@ const EditMonthDataModal = ({
                     variant="secondary"
                     onClick={() => {
                         setIncomeData([]);
+                        setExpenseData([]);
                         onClose();
                     }}
                 >
