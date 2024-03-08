@@ -45,12 +45,12 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 {row.date}
               </Typography>
-              <div style={{ display : 'flex'}}>
+              <div style={{ display: 'flex' }}>
                 {/* Sub Tabel Income, Investment, Expense */}
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={3} style={{fontSize: '12pt'}}>Income</TableCell>
+                      <TableCell align="center" colSpan={3} style={{ fontSize: '12pt' }}>Income</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Type</TableCell>
@@ -84,7 +84,7 @@ function Row(props) {
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Investment</TableCell>
+                      <TableCell align="center" colSpan={2} style={{ fontSize: '12pt' }}>Investment</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Name</TableCell>
@@ -116,7 +116,7 @@ function Row(props) {
                 <Table className='sub-table'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" colSpan={2} style={{fontSize: '12pt'}}>Expense</TableCell>
+                      <TableCell align="center" colSpan={2} style={{ fontSize: '12pt' }}>Expense</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="center">Fixed Expense</TableCell>
@@ -220,11 +220,11 @@ export default function MonthDataTable({ data, startDate, endDate }) {
         <Table aria-label="collapsible table" className='main-table'>
           <TableHead>
             <TableRow align="center">
-              <TableCell/>
-              <TableCell style={{fontSize: '15pt'}}>Month</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Income</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Investment</TableCell>
-              <TableCell align="center" style={{fontSize: '15pt'}}>Expense</TableCell>
+              <TableCell />
+              <TableCell style={{ fontSize: '15pt' }}>Month</TableCell>
+              <TableCell align="center" style={{ fontSize: '15pt' }}>Income</TableCell>
+              <TableCell align="center" style={{ fontSize: '15pt' }}>Investment</TableCell>
+              <TableCell align="center" style={{ fontSize: '15pt' }}>Expense</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
