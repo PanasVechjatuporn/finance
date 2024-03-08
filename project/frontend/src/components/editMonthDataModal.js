@@ -110,26 +110,6 @@ const taxableIncome = [
     },
 ];
 
-const SelectIncomeType = () => {
-    return (
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
-            <InputLabel id="demo-simple-select-standard-label">
-                ประเภทของรายได้
-            </InputLabel>
-            <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                onChange={(e) => { }}
-                label="ประเภทของรายได้"
-            >
-                {taxableIncome.map((type) => (
-                    <MenuItem value={type.name}>{type.name} </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    );
-};
-
 const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
     // const [monthData, setMonthData] = useState(clickedMonth);
     const [incomeData, setIncomeData] = useState([]);
@@ -145,7 +125,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
         // console.log('value passed :: ', e.target.value)
         // console.log('index passed :: ', index)
     }
-    
+
     const handleIncomeTypeChange = (e, index) => {
         // console.log('value passed :: ', e.target.value)
         // console.log('index passed :: ', index)
