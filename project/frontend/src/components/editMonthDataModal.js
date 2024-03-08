@@ -17,9 +17,10 @@ import IconButton from "@mui/material/IconButton";
 import { calcs } from "grommet";
 import Grid from "@mui/material/Grid";
 import "./editMonthDataModal.css";
-var monthString;
-var year;
-var month;
+import { current } from "@reduxjs/toolkit";
+let monthString;
+let year;
+let month;
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -110,28 +111,26 @@ const taxableIncome = [
     },
 ];
 
-const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
-    // const [monthData, setMonthData] = useState(clickedMonth);
+const EditMonthDataModal = ({
+    show,
+    onClose,
+    clickedMonth,
+    mode,
+    currentYearData,
+    selectedYear,
+}) => {
     const [incomeData, setIncomeData] = useState([]);
+    const [expenseData, setExpenseData] = useState([]);
+    const [investmentData, setInvestmentData] = useState([]);
+
     const handleAddIncomeData = () => {
         setIncomeData((prevIncomeData) => [...prevIncomeData, {}]);
     };
-    
-    // useEffect(() => {
-    //     setMonthData()
-    // },[incomeData])
 
-    const handleIncomeAmountChange = (e, index) => {
-        // console.log('value passed :: ', e.target.value)
-        // console.log('index passed :: ', index)
-    }
+    const handleIncomeAmountChange = (e, index) => { };
 
-    const handleIncomeTypeChange = (e, index) => {
-        // console.log('value passed :: ', e.target.value)
-        // console.log('index passed :: ', index)
-    }
+    const handleIncomeTypeChange = (e, index) => { };
 
-    useEffect(() => { }, [clickedMonth]);
     if (show === true && mode === "editexisting") {
         year = new Date(clickedMonth.date).getFullYear();
         month = new Date(clickedMonth.date).getMonth();
@@ -139,16 +138,48 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
             month: "long",
         });
     }
+    let newMonthString;
+    let newYearString;
+
+    if (currentYearData && currentYearData.data.length && mode === "newmonth") {
+        const lastDateTime = new Date(
+            currentYearData.data[currentYearData.data.length - 1].date
+        );
+        lastDateTime.setMonth(lastDateTime.getMonth() + 1);
+        [newMonthString, newYearString] = [
+            new Date(lastDateTime).toLocaleString("en-us", { month: "long" }),
+            lastDateTime.getFullYear().toString(),
+        ];
+    } else if (currentYearData) {
+        [newMonthString, newYearString] = [
+            new Date(new Date().setMonth(currentYearData.data.length)).toLocaleString(
+                "en-us",
+                { month: "long" }
+            ),
+            selectedYear,
+        ];
+    }
+
     return (
-        <Modal show={show} onHide={onClose} backdrop="static">
+        <Modal
+            show={show}
+            onHide={() => {
+                setIncomeData([]);
+                onClose();
+            }}
+            backdrop="static"
+            className="edit-modal"
+        >
             <Modal.Header closeButton>
                 {mode === "editexisting" ? (
                     <Modal.Title>
                         Editing {monthString} of {year}
                     </Modal.Title>
-                ) : (
-                    <Modal.Title>New Month</Modal.Title>
-                )}
+                ) : currentYearData ? (
+                    <Modal.Title>
+                        Adding {newMonthString} of {newYearString}
+                    </Modal.Title>
+                ) : null}
             </Modal.Header>
             <Modal.Body>
                 <Container
@@ -167,7 +198,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                         display: "inline-block",
                                         width: "100%",
                                         paddingBottom: "8px",
-                                        userSelect: "none"
+                                        userSelect: "none",
                                     }}
                                 >
                                     Income
@@ -178,7 +209,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                         color: "#757575",
                                         textDecorationColor: "transparent",
                                         width: "100%",
-                                        userSelect: "none"
+                                        userSelect: "none",
                                     }}
                                 >
                                     Add/Edit Source of Income
@@ -201,13 +232,16 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                                     size="small"
                                                     margin="normal"
                                                     onChange={(e) => {
-                                                        handleIncomeAmountChange(e, index)
+                                                        handleIncomeAmountChange(e, index);
                                                     }}
                                                 />
                                             </Grid>
                                             {/* income type */}
                                             <Grid item>
-                                                <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
+                                                <FormControl
+                                                    variant="standard"
+                                                    sx={{ m: 1, minWidth: 150 }}
+                                                >
                                                     <InputLabel id="demo-simple-select-standard-label">
                                                         ประเภทของรายได้
                                                     </InputLabel>
@@ -215,12 +249,17 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                                         labelId="demo-simple-select-standard-label"
                                                         id="demo-simple-select-standard"
                                                         onChange={(e) => {
-                                                            handleIncomeTypeChange(e, index)
+                                                            handleIncomeTypeChange(e, index);
                                                         }}
                                                         label="ประเภทของรายได้"
                                                     >
                                                         {taxableIncome.map((type) => (
-                                                            <MenuItem value={type.name} key = {type.name+index}>{type.name} </MenuItem>
+                                                            <MenuItem
+                                                                value={type.name}
+                                                                key={type.name + index}
+                                                            >
+                                                                {type.name}{" "}
+                                                            </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -293,13 +332,18 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                     Add/Edit Your Personal Expense
                                 </Typography>
                             </div>
-                            
                         </Col>
                     </Row>
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                        setIncomeData([]);
+                        onClose();
+                    }}
+                >
                     Close
                 </Button>
                 <Button variant="primary" onClick={onClose}>
