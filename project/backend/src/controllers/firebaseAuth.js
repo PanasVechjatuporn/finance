@@ -56,7 +56,22 @@ exports.verifyIdToken = async (idToken, uid) => {
       return false
     }
   } catch (error) {
-    console.error('Error verifying token:', error);
+    console.error('Error verifying token :: ', error);
     throw error;
+  }
+}
+
+exports.verifyLocalUser = async (req, res) => {
+  try {
+    const localUser = JSON.parse(req.body.localUser)
+    const decodedUser = await firebaseAdmin.auth().verifyIdToken(localUser.userToken);
+    if (decodedUser.uid === localUser.userId) {
+      res.status(200).json({ message: 'Authenticated' })
+    } else {
+      res.status(401).json({ message: 'Please Login Again' })
+    }
+  } catch (error) {
+    console.error('Error validating local user :: ', error)
+    res.status(401).json({ message: 'Please Login Again' })
   }
 }

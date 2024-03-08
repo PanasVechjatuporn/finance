@@ -1,23 +1,21 @@
 import Button from "react-bootstrap/Button";
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Modal from "react-bootstrap/Modal";
 import Input from '@mui/joy/Input';
 import GoogleButton from "react-google-button";
-import FacebookLogin from "react-facebook-login";
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import "components/SignUpModal.css";
 import { signInWithGooglePopup } from "../utils/firebase.utils";
 import { useDispatch } from "react-redux";
 import axios from 'axios';
-import { Login } from '../store/UserSlice';
+import { Login, LoginEmailPassword } from '../store/UserSlice';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 const baseURL = "http://localhost:8000";
 
 function OverlayLoading({ isLoading }) {
   const [open, setOpen] = React.useState(false);
-
   React.useEffect(() => {
     setOpen(isLoading);
   }, [isLoading]);
@@ -33,9 +31,10 @@ function OverlayLoading({ isLoading }) {
     </div>
   );
 }
+
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [email, setEmail] = React.useState('');
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -46,9 +45,15 @@ function SignUpModal({ show, setShow, mode }) {
       axios.post(`${baseURL}/db/createuser_provider=google`, {
         userData: response
       }).then(response => {
-        let userData = response.data.userData;
-        dispatch(Login(userData));
-        localStorage.setItem('userData', JSON.stringify(response.data.userData))
+        const userData = response.data.userData;
+        dispatch(Login(userData))
+        const storeObj = {
+          'userName': userData.email,
+          'userId': userData.uid,
+          'isLogIn': true,
+          'userToken': userData.stsTokenManager.accessToken
+        }
+        localStorage.setItem('userData', JSON.stringify(storeObj))
         setisLoading(false)
         handleClose()
       }).catch(error => {
@@ -68,7 +73,6 @@ function SignUpModal({ show, setShow, mode }) {
       displayName: userName
     })
       .then((response) => {
-        console.log('register response :: ', response)
         //Prompt popup modal to alert user register successfully
         setisLoading(false)
         handleClose()
@@ -85,9 +89,15 @@ function SignUpModal({ show, setShow, mode }) {
       password: password
     })
       .then((response) => {
-        console.log('signing :: ', response)
-        dispatch(Login(response.data.signInData))
-        localStorage.setItem('userData', JSON.stringify(response.data.signInData))
+        const userData = response.data.signInData
+        dispatch(LoginEmailPassword(userData))
+        const storeObj = {
+          'userName': userData.email,
+          'userId': userData.localId,
+          'isLogIn': true,
+          'userToken': userData.idToken
+        }
+        localStorage.setItem('userData', JSON.stringify(storeObj))
         setisLoading(false)
         handleClose()
       })
@@ -97,10 +107,10 @@ function SignUpModal({ show, setShow, mode }) {
       });
   }
   return (
-    <Modal show={show}>
+    <Modal show={show} backdrop="static">
       <OverlayLoading isLoading={isLoading} />
       <Modal.Header closeButton onHide={handleClose}>
-        <Modal.Title>{mode === 'signup' ? 'Sign Up' : 'Sign In'}</Modal.Title>
+        <Modal.Title>{mode === 'signup' ? 'Sign Up' : mode === 'signin' ? 'Sign In' : 'Please Sign-in before using our service'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <FormControl>
@@ -128,11 +138,6 @@ function SignUpModal({ show, setShow, mode }) {
         }} />
       </div>
       <br></br>
-      {/* ******** NOTICE WILL BE ADDED LATER JA
-      <div className="btn-wrapper">
-        <FacebookLogin
-        ></FacebookLogin>
-      </div> */}
       <Modal.Footer>
         <Button variant="primary" onClick={(e) => {
           try {

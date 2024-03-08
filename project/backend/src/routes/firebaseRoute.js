@@ -5,4 +5,6 @@ router.post('/signup', firebaseAuth.signup);
 
 router.post('/signin', firebaseAuth.signin);
 
+router.post('/veriylocaluser', firebaseAuth.verifyLocalUser);
+
 module.exports = router;

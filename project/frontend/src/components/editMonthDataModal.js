@@ -16,7 +16,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { calcs } from "grommet";
 import Grid from "@mui/material/Grid";
-//import "./editMonthDataModal.css";
+import "./editMonthDataModal.css";
 var monthString;
 var year;
 var month;
@@ -110,33 +110,13 @@ const taxableIncome = [
     },
 ];
 
-const SelectIncomeType = () => {
-    return (
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
-            <InputLabel id="demo-simple-select-standard-label">
-                ประเภทของรายได้
-            </InputLabel>
-            <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                onChange={(e) => { }}
-                label="ประเภทของรายได้"
-            >
-                {taxableIncome.map((type) => (
-                    <MenuItem value={type.name}>{type.name} </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    );
-};
-
 const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
     // const [monthData, setMonthData] = useState(clickedMonth);
     const [incomeData, setIncomeData] = useState([]);
     const handleAddIncomeData = () => {
         setIncomeData((prevIncomeData) => [...prevIncomeData, {}]);
     };
-
+    
     // useEffect(() => {
     //     setMonthData()
     // },[incomeData])
@@ -240,7 +220,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                                         label="ประเภทของรายได้"
                                                     >
                                                         {taxableIncome.map((type) => (
-                                                            <MenuItem value={type.name} key={type.name + index}>{type.name} </MenuItem>
+                                                            <MenuItem value={type.name} key = {type.name+index}>{type.name} </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -313,7 +293,7 @@ const EditMonthDataModal = ({ show, onClose, clickedMonth, mode }) => {
                                     Add/Edit Your Personal Expense
                                 </Typography>
                             </div>
-
+                            
                         </Col>
                     </Row>
                 </Container>
