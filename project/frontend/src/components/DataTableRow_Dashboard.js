@@ -9,10 +9,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
-import EditMonthDataModal from "./editMonthDataModal";
+import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 function digestMonthDataParent(monthData){ //head of each month (outside)
+    console.log('monthData :: ',monthData)
     let sumIncome = 0
-    monthData.income.forEach(element => {
+    monthData.incomeData.forEach(element => {
         sumIncome += parseFloat(element.amount)
     });
     const result = {
