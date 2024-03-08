@@ -1,0 +1,46 @@
+[
+  {
+    "uid": "123456789firebaseUID",
+    "mongoDBID": "123456789mongoDBId",
+    "date": "2023-01",
+    "incomeData": [
+      {
+        "type": "1",
+        "amount": "12500"
+      }
+    ],
+    "expenseData": [
+      {
+        "label": "ค่าใช้จ่ายอะไรซักอย่าง",
+        "amount": "5000"
+      }
+    ],
+    "investmentData": [
+      {
+        "amcname": "SCB-1000",
+        "unitamount": "100",
+        "mongodbrecordid": "987654321mongoDBRecordId"
+      }
+    ]
+  },
+  {
+    "uid": "123456789firebaseUID",
+    "mongoDBID": "123456789mongoDBId",
+    "date": "2023-02",
+    "incomeData": [
+      {
+        "type": "1",
+        "amount": "12500"
+      }
+    ],
+    "expenseData": [
+      {
+        "label": "ค่าใช้จ่ายอะไรซักอย่าง",
+        "amount": "5000"
+      }
+    ],
+    "investmentData": {
+        "investment" : "2000"
+    }
+  }
+]
