@@ -27,7 +27,6 @@ function App() {
         axios.post(`${baseURL}/auth/veriylocaluser`, {
           localUser: localUser
         }).then(res => {
-          console.log('res :: ',res)
           dispatch(LoginWithLocalData(JSON.parse(localUser)))
         }).catch(e => {
           localStorage.removeItem("userData");

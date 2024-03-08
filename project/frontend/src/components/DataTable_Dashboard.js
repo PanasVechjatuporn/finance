@@ -118,12 +118,34 @@ export default function MonthDataTable() {
                   <TableCell align="center" style={{ width: "10vh" }}>
                     Month
                   </TableCell>
-                  <TableCell align="center">Income</TableCell>
+                  <TableCell align="center" >Income</TableCell>
                   <TableCell align="center">Investment</TableCell>
                   <TableCell align="center">Expense</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBodyDashboard currentYearData={currentYearData} handleNewMonthClick={handleNewMonthClick}></TableBodyDashboard>
+              <TableBodyDashboard
+                currentYearData={currentYearData}
+              ></TableBodyDashboard>
+              {currentYearData.data.length !== 12 ? (
+                <TableBody>
+                  <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+                    <TableCell
+                      colSpan={6}
+                      align="center"
+                      onClick={(e) => {
+                        handleNewMonthClick();
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <IconButton
+                        children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
+                      ></IconButton>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ) : (
+                <></>
+              )}
             </Table>
           </TableContainer>
           <Box
@@ -170,7 +192,7 @@ export default function MonthDataTable() {
                 Select year to create or edit data
               </FormHelperText>
             </FormControl>
-            <Button>Save</Button>
+            {/* <Button>Save</Button> */}
           </Box>
         </Paper>
       </Box>
@@ -183,7 +205,7 @@ export default function MonthDataTable() {
   );
 }
 
-const TableBodyDashboard = ({ currentYearData, handleNewMonthClick }) => {
+const TableBodyDashboard = ({ currentYearData }) => {
   return (
     <TableBody>
       {currentYearData.data.map((monthData, index) => (
@@ -192,24 +214,6 @@ const TableBodyDashboard = ({ currentYearData, handleNewMonthClick }) => {
           dataMonth={monthData}
         ></DataTableRow>
       ))}
-      {currentYearData.data.length !== 12 ? (
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-          <TableCell
-            colSpan={6}
-            align="center"
-            onClick={(e) => {
-              handleNewMonthClick();
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <IconButton
-              children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
-            ></IconButton>
-          </TableCell>
-        </TableRow>
-      ) : (
-        <></>
-      )}
     </TableBody>
   );
 };
