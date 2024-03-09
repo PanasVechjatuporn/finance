@@ -108,6 +108,42 @@ const taxableIncome = [
     },
 ];
 
+const expenseType = [
+    {
+        name: "รายจ่าย tmp 1",
+        category: 1
+    },
+    {
+        name: "รายจ่าย tmp 2",
+        category: 2
+    },
+    {
+        name: "รายจ่าย tmp 3",
+        category: 3
+    },
+    {
+        name: "รายจ่าย tmp 4",
+        category: 4
+    },
+    {
+        name: "รายจ่าย tmp 5",
+        category: 5
+    },
+    {
+        name: "รายจ่าย tmp 6",
+        category: 6
+    },
+    {
+        name: "รายจ่าย tmp 7",
+        category: 7
+    }
+    ,
+    {
+        name: "อื่นๆ",
+        category: 0
+    }
+];
+
 const EditMonthDataModal = ({
     show,
     onClose,
@@ -284,6 +320,7 @@ const EditMonthDataModal = ({
                                                             handleIncomeTypeChange(e, index);
                                                         }}
                                                         label="ประเภทของรายได้"
+                                                        value={incomeData[index].type ? incomeData[index].type : ""}
                                                     >
                                                         {taxableIncome.map((type) => (
                                                             <MenuItem
@@ -411,16 +448,16 @@ const EditMonthDataModal = ({
                                                         <Select
                                                             labelId="demo-simple-select-standard-label"
                                                             id="demo-simple-select-standard"
-                                                            onChange={(e) => { }}
+                                                            onChange={(e) => {handleExpenseTypeChange(e, index)}}
                                                             label="ประเภทของรายจ่าย"
+                                                            value={expenseData[index].type ? expenseData[index].type : ""}
                                                         >
-                                                            {taxableIncome.map((type) => (
+                                                            {expenseType.map((type) => (
                                                                 <MenuItem
                                                                     value={type.category}
                                                                     key={type.name + index}
                                                                 >
                                                                     {type.name}
-                                                                    {/* {type.name}{" "}{type.label} */}
                                                                 </MenuItem>
                                                             ))}
                                                         </Select>

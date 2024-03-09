@@ -22,6 +22,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 const data = mockData;
 async function fetchUserData(userStore) {
   // use axios to fetchUserData
+  console.log('fetching data')
   return [];
   // return data;
 }
