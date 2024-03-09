@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navigate from "components/Navbar";
-import EditMonthDataModal from "components/editMonthDataModal";
+import EditMonthDataModal from "components/EditMonthDataModal_Dashboard";
 import Button from "react-bootstrap/Button";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
