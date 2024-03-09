@@ -9,13 +9,9 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import questions from "./question";
-import "./RiskEval_GoalBased.css";
+import "./RiskEvalForm_RiskEvalNormal.css";
 
-import { Link, useNavigate } from "react-router-dom";
-
-export default function EvaluationForm({ setAllowedToAccessNormalGoal }) {
-  const navigate = useNavigate();
-
+export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(
@@ -54,8 +50,10 @@ export default function EvaluationForm({ setAllowedToAccessNormalGoal }) {
       0
     );
     setScore(totalScore);
-    setAllowedToAccessNormalGoal(true);
-    navigate("../Goal-based/normal-goal", { state: { score: totalScore } });
+    setshowRiskLevel(true);
+    setEvaluationResult(totalScore);
+
+    // navigate("../Goal-based/normal-goal", { state: { score: totalScore } });
   };
 
   const { question, options } = questions[currentQuestionIndex];
@@ -127,4 +125,4 @@ export default function EvaluationForm({ setAllowedToAccessNormalGoal }) {
       </Container>
     </React.Fragment>
   );
-}
+};
