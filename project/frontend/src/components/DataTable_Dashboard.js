@@ -15,11 +15,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { DataTableRow } from "components/DataTableRow_Dashboard";
-import mockData from "../mockupData/newMockMonthlyData";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-const data = mockData;
 async function fetchUserData(userStore) {
   // use axios to fetchUserData
   console.log('fetching data')
@@ -218,6 +216,7 @@ export default function MonthDataTable() {
         mode="newmonth"
         currentYearData={currentYearData}
         selectedYear={selectedYear}
+        userStore={userStore}
       ></EditMonthDataModal>
     </Container>
   );

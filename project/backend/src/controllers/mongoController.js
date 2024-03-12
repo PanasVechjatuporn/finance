@@ -58,8 +58,8 @@ exports.create_new_user_provider = async (req, res) => {
                     throw new Error('Unknown Provider');
             }
             res.status(200).json({ userData });
-        }else{
-            throw new Error('unauthorized access isVerify flag == false')
+        } else {
+            throw new Error('unauthorized access')
         }
     } catch (error) {
         console.log('Error occured in mongoController.create_new_user_provider: ', error)
@@ -67,6 +67,39 @@ exports.create_new_user_provider = async (req, res) => {
     }
 }
 
-exports.get_user_data_income_expense = async (req, res) => {
+exports.upsert_user_monthly_data = async (req, res) => {
+    const upsertData = req.body.upsertData
+    const userToken = req.header('Authorization')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, upsertData.user.userId)
+        if (isVerify) {
+            console.log('upsertData :: ', upsertData)
+            query = { userId: upsertData.user.userId, date: upsertData.currentDate };
+            await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        userId: upsertData.user.userId,
+                        date: upsertData.currentDate,
+                        incomeData: upsertData.incomeData,
+                        expenseData: upsertData.expenseData,
+                        investmentData: upsertData.investmentData
+                    }
+                },
+                { upsert: true }
+            );
+            res.status(200).json({ upsertData })
+        } else {
+            throw new Error('unauthorized access')
+        }
+    } catch (error) {
+        console.log('Error occured in mongoController.upsert_user_monthly_data: ', error)
+        res.status(401).json({ message: error });
+    }
+}
 
+exports.get_user_data_income_expense = async (req, res) => {
+    
 }
