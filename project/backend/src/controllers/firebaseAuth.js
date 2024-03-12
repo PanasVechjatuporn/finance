@@ -2,7 +2,7 @@ require('dotenv').config({ path: '../.env' });
 const firebaseAdmin = require('../configs/firebaseConfig');
 const mongoController = require('../controllers/mongoController')
 
-exports.signup = async (req, res) => {
+exports.signUp = async (req, res) => {
   console.log(req.body)
   const { email, password, displayName } = req.body;
   firebaseAdmin.auth()
@@ -21,7 +21,7 @@ exports.signup = async (req, res) => {
     });
 };
 
-exports.signin = async (req, res) => {
+exports.signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
     const signInResponse = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`, {

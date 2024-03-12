@@ -4,7 +4,7 @@ const firebaseAuth = require('../controllers/firebaseAuth')
 // Database Name
 const dbName = 'dev';
 
-exports.create_new_user = async (user) => {
+exports.createNewUser = async (user) => {
     const db = client.db(dbName)
     const collection = db.collection('users')
     try {
@@ -28,7 +28,7 @@ exports.create_new_user = async (user) => {
     }
 }
 
-exports.create_new_user_provider = async (req, res) => {
+exports.createNewUserWithProvider = async (req, res) => {
     const userData = req.body.userData.user
     const idToken = req.body.userData._tokenResponse.idToken
     const provider = req.params.provider
@@ -67,7 +67,7 @@ exports.create_new_user_provider = async (req, res) => {
     }
 }
 
-exports.upsert_user_monthly_data = async (req, res) => {
+exports.upsertUserMonthlyData = async (req, res) => {
     const upsertData = req.body.upsertData
     const userToken = req.header('Authorization')
     const db = client.db(dbName)
@@ -100,7 +100,7 @@ exports.upsert_user_monthly_data = async (req, res) => {
     }
 }
 
-exports.get_user_data_income_expense = async (req, res) => {
+exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header('userId')
     const userToken = req.header('Authorization')
     const db = client.db(dbName)
