@@ -101,5 +101,15 @@ exports.upsert_user_monthly_data = async (req, res) => {
 }
 
 exports.get_user_data_income_expense = async (req, res) => {
-    
+    const userId = req.header('userId')
+    const userToken = req.header('Authorization')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        res.status(200).json({})
+
+    } catch (error) {
+        console.log('Error occured in mongoController.get_user_data_income_expense: ', error)
+        res.status(401).json({ message: error });
+    }
 }

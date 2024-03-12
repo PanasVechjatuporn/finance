@@ -164,7 +164,6 @@ async function onSaveMonthData(
                 .then(() => {
                     const upsertData = {
                         user : {
-                            userName : userStore.userName,
                             userId : userStore.userId
                         },
                         currentDate : currentDate,

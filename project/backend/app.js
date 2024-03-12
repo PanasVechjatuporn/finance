@@ -1,8 +1,10 @@
 const express = require("express");
-const firebaseRoute = require('./src/routes/firebaseRoute');
-const bodyParser = require("body-parser");
 const cors = require('cors');
+
+const bodyParser = require("body-parser");
+
 const mongoRoute = require('./src/routes/mongoRoute');
+const firebaseRoute = require('./src/routes/firebaseRoute');
 
 const app = express();
 app.use(cors());

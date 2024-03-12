@@ -18,9 +18,23 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import axios from "axios";
+
+const baseURL = "http://localhost:8000";
 async function fetchUserData(userStore) {
   // use axios to fetchUserData
-  console.log('fetching data')
+  await axios
+  .get(
+    `${baseURL}/db/userdata_dashboard`,
+    {
+        headers: {
+            Authorization: userStore.userToken,
+            userId : userStore.userId
+        },
+    }
+  ).then(res => {
+
+  })
   return [];
   // return data;
 }
