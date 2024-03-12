@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -15,8 +16,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./EditMonthDataModal_Dashboard.css";
@@ -163,16 +162,15 @@ async function onSaveMonthData(
             Promise.all([validateMonthData(incomeData, expenseData, investmentData)])
                 .then(() => {
                     const upsertData = {
-                        user : {
-                            userId : userStore.userId
+                        user: {
+                            userId: userStore.userId,
                         },
-                        currentDate : currentDate,
+                        currentDate: currentDate,
                         incomeData,
                         expenseData,
                         investmentData,
                     };
                     try {
-                        console.log(JSON.stringify(upsertData, null, 2));
                         axios
                             .post(
                                 `${baseURL}/db/upsert_monthly`,
@@ -247,14 +245,49 @@ const EditMonthDataModal = ({
     mode,
     currentYearData,
     selectedYear,
-    userStore,
 }) => {
-    const currentMonth = String((new Date(new Date().setMonth(currentYearData.data.length))).getMonth() + 1).padStart(2,'0');
+    const userStore = useSelector((state) => state.userStore);
     const [incomeData, setIncomeData] = useState([{}]);
     const [expenseData, setExpenseData] = useState([{}]);
     const [investmentData, setInvestmentData] = useState(null);
     const [isLoading, setisLoading] = useState(false);
-    const [currentDate] = useState(selectedYear+'-'+currentMonth);
+    const [currentDate, setCurrentDate] = useState(null);
+    const [newMonthString, setNewMonthString] = useState('');
+    const [newYearString, setNewYearString] = useState('');
+
+    useEffect(() => {
+        if (mode === "newmonth") {
+            setCurrentDate(
+                selectedYear +
+                "-" +
+                String(
+                    new Date(
+                        new Date().setMonth(currentYearData.data.length)
+                    ).getMonth() + 1
+                ).padStart(2, "0")
+            );
+        } else {
+            setCurrentDate(clickedMonth.date);
+            setIncomeData(clickedMonth.incomeData);
+            setExpenseData(clickedMonth.expenseData);
+            setInvestmentData(clickedMonth.investmentData);
+        }
+    }, [mode, selectedYear, currentYearData, clickedMonth]);
+
+    useEffect(() => {
+        if (currentYearData && mode === "newmonth") {
+            //handle newmonth case
+        } else if (currentYearData) {
+            setNewMonthString(
+                new Date(new Date().setMonth(currentYearData.data.length)).toLocaleString(
+                    "en-us",
+                    { month: "long" }
+                )
+            );
+            setNewYearString(selectedYear);
+        }
+    }, [mode, selectedYear, currentYearData]);
+
     const handleDeleteIncomeAtIndex = (index) => {
         let tmpIncomeData = [...incomeData];
         tmpIncomeData.splice(index, 1);
@@ -300,7 +333,6 @@ const EditMonthDataModal = ({
     };
 
     const handleInvestmentAmountChange = (e) => {
-        console.log("Investment :: ", e.target.value);
         setInvestmentData(e.target.value);
     };
     if (show === true && mode === "editexisting") {
@@ -310,35 +342,11 @@ const EditMonthDataModal = ({
             month: "long",
         });
     }
-    let newMonthString;
-    let newYearString;
-
-    if (currentYearData && currentYearData.data.length && mode === "newmonth") {
-        const lastDateTime = new Date(
-            currentYearData.data[currentYearData.data.length - 1].date
-        );
-        lastDateTime.setMonth(lastDateTime.getMonth() + 1);
-        [newMonthString, newYearString] = [
-            new Date(lastDateTime).toLocaleString("en-us", { month: "long" }),
-            lastDateTime.getFullYear().toString(),
-        ];
-    } else if (currentYearData) {
-        [newMonthString, newYearString] = [
-            new Date(new Date().setMonth(currentYearData.data.length)).toLocaleString(
-                "en-us",
-                { month: "long" }
-            ),
-            selectedYear,
-        ];
-    }
 
     return (
         <Modal
             show={show}
             onHide={() => {
-                setIncomeData([]);
-                setExpenseData([]);
-                setInvestmentData(null);
                 onClose();
             }}
             backdrop="static"
@@ -405,6 +413,11 @@ const EditMonthDataModal = ({
                                                     onChange={(e) => {
                                                         handleIncomeAmountChange(e, index);
                                                     }}
+                                                    value={
+                                                        incomeData[index].amount
+                                                            ? incomeData[index].amount
+                                                            : ""
+                                                    }
                                                 />
                                             </Grid>
                                             <Grid item>
@@ -463,7 +476,6 @@ const EditMonthDataModal = ({
                                 ></IconButton>
                             </Row>
 
-                            {/* Investment */}
                             <Typography
                                 variant="h4"
                                 style={{
@@ -494,12 +506,13 @@ const EditMonthDataModal = ({
                                         <TextField
                                             required
                                             id={"investment-amount"}
-                                            label="รายได้"
+                                            label="เงินลงทุนเดือนนี้"
                                             size="small"
                                             margin="normal"
                                             onChange={(e) => {
                                                 handleInvestmentAmountChange(e);
                                             }}
+                                            value={investmentData ? investmentData : ""}
                                         />
                                     </FormControl>
                                 </Grid>
@@ -552,6 +565,11 @@ const EditMonthDataModal = ({
                                                         onChange={(e) => {
                                                             handleExpenseAmountChange(e, index);
                                                         }}
+                                                        value={
+                                                            expenseData[index].amount
+                                                                ? expenseData[index].amount
+                                                                : ""
+                                                        }
                                                     />
                                                 </Grid>
                                                 {/* income type */}
@@ -620,9 +638,6 @@ const EditMonthDataModal = ({
                 <Button
                     variant="secondary"
                     onClick={() => {
-                        setIncomeData([]);
-                        setExpenseData([]);
-                        setInvestmentData(null);
                         onClose();
                     }}
                 >
@@ -639,9 +654,8 @@ const EditMonthDataModal = ({
                                 investmentData,
                                 currentDate,
                                 setisLoading
-                            ).then((res) => {
-                                onClose();
-                            });
+                            );
+                            onClose();
                         } catch (err) {
                             alert(err);
                         }

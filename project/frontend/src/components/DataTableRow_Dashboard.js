@@ -12,11 +12,17 @@ import Box from '@mui/material/Box';
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 function digestMonthDataParent(monthData){ //head of each month (outside)
     let sumIncome = 0
+    let sumExpense = 0
     monthData.incomeData.forEach(element => {
         sumIncome += parseFloat(element.amount)
     });
+    monthData.expenseData.forEach(element => {
+        sumExpense += parseFloat(element.amount)
+    });
     const result = {
-        income : sumIncome
+        income : sumIncome,
+        expense : sumExpense,
+        investment : monthData.investmentData
     }
     return result
 }
@@ -51,10 +57,10 @@ export const DataTableRow = (dataMonth) => {
                     {headerData.income}
                 </TableCell>
                 <TableCell align="center">
-                    {/* {row.sumOfInvestment} */}
+                    {headerData.expense}
                 </TableCell>
                 <TableCell align="center">
-                    {/* {row.sumOfExpense} */}
+                    {headerData.investment}
                 </TableCell>
             </TableRow>
             <TableRow>
