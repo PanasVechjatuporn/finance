@@ -15,13 +15,26 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { DataTableRow } from "components/DataTableRow_Dashboard";
-import mockData from "../mockupData/newMockMonthlyData";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-const data = mockData;
+import axios from "axios";
+
+const baseURL = "http://localhost:8000";
 async function fetchUserData(userStore) {
   // use axios to fetchUserData
+  await axios
+  .get(
+    `${baseURL}/db/userdata_dashboard`,
+    {
+        headers: {
+            Authorization: userStore.userToken,
+            userId : userStore.userId
+        },
+    }
+  ).then(res => {
+
+  })
   return [];
   // return data;
 }
@@ -217,6 +230,7 @@ export default function MonthDataTable() {
         mode="newmonth"
         currentYearData={currentYearData}
         selectedYear={selectedYear}
+        userStore={userStore}
       ></EditMonthDataModal>
     </Container>
   );

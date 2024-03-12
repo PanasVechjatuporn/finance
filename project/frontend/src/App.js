@@ -1,8 +1,7 @@
 import "App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Dashboard } from "pages/dashboard";
-import { Home } from "pages/homepage";
-import { EditFormPage } from "pages/editpages_form";
+import { Dashboard } from "pages/Dashboard";
+import { Home } from "pages/Homepage";
 import { GoalBased } from "pages/goalbased";
 import { NewTaxGoal } from "pages/newtaxgoal";
 import { useDispatch, useSelector } from "react-redux";

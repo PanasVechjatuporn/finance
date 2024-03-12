@@ -11,7 +11,6 @@ import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 function digestMonthDataParent(monthData){ //head of each month (outside)
-    console.log('monthData :: ',monthData)
     let sumIncome = 0
     monthData.incomeData.forEach(element => {
         sumIncome += parseFloat(element.amount)

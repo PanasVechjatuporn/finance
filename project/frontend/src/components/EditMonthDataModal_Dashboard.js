@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -14,7 +15,12 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import "./EditMonthDataModal_Dashboard.css";
+const baseURL = "http://localhost:8000";
 let monthString;
 let year;
 let month;
@@ -108,6 +114,132 @@ const taxableIncome = [
     },
 ];
 
+const expenseType = [
+    {
+        name: "รายจ่าย tmp 1",
+        category: 1,
+    },
+    {
+        name: "รายจ่าย tmp 2",
+        category: 2,
+    },
+    {
+        name: "รายจ่าย tmp 3",
+        category: 3,
+    },
+    {
+        name: "รายจ่าย tmp 4",
+        category: 4,
+    },
+    {
+        name: "รายจ่าย tmp 5",
+        category: 5,
+    },
+    {
+        name: "รายจ่าย tmp 6",
+        category: 6,
+    },
+    {
+        name: "รายจ่าย tmp 7",
+        category: 7,
+    },
+    {
+        name: "อื่นๆ",
+        category: 0,
+    },
+];
+
+async function onSaveMonthData(
+    userStore,
+    incomeData,
+    expenseData,
+    investmentData,
+    currentDate,
+    setisLoading
+) {
+    return new Promise((resolve, reject) => {
+        try {
+            setisLoading(true);
+            Promise.all([validateMonthData(incomeData, expenseData, investmentData)])
+                .then(() => {
+                    const upsertData = {
+                        user : {
+                            userId : userStore.userId
+                        },
+                        currentDate : currentDate,
+                        incomeData,
+                        expenseData,
+                        investmentData,
+                    };
+                    try {
+                        console.log(JSON.stringify(upsertData, null, 2));
+                        axios
+                            .post(
+                                `${baseURL}/db/upsert_monthly`,
+                                {
+                                    upsertData,
+                                },
+                                {
+                                    headers: {
+                                        Authorization: userStore.userToken,
+                                    },
+                                }
+                            )
+                            .then((res) => {
+                                setisLoading(false);
+                                resolve(res);
+                            });
+                    } catch (err) {
+                        console.error("Error :: ", err);
+                        setisLoading(false);
+                        reject(err);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error saving data:", err);
+                    setisLoading(false);
+                    reject(err);
+                });
+        } catch (err) {
+            console.error("Error :: ", err);
+            setisLoading(false);
+            reject(err);
+        }
+    });
+}
+
+function validateMonthData(incomeData, expenseData, investmentData) {
+    return new Promise((resolve, reject) => {
+        if (
+            incomeData.length === 0 ||
+            expenseData.length === 0 ||
+            investmentData === ""
+        ) {
+            reject("Please fill in all the required fields");
+        } else {
+            resolve();
+        }
+    });
+}
+
+function OverlayLoading({ isLoading }) {
+    const [open, setOpen] = React.useState(false);
+    React.useEffect(() => {
+        setOpen(isLoading);
+    }, [isLoading]);
+
+    return (
+        <div>
+            <Backdrop
+                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={open}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </div>
+    );
+}
+
 const EditMonthDataModal = ({
     show,
     onClose,
@@ -115,11 +247,14 @@ const EditMonthDataModal = ({
     mode,
     currentYearData,
     selectedYear,
+    userStore,
 }) => {
-    const [incomeData, setIncomeData] = useState([]);
-    const [expenseData, setExpenseData] = useState([]);
-    const [investmentData, setInvestmentData] = useState([]);
-
+    const currentMonth = String((new Date(new Date().setMonth(currentYearData.data.length))).getMonth() + 1).padStart(2,'0');
+    const [incomeData, setIncomeData] = useState([{}]);
+    const [expenseData, setExpenseData] = useState([{}]);
+    const [investmentData, setInvestmentData] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
+    const [currentDate] = useState(selectedYear+'-'+currentMonth);
     const handleDeleteIncomeAtIndex = (index) => {
         let tmpIncomeData = [...incomeData];
         tmpIncomeData.splice(index, 1);
@@ -164,6 +299,10 @@ const EditMonthDataModal = ({
         setExpenseData(tmpExpenseData);
     };
 
+    const handleInvestmentAmountChange = (e) => {
+        console.log("Investment :: ", e.target.value);
+        setInvestmentData(e.target.value);
+    };
     if (show === true && mode === "editexisting") {
         year = new Date(clickedMonth.date).getFullYear();
         month = new Date(clickedMonth.date).getMonth();
@@ -199,11 +338,13 @@ const EditMonthDataModal = ({
             onHide={() => {
                 setIncomeData([]);
                 setExpenseData([]);
+                setInvestmentData(null);
                 onClose();
             }}
             backdrop="static"
             className="edit-modal"
         >
+            <OverlayLoading isLoading={isLoading} />
             <Modal.Header closeButton>
                 {mode === "editexisting" ? (
                     <Modal.Title>
@@ -254,13 +395,10 @@ const EditMonthDataModal = ({
                                 {incomeData.length > 0 ? (
                                     incomeData.map((data, index) => (
                                         <Grid container spacing={2} key={index} alignItems="center">
-                                            {/* <Grid item>
-                                                <Typography>{index + 1 + "."}</Typography>
-                                            </Grid> */}
                                             <Grid item>
                                                 <TextField
                                                     required
-                                                    id={"outlined-required" + index}
+                                                    id={"income-amount" + index}
                                                     label="รายได้"
                                                     size="small"
                                                     margin="normal"
@@ -274,16 +412,21 @@ const EditMonthDataModal = ({
                                                     variant="standard"
                                                     sx={{ m: 1, minWidth: 150 }}
                                                 >
-                                                    <InputLabel id="demo-simple-select-standard-label">
+                                                    <InputLabel id="income-type-label">
                                                         ประเภทของรายได้
                                                     </InputLabel>
                                                     <Select
-                                                        labelId="demo-simple-select-standard-label"
-                                                        id="demo-simple-select-standard"
+                                                        labelId={"income-select-label" + index}
+                                                        id="income-type-field"
                                                         onChange={(e) => {
                                                             handleIncomeTypeChange(e, index);
                                                         }}
                                                         label="ประเภทของรายได้"
+                                                        value={
+                                                            incomeData[index].type
+                                                                ? incomeData[index].type
+                                                                : ""
+                                                        }
                                                     >
                                                         {taxableIncome.map((type) => (
                                                             <MenuItem
@@ -300,7 +443,6 @@ const EditMonthDataModal = ({
                                                 <IconButton
                                                     children={<DeleteIcon></DeleteIcon>}
                                                     onClick={() => {
-                                                        console.log("handleDeleteIncomeAtIndex :: ");
                                                         handleDeleteIncomeAtIndex(index);
                                                     }}
                                                 ></IconButton>
@@ -346,6 +488,22 @@ const EditMonthDataModal = ({
                             >
                                 Add Investment Amount
                             </Typography>
+                            <Container>
+                                <Grid container spacing={2} alignItems="center">
+                                    <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
+                                        <TextField
+                                            required
+                                            id={"investment-amount"}
+                                            label="รายได้"
+                                            size="small"
+                                            margin="normal"
+                                            onChange={(e) => {
+                                                handleInvestmentAmountChange(e);
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                            </Container>
                         </Col>
 
                         {/* Expense */}
@@ -384,13 +542,10 @@ const EditMonthDataModal = ({
                                                 key={index}
                                                 alignItems="center"
                                             >
-                                                {/* <Grid item>
-                                                <Typography>{index + 1 + "."}</Typography>
-                                            </Grid> */}
                                                 <Grid item>
                                                     <TextField
                                                         required
-                                                        id={"outlined-required" + index}
+                                                        id={"expense-amount" + index}
                                                         label="รายจ่าย"
                                                         size="small"
                                                         margin="normal"
@@ -405,22 +560,28 @@ const EditMonthDataModal = ({
                                                         variant="standard"
                                                         sx={{ m: 1, minWidth: 150 }}
                                                     >
-                                                        <InputLabel id="demo-simple-select-standard-label">
+                                                        <InputLabel id="expense-type-label">
                                                             ประเภทของรายจ่าย
                                                         </InputLabel>
                                                         <Select
-                                                            labelId="demo-simple-select-standard-label"
-                                                            id="demo-simple-select-standard"
-                                                            onChange={(e) => { }}
+                                                            labelId={"expense-select-label" + index}
+                                                            id="expense-type-field"
+                                                            onChange={(e) => {
+                                                                handleExpenseTypeChange(e, index);
+                                                            }}
                                                             label="ประเภทของรายจ่าย"
+                                                            value={
+                                                                expenseData[index].type
+                                                                    ? expenseData[index].type
+                                                                    : ""
+                                                            }
                                                         >
-                                                            {taxableIncome.map((type) => (
+                                                            {expenseType.map((type) => (
                                                                 <MenuItem
                                                                     value={type.category}
                                                                     key={type.name + index}
                                                                 >
                                                                     {type.name}
-                                                                    {/* {type.name}{" "}{type.label} */}
                                                                 </MenuItem>
                                                             ))}
                                                         </Select>
@@ -431,7 +592,6 @@ const EditMonthDataModal = ({
                                                     <IconButton
                                                         children={<DeleteIcon></DeleteIcon>}
                                                         onClick={() => {
-                                                            console.log("handleDeleteExpenseAtIndex :: ");
                                                             handleDeleteExpenseAtIndex(index);
                                                         }}
                                                     ></IconButton>
@@ -462,12 +622,31 @@ const EditMonthDataModal = ({
                     onClick={() => {
                         setIncomeData([]);
                         setExpenseData([]);
+                        setInvestmentData(null);
                         onClose();
                     }}
                 >
                     Close
                 </Button>
-                <Button variant="primary" onClick={onClose}>
+                <Button
+                    variant="primary"
+                    onClick={async () => {
+                        try {
+                            await onSaveMonthData(
+                                userStore,
+                                incomeData,
+                                expenseData,
+                                investmentData,
+                                currentDate,
+                                setisLoading
+                            ).then((res) => {
+                                onClose();
+                            });
+                        } catch (err) {
+                            alert(err);
+                        }
+                    }}
+                >
                     Save
                 </Button>
             </Modal.Footer>

@@ -4,7 +4,7 @@ const firebaseAuth = require('../controllers/firebaseAuth')
 // Database Name
 const dbName = 'dev';
 
-exports.create_new_user = async (user) => {
+exports.createNewUser = async (user) => {
     const db = client.db(dbName)
     const collection = db.collection('users')
     try {
@@ -28,7 +28,7 @@ exports.create_new_user = async (user) => {
     }
 }
 
-exports.create_new_user_provider = async (req, res) => {
+exports.createNewUserWithProvider = async (req, res) => {
     const userData = req.body.userData.user
     const idToken = req.body.userData._tokenResponse.idToken
     const provider = req.params.provider
@@ -58,8 +58,8 @@ exports.create_new_user_provider = async (req, res) => {
                     throw new Error('Unknown Provider');
             }
             res.status(200).json({ userData });
-        }else{
-            throw new Error('unauthorized access isVerify flag == false')
+        } else {
+            throw new Error('unauthorized access')
         }
     } catch (error) {
         console.log('Error occured in mongoController.create_new_user_provider: ', error)
@@ -67,6 +67,49 @@ exports.create_new_user_provider = async (req, res) => {
     }
 }
 
-exports.get_user_data_income_expense = async (req, res) => {
+exports.upsertUserMonthlyData = async (req, res) => {
+    const upsertData = req.body.upsertData
+    const userToken = req.header('Authorization')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, upsertData.user.userId)
+        if (isVerify) {
+            console.log('upsertData :: ', upsertData)
+            query = { userId: upsertData.user.userId, date: upsertData.currentDate };
+            await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        userId: upsertData.user.userId,
+                        date: upsertData.currentDate,
+                        incomeData: upsertData.incomeData,
+                        expenseData: upsertData.expenseData,
+                        investmentData: upsertData.investmentData
+                    }
+                },
+                { upsert: true }
+            );
+            res.status(200).json({ upsertData })
+        } else {
+            throw new Error('unauthorized access')
+        }
+    } catch (error) {
+        console.log('Error occured in mongoController.upsert_user_monthly_data: ', error)
+        res.status(401).json({ message: error });
+    }
+}
 
+exports.getUserDataDashboard = async (req, res) => {
+    const userId = req.header('userId')
+    const userToken = req.header('Authorization')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        res.status(200).json({})
+
+    } catch (error) {
+        console.log('Error occured in mongoController.get_user_data_income_expense: ', error)
+        res.status(401).json({ message: error });
+    }
 }
