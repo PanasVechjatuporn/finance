@@ -32,7 +32,7 @@ export const RiskLevel = ({
 
   const handleCreateGoal = () => {
     setAllowedToAccessNormalGoal(true);
-    navigate("../Goal-based/normal-goal");
+    navigate("../Goal-based/normal-goal", { state: { profile: risk_profile } });
   };
 
   return (
@@ -48,7 +48,7 @@ export const RiskLevel = ({
           <Button variant="outlined" onClick={handleBackButton}>
             Back
           </Button>
-          <Button variant="outlined" onClick={handleCreateGoal}>
+          <Button variant="contained" onClick={handleCreateGoal}>
             Create Goal
           </Button>
         </Stack>

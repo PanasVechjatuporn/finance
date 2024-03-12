@@ -1,0 +1,23 @@
+.MainForm {
+    padding: 10px; 
+    border: 2px solid #ccc; 
+    border-radius: 5px; 
+    margin-top: 80px;
+    width: 20%; /* Set width to 50% of the page width */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin-left: 15% ; /* Center the div horizontally and add margin-top */
+  }
+
+.SubForm{
+  padding: 10px; 
+  border: 2px solid #ccc; 
+  border-radius: 5px; 
+  margin-top: 40px;
+  width: 20%; /* Set width to 50% of the page width */
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  margin-left: 15% ; /* Center the div horizontally and add margin-top */
+  }
