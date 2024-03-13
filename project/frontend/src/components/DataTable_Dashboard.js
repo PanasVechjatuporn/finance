@@ -177,6 +177,8 @@ export default function MonthDataTable() {
                       key={`data-table-row-${index}`}
                       dataMonth={monthData}
                       currentYearData={currentYearData}
+                      userData={userData}
+                      setUserData={setUserData}
                     ></DataTableRow>
                   ))}
                 </TableBody>
