@@ -259,6 +259,8 @@ export default function MonthDataTable() {
         currentYearData={currentYearData}
         selectedYear={selectedYear}
         setCurrentYearData={setCurrentYearData}
+        userData={userData}
+        setUserData={setUserData}
       ></EditMonthDataModal>
     </Container>
   );

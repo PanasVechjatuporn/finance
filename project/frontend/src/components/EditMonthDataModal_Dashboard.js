@@ -154,7 +154,9 @@ async function onSaveMonthData(
     currentDate,
     setisLoading,
     currentYearData,
-    setCurrentYearData
+    setCurrentYearData,
+    userData,
+    setUserData
 ) {
     try {
         setisLoading(true);
@@ -187,7 +189,7 @@ async function onSaveMonthData(
                 year: currentDate.split("-")[0]
             },
         })
-        modifyCurrentYearData(resFetchNewData.data,setCurrentYearData)
+        modifyUserDataByYear(currentDate.split("-")[0], resFetchNewData.data.queryResult, setUserData)
         setisLoading(false);
         return resUpsert;
     } catch (err) {
@@ -229,13 +231,16 @@ function OverlayLoading({ isLoading }) {
     );
 }
 
-const modifyCurrentYearData = (newData,setCurrentYearData) => {
-    const newArray = [...newData.queryResult];
-    setCurrentYearData(prevState => ({
-      ...prevState,
-      data: newArray
-    }));
-  };
+function modifyUserDataByYear(yearToChange, newData, setUserData) {
+    setUserData(prevState => {
+        return prevState.map(entry => {
+            if (entry.year === yearToChange) {
+                return { ...entry, data: newData };
+            }
+            return entry;
+        });
+    });
+}
 
 const EditMonthDataModal = ({
     show,
@@ -245,6 +250,8 @@ const EditMonthDataModal = ({
     currentYearData,
     selectedYear,
     setCurrentYearData,
+    userData,
+    setUserData
 }) => {
     const userStore = useSelector((state) => state.userStore);
     const [incomeData, setIncomeData] = useState([{}]);
@@ -646,7 +653,9 @@ const EditMonthDataModal = ({
                                 currentDate,
                                 setisLoading,
                                 currentYearData,
-                                setCurrentYearData
+                                setCurrentYearData,
+                                userData,
+                                setUserData
                             );
                             onClose();
                         } catch (err) {
