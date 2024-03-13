@@ -246,6 +246,8 @@ const EditMonthDataModal = ({
     const [newYearString, setNewYearString] = useState("");
 
     useEffect(() => {
+        console.log('clickedMonth :: ',clickedMonth)
+        console.log('currentYearData :: ',currentYearData)
         if (mode === "newmonth") {
             setCurrentDate(
                 selectedYear +
@@ -274,7 +276,7 @@ const EditMonthDataModal = ({
                 month: "long",
             }))
         }
-    }, [mode, selectedYear, currentYearData, clickedMonth]);
+    }, [mode, selectedYear, currentYearData, clickedMonth, userData]);
 
     const handleDeleteIncomeAtIndex = (index) => {
         let tmpIncomeData = [...incomeData];
@@ -328,6 +330,9 @@ const EditMonthDataModal = ({
         <Modal
             show={show}
             onHide={() => {
+                // setIncomeData([{}])
+                // setExpenseData([{}])
+                // setInvestmentData(null)
                 onClose();
             }}
             backdrop="static"
@@ -347,7 +352,7 @@ const EditMonthDataModal = ({
             </Modal.Header>
             <Modal.Body>
                 <Container
-                    style={{ overflowY: "auto", maxHeight: `calc(100vh - 200px)` }}
+                    style={{ overflowY: "auto", maxHeight: `calc(100vh - 200px)`, maxWidth:"100%" }}
                 >
                     <Row>
                         {/* Income */}
@@ -404,7 +409,7 @@ const EditMonthDataModal = ({
                                             <Grid item>
                                                 <FormControl
                                                     variant="standard"
-                                                    sx={{ m: 1, minWidth: 150 }}
+                                                    sx={{ m: 1, minWidth:200, maxWidth:200}}
                                                 >
                                                     <InputLabel id="income-type-label">
                                                         ประเภทของรายได้
@@ -557,7 +562,7 @@ const EditMonthDataModal = ({
                                                 <Grid item>
                                                     <FormControl
                                                         variant="standard"
-                                                        sx={{ m: 1, minWidth: 150 }}
+                                                        sx={{ m: 1, maxWidth: 125, minWidth: 125 }}
                                                     >
                                                         <InputLabel id="expense-type-label">
                                                             ประเภทของรายจ่าย
@@ -619,6 +624,9 @@ const EditMonthDataModal = ({
                 <Button
                     variant="secondary"
                     onClick={() => {
+                        // setIncomeData([{}])
+                        // setExpenseData([{}])
+                        // setInvestmentData(null)
                         onClose();
                     }}
                 >
@@ -640,6 +648,9 @@ const EditMonthDataModal = ({
                                 userData,
                                 setUserData
                             );
+                            // setIncomeData([{}])
+                            // setExpenseData([{}])
+                            // setInvestmentData(null)
                             onClose();
                         } catch (err) {
                             alert(err);
