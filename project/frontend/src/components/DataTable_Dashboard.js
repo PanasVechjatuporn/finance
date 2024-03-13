@@ -21,22 +21,29 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import axios from "axios";
 
 const baseURL = "http://localhost:8000";
-async function fetchUserData(userStore) {
-  // use axios to fetchUserData
-  await axios
-  .get(
-    `${baseURL}/db/userdata_dashboard`,
-    {
+function fetchUserData(userStore) {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      `${baseURL}/db/userdata_dashboard`,
+      {
         headers: {
-            Authorization: userStore.userToken,
-            userId : userStore.userId
+          Authorization: userStore.userToken,
+          userId: userStore.userId
         },
-    }
-  ).then(res => {
-
-  })
-  return [];
-  // return data;
+      }
+    )
+    .then(response => {
+      let data = []
+      response.data.queryResult.forEach(e => {
+        data.push(e)
+      })
+      resolve(data);
+    })
+    .catch(error => {
+      console.log('err :: ', error);
+      reject(error);
+    });
+  });
 }
 
 const groupDataByYear = (data) => {
@@ -53,6 +60,7 @@ const groupDataByYear = (data) => {
 };
 
 export default function MonthDataTable() {
+  //pass currentYearData prop to all child containing EditMonthDataModal
   const userStore = useSelector((state) => state.userStore);
   const [userData, setUserData] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -80,38 +88,33 @@ export default function MonthDataTable() {
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchUserData(userStore);
-        if (data.length > 0) {
-          const groupedData = groupDataByYear(data);
-          const yearInData = groupedData.map((data) => data.year);
-          if (yearInData.length > 0) {
-            setSelectedYear(yearInData[0].toString());
-            setCurrentYearData(
-              groupedData.find((entry) => entry.year === yearInData[0])
-            );
-          }
-          setAllYear(yearInData);
-          setUserData(groupedData);
-        } else {
-          const currentDate = new Date();
-          const currentYearObj = {
-            data: [],
-            year: currentDate.getFullYear().toString(),
-          };
-          setSelectedYear(currentDate.getFullYear().toString());
-          setCurrentYearData(currentYearObj);
-          setAllYear([currentDate.getFullYear().toString()]);
-          setUserData([currentYearObj]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+useEffect(() => {
+  Promise.all([fetchUserData(userStore)]).then(res => {
+    const data = res[0]
+    if (data.length > 0) {
+      const groupedData = groupDataByYear(data);
+      const yearInData = groupedData.map((data) => data.year);
+      if (yearInData.length > 0) {
+        setSelectedYear(yearInData[0].toString());
+        setCurrentYearData(
+          groupedData.find((entry) => entry.year === yearInData[0])
+        );
       }
-    };
-    fetchData();
-  }, [userStore]);
+      setAllYear(yearInData);
+      setUserData(groupedData);
+    } else {
+      const currentDate = new Date();
+      const currentYearObj = {
+        data: [],
+        year: currentDate.getFullYear().toString(),
+      };
+      setSelectedYear(currentDate.getFullYear().toString());
+      setCurrentYearData(currentYearObj);
+      setAllYear([currentDate.getFullYear().toString()]);
+      setUserData([currentYearObj]);
+    }
+  })
+}, [userStore]);
 
   useEffect(() => {
     if (userData && selectedYear) {
@@ -230,7 +233,6 @@ export default function MonthDataTable() {
         mode="newmonth"
         currentYearData={currentYearData}
         selectedYear={selectedYear}
-        userStore={userStore}
       ></EditMonthDataModal>
     </Container>
   );

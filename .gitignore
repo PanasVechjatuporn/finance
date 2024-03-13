@@ -128,6 +128,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-# service account keys: 2023-09-25
-*myfirebase-42f1f-firebase-adminsdk-m4q29-78682b3197.json

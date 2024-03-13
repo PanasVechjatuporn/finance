@@ -24,7 +24,7 @@ exports.createNewUser = async (user) => {
             console.log(insertResult)
         }
     } catch (error) {
-        console.log('Error occured in mongoController.create_new_user: ', error)
+        console.log('Error occured in mongoController.createNewUser: ', error)
     }
 }
 
@@ -62,7 +62,7 @@ exports.createNewUserWithProvider = async (req, res) => {
             throw new Error('unauthorized access')
         }
     } catch (error) {
-        console.log('Error occured in mongoController.create_new_user_provider: ', error)
+        console.log('Error occured in mongoController.createNewUserWithProvider: ', error)
         res.status(401).json({ message: error });
     }
 }
@@ -95,7 +95,7 @@ exports.upsertUserMonthlyData = async (req, res) => {
             throw new Error('unauthorized access')
         }
     } catch (error) {
-        console.log('Error occured in mongoController.upsert_user_monthly_data: ', error)
+        console.log('Error occured in mongoController.upsertUserMonthlyData: ', error)
         res.status(401).json({ message: error });
     }
 }
@@ -106,10 +106,14 @@ exports.getUserDataDashboard = async (req, res) => {
     const db = client.db(dbName)
     const collection = db.collection('income_expense')
     try {
-        res.status(200).json({})
-
+            query = { userId: userId };
+            const queryResult = await collection.find(
+                query
+            ).toArray();
+            res.status(200).json({ queryResult })
+        
     } catch (error) {
-        console.log('Error occured in mongoController.get_user_data_income_expense: ', error)
+        console.log('Error occured in mongoController.getUserDataDashboard: ', error)
         res.status(401).json({ message: error });
     }
 }
