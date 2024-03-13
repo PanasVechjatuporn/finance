@@ -18,31 +18,50 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
 const baseURL = "http://localhost:8000";
+
+function OverlayLoading({ isLoading }) {
+  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => {
+    setOpen(isLoading);
+  }, [isLoading]);
+
+  return (
+    <div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+  );
+}
+
 function fetchUserData(userStore) {
   return new Promise((resolve, reject) => {
-    axios.get(
-      `${baseURL}/db/userdata_dashboard`,
-      {
+    axios
+      .get(`${baseURL}/db/userdata_dashboard`, {
         headers: {
           Authorization: userStore.userToken,
-          userId: userStore.userId
+          userId: userStore.userId,
         },
-      }
-    )
-    .then(response => {
-      let data = []
-      response.data.queryResult.forEach(e => {
-        data.push(e)
       })
-      resolve(data);
-    })
-    .catch(error => {
-      console.log('err :: ', error);
-      reject(error);
-    });
+      .then((response) => {
+        let data = [];
+        response.data.queryResult.forEach((e) => {
+          data.push(e);
+        });
+        resolve(data);
+      })
+      .catch((error) => {
+        console.log("err :: ", error);
+        reject(error);
+      });
   });
 }
 
@@ -60,7 +79,6 @@ const groupDataByYear = (data) => {
 };
 
 export default function MonthDataTable() {
-  //pass currentYearData prop to all child containing EditMonthDataModal
   const userStore = useSelector((state) => state.userStore);
   const [userData, setUserData] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -88,33 +106,33 @@ export default function MonthDataTable() {
     });
   };
 
-useEffect(() => {
-  Promise.all([fetchUserData(userStore)]).then(res => {
-    const data = res[0]
-    if (data.length > 0) {
-      const groupedData = groupDataByYear(data);
-      const yearInData = groupedData.map((data) => data.year);
-      if (yearInData.length > 0) {
-        setSelectedYear(yearInData[0].toString());
-        setCurrentYearData(
-          groupedData.find((entry) => entry.year === yearInData[0])
-        );
+  useEffect(() => {
+    Promise.all([fetchUserData(userStore)]).then((res) => {
+      const data = res[0];
+      if (data.length > 0) {
+        const groupedData = groupDataByYear(data);
+        const yearInData = groupedData.map((data) => data.year);
+        if (yearInData.length > 0) {
+          setSelectedYear(yearInData[0].toString());
+          setCurrentYearData(
+            groupedData.find((entry) => entry.year === yearInData[0])
+          );
+        }
+        setAllYear(yearInData);
+        setUserData(groupedData);
+      } else {
+        const currentDate = new Date();
+        const currentYearObj = {
+          data: [],
+          year: currentDate.getFullYear().toString(),
+        };
+        setSelectedYear(currentDate.getFullYear().toString());
+        setCurrentYearData(currentYearObj);
+        setAllYear([currentDate.getFullYear().toString()]);
+        setUserData([currentYearObj]);
       }
-      setAllYear(yearInData);
-      setUserData(groupedData);
-    } else {
-      const currentDate = new Date();
-      const currentYearObj = {
-        data: [],
-        year: currentDate.getFullYear().toString(),
-      };
-      setSelectedYear(currentDate.getFullYear().toString());
-      setCurrentYearData(currentYearObj);
-      setAllYear([currentDate.getFullYear().toString()]);
-      setUserData([currentYearObj]);
-    }
-  })
-}, [userStore]);
+    });
+  }, [userStore]);
 
   useEffect(() => {
     if (userData && selectedYear) {
@@ -123,8 +141,9 @@ useEffect(() => {
   }, [selectedYear, userData]);
 
   if (!userData || !currentYearData) {
-    return <div>Loading...</div>;
+    return <OverlayLoading isLoading={true} />;
   }
+
   return (
     <Container>
       <Box style={{ marginTop: "5%" }}>
@@ -152,9 +171,15 @@ useEffect(() => {
                 </TableRow>
               </TableHead>
               {currentYearData.data.length > 0 ? (
-                <TableBodyDashboard
-                  currentYearData={currentYearData}
-                ></TableBodyDashboard>
+                <TableBody>
+                  {currentYearData.data.map((monthData, index) => (
+                    <DataTableRow
+                      key={`data-table-row-${index}`}
+                      dataMonth={monthData}
+                      currentYearData={currentYearData}
+                    ></DataTableRow>
+                  ))}
+                </TableBody>
               ) : (
                 <></>
               )}
@@ -233,20 +258,8 @@ useEffect(() => {
         mode="newmonth"
         currentYearData={currentYearData}
         selectedYear={selectedYear}
+        setCurrentYearData={setCurrentYearData}
       ></EditMonthDataModal>
     </Container>
   );
 }
-
-const TableBodyDashboard = ({ currentYearData }) => {
-  return (
-    <TableBody>
-      {currentYearData.data.map((monthData, index) => (
-        <DataTableRow
-          key={`data-table-row-${index}`}
-          dataMonth={monthData}
-        ></DataTableRow>
-      ))}
-    </TableBody>
-  );
-};
