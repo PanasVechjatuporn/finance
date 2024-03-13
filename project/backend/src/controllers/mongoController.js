@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '../.env' });
 const client = require('../utils/mongoUtils')
-const firebaseAuth = require('../controllers/firebaseAuth')
+const firebaseAuth = require('../controllers/firebaseAuth');
+const { query } = require('express');
 // Database Name
 const dbName = 'dev';
 
@@ -45,7 +46,7 @@ exports.createNewUserWithProvider = async (req, res) => {
                         displayName: userData.displayName,
                         provider: provider
                     }
-                    query = { uid: userData.uid }
+                    let query = { uid: userData.uid }
                     var findResult = await collection.findOne(query)
                     if (findResult) {
                         await collection.findOneAndReplace(query, obj, { returnNewDocument: true })
@@ -75,8 +76,7 @@ exports.upsertUserMonthlyData = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, upsertData.user.userId)
         if (isVerify) {
-            console.log('upsertData :: ', upsertData)
-            query = { userId: upsertData.user.userId, date: upsertData.currentDate };
+            let query = { userId: upsertData.user.userId, date: upsertData.currentDate };
             await collection.updateOne(
                 query,
                 {
@@ -85,7 +85,9 @@ exports.upsertUserMonthlyData = async (req, res) => {
                         date: upsertData.currentDate,
                         incomeData: upsertData.incomeData,
                         expenseData: upsertData.expenseData,
-                        investmentData: upsertData.investmentData
+                        investmentData: upsertData.investmentData,
+                        year: upsertData.currentDate.split("-")[0],
+                        month: parseInt(upsertData.currentDate.split("-")[1]).toString()
                     }
                 },
                 { upsert: true }
@@ -103,15 +105,19 @@ exports.upsertUserMonthlyData = async (req, res) => {
 exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header('userId')
     const userToken = req.header('Authorization')
+    const queryYear = req.header('year')
     const db = client.db(dbName)
     const collection = db.collection('income_expense')
     try {
-            query = { userId: userId };
-            const queryResult = await collection.find(
-                query
-            ).toArray();
-            res.status(200).json({ queryResult })
-        
+        let query = { userId: userId }
+        if(queryYear){
+            query.year = queryYear
+        }
+        const queryResult = await collection.find(
+            query
+        ).toArray();
+        res.status(200).json({ queryResult })
+
     } catch (error) {
         console.log('Error occured in mongoController.getUserDataDashboard: ', error)
         res.status(401).json({ message: error });
