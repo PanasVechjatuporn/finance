@@ -18,29 +18,10 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
+import OverlayLoading from "./OverlayLoading";
 import axios from "axios";
 
 const baseURL = "http://localhost:8000";
-
-function OverlayLoading({ isLoading }) {
-  const [open, setOpen] = React.useState(false);
-  React.useEffect(() => {
-    setOpen(isLoading);
-  }, [isLoading]);
-
-  return (
-    <div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
-  );
-}
 
 function fetchUserData(userStore) {
   return new Promise((resolve, reject) => {
@@ -166,8 +147,8 @@ export default function MonthDataTable() {
                     Month
                   </TableCell>
                   <TableCell align="center">Income</TableCell>
-                  <TableCell align="center">Investment</TableCell>
                   <TableCell align="center">Expense</TableCell>
+                  <TableCell align="center">Investment</TableCell>
                 </TableRow>
               </TableHead>
               {currentYearData.data.length > 0 ? (

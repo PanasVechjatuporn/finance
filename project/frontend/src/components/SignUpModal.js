@@ -10,27 +10,8 @@ import { signInWithGooglePopup } from "../utils/firebase.utils";
 import { useDispatch } from "react-redux";
 import axios from 'axios';
 import { Login, LoginEmailPassword } from '../store/UserSlice';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import OverlayLoading from "./OverlayLoading";
 const baseURL = "http://localhost:8000";
-
-function OverlayLoading({ isLoading }) {
-  const [open, setOpen] = React.useState(false);
-  React.useEffect(() => {
-    setOpen(isLoading);
-  }, [isLoading]);
-
-  return (
-    <div>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
-  );
-}
 
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);

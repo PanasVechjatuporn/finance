@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import OverlayLoading from "./OverlayLoading";
 import "./EditMonthDataModal_Dashboard.css";
 const baseURL = "http://localhost:8000";
 
@@ -142,7 +143,7 @@ const expenseType = [
     },
     {
         name: "อื่นๆ",
-        category: 0,
+        category: 8,
     },
 ];
 
@@ -211,24 +212,6 @@ function validateMonthData(incomeData, expenseData, investmentData) {
             resolve();
         }
     });
-}
-
-function OverlayLoading({ isLoading }) {
-    const [open, setOpen] = React.useState(false);
-    React.useEffect(() => {
-        setOpen(isLoading);
-    }, [isLoading]);
-
-    return (
-        <div>
-            <Backdrop
-                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={open}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        </div>
-    );
 }
 
 function modifyUserDataByYear(yearToChange, newData, setUserData) {
@@ -444,7 +427,7 @@ const EditMonthDataModal = ({
                                                                 value={type.category}
                                                                 key={type.name + index}
                                                             >
-                                                                {type.name}
+                                                                {type.label}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
