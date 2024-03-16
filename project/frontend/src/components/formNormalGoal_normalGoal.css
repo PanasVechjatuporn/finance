@@ -1,23 +1,17 @@
-.MainForm {
-    padding: 10px; 
-    border: 2px solid #ccc; 
-    border-radius: 5px; 
-    margin-top: 80px;
-    width: 20%; /* Set width to 50% of the page width */
-    border-radius: 10px;
+.Container{
+  position: fixed; /* Use fixed or absolute depending on your needs */
+    top: 50%; /* Middle of the page vertically */
+    right: 10%; /* Align to the right of the page */
+    transform: translateY(-50%); /* Adjust for the container's height to truly center it */
     display: flex;
-    justify-content: center;
-    margin-left: 15% ; /* Center the div horizontally and add margin-top */
+    flex-direction: column; /* Stack child elements (buttons) vertically */
+    align-items: center; /* Align buttons in the center of the 'div' */
+    padding: 10px;
+    border: 2px solid #ccc; /* Example styling */
+    border-radius: 10px; /* Example styling */
   }
 
-.SubForm{
-  padding: 10px; 
-  border: 2px solid #ccc; 
-  border-radius: 5px; 
-  margin-top: 40px;
-  width: 20%; /* Set width to 50% of the page width */
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  margin-left: 15% ; /* Center the div horizontally and add margin-top */
+.TextField{
+  margin: 10px 0; /* Add space between buttons */
+    /* Add more button styling here */
   }

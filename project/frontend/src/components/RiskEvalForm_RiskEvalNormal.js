@@ -66,10 +66,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
             <FormControl>
               <h2>Question {currentQuestionIndex + 1}</h2>
               <div>
-                <FormLabel
-                  id="demo-radio-buttons-group-label"
-                  className="QuestionHeader"
-                >
+                <FormLabel id="question" className="QuestionHeader">
                   <h4>{question}</h4>
                 </FormLabel>
               </div>

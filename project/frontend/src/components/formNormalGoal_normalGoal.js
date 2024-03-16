@@ -1,83 +1,136 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 import "./formNormalGoal_normalGoal.css";
 
-export const FormGoal = () => {
+export const FormGoal = ({ setShowChooseAsset, sendData }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const risk_profile = location.state.profile;
+  const [alphabetFields, setAlphabetFields] = useState("");
+  const [numbersFields, setNumbersFields] = useState({
+    year: "",
+    amount: "",
+    age: "",
+  });
+
+  const handleAlphabetChange = (e) => {
+    const name = e.target.id;
+    const value = e.target.value;
+    const isValid = /^[A-Za-z]*$/.test(value); // Regular expression for alphabet validation
+    if (isValid) {
+      setAlphabetFields(value);
+    }
+  };
+
+  const handleNumberChange = (e) => {
+    const name = e.target.id;
+    const value = e.target.value;
+    console.log(name, value);
+    const isValid = /^[0-9]*$/.test(value); // Regular expression for number validation
+    if (isValid) {
+      setNumbersFields((prevFields) => ({
+        ...prevFields,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleBackButton = () => {
+    navigate("../Goal-Based/risk-evaluation-normal");
+  };
+
+  const handleNextButton = () => {
+    const combinedData = {
+      alphabetFields,
+      ...numbersFields,
+      risk_profile,
+    };
+    console.log(combinedData);
+    sendData(combinedData);
+  };
+
+  const createTextField = (id, label, variant, value, onChange) => (
+    <TextField
+      id={id}
+      label={value ? "" : label}
+      variant={variant}
+      value={value}
+      onChange={onChange}
+    />
+  );
+
   return (
     <React.Fragment>
-      <div className="MainForm">
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 1, width: "25ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
+      <div className="Container">
+        <div className="TextField">
           <div>
             <p>ชื่อเป้าหมาย</p>
-            <TextField id="name" label="ชื่อเป้าหมาย" variant="outlined" />
+            {createTextField(
+              "name",
+              "ชื่อเป้าหมาย",
+              "outlined",
+              alphabetFields,
+              handleAlphabetChange
+            )}
           </div>
-        </Box>
-      </div>
+        </div>
 
-      <div className="SubForm">
-        <div>
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
+        <div className="TextField">
+          <div>
             <div>
               <p>ระยะเวลาลงทุน</p>
-              <TextField id="year" label="ระยะเวลาลงทุน" variant="outlined" />
+              {createTextField(
+                "year",
+                "ปี",
+                "outlined",
+                numbersFields.year,
+                handleNumberChange
+              )}
             </div>
-          </Box>
+          </div>
         </div>
-      </div>
 
-      <div className="SubForm">
-        <div>
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
+        <div className="TextField">
+          <div>
             <div>
               <p>เงินเป้าหมาย</p>
-              <TextField id="amount" label="เงินเป้าหมาย" variant="outlined" />
+              {createTextField(
+                "amount",
+                "บาท",
+                "outlined",
+                numbersFields.amount,
+                handleNumberChange
+              )}
             </div>
-          </Box>
+          </div>
         </div>
-      </div>
 
-      <div className="SubForm">
-        <div>
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
+        <div className="TextField">
+          <div>
             <div>
               <p>อายุผู้ลงทุน</p>
-              <TextField id="age" label="อายุผู้ลงทุน" variant="outlined" />
+              {createTextField(
+                "age",
+                "ปี",
+                "outlined",
+                numbersFields.age,
+                handleNumberChange
+              )}
             </div>
-          </Box>
+          </div>
+          <br />
+          <div>
+            <Button variant="outlined" onClick={handleBackButton}>
+              Back
+            </Button>
+            <Button variant="contained" onClick={handleNextButton}>
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </React.Fragment>
