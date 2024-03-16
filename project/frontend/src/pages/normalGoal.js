@@ -4,30 +4,46 @@ import Navigate from "components/Navbar";
 
 import { ChooseAsset } from "components/ChooseAsset_normalGoal";
 import { FormGoal } from "components/formNormalGoal_normalGoal";
+import { RmfFactsheet } from "components/rmfGraph_normalGoal";
 
 import "./normalGoal.css";
 
 export const NormalGoal = () => {
+  const [showFormGoal, setShowFormGoal] = useState(true);
   const [showChooseAsset, setShowChooseAsset] = useState(false);
-  const [sharedData, setSharedData] = useState({});
+  const [showGraph, setShowGraph] = useState("");
+  const [dataBetweenComponents, setDataBetweenComponents] = useState({});
 
-  const handleData = (data) => {
-    console.log("normalGoal: ", sharedData);
-    setSharedData(data);
+  const handleNextToChooseAsset = (data) => {
+    setDataBetweenComponents(data);
+    setShowFormGoal(false);
     setShowChooseAsset(true);
+  };
+
+  const handleNextToShowGraph = (data) => {
+    setDataBetweenComponents(data);
+    setShowChooseAsset(false);
+  };
+
+  const returnShowGraph = (data) => {
+    console.log(data.selectedValue);
+    if (data.selectedValue === "rmf")
+      return <RmfFactsheet data={dataBetweenComponents} />;
   };
 
   return (
     <React.Fragment>
       <Navigate />
-      {!showChooseAsset ? (
-        <FormGoal
-          setShowChooseAsset={setShowChooseAsset}
-          sendData={handleData}
+      {showFormGoal && <FormGoal sendData={handleNextToChooseAsset} />}
+      {showChooseAsset && (
+        <ChooseAsset
+          sendData={handleNextToShowGraph}
+          data={dataBetweenComponents}
         />
-      ) : (
-        <ChooseAsset data={sharedData} />
       )}
+      {!showFormGoal &&
+        !showChooseAsset &&
+        returnShowGraph(dataBetweenComponents)}
     </React.Fragment>
   );
 };

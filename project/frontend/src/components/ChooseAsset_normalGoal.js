@@ -1,25 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navigate from "components/Navbar";
-import Button from "@mui/material/Button";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import {
+  Button,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+} from "@mui/material";
 
 import "./ChooseAsset_normalGoal.css";
 
-export const ChooseAsset = ({ data }) => {
-  const navigate = useNavigate();
+export const ChooseAsset = ({ sendData, data }) => {
+  const [selectedValue, setSelectedValue] = useState("");
+  const [submittedValue, setSubmittedValue] = useState("");
 
   function logData() {
-    console.log(data);
-    console.log(data.alpha);
+    console.log(JSON.stringify(data));
   }
 
-  function handleSubmit() {}
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+
+  useEffect(() => {
+    console.log(selectedValue); // This will log the updated value whenever `selectedValue` changes.
+  }, [selectedValue]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSubmittedValue(selectedValue);
+    // console.log(selectedValue);
+    const combinedData = {
+      data,
+      selectedValue,
+    };
+    console.log(combinedData);
+    sendData(combinedData);
+  };
 
   return (
     <React.Fragment>
@@ -36,26 +56,27 @@ export const ChooseAsset = ({ data }) => {
           <FormLabel id="asset-choice">เลือกลงทุนใน</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
-            name="radio-buttons-group"
+            name="options"
+            value={selectedValue}
+            onChange={handleChange}
           >
             <FormControlLabel
-              value="1"
+              value="deposit"
               control={<Radio />}
               label="เงินฝากประจำ"
             />
             <FormControlLabel
-              value="2"
+              value="fund"
               control={<Radio />}
               label="กองทุนรวมที่ไม่มีสิทธิประโยชน์ทางภาษี"
             />
             <FormControlLabel
-              value="3"
+              value="rmf"
               control={<Radio />}
               label="กองทุน RMF"
             />
             <FormControlLabel
-              value="4"
+              value="ssf"
               control={<Radio />}
               label="กองทุน SSF"
             />

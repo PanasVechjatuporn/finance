@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 
 import "./formNormalGoal_normalGoal.css";
 
-export const FormGoal = ({ setShowChooseAsset, sendData }) => {
+export const FormGoal = ({ sendData }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const risk_profile = location.state.profile;
