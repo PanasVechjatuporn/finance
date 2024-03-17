@@ -6,4 +6,6 @@ router.post('/createuser_provider=:provider', mongoController.create_new_user_pr
 
 router.get('/userdata=:uid', mongoController.get_user_data_income_expense)
 
+router.get('/funds', mongoController.get_funds)
+
 module.exports = router;

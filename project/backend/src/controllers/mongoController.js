@@ -58,7 +58,7 @@ exports.create_new_user_provider = async (req, res) => {
                     throw new Error('Unknown Provider');
             }
             res.status(200).json({ userData });
-        }else{
+        } else {
             throw new Error('unauthorized access isVerify flag == false')
         }
     } catch (error) {
@@ -68,5 +68,36 @@ exports.create_new_user_provider = async (req, res) => {
 }
 
 exports.get_user_data_income_expense = async (req, res) => {
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
 
+    try {
+        query = {}
+        var findResult = await collection.find(query).toArray();
+        console.log(findResult);
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.get_user_data_income_expense: ', error)
+        res.status(401).json({ message: error });
+
+    }
 }
+
+exports.get_funds = async (req, res) => {
+    const db = client.db(dbName)
+    const collection = db.collection('funds')
+
+    try {
+        query = {};
+        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1 }).toArray();
+        console.log(findResult);
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.get_user_data_income_expense: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}
+
