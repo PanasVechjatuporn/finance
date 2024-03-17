@@ -8,4 +8,6 @@ router.get('/userdata=:uid', mongoController.get_user_data_income_expense)
 
 router.get('/funds', mongoController.get_funds)
 
+router.post('/save_tax_goal', mongoController.save_tax_goal)
+
 module.exports = router;

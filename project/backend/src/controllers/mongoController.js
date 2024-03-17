@@ -90,12 +90,37 @@ exports.get_funds = async (req, res) => {
 
     try {
         query = {};
-        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1 }).toArray();
+        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1, "url_factsheet": 1 }).toArray();
         console.log(findResult);
         res.json(findResult);
 
     } catch (error) {
-        console.log('Error occured in exports.get_user_data_income_expense: ', error)
+        console.log('Error occured in exports.get_funds: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}
+
+exports.save_tax_goal = async (req, res) => {
+    const db = client.db(dbName)
+    const collection = db.collection('goal')
+
+    //เอาไว้หา UserId
+    const filter = {};
+
+    const updateDoc = {
+        $set: {
+            funds: req.body.confirmData
+        }
+    };
+    const options = { upsert: true };
+
+
+    try {
+        //ถ้า filter ไม่เจอ สร้างเป็น obj ใหม่(upsert)
+        await collection.updateOne(filter, updateDoc, options)
+    } catch (error) {
+        console.log('Error occured in exports.save_tax_goal: ', error)
         res.status(401).json({ message: error });
 
     }
