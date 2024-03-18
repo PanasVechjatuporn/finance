@@ -109,6 +109,24 @@ exports.upsertUserMonthlyData = async (req, res) => {
   }
 };
 
+exports.get_user_data_income_expense = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("income_expense");
+
+  try {
+    query = {};
+    var findResult = await collection.find(query).toArray();
+    console.log(findResult);
+    res.json(findResult);
+  } catch (error) {
+    console.log(
+      "Error occured in exports.get_user_data_income_expense: ",
+      error
+    );
+    res.status(401).json({ message: error });
+  }
+};
+
 exports.getUserDataDashboard = async (req, res) => {
   const userId = req.header("userId");
   const userToken = req.header("Authorization");
@@ -121,21 +139,6 @@ exports.getUserDataDashboard = async (req, res) => {
   } catch (error) {
     console.log(
       "Error occured in mongoController.getUserDataDashboard: ",
-      error
-    );
-    res.status(401).json({ message: error });
-  }
-  const db = client.db(dbName);
-  const collection = db.collection("income_expense");
-
-  try {
-    query = {};
-    var findResult = await collection.find(query).toArray();
-    console.log(findResult);
-    res.json(findResult);
-  } catch (error) {
-    console.log(
-      "Error occured in exports.get_user_data_income_expense: ",
       error
     );
     res.status(401).json({ message: error });
