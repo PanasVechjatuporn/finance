@@ -5,6 +5,7 @@ import Navigate from "components/Navbar";
 import { ChooseAsset } from "components/ChooseAsset_normalGoal";
 import { FormGoal } from "components/formNormalGoal_normalGoal";
 import { RmfFactsheet } from "components/rmfGraph_normalGoal";
+import { DepositFactsheet } from "components/depositGraph_normalGoal";
 
 import "./normalGoal.css";
 
@@ -27,8 +28,11 @@ export const NormalGoal = () => {
 
   const returnShowGraph = (data) => {
     console.log(data.selectedValue);
-    if (data.selectedValue === "rmf")
+    if (data.selectedValue === "rmf") {
       return <RmfFactsheet data={dataBetweenComponents} />;
+    } else if (data.selectedValue === "deposit") {
+      return <DepositFactsheet data={dataBetweenComponents} />;
+    }
   };
 
   return (
