@@ -160,6 +160,7 @@ export default function MonthDataTable() {
                       currentYearData={currentYearData}
                       userData={userData}
                       setUserData={setUserData}
+                      selectedYear={selectedYear}
                     ></DataTableRow>
                   ))}
                 </TableBody>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, TableHead } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TableCell from "@mui/material/TableCell";
@@ -11,7 +11,6 @@ import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 function digestMonthDataParent(monthData) {
-    //head of each month (outside)
     let sumIncome = 0;
     let sumExpense = 0;
     monthData.incomeData.forEach((element) => {
@@ -28,14 +27,20 @@ function digestMonthDataParent(monthData) {
     return result;
 }
 
-export const DataTableRow = ({dataMonth,userData,setUserData}) => {
+export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
     const [openModal, setOpenModal] = useState(false);
+    const [monthData,setMonthData] = useState(dataMonth);
+    const [headerData,setHeaderData] = useState(digestMonthDataParent(monthData));
     const handleEditClick = () => {
         openModal ? setOpenModal(false) : setOpenModal(true);
     };
     const [open, setOpen] = React.useState(false);
-    const monthData = dataMonth;
-    const headerData = digestMonthDataParent(monthData);
+    
+    useEffect(() => {
+        setMonthData(dataMonth)
+        setHeaderData(digestMonthDataParent(monthData))
+    },[openModal, monthData, dataMonth])
+
     return (
         <React.Fragment>
             <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -57,7 +62,8 @@ export const DataTableRow = ({dataMonth,userData,setUserData}) => {
                     ></IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {monthData.date}
+                    {/* {console.log('monthData :: ',monthData)}
+                    {monthData.date} */}
                 </TableCell>
                 <TableCell align="center">{headerData.income}</TableCell>
                 <TableCell align="center">{headerData.expense}</TableCell>
@@ -136,6 +142,7 @@ export const DataTableRow = ({dataMonth,userData,setUserData}) => {
                 mode="editexisting"
                 userData={userData}
                 setUserData={setUserData}
+                selectedYear={selectedYear}
             ></EditMonthDataModal>
         </React.Fragment>
     );

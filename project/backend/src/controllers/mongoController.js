@@ -102,6 +102,44 @@ exports.upsertUserMonthlyData = async (req, res) => {
     }
 }
 
+exports.upsertUserMultipleMonthlyData = async (req, res) => {
+    const upsertData = req.body.upsertData
+    const userToken = req.header('Authorization')
+    const userId = req.header('UserId')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId)
+        if (isVerify) {
+            await Promise.all(upsertData.map(async (data) => {
+                let query = { userId: data.user.userId, date: data.currentDate };
+                await collection.updateOne(
+                    query,
+                    {
+                        $set: {
+                            userId: data.user.userId,
+                            date: data.currentDate,
+                            incomeData: data.incomeData,
+                            expenseData: data.expenseData,
+                            investmentData: data.investmentData,
+                            year: data.currentDate.split("-")[0],
+                            month: parseInt(data.currentDate.split("-")[1]).toString()
+                        }
+                    },
+                    { upsert: true }
+                );
+            }));
+            
+            res.status(200).json({ upsertData })
+        } else {
+            throw new Error('unauthorized access')
+        }
+    } catch (error) {
+        console.log('Error occured in mongoController.upsertUserMonthlyData: ', error)
+        res.status(401).json({ message: error });
+    }
+}
+
 exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header('userId')
     const userToken = req.header('Authorization')

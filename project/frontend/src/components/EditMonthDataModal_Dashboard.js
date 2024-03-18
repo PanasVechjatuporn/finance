@@ -16,10 +16,13 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import OverlayLoading from "./OverlayLoading";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 import "./EditMonthDataModal_Dashboard.css";
+import { current } from "@reduxjs/toolkit";
 const baseURL = "http://localhost:8000";
 
 const taxableIncome = [
@@ -157,42 +160,89 @@ async function onSaveMonthData(
     currentYearData,
     setCurrentYearData,
     userData,
-    setUserData
+    setUserData,
+    isUseSameData
 ) {
     try {
         setisLoading(true);
-
         await validateMonthData(incomeData, expenseData, investmentData);
-
-        const upsertData = {
-            user: {
-                userId: userStore.userId,
-            },
-            currentDate: currentDate,
-            incomeData,
-            expenseData,
-            investmentData,
-        };
-
-        const resUpsert = await axios.post(
-            `${baseURL}/db/upsert_monthly`,
-            { upsertData },
-            {
-                headers: {
-                    Authorization: userStore.userToken,
-                },
+        if (isUseSameData === true) {
+            let upsertData = [];
+            for(let i=0;i< 12 - currentYearData.data.length; i++){
+                upsertData.push({
+                    user: {
+                        userId: userStore.userId
+                    },
+                    currentDate: currentDate.split("-")[0]+"-"+String(parseInt(currentDate.split("-")[1]) + i).padStart(2,'0'),
+                    incomeData,
+                    expenseData,
+                    investmentData,
+                })
             }
-        );
-        const resFetchNewData = await axios.get(`${baseURL}/db/userdata_dashboard`, {
-            headers: {
-                Authorization: userStore.userToken,
-                userId: userStore.userId,
-                year: currentDate.split("-")[0]
-            },
-        })
-        modifyUserDataByYear(currentDate.split("-")[0], resFetchNewData.data.queryResult, setUserData)
-        setisLoading(false);
-        return resUpsert;
+            const resUpsert = await axios.post(
+                `${baseURL}/db/upsert_multiple`,
+                { upsertData },
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        UserId: userStore.userId
+                    },
+                }
+            )
+            const resFetchNewData = await axios.get(
+                `${baseURL}/db/userdata_dashboard`,
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        userId: userStore.userId,
+                        year: currentDate.split("-")[0],
+                    },
+                }
+            );
+            modifyUserDataByYear(
+                currentDate.split("-")[0],
+                resFetchNewData.data.queryResult,
+                setUserData
+            );
+            setisLoading(false);
+            return resUpsert;
+        } else {
+            const upsertData = {
+                user: {
+                    userId: userStore.userId,
+                },
+                currentDate: currentDate,
+                incomeData,
+                expenseData,
+                investmentData,
+            };
+            const resUpsert = await axios.post(
+                `${baseURL}/db/upsert_monthly`,
+                { upsertData },
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                    },
+                }
+            );
+            const resFetchNewData = await axios.get(
+                `${baseURL}/db/userdata_dashboard`,
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        userId: userStore.userId,
+                        year: currentDate.split("-")[0],
+                    },
+                }
+            );
+            modifyUserDataByYear(
+                currentDate.split("-")[0],
+                resFetchNewData.data.queryResult,
+                setUserData
+            );
+            setisLoading(false);
+            return resUpsert;
+        }
     } catch (err) {
         console.error("Error saving data:", err);
         setisLoading(false);
@@ -215,8 +265,8 @@ function validateMonthData(incomeData, expenseData, investmentData) {
 }
 
 function modifyUserDataByYear(yearToChange, newData, setUserData) {
-    setUserData(prevState => {
-        return prevState.map(entry => {
+    setUserData((prevState) => {
+        return prevState.map((entry) => {
             if (entry.year === yearToChange) {
                 return { ...entry, data: newData };
             }
@@ -234,7 +284,7 @@ const EditMonthDataModal = ({
     selectedYear,
     setCurrentYearData,
     userData,
-    setUserData
+    setUserData,
 }) => {
     const userStore = useSelector((state) => state.userStore);
     const [incomeData, setIncomeData] = useState([{}]);
@@ -244,10 +294,17 @@ const EditMonthDataModal = ({
     const [currentDate, setCurrentDate] = useState(null);
     const [newMonthString, setNewMonthString] = useState("");
     const [newYearString, setNewYearString] = useState("");
+    const [isUseSameData, setIsUseSameData] = useState(false);
 
     useEffect(() => {
-        console.log('clickedMonth :: ',clickedMonth)
-        console.log('currentYearData :: ',currentYearData)
+        if (mode === "newmonth") {
+            setIncomeData([{}]);
+            setExpenseData([{}]);
+            setInvestmentData(null);
+        }
+    }, [show, mode]);
+
+    useEffect(() => {
         if (mode === "newmonth") {
             setCurrentDate(
                 selectedYear +
@@ -272,9 +329,11 @@ const EditMonthDataModal = ({
             setExpenseData(clickedMonth.expenseData);
             setInvestmentData(clickedMonth.investmentData);
             setNewYearString(new Date(clickedMonth.date).getFullYear());
-            setNewMonthString(new Date(clickedMonth.date).toLocaleString("en-us", {
-                month: "long",
-            }))
+            setNewMonthString(
+                new Date(clickedMonth.date).toLocaleString("en-us", {
+                    month: "long",
+                })
+            );
         }
     }, [mode, selectedYear, currentYearData, clickedMonth, userData]);
 
@@ -330,9 +389,6 @@ const EditMonthDataModal = ({
         <Modal
             show={show}
             onHide={() => {
-                // setIncomeData([{}])
-                // setExpenseData([{}])
-                // setInvestmentData(null)
                 onClose();
             }}
             backdrop="static"
@@ -352,7 +408,11 @@ const EditMonthDataModal = ({
             </Modal.Header>
             <Modal.Body>
                 <Container
-                    style={{ overflowY: "auto", maxHeight: `calc(100vh - 200px)`, maxWidth:"100%" }}
+                    style={{
+                        overflowY: "auto",
+                        maxHeight: `calc(100vh - 200px)`,
+                        maxWidth: "100%",
+                    }}
                 >
                     <Row>
                         {/* Income */}
@@ -409,7 +469,7 @@ const EditMonthDataModal = ({
                                             <Grid item>
                                                 <FormControl
                                                     variant="standard"
-                                                    sx={{ m: 1, minWidth:200, maxWidth:200}}
+                                                    sx={{ m: 1, minWidth: 200, maxWidth: 200 }}
                                                 >
                                                     <InputLabel id="income-type-label">
                                                         ประเภทของรายได้
@@ -621,12 +681,26 @@ const EditMonthDataModal = ({
                 </Container>
             </Modal.Body>
             <Modal.Footer>
+                {mode === "newmonth" ? (
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isUseSameData}
+                                    onChange={(e) => {
+                                        console.log('e.target.checked :: ', e.target.checked)
+                                        setIsUseSameData(e.target.checked)
+                                    }
+                                    }
+                                />
+                            }
+                            label="ใช้ข้อมูลเดียวกันทั้งปี"
+                        />
+                    </FormGroup>
+                ) : null}
                 <Button
                     variant="secondary"
                     onClick={() => {
-                        // setIncomeData([{}])
-                        // setExpenseData([{}])
-                        // setInvestmentData(null)
                         onClose();
                     }}
                 >
@@ -646,11 +720,9 @@ const EditMonthDataModal = ({
                                 currentYearData,
                                 setCurrentYearData,
                                 userData,
-                                setUserData
+                                setUserData,
+                                isUseSameData
                             );
-                            // setIncomeData([{}])
-                            // setExpenseData([{}])
-                            // setInvestmentData(null)
                             onClose();
                         } catch (err) {
                             alert(err);
