@@ -6,6 +6,7 @@ import { GoalBased } from "pages/goalbased";
 import { NewTaxGoal } from "pages/newtaxgoal";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from "./store/UserSlice";
+import { SelectFund } from "pages/selectFund";
 import axios from "axios";
 import { Login } from "./store/UserSlice";
 import { NormalGoal } from "pages/normalGoal";
@@ -87,9 +88,14 @@ function App() {
             </RequireAuth>
           }
         />
+        */}
         <Route
           path="/Goal-Based/normal-goal-first"
           element={<RequireAuth redirectTo="/">{<NormalGoal />}</RequireAuth>}
+        />
+        <Route
+          path="/Goal-Based/reduce-tax-goal/select-fund"
+          element={<SelectFund />}
         />
       </Routes>
     </BrowserRouter>

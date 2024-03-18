@@ -8,4 +8,8 @@ router.post('/upsert_monthly',mongoController.upsertUserMonthlyData)
 
 router.get('/userdata_dashboard', mongoController.getUserDataDashboard)
 
+router.get('/funds', mongoController.get_funds)
+
+router.post('/save_tax_goal', mongoController.save_tax_goal)
+
 module.exports = router;
