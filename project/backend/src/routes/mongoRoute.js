@@ -10,4 +10,6 @@ router.get('/funds', mongoController.get_funds)
 
 router.post('/save_tax_goal', mongoController.save_tax_goal)
 
+router.get('/usergoal=:uid', mongoController.getUserGoal)
+
 module.exports = router;

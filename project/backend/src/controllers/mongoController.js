@@ -127,3 +127,18 @@ exports.save_tax_goal = async (req, res) => {
     }
 }
 
+exports.getUserGoal = async (req, res) => {
+    const db = client.db(dbName)
+    const collection = db.collection('goal');
+
+    try {
+        query = { userId: req.params.uid }
+        var findResult = await collection.find(query).toArray();
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.getUserGoal: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}

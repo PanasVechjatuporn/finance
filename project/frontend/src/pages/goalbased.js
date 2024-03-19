@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import GoalCard from "components/GoalCard";
-import mockGoal from "mockupData/mockGoal.json"
+//import mockGoal from "mockupData/mockGoal.json"
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -17,10 +17,13 @@ export const GoalBased = () => {
 
     const uid = useSelector(state => state.userStore.userId)
     const [data, setData] = React.useState([])
+    const [goal, setGoal] = React.useState([]);
     React.useEffect(() => {
         async function fetchData() {
             await axios.get(`http://localhost:8000/db/userdata=${uid}`)
-                .then(response => { setData(response.data); console.log(response, uid) });
+                .then(response => { setData(response.data); });
+            await axios.get(`http://localhost:8000/db/usergoal=${uid}`)
+                .then(res => { setGoal(res.data); });
         }
         fetchData();
     }, [uid])
@@ -83,30 +86,10 @@ export const GoalBased = () => {
         <React.Fragment>
             <Navigate />
             <Container style={{ display: 'flex', marginTop: 20, paddingTop: 10, paddingBottom: 10, width: "70%", maxHeight: 400, overflow: 'auto', backgroundColor: '#F0F0F0' }}>
-                <GoalCard MockGoal={mockGoal} />
-                <Card sx={{ minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
-                    <CardMedia
-                        component="img"
-                        height="100"
-                        image=""
-                        alt="icon/image"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h6" component="div">
-                            ชื่อ :
-                        </Typography>
-                        <Typography component="div" variant="subtitile1" color="text.secondary">
-                            ระยะเวลาการลงทุน :
-                        </Typography>
-                        <Typography component="div" variant="subtitile1" color="text.secondary">
-                            เป้าหมาย :
-                        </Typography>
-                        <Typography component="div" variant="subtitile1" color="text.secondary">
-                            วันที่สร้าง :
-                        </Typography>
-                    </CardContent>
-                    <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
-                        <Button onClick={handleOpenCreate} sx={{ backgroundColor: 'black' }} size="medium" >
+                <GoalCard Goal={goal} />
+                <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
+                    <CardActions sx={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button onClick={handleOpenCreate} sx={{ backgroundColor: 'black' }} size="large" >
                             <Typography color='white' variant="subtitile1">
                                 สร้างเป้าหมาย
                             </Typography>

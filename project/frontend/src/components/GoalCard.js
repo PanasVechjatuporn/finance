@@ -113,7 +113,7 @@ function EachCard({ data }) {
     }
 
     return (
-        <Card sx={{ minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
+        <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
             <CardMedia
                 component="img"
                 height="100"
@@ -152,10 +152,10 @@ function EachCard({ data }) {
     )
 }
 
-export default function GoalCard({ MockGoal }) {
-    if (Object.keys(MockGoal).length > 0) {
+export default function GoalCard({ Goal }) {
+    if (Object.keys(Goal).length > 0) {
         return (
-            MockGoal.map((card) => (
+            Goal.map((card) => (
                 <EachCard key={card.Name} data={card} />
             ))
         )
