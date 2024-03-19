@@ -59,7 +59,7 @@ const groupDataByYear = (data) => {
   }, []);
 };
 
-export default function MonthDataTable({userData, setUserData}) {
+export default function MonthDataTable({ userData, setUserData }) {
   const userStore = useSelector((state) => state.userStore);
   const [selectedYear, setSelectedYear] = useState(null);
   const [allYear, setAllYear] = useState(null);
@@ -170,19 +170,21 @@ export default function MonthDataTable({userData, setUserData}) {
                   <TableCell align="center">Income</TableCell>
                   <TableCell align="center">Expense</TableCell>
                   <TableCell align="center">Investment</TableCell>
+                  <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>
               {currentYearData.data.length > 0 ? (
                 <TableBody>
                   {currentYearData.data.map((monthData, index) => (
-                    <DataTableRow
-                      key={`data-table-row-${index}`}
-                      dataMonth={monthData}
-                      currentYearData={currentYearData}
-                      userData={userData}
-                      setUserData={setUserData}
-                      selectedYear={selectedYear}
-                    ></DataTableRow>
+                      <DataTableRow
+                        key={`data-table-row-${index}`}
+                        dataMonth={monthData}
+                        currentYearData={currentYearData}
+                        userData={userData}
+                        setUserData={setUserData}
+                        selectedYear={selectedYear}
+                        isDeleteActive={parseInt(currentYearData.data.length) === parseInt(index+1) ? true : false}
+                      ></DataTableRow>
                   ))}
                 </TableBody>
               ) : (

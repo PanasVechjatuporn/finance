@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHead } from "@mui/material";
+import { Table, TableBody, TableHead } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -10,7 +10,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -141,6 +141,7 @@ export const DataTableRow = ({
     userData,
     setUserData,
     selectedYear,
+    isDeleteActive
 }) => {
     const [openModal, setOpenModal] = useState(false);
     const handleEditClick = () => {
@@ -149,6 +150,9 @@ export const DataTableRow = ({
     const [open, setOpen] = React.useState(false);
     const tmp = 0;
 
+    const onClickDelete = (e) => {
+        console.log('e :: ',e)
+    }
     return (
         <React.Fragment>
             <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -187,6 +191,20 @@ export const DataTableRow = ({
                     )}
                 </TableCell>
                 <TableCell align="center">{dataMonth.investmentData}</TableCell>
+
+                {/* delete button */}
+                <TableCell align="center">
+                    <>
+                    {
+                        isDeleteActive ? (<IconButton
+                            children={<DeleteIcon style={{color : 'red'}}></DeleteIcon>}
+                            onClick={(e) => {
+                                onClickDelete(e)
+                            }}
+                        ></IconButton>) : (<DeleteIcon style={{ color: 'grey' }} />)
+                    }
+                    </>
+                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -204,6 +222,9 @@ export const DataTableRow = ({
                                                 align="center"
                                                 colSpan={3}
                                                 style={{ fontSize: "12pt" }}
+                                                sx={{
+                                                    backgroundColor: '#CBFFA9',
+                                                  }}
                                             >
                                                 Income
                                             </TableCell>
@@ -214,6 +235,17 @@ export const DataTableRow = ({
                                             <TableCell align="center">Subtype</TableCell>
                                         </TableRow>
                                     </TableHead>
+                                    <TableBody>
+                                        {
+                                            (dataMonth.incomeData.map((item, index) => 
+                                                (<TableRow>
+                                                    <TableCell key={item.amount+index} align="center">{item.amount}</TableCell>
+                                                    <TableCell key={item.type+index} align="center">{item.type}</TableCell>
+                                                    <TableCell key={item.amount+Math.random(10,10)} align="center">null</TableCell>
+                                                </TableRow>)
+                                            )) 
+                                        }
+                                    </TableBody>
                                 </Table>
                                 <Table className="sub-table">
                                     <TableHead>
@@ -222,23 +254,9 @@ export const DataTableRow = ({
                                                 align="center"
                                                 colSpan={2}
                                                 style={{ fontSize: "12pt" }}
-                                            >
-                                                Investment
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell align="center">Name</TableCell>
-                                            <TableCell align="center">Amount</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                </Table>
-                                <Table className="sub-table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell
-                                                align="center"
-                                                colSpan={2}
-                                                style={{ fontSize: "12pt" }}
+                                                sx={{
+                                                    backgroundColor: '#FF9B9B',
+                                                  }}
                                             >
                                                 Expense
                                             </TableCell>
@@ -248,6 +266,39 @@ export const DataTableRow = ({
                                             <TableCell align="center">Type</TableCell>
                                         </TableRow>
                                     </TableHead>
+                                    <TableBody>
+                                        {
+                                            (dataMonth.expenseData.map((item, index) => 
+                                                (<TableRow>
+                                                    <TableCell key={item.amount+index} align="center">{item.amount}</TableCell>
+                                                    <TableCell key={item.type+index} align="center">{item.type}</TableCell>
+                                                </TableRow>)
+                                            )) 
+                                        }
+                                    </TableBody>
+                                </Table>
+                                <Table className="sub-table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell
+                                                align="center"
+                                                colSpan={2}
+                                                style={{ fontSize: "12pt" }}
+                                                sx={{
+                                                    backgroundColor: '#FFFEC4',
+                                                  }}
+                                            >
+                                                Investment
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell align="center" key={Math.random(10,10)}>Amount</TableCell>
+                                            <TableCell align="center" key={Math.random(10,10)}>Unit</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+
+                                    </TableBody>
                                 </Table>
                             </div>
                         </Box>

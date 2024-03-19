@@ -20,9 +20,7 @@ import OverlayLoading from "./OverlayLoading";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
 import "./EditMonthDataModal_Dashboard.css";
-import { current } from "@reduxjs/toolkit";
 const baseURL = "http://localhost:8000";
 
 const taxableIncome = [
