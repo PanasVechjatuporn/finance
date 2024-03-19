@@ -10,36 +10,144 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
-function digestMonthDataParent(monthData) {
-    let sumIncome = 0;
-    let sumExpense = 0;
-    monthData.incomeData.forEach((element) => {
-        sumIncome += parseFloat(element.amount);
-    });
-    monthData.expenseData.forEach((element) => {
-        sumExpense += parseFloat(element.amount);
-    });
-    const result = {
-        income: sumIncome,
-        expense: sumExpense,
-        investment: monthData.investmentData,
-    };
-    return result;
-}
 
-export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
+const taxableIncome = [
+    {
+        name: "เงินได้ประเภทที่ 1",
+        category: 1,
+        label: "เงินเดือน",
+    },
+    {
+        name: "เงินได้ประเภทที่ 2",
+        category: 2,
+        label: "ค่าจ้างทั่วไป",
+    },
+    {
+        name: "เงินได้ประเภทที่ 3",
+        category: 3,
+        label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
+        subcategory: [
+            {
+                subcategorylabel:
+                    "ค่าลิขสิทธิ์/ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา/ค่าGoodwill",
+                subcategorycategory: 1,
+                subcategoryinfo: "หักแบบเหมา 50% แต่ไม่เกิน 100,000 บาท หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "เงินปีและเงินรายปีจากนิติกรรมหรือคำพิพากษาของศาล",
+                subcategorycategory: 2,
+                subcategoryinfo: "-",
+            },
+        ],
+    },
+    {
+        name: "เงินได้ประเภทที่ 4",
+        category: 4,
+        label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
+    },
+    {
+        name: "เงินได้ประเภทที่ 5",
+        category: 5,
+        label: "เงินได้จากการให้เช่าทรัพย์สิน",
+        subcategory: [
+            {
+                subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
+                subcategorycategory: 1,
+                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "ค่าเช่าที่ดินเกษตรกรรม",
+                subcategorycategory: 2,
+                subcategoryinfo: "หักแบบเหมา 20% หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "ค่าเช่าที่ดินไม่ใช้ในเกษตรกรรม",
+                subcategorycategory: 3,
+                subcategoryinfo: "หักแบบเหมา 15% หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "ค่าเช่ายานพาหนะ",
+                subcategorycategory: 4,
+                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "ค่าเช่าอื่นๆ",
+                subcategorycategory: 5,
+                subcategoryinfo: "หักแบบเหมา 10% หรือหักตามจริง",
+            },
+        ],
+    },
+    {
+        name: "เงินได้ประเภทที่ 6",
+        category: 6,
+        label: "เงินได้จากวิชาชีพอิสระ",
+        subcategory: [
+            {
+                subcategorylabel: "การประกอบโรคศิลปะ",
+                subcategorycategory: 1,
+                subcategoryinfo: "หักแบบเหมา 60% หรือหักตามจริง",
+            },
+            {
+                subcategorylabel: "กฎหมาย/วิศวกรรม/สถาปัตยกรรม/บัญชี/ประณีตศิลปกรรม",
+                subcategorycategory: 2,
+                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+            },
+        ],
+    },
+    {
+        name: "เงินได้ประเภทที่ 7",
+        category: 7,
+        label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
+    },
+];
+
+const expenseType = [
+    {
+        name: "รายจ่าย tmp 1",
+        category: 1,
+    },
+    {
+        name: "รายจ่าย tmp 2",
+        category: 2,
+    },
+    {
+        name: "รายจ่าย tmp 3",
+        category: 3,
+    },
+    {
+        name: "รายจ่าย tmp 4",
+        category: 4,
+    },
+    {
+        name: "รายจ่าย tmp 5",
+        category: 5,
+    },
+    {
+        name: "รายจ่าย tmp 6",
+        category: 6,
+    },
+    {
+        name: "รายจ่าย tmp 7",
+        category: 7,
+    },
+    {
+        name: "อื่นๆ",
+        category: 8,
+    },
+];
+
+export const DataTableRow = ({
+    dataMonth,
+    userData,
+    setUserData,
+    selectedYear,
+}) => {
     const [openModal, setOpenModal] = useState(false);
-    const [monthData,setMonthData] = useState(dataMonth);
-    const [headerData,setHeaderData] = useState(digestMonthDataParent(monthData));
     const handleEditClick = () => {
         openModal ? setOpenModal(false) : setOpenModal(true);
     };
     const [open, setOpen] = React.useState(false);
-    
-    useEffect(() => {
-        setMonthData(dataMonth)
-        setHeaderData(digestMonthDataParent(monthData))
-    },[openModal, monthData, dataMonth])
+    const tmp = 0;
 
     return (
         <React.Fragment>
@@ -62,19 +170,31 @@ export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
                     ></IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {monthData.date}
+                    {new Date(dataMonth.date).toLocaleString("en-us", {
+                        month: "long",
+                    })}
                 </TableCell>
-                <TableCell align="center">{headerData.income}</TableCell>
-                <TableCell align="center">{headerData.expense}</TableCell>
-                <TableCell align="center">{headerData.investment}</TableCell>
+                <TableCell align="center">
+                    {dataMonth.incomeData.reduce(
+                        (sum, current) => parseFloat(sum) + parseFloat(current.amount),
+                        tmp
+                    )}
+                </TableCell>
+                <TableCell align="center">
+                    {dataMonth.expenseData.reduce(
+                        (sum, current) => parseFloat(sum) + parseFloat(current.amount),
+                        tmp
+                    )}
+                </TableCell>
+                <TableCell align="center">{dataMonth.investmentData}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                {/* {row.date} */}
-                            </Typography>
+                            {/* <Typography variant="h6" gutterBottom component="div">
+                                {row.date}
+                            </Typography> */}
                             <div style={{ display: "flex" }}>
                                 {/* Sub Tabel Income, Investment, Expense */}
                                 <Table className="sub-table">
@@ -89,9 +209,9 @@ export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
                                             </TableCell>
                                         </TableRow>
                                         <TableRow>
-                                            <TableCell align="center">Type</TableCell>
-                                            <TableCell align="center">SubType</TableCell>
                                             <TableCell align="center">Amount</TableCell>
+                                            <TableCell align="center">Type</TableCell>
+                                            <TableCell align="center">Subtype</TableCell>
                                         </TableRow>
                                     </TableHead>
                                 </Table>
@@ -124,8 +244,8 @@ export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
                                             </TableCell>
                                         </TableRow>
                                         <TableRow>
-                                            <TableCell align="center">Fixed Expense</TableCell>
-                                            <TableCell align="center">Variable Expense</TableCell>
+                                            <TableCell align="center">Amount</TableCell>
+                                            <TableCell align="center">Type</TableCell>
                                         </TableRow>
                                     </TableHead>
                                 </Table>
@@ -136,7 +256,7 @@ export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
             </TableRow>
             <EditMonthDataModal
                 show={openModal}
-                clickedMonth={monthData}
+                dataMonth={dataMonth}
                 onClose={handleEditClick}
                 mode="editexisting"
                 userData={userData}

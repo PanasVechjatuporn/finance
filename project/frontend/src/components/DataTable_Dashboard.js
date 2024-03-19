@@ -59,13 +59,14 @@ const groupDataByYear = (data) => {
   }, []);
 };
 
-export default function MonthDataTable() {
+export default function MonthDataTable({userData, setUserData}) {
   const userStore = useSelector((state) => state.userStore);
-  const [userData, setUserData] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [allYear, setAllYear] = useState(null);
   const [currentYearData, setCurrentYearData] = useState(null);
   const [openNewMonthModal, setOpenNewMonthModal] = useState(false);
+
+
 
   const handleNewMonthClick = () => {
     openNewMonthModal
@@ -110,7 +111,6 @@ export default function MonthDataTable() {
           setCurrentYearData(dataYear);
         }
         setAllYear(yearInData);
-        setUserData(groupedData);
       } else {
         const currentDate = new Date();
         const currentYearObj = {
@@ -120,7 +120,6 @@ export default function MonthDataTable() {
         setSelectedYear(currentDate.getFullYear().toString());
         setCurrentYearData(currentYearObj);
         setAllYear([currentDate.getFullYear().toString()]);
-        setUserData([currentYearObj]);
       }
     });
   }, [userStore]);

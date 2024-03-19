@@ -278,7 +278,7 @@ function modifyUserDataByYear(yearToChange, newData, setUserData) {
 const EditMonthDataModal = ({
     show,
     onClose,
-    clickedMonth,
+    dataMonth,
     mode,
     currentYearData,
     selectedYear,
@@ -287,20 +287,36 @@ const EditMonthDataModal = ({
     setUserData,
 }) => {
     const userStore = useSelector((state) => state.userStore);
-    const [incomeData, setIncomeData] = useState([{}]);
-    const [expenseData, setExpenseData] = useState([{}]);
-    const [investmentData, setInvestmentData] = useState(null);
+    //set initial state
+    const dataMonthCopy = dataMonth ? JSON.parse(JSON.stringify(dataMonth)) : dataMonth;
+    const [incomeData, setIncomeData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.incomeData : [{}]);
+    const [expenseData, setExpenseData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.expenseData : [{}]);
+    const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
     const [isLoading, setisLoading] = useState(false);
-    const [currentDate, setCurrentDate] = useState(null);
-    const [newMonthString, setNewMonthString] = useState("");
-    const [newYearString, setNewYearString] = useState("");
+    const [currentDate, setCurrentDate] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.date : null);
+    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("en-us",{month: "long"}) : "");
+    const [newYearString, setNewYearString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).getFullYear() : "");
     const [isUseSameData, setIsUseSameData] = useState(false);
 
+    //back to initial state
     useEffect(() => {
         if (mode === "newmonth") {
             setIncomeData([{}]);
             setExpenseData([{}]);
             setInvestmentData(null);
+            setIsUseSameData(false);
+        }
+        else{
+            setCurrentDate(dataMonthCopy.date);
+            setIncomeData(dataMonthCopy.incomeData);
+            setExpenseData(dataMonthCopy.expenseData);
+            setInvestmentData(dataMonthCopy.investmentData);
+            setNewYearString(new Date(dataMonthCopy.date).getFullYear());
+            setNewMonthString(
+                new Date(dataMonthCopy.date).toLocaleString("en-us", {
+                    month: "long",
+                })
+            );
         }
     }, [show, mode]);
 
@@ -323,19 +339,20 @@ const EditMonthDataModal = ({
                     month: "long",
                 })
             );
-        } else {
-            setCurrentDate(clickedMonth.date);
-            setIncomeData(clickedMonth.incomeData);
-            setExpenseData(clickedMonth.expenseData);
-            setInvestmentData(clickedMonth.investmentData);
-            setNewYearString(new Date(clickedMonth.date).getFullYear());
+        } 
+        else {
+            setCurrentDate(dataMonthCopy.date);
+            setIncomeData(dataMonthCopy.incomeData);
+            setExpenseData(dataMonthCopy.expenseData);
+            setInvestmentData(dataMonthCopy.investmentData);
+            setNewYearString(new Date(dataMonthCopy.date).getFullYear());
             setNewMonthString(
-                new Date(clickedMonth.date).toLocaleString("en-us", {
+                new Date(dataMonthCopy.date).toLocaleString("en-us", {
                     month: "long",
                 })
             );
         }
-    }, [mode, selectedYear, currentYearData, clickedMonth, userData]);
+    }, [mode, selectedYear, currentYearData, dataMonth, userData]);
 
     const handleDeleteIncomeAtIndex = (index) => {
         let tmpIncomeData = [...incomeData];
