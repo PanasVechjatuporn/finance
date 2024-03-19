@@ -66,8 +66,6 @@ export default function MonthDataTable({ userData, setUserData }) {
   const [currentYearData, setCurrentYearData] = useState(null);
   const [openNewMonthModal, setOpenNewMonthModal] = useState(false);
 
-
-
   const handleNewMonthClick = () => {
     openNewMonthModal
       ? setOpenNewMonthModal(false)
@@ -96,7 +94,9 @@ export default function MonthDataTable({ userData, setUserData }) {
         const yearInData = groupedData.map((data) => data.year);
         if (yearInData.length > 0) {
           setSelectedYear(yearInData[0].toString());
-          let dataYear = groupedData.find((entry) => entry.year === yearInData[0]);
+          let dataYear = groupedData.find(
+            (entry) => entry.year === yearInData[0]
+          );
           let tmpMonthArray = dataYear.data;
           tmpMonthArray.sort((a, b) => {
             if (a.date < b.date) {
@@ -176,15 +176,20 @@ export default function MonthDataTable({ userData, setUserData }) {
               {currentYearData.data.length > 0 ? (
                 <TableBody>
                   {currentYearData.data.map((monthData, index) => (
-                      <DataTableRow
-                        key={`data-table-row-${index}`}
-                        dataMonth={monthData}
-                        currentYearData={currentYearData}
-                        userData={userData}
-                        setUserData={setUserData}
-                        selectedYear={selectedYear}
-                        isDeleteActive={parseInt(currentYearData.data.length) === parseInt(index+1) ? true : false}
-                      ></DataTableRow>
+                    <DataTableRow
+                      key={`data-table-row-${index}`}
+                      dataMonth={monthData}
+                      currentYearData={currentYearData}
+                      userData={userData}
+                      setUserData={setUserData}
+                      selectedYear={selectedYear}
+                      isDeleteActive={
+                        parseInt(currentYearData.data.length) ===
+                          parseInt(index + 1)
+                          ? true
+                          : false
+                      }
+                    ></DataTableRow>
                   ))}
                 </TableBody>
               ) : (

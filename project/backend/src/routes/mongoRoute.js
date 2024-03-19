@@ -10,4 +10,6 @@ router.post('/upsert_multiple',mongoController.upsertUserMultipleMonthlyData)
 
 router.get('/userdata_dashboard', mongoController.getUserDataDashboard)
 
+router.post('/delete_monthly',mongoController.deleteUserMonthData)
+
 module.exports = router;

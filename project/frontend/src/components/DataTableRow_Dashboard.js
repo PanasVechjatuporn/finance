@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Table, TableBody, TableHead } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TableCell from "@mui/material/TableCell";
@@ -10,7 +11,13 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "react-bootstrap/Button";
+import { Modal } from "react-bootstrap";
+import axios from "axios";
+
+const baseURL = "http://localhost:8000";
+
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -136,22 +143,75 @@ const expenseType = [
     },
 ];
 
+async function deleteCurrentMonthData(dataMonth, userData, setUserData, userStore){
+    await axios.post(
+        `${baseURL}/db/delete_monthly`,
+         { 
+            month : dataMonth.month,
+            year : dataMonth.year
+         },
+        {
+            headers: {
+                Authorization: userStore.userToken,
+                UserId: userStore.userId
+            },
+        }
+    )
+    const resFetchNewData = await axios.get(
+        `${baseURL}/db/userdata_dashboard`,
+        {
+            headers: {
+                Authorization: userStore.userToken,
+                userId: userStore.userId,
+                year: dataMonth.year
+            },
+        }
+    );
+    modifyUserDataByYear(
+        dataMonth.year,
+        resFetchNewData.data.queryResult,
+        setUserData
+    );
+}
+
+function modifyUserDataByYear(yearToChange, newData, setUserData) {
+    setUserData((prevState) => {
+        return prevState.map((entry) => {
+            if (entry.year === yearToChange) {
+                return { ...entry, data: newData };
+            }
+            return entry;
+        });
+    });
+}
+
 export const DataTableRow = ({
     dataMonth,
     userData,
     setUserData,
     selectedYear,
-    isDeleteActive
+    isDeleteActive,
 }) => {
+    const userStore = useSelector((state) => state.userStore);
     const [openModal, setOpenModal] = useState(false);
     const handleEditClick = () => {
         openModal ? setOpenModal(false) : setOpenModal(true);
     };
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [open, setOpen] = React.useState(false);
     const tmp = 0;
 
     const onClickDelete = (e) => {
-        console.log('e :: ',e)
+        openDeleteModal ? setOpenDeleteModal(false) : setOpenDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = (e) => {
+        setOpenDeleteModal(false);
+    };
+
+    const handleDeleteCurrentMonth = async (e) => {
+        await deleteCurrentMonthData(dataMonth, userData, setUserData, userStore)
+        setOpenDeleteModal(false)
     }
     return (
         <React.Fragment>
@@ -195,14 +255,16 @@ export const DataTableRow = ({
                 {/* delete button */}
                 <TableCell align="center">
                     <>
-                    {
-                        isDeleteActive ? (<IconButton
-                            children={<DeleteIcon style={{color : 'red'}}></DeleteIcon>}
-                            onClick={(e) => {
-                                onClickDelete(e)
-                            }}
-                        ></IconButton>) : (<DeleteIcon style={{ color: 'grey' }} />)
-                    }
+                        {isDeleteActive ? (
+                            <IconButton
+                                children={<DeleteIcon style={{ color: "red" }}></DeleteIcon>}
+                                onClick={(e) => {
+                                    onClickDelete(e);
+                                }}
+                            ></IconButton>
+                        ) : (
+                            <DeleteIcon style={{ color: "grey" }} />
+                        )}
                     </>
                 </TableCell>
             </TableRow>
@@ -223,8 +285,8 @@ export const DataTableRow = ({
                                                 colSpan={3}
                                                 style={{ fontSize: "12pt" }}
                                                 sx={{
-                                                    backgroundColor: '#CBFFA9',
-                                                  }}
+                                                    backgroundColor: "#CBFFA9",
+                                                }}
                                             >
                                                 Income
                                             </TableCell>
@@ -236,15 +298,22 @@ export const DataTableRow = ({
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {
-                                            (dataMonth.incomeData.map((item, index) => 
-                                                (<TableRow>
-                                                    <TableCell key={item.amount+index} align="center">{item.amount}</TableCell>
-                                                    <TableCell key={item.type+index} align="center">{item.type}</TableCell>
-                                                    <TableCell key={item.amount+Math.random(10,10)} align="center">null</TableCell>
-                                                </TableRow>)
-                                            )) 
-                                        }
+                                        {dataMonth.incomeData.map((item, index) => (
+                                            <TableRow>
+                                                <TableCell key={item.amount + index} align="center">
+                                                    {item.amount}
+                                                </TableCell>
+                                                <TableCell key={item.type + index} align="center">
+                                                    {item.type}
+                                                </TableCell>
+                                                <TableCell
+                                                    key={item.amount + Math.random(10, 10)}
+                                                    align="center"
+                                                >
+                                                    null
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                                 <Table className="sub-table">
@@ -255,8 +324,8 @@ export const DataTableRow = ({
                                                 colSpan={2}
                                                 style={{ fontSize: "12pt" }}
                                                 sx={{
-                                                    backgroundColor: '#FF9B9B',
-                                                  }}
+                                                    backgroundColor: "#FF9B9B",
+                                                }}
                                             >
                                                 Expense
                                             </TableCell>
@@ -267,14 +336,16 @@ export const DataTableRow = ({
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {
-                                            (dataMonth.expenseData.map((item, index) => 
-                                                (<TableRow>
-                                                    <TableCell key={item.amount+index} align="center">{item.amount}</TableCell>
-                                                    <TableCell key={item.type+index} align="center">{item.type}</TableCell>
-                                                </TableRow>)
-                                            )) 
-                                        }
+                                        {dataMonth.expenseData.map((item, index) => (
+                                            <TableRow>
+                                                <TableCell key={item.amount + index} align="center">
+                                                    {item.amount}
+                                                </TableCell>
+                                                <TableCell key={item.type + index} align="center">
+                                                    {item.type}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                                 <Table className="sub-table">
@@ -285,20 +356,22 @@ export const DataTableRow = ({
                                                 colSpan={2}
                                                 style={{ fontSize: "12pt" }}
                                                 sx={{
-                                                    backgroundColor: '#FFFEC4',
-                                                  }}
+                                                    backgroundColor: "#FFFEC4",
+                                                }}
                                             >
                                                 Investment
                                             </TableCell>
                                         </TableRow>
                                         <TableRow>
-                                            <TableCell align="center" key={Math.random(10,10)}>Amount</TableCell>
-                                            <TableCell align="center" key={Math.random(10,10)}>Unit</TableCell>
+                                            <TableCell align="center" key={Math.random(10, 10)}>
+                                                Amount
+                                            </TableCell>
+                                            <TableCell align="center" key={Math.random(10, 10)}>
+                                                Unit
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
-                                    <TableBody>
-
-                                    </TableBody>
+                                    <TableBody></TableBody>
                                 </Table>
                             </div>
                         </Box>
@@ -314,6 +387,34 @@ export const DataTableRow = ({
                 setUserData={setUserData}
                 selectedYear={selectedYear}
             ></EditMonthDataModal>
+            <Modal show={openDeleteModal} backdrop="static">
+                <Modal.Header closeButton onHide={handleCloseDeleteModal}>
+                    <Modal.Title>
+                       Deleting
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete {dataMonth.date}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="primary"
+                        onClick={(e) => {
+                            handleCloseDeleteModal()
+                        }}
+                    >
+                        No
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={(e) => {
+                            handleDeleteCurrentMonth()
+                        }}
+                    >
+                        Yes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </React.Fragment>
     );
 };

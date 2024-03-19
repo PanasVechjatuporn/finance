@@ -161,3 +161,27 @@ exports.getUserDataDashboard = async (req, res) => {
         res.status(401).json({ message: error });
     }
 }
+
+exports.deleteUserMonthData = async (req, res) => {
+    const year = req.body.year
+    const month = req.body.month
+    const userToken = req.header('Authorization')
+    const userId = req.header('UserId')
+    const db = client.db(dbName)
+    const collection = db.collection('income_expense')
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId)
+        if (isVerify) {
+            let query = { year: year , month : month, userId : userId }
+            const queryResult = await collection.deleteOne(
+                query
+            )
+            res.status(200).json({message : "delete success"})
+        } else {
+            throw new Error('unauthorized access')
+        }
+    } catch (error) {
+        console.log('Error occured in mongoController.upsertUserMonthlyData: ', error)
+        res.status(401).json({ message: error });
+    }
+}
