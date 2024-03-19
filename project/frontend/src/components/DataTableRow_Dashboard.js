@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, TableBody, TableHead } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
@@ -272,11 +271,8 @@ export const DataTableRow = ({
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            {/* <Typography variant="h6" gutterBottom component="div">
-                                {row.date}
-                            </Typography> */}
                             <div style={{ display: "flex" }}>
-                                {/* Sub Tabel Income, Investment, Expense */}
+                                {/* Sub Table Income, Investment, Expense */}
                                 <Table className="sub-table">
                                     <TableHead>
                                         <TableRow>
