@@ -95,9 +95,19 @@ export default function MonthDataTable() {
         const yearInData = groupedData.map((data) => data.year);
         if (yearInData.length > 0) {
           setSelectedYear(yearInData[0].toString());
-          setCurrentYearData(
-            groupedData.find((entry) => entry.year === yearInData[0])
-          );
+          let dataYear = groupedData.find((entry) => entry.year === yearInData[0]);
+          let tmpMonthArray = dataYear.data;
+          tmpMonthArray.sort((a, b) => {
+            if (a.date < b.date) {
+              return -1;
+            }
+            if (a.date > b.date) {
+              return 1;
+            }
+            return 0;
+          });
+          dataYear.data = tmpMonthArray;
+          setCurrentYearData(dataYear);
         }
         setAllYear(yearInData);
         setUserData(groupedData);
@@ -117,7 +127,19 @@ export default function MonthDataTable() {
 
   useEffect(() => {
     if (userData && selectedYear) {
-      setCurrentYearData(userData.find((entry) => entry.year === selectedYear));
+      let dataYear = userData.find((entry) => entry.year === selectedYear);
+      let tmpMonthArray = dataYear.data;
+      tmpMonthArray.sort((a, b) => {
+        if (a.date < b.date) {
+          return -1;
+        }
+        if (a.date > b.date) {
+          return 1;
+        }
+        return 0;
+      });
+      dataYear.data = tmpMonthArray;
+      setCurrentYearData(dataYear);
     }
   }, [selectedYear, userData]);
 

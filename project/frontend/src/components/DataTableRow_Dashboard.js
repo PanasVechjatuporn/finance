@@ -62,8 +62,7 @@ export const DataTableRow = ({dataMonth,userData,setUserData,selectedYear}) => {
                     ></IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {/* {console.log('monthData :: ',monthData)}
-                    {monthData.date} */}
+                    {monthData.date}
                 </TableCell>
                 <TableCell align="center">{headerData.income}</TableCell>
                 <TableCell align="center">{headerData.expense}</TableCell>
