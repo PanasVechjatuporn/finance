@@ -185,7 +185,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                       selectedYear={selectedYear}
                       isDeleteActive={
                         parseInt(currentYearData.data.length) ===
-                          parseInt(index + 1)
+                          parseInt(index + 1) && (currentYearData.data.length !== 1)
                           ? true
                           : false
                       }
