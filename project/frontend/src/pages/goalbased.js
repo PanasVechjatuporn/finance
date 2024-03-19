@@ -10,8 +10,20 @@ import Modal from '@mui/material/Modal';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import GoalCard from "components/GoalCard";
 import mockGoal from "mockupData/mockGoal.json"
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 export const GoalBased = () => {
+
+    const uid = useSelector(state => state.userStore.userId)
+    const [data, setData] = React.useState([])
+    React.useEffect(() => {
+        async function fetchData() {
+            await axios.get(`http://localhost:8000/db/userdata=${uid}`)
+                .then(response => { setData(response.data); console.log(response, uid) });
+        }
+        fetchData();
+    }, [uid])
 
     const [openCreate, setOpenCreate] = React.useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
@@ -53,6 +65,7 @@ export const GoalBased = () => {
                         </Button>
                         <Link
                             to={"./reduce-tax-goal"}
+                            state={{ data: data }}
                             style={{ textDecoration: "none", color: "white" }}
                         >
                             <Button sx={{ backgroundColor: 'black' }} size="small" >

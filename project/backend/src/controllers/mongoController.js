@@ -72,7 +72,7 @@ exports.get_user_data_income_expense = async (req, res) => {
     const collection = db.collection('income_expense')
 
     try {
-        query = {}
+        query = { userId: req.params.uid }
         var findResult = await collection.find(query).toArray();
         console.log(findResult);
         res.json(findResult);
@@ -90,7 +90,7 @@ exports.get_funds = async (req, res) => {
 
     try {
         query = {};
-        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1, "url_factsheet": 1 }).toArray();
+        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1, "url_factsheet": 1 }).sort({ "growthrat_lastmonth": -1 }).toArray();
         console.log(findResult);
         res.json(findResult);
 
@@ -106,10 +106,11 @@ exports.save_tax_goal = async (req, res) => {
     const collection = db.collection('goal')
 
     //เอาไว้หา UserId
-    const filter = {};
+    const filter = { userId: req.body.uid };
 
     const updateDoc = {
         $set: {
+            userId: req.body.uid,
             funds: req.body.confirmData
         }
     };

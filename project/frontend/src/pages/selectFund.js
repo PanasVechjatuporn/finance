@@ -14,12 +14,15 @@ import AddIcon from '@mui/icons-material/Add';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Tooltip from '@mui/material/Tooltip';
 import SaveIcon from '@mui/icons-material/Save';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const SelectFund = () => {
     const location = useLocation();
     const netIncome = location.state.netIncome;
     const beforeReduction = location.state.beforeReduction;
-
+    const uid = useSelector(state => state.userStore.userId)
     const [isLoading, setIsloading] = React.useState(true);
 
     function calTax(netIncome) {
@@ -51,7 +54,7 @@ export const SelectFund = () => {
         return tax;
     }
 
-    const [investPercent, setInvestPercent] = React.useState('')
+    const [investPercent, setInvestPercent] = React.useState('100')
 
     const [tax, setTax] = React.useState(0);
     const [newTax, setNewTax] = React.useState(0);
@@ -64,8 +67,7 @@ export const SelectFund = () => {
         async function fetchData() {
             const fundsResponse = await axios.get('http://localhost:8000/db/funds');
             setFunds(fundsResponse.data);
-            console.log(funds)
-            const userData = await axios.get('http://localhost:8000/db/userdata=5');
+            const userData = await axios.get(`http://localhost:8000/db/userdata=${uid}`);
             let sumOfInvest = 0;
             userData.data.forEach(item => {
                 sumOfInvest += parseInt(item.investmentData);
@@ -79,7 +81,7 @@ export const SelectFund = () => {
             setIsloading(false);
         }
         fetchData();
-    }, [investPercent])
+    }, [])
 
     /*const [fundName, setFundName] = React.useState('');
 
@@ -88,23 +90,38 @@ export const SelectFund = () => {
         console.log(event.target.innerHTML)
     };*/
 
-    const [dropdowns, setDropdowns] = React.useState([{ id: 0, value: '' }]);
+    const [dropdowns, setDropdowns] = React.useState([{ value: '' }]);
 
     const addDropdown = () => {
-        const newDropdowns = [...dropdowns, { id: dropdowns.length, value: '' }];
+        const newDropdowns = [...dropdowns, { value: '' }];
         setDropdowns(newDropdowns);
     };
 
-    const handleDropdownChange = (id, newValue) => {
-        const updatedDropdowns = dropdowns.map(dropdown =>
-            dropdown.id === id ? { ...dropdown, value: newValue } : dropdown
+    const deleteDropdown = (passedIndex) => {
+        const updatedDropdowns = [...dropdowns];
+        updatedDropdowns.splice(passedIndex, 1);
+        setDropdowns(updatedDropdowns);
+    };
+
+
+    const handleDropdownChange = (passedIndex, newValue) => {
+        const updatedDropdowns = dropdowns.map((dropdown, index) =>
+            index === passedIndex ? { ...dropdown, value: newValue } : dropdown
         );
         setDropdowns(updatedDropdowns);
     };
 
+    const navigate = useNavigate();
+
     function saveTaxGoal() {
-        const confirmData = dropdowns.map(item => (item.value.split(' (')[0]));
-        axios.post('http://localhost:8000/db/save_tax_goal', { confirmData })
+        const confirmData = dropdowns.map(item => {
+            return (item.value.split(' (')[0])
+        });
+        if (confirmData.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
+        else {
+            axios.post('http://localhost:8000/db/save_tax_goal', { confirmData, uid })
+                .then(navigate("/"))
+        }
     }
 
     return (
@@ -204,9 +221,11 @@ export const SelectFund = () => {
                             <div style={{ width: "50%", marginRight: 5 }}>
                                 <Autocomplete
                                     freeSolo
+                                    //isOptionEqualToValue={(option, value) => option == value || '' == value}
                                     id="free-solo-2-demo"
                                     disableClearable
-                                    onChange={e => handleDropdownChange(dropdown.id, e.target.innerHTML)}
+                                    value={dropdown.value}
+                                    onChange={e => handleDropdownChange(index, e.target.innerHTML)}
                                     options={funds.map((item) => (item.proj_name_th + ` (${item.proj_name_en})`))}
                                     renderInput={(params) => (
                                         <TextField
@@ -220,20 +239,21 @@ export const SelectFund = () => {
                                     )}
                                 />
                             </div>
-                            <IconButton onClick={addDropdown}>
-                                <AddIcon color='action' />
-                            </IconButton>
+                            {index == dropdowns.length - 1 ?
+                                <IconButton onClick={addDropdown}>
+                                    <AddIcon color='success' />
+                                </IconButton>
+                                :
+                                <IconButton onClick={e => deleteDropdown(index)}>
+                                    <ClearIcon color='error' />
+                                </IconButton>
+                            }
                         </div>))}
 
                     <Container style={{ display: 'flex', width: '50%', marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                        <Link
-                            to={"/Goal-Based"}
-                            style={{ textDecoration: "none", color: "white" }}
-                        >
-                            <IconButton onClick={saveTaxGoal} >
-                                <SaveIcon color='action' />
-                            </IconButton>
-                        </Link>
+                        <IconButton onClick={saveTaxGoal} >
+                            <SaveIcon color='action' />
+                        </IconButton>
                     </Container>
 
                 </Container>)}
