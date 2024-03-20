@@ -109,9 +109,8 @@ exports.save_tax_goal = async (req, res) => {
     const filter = { userId: req.body.uid };
 
     const updateDoc = {
-        $set: {
-            userId: req.body.uid,
-            funds: req.body.confirmData
+        $push: {
+            userGoals: req.body.confirmData
         }
     };
     const options = { upsert: true };

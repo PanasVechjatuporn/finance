@@ -155,9 +155,13 @@ function EachCard({ data }) {
 export default function GoalCard({ Goal }) {
     if (Object.keys(Goal).length > 0) {
         return (
-            Goal.map((card) => (
-                <EachCard key={card.Name} data={card} />
-            ))
+            Goal.map((card) => {
+                return card.userGoals.map((eachCard) => {
+                    console.log(eachCard);
+                    return <EachCard key={eachCard.Name} data={eachCard} />
+                }
+                )
+            })
         )
     }
 }
