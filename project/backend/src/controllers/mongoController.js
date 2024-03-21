@@ -191,3 +191,22 @@ exports.save_tax_goal = async (req, res) => {
     res.status(401).json({ message: error });
   }
 };
+
+exports.get_growthrate = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("goal");
+
+  try {
+    const query = {};
+    const options = {
+      projection: { _id: 0, growthrat_lastmonth: 1 },
+    };
+
+    const findResult = collection.find(query).project(options);
+    console.log(findResult);
+    res.status(200).json({ findResult });
+  } catch (error) {
+    console.log("Error occured in exports.get_growthrate: ", error);
+    res.status(401).json({ message: error });
+  }
+};

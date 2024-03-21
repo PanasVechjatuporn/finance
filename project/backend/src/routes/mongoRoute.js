@@ -17,4 +17,6 @@ router.get("/funds", mongoController.get_funds);
 
 router.post("/save_tax_goal", mongoController.save_tax_goal);
 
+router.get("/get_growthrate", mongoController.get_growthrate);
+
 module.exports = router;
