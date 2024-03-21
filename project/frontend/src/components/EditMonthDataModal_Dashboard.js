@@ -16,13 +16,13 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
+import OverlayLoading from "./OverlayLoading";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import "./EditMonthDataModal_Dashboard.css";
 const baseURL = "http://localhost:8000";
-let monthString;
-let year;
-let month;
+
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -144,7 +144,7 @@ const expenseType = [
     },
     {
         name: "อื่นๆ",
-        category: 0,
+        category: 8,
     },
 ];
 
@@ -154,56 +154,98 @@ async function onSaveMonthData(
     expenseData,
     investmentData,
     currentDate,
-    setisLoading
+    setisLoading,
+    currentYearData,
+    setCurrentYearData,
+    userData,
+    setUserData,
+    isUseSameData
 ) {
-    return new Promise((resolve, reject) => {
-        try {
-            setisLoading(true);
-            Promise.all([validateMonthData(incomeData, expenseData, investmentData)])
-                .then(() => {
-                    const upsertData = {
-                        user: {
-                            userId: userStore.userId,
-                        },
-                        currentDate: currentDate,
-                        incomeData,
-                        expenseData,
-                        investmentData,
-                    };
-                    try {
-                        axios
-                            .post(
-                                `${baseURL}/db/upsert_monthly`,
-                                {
-                                    upsertData,
-                                },
-                                {
-                                    headers: {
-                                        Authorization: userStore.userToken,
-                                    },
-                                }
-                            )
-                            .then((res) => {
-                                setisLoading(false);
-                                resolve(res);
-                            });
-                    } catch (err) {
-                        console.error("Error :: ", err);
-                        setisLoading(false);
-                        reject(err);
-                    }
+    try {
+        setisLoading(true);
+        await validateMonthData(incomeData, expenseData, investmentData);
+        if (isUseSameData === true) {
+            let upsertData = [];
+            for(let i=0;i< 12 - currentYearData.data.length; i++){
+                upsertData.push({
+                    user: {
+                        userId: userStore.userId
+                    },
+                    currentDate: currentDate.split("-")[0]+"-"+String(parseInt(currentDate.split("-")[1]) + i).padStart(2,'0'),
+                    incomeData,
+                    expenseData,
+                    investmentData,
                 })
-                .catch((err) => {
-                    console.error("Error saving data:", err);
-                    setisLoading(false);
-                    reject(err);
-                });
-        } catch (err) {
-            console.error("Error :: ", err);
+            }
+            const resUpsert = await axios.post(
+                `${baseURL}/db/upsert_multiple`,
+                { upsertData },
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        UserId: userStore.userId
+                    },
+                }
+            )
+            const resFetchNewData = await axios.get(
+                `${baseURL}/db/userdata_dashboard`,
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        userId: userStore.userId,
+                        year: currentDate.split("-")[0],
+                    },
+                }
+            );
+            modifyUserDataByYear(
+                currentDate.split("-")[0],
+                resFetchNewData.data.queryResult,
+                setUserData
+            );
             setisLoading(false);
-            reject(err);
+            return resUpsert;
+        } else {
+            const upsertData = {
+                user: {
+                    userId: userStore.userId,
+                },
+                currentDate: currentDate,
+                incomeData,
+                expenseData,
+                investmentData,
+            };
+            const resUpsert = await axios.post(
+                `${baseURL}/db/upsert_monthly`,
+                { upsertData },
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                    },
+                }
+            );
+            const resFetchNewData = await axios.get(
+                `${baseURL}/db/userdata_dashboard`,
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        userId: userStore.userId,
+                        year: currentDate.split("-")[0],
+                    },
+                }
+            );
+            modifyUserDataByYear(
+                currentDate.split("-")[0],
+                resFetchNewData.data.queryResult,
+                setUserData
+            );
+            setisLoading(false);
+            return resUpsert;
         }
-    });
+    } catch (err) {
+        console.error("Error saving data:", err);
+        setisLoading(false);
+        throw err;
+    }
 }
 
 function validateMonthData(incomeData, expenseData, investmentData) {
@@ -220,40 +262,61 @@ function validateMonthData(incomeData, expenseData, investmentData) {
     });
 }
 
-function OverlayLoading({ isLoading }) {
-    const [open, setOpen] = React.useState(false);
-    React.useEffect(() => {
-        setOpen(isLoading);
-    }, [isLoading]);
-
-    return (
-        <div>
-            <Backdrop
-                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={open}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        </div>
-    );
+function modifyUserDataByYear(yearToChange, newData, setUserData) {
+    setUserData((prevState) => {
+        return prevState.map((entry) => {
+            if (entry.year === yearToChange) {
+                return { ...entry, data: newData };
+            }
+            return entry;
+        });
+    });
 }
 
 const EditMonthDataModal = ({
     show,
     onClose,
-    clickedMonth,
+    dataMonth,
     mode,
     currentYearData,
     selectedYear,
+    setCurrentYearData,
+    userData,
+    setUserData,
 }) => {
     const userStore = useSelector((state) => state.userStore);
-    const [incomeData, setIncomeData] = useState([{}]);
-    const [expenseData, setExpenseData] = useState([{}]);
-    const [investmentData, setInvestmentData] = useState(null);
+    //set initial state
+    const dataMonthCopy = dataMonth ? JSON.parse(JSON.stringify(dataMonth)) : dataMonth;
+    const [incomeData, setIncomeData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.incomeData : [{}]);
+    const [expenseData, setExpenseData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.expenseData : [{}]);
+    const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
     const [isLoading, setisLoading] = useState(false);
-    const [currentDate, setCurrentDate] = useState(null);
-    const [newMonthString, setNewMonthString] = useState('');
-    const [newYearString, setNewYearString] = useState('');
+    const [currentDate, setCurrentDate] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.date : null);
+    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("en-us",{month: "long"}) : "");
+    const [newYearString, setNewYearString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).getFullYear() : "");
+    const [isUseSameData, setIsUseSameData] = useState(false);
+
+    //back to initial state
+    useEffect(() => {
+        if (mode === "newmonth") {
+            setIncomeData([{}]);
+            setExpenseData([{}]);
+            setInvestmentData(null);
+            setIsUseSameData(false);
+        }
+        else{
+            setCurrentDate(dataMonthCopy.date);
+            setIncomeData(dataMonthCopy.incomeData);
+            setExpenseData(dataMonthCopy.expenseData);
+            setInvestmentData(dataMonthCopy.investmentData);
+            setNewYearString(new Date(dataMonthCopy.date).getFullYear());
+            setNewMonthString(
+                new Date(dataMonthCopy.date).toLocaleString("en-us", {
+                    month: "long",
+                })
+            );
+        }
+    }, [show, mode]);
 
     useEffect(() => {
         if (mode === "newmonth") {
@@ -266,27 +329,28 @@ const EditMonthDataModal = ({
                     ).getMonth() + 1
                 ).padStart(2, "0")
             );
-        } else {
-            setCurrentDate(clickedMonth.date);
-            setIncomeData(clickedMonth.incomeData);
-            setExpenseData(clickedMonth.expenseData);
-            setInvestmentData(clickedMonth.investmentData);
-        }
-    }, [mode, selectedYear, currentYearData, clickedMonth]);
-
-    useEffect(() => {
-        if (currentYearData && mode === "newmonth") {
-            //handle newmonth case
-        } else if (currentYearData) {
-            setNewMonthString(
-                new Date(new Date().setMonth(currentYearData.data.length)).toLocaleString(
-                    "en-us",
-                    { month: "long" }
-                )
-            );
             setNewYearString(selectedYear);
+            setNewMonthString(
+                new Date(
+                    new Date().setMonth(currentYearData.data.length)
+                ).toLocaleString("en-us", {
+                    month: "long",
+                })
+            );
+        } 
+        else {
+            setCurrentDate(dataMonthCopy.date);
+            setIncomeData(dataMonthCopy.incomeData);
+            setExpenseData(dataMonthCopy.expenseData);
+            setInvestmentData(dataMonthCopy.investmentData);
+            setNewYearString(new Date(dataMonthCopy.date).getFullYear());
+            setNewMonthString(
+                new Date(dataMonthCopy.date).toLocaleString("en-us", {
+                    month: "long",
+                })
+            );
         }
-    }, [mode, selectedYear, currentYearData]);
+    }, [mode, selectedYear, currentYearData, dataMonth, userData]);
 
     const handleDeleteIncomeAtIndex = (index) => {
         let tmpIncomeData = [...incomeData];
@@ -335,13 +399,6 @@ const EditMonthDataModal = ({
     const handleInvestmentAmountChange = (e) => {
         setInvestmentData(e.target.value);
     };
-    if (show === true && mode === "editexisting") {
-        year = new Date(clickedMonth.date).getFullYear();
-        month = new Date(clickedMonth.date).getMonth();
-        monthString = new Date(clickedMonth.date).toLocaleString("en-us", {
-            month: "long",
-        });
-    }
 
     return (
         <Modal
@@ -356,7 +413,7 @@ const EditMonthDataModal = ({
             <Modal.Header closeButton>
                 {mode === "editexisting" ? (
                     <Modal.Title>
-                        Editing {monthString} of {year}
+                        Editing {newMonthString} of {newYearString}
                     </Modal.Title>
                 ) : currentYearData ? (
                     <Modal.Title>
@@ -366,7 +423,11 @@ const EditMonthDataModal = ({
             </Modal.Header>
             <Modal.Body>
                 <Container
-                    style={{ overflowY: "auto", maxHeight: `calc(100vh - 200px)` }}
+                    style={{
+                        overflowY: "auto",
+                        maxHeight: `calc(100vh - 200px)`,
+                        maxWidth: "100%",
+                    }}
                 >
                     <Row>
                         {/* Income */}
@@ -423,7 +484,7 @@ const EditMonthDataModal = ({
                                             <Grid item>
                                                 <FormControl
                                                     variant="standard"
-                                                    sx={{ m: 1, minWidth: 150 }}
+                                                    sx={{ m: 1, minWidth: 200, maxWidth: 200 }}
                                                 >
                                                     <InputLabel id="income-type-label">
                                                         ประเภทของรายได้
@@ -446,7 +507,7 @@ const EditMonthDataModal = ({
                                                                 value={type.category}
                                                                 key={type.name + index}
                                                             >
-                                                                {type.name}
+                                                                {type.label}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -576,7 +637,7 @@ const EditMonthDataModal = ({
                                                 <Grid item>
                                                     <FormControl
                                                         variant="standard"
-                                                        sx={{ m: 1, minWidth: 150 }}
+                                                        sx={{ m: 1, maxWidth: 125, minWidth: 125 }}
                                                     >
                                                         <InputLabel id="expense-type-label">
                                                             ประเภทของรายจ่าย
@@ -635,6 +696,23 @@ const EditMonthDataModal = ({
                 </Container>
             </Modal.Body>
             <Modal.Footer>
+                {mode === "newmonth" ? (
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isUseSameData}
+                                    onChange={(e) => {
+                                        console.log('e.target.checked :: ', e.target.checked)
+                                        setIsUseSameData(e.target.checked)
+                                    }
+                                    }
+                                />
+                            }
+                            label="ใช้ข้อมูลเดียวกันทั้งปี"
+                        />
+                    </FormGroup>
+                ) : null}
                 <Button
                     variant="secondary"
                     onClick={() => {
@@ -653,7 +731,12 @@ const EditMonthDataModal = ({
                                 expenseData,
                                 investmentData,
                                 currentDate,
-                                setisLoading
+                                setisLoading,
+                                currentYearData,
+                                setCurrentYearData,
+                                userData,
+                                setUserData,
+                                isUseSameData
                             );
                             onClose();
                         } catch (err) {

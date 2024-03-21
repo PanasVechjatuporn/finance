@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "../.env" });
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
+const { query } = require("express");
 // Database Name
 const dbName = "dev";
 
@@ -127,24 +128,6 @@ exports.get_user_data_income_expense = async (req, res) => {
   }
 };
 
-exports.getUserDataDashboard = async (req, res) => {
-  const userId = req.header("userId");
-  const userToken = req.header("Authorization");
-  const db = client.db(dbName);
-  const collection = db.collection("income_expense");
-  try {
-    query = { userId: userId };
-    const queryResult = await collection.find(query).toArray();
-    res.status(200).json({ queryResult });
-  } catch (error) {
-    console.log(
-      "Error occured in mongoController.getUserDataDashboard: ",
-      error
-    );
-    res.status(401).json({ message: error });
-  }
-};
-
 exports.get_funds = async (req, res) => {
   const db = client.db(dbName);
   const collection = db.collection("funds");
@@ -207,6 +190,95 @@ exports.get_growthrate = async (req, res) => {
     res.status(200).json({ findResult });
   } catch (error) {
     console.log("Error occured in exports.get_growthrate: ", error);
+    res.status(401).json({ message: error });
+  }
+};
+exports.upsertUserMultipleMonthlyData = async (req, res) => {
+  const upsertData = req.body.upsertData;
+  const userToken = req.header("Authorization");
+  const userId = req.header("UserId");
+  const db = client.db(dbName);
+  const collection = db.collection("income_expense");
+  try {
+    const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+    if (isVerify) {
+      await Promise.all(
+        upsertData.map(async (data) => {
+          let query = { userId: data.user.userId, date: data.currentDate };
+          await collection.updateOne(
+            query,
+            {
+              $set: {
+                userId: data.user.userId,
+                date: data.currentDate,
+                incomeData: data.incomeData,
+                expenseData: data.expenseData,
+                investmentData: data.investmentData,
+                year: data.currentDate.split("-")[0],
+                month: parseInt(data.currentDate.split("-")[1]).toString(),
+              },
+            },
+            { upsert: true }
+          );
+        })
+      );
+
+      res.status(200).json({ upsertData });
+    } else {
+      throw new Error("unauthorized access");
+    }
+  } catch (error) {
+    console.log(
+      "Error occured in mongoController.upsertUserMonthlyData: ",
+      error
+    );
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.getUserDataDashboard = async (req, res) => {
+  const userId = req.header("userId");
+  const userToken = req.header("Authorization");
+  const queryYear = req.header("year");
+  const db = client.db(dbName);
+  const collection = db.collection("income_expense");
+  try {
+    let query = { userId: userId };
+    if (queryYear) {
+      query.year = queryYear;
+    }
+    const queryResult = await collection.find(query).toArray();
+    res.status(200).json({ queryResult });
+  } catch (error) {
+    console.log(
+      "Error occured in mongoController.getUserDataDashboard: ",
+      error
+    );
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.deleteUserMonthData = async (req, res) => {
+  const year = req.body.year;
+  const month = req.body.month;
+  const userToken = req.header("Authorization");
+  const userId = req.header("UserId");
+  const db = client.db(dbName);
+  const collection = db.collection("income_expense");
+  try {
+    const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+    if (isVerify) {
+      let query = { year: year, month: month, userId: userId };
+      const queryResult = await collection.deleteOne(query);
+      res.status(200).json({ message: "delete success" });
+    } else {
+      throw new Error("unauthorized access");
+    }
+  } catch (error) {
+    console.log(
+      "Error occured in mongoController.upsertUserMonthlyData: ",
+      error
+    );
     res.status(401).json({ message: error });
   }
 };

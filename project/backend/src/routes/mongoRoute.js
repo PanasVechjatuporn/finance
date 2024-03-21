@@ -19,4 +19,8 @@ router.post("/save_tax_goal", mongoController.save_tax_goal);
 
 router.get("/get_growthrate", mongoController.get_growthrate);
 
+router.post("/upsert_multiple", mongoController.upsertUserMultipleMonthlyData);
+
+router.post("/delete_monthly", mongoController.deleteUserMonthData);
+
 module.exports = router;
