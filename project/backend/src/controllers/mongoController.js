@@ -105,20 +105,18 @@ exports.save_tax_goal = async (req, res) => {
     const db = client.db(dbName)
     const collection = db.collection('goal')
 
-    //เอาไว้หา UserId
-    const filter = { userId: req.body.uid };
-
     const updateDoc = {
-        $push: {
-            userGoals: req.body.confirmData
-        }
+        userId: req.body.userId,
+        Name: req.body.Name,
+        Funds: req.body.Funds,
+        Percentage: req.body.Percentage,
+        CreatedDate: new Date().toLocaleDateString("en-GB").split(' ')[0]
     };
-    const options = { upsert: true };
+    //const options = { upsert: true };
 
 
     try {
-        //ถ้า filter ไม่เจอ สร้างเป็น obj ใหม่(upsert)
-        await collection.updateOne(filter, updateDoc, options)
+        await collection.insertOne(updateDoc)
     } catch (error) {
         console.log('Error occured in exports.save_tax_goal: ', error)
         res.status(401).json({ message: error });

@@ -22,6 +22,7 @@ export const SelectFund = () => {
     const location = useLocation();
     const netIncome = location.state.netIncome;
     const beforeReduction = location.state.beforeReduction;
+    const Percentage = location.state.Percentage;
     const uid = useSelector(state => state.userStore.userId);
     const [isLoading, setIsloading] = React.useState(true);
 
@@ -54,7 +55,7 @@ export const SelectFund = () => {
         return tax;
     }
 
-    const [investPercent, setInvestPercent] = React.useState('100')
+    const investPercent = Percentage;
 
     const [tax, setTax] = React.useState(0);
     const [newTax, setNewTax] = React.useState(0);
@@ -125,12 +126,12 @@ export const SelectFund = () => {
     const navigate = useNavigate();
 
     function saveTaxGoal(e) {
-        const confirmData = dropdowns.map(item => {
+        const Funds = dropdowns.map(item => {
             return ({ fundName: item.name.split(' (')[0], amount: item.amount })
         });
-        if (confirmData.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
+        if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
         else {
-            axios.post('http://localhost:8000/db/save_tax_goal', { confirmData: { Name: 'ลดหย่อนภาษี', funds: { ...confirmData } }, uid })
+            axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid, Percentage: Percentage })
                 .then(navigate("/Goal-Based"))
         };
         e.preventDefault();
@@ -149,7 +150,7 @@ export const SelectFund = () => {
                 <Typography>
                     หลังหักค่าลดหย่อนเป็นเงินได้สุทธิ : {netIncome} บาท
                 </Typography>*/}
-                        <div style={{ width: '60%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ textAlign: 'center', width: '60%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Typography component={'span'} className="tax" variant="h6">
                                 ภาษีที่ต้องจ่าย : {tax} บาท
                             </Typography>
@@ -182,7 +183,8 @@ export const SelectFund = () => {
                                     เงินลงทุนรายเดือน : {Math.round(avgInvest)} บาท
                                 </Typography>
                                 <Typography component={'span'}>
-                                    ลงทุนในสัดส่วน :
+                                    ลงทุนในสัดส่วน : {Percentage} %
+                                    {/* ลงทุนในสัดส่วน :
                                     <TextField inputProps={{ style: { textAlign: 'center', width: 50, fontSize: 14 } }} placeholder='0' id="standard-basic" label="" variant="standard" value={investPercent}
                                         onChange={(e) => {
                                             if (e.target.value.match(/^[1-9][0-9]{0,2}$/)) {
@@ -192,8 +194,9 @@ export const SelectFund = () => {
                                                 setInvestPercent('')
                                             }
                                         }} />
-                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท
+                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
                                 </Typography>
+                                <Typography> คิดเป็นเงิน {investAmount.toString()}</Typography>
                             </div>
                         </Container>
 

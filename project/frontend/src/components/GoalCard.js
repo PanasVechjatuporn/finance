@@ -112,56 +112,95 @@ function EachCard({ data }) {
             </Modal>)
     }
 
-    return (
-        <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
-            <CardMedia
-                component="img"
-                height="100"
-                image=""
-                alt="icon/image"
-            />
-            <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                    ชื่อ : {data.Name || ""}
-                </Typography>
-                <Typography component="div" variant="subtitile1" color="text.secondary">
-                    ระยะเวลาการลงทุน : {data.Period || ""}
-                </Typography>
-                <Typography component="div" variant="subtitile1" color="text.secondary">
-                    เป้าหมาย : {data.Goal || ""}
-                </Typography>
-                <Typography component="div" variant="subtitile1" color="text.secondary">
-                    วันที่สร้าง : {data.CreatedDate || ""}
-                </Typography>
-            </CardContent>
-            <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
-                <Button onClick={handleOpenStop} sx={{ backgroundColor: 'black' }} size="small" >
-                    <Typography color='white' variant="subtitile1">
-                        หยุด
+    if (data.Name != 'ลดหย่อนภาษี') {
+        return (
+            <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
+                <CardMedia
+                    component="img"
+                    height="100"
+                    image=""
+                    alt="icon/image"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                        ชื่อ : {data.Name || ""}
                     </Typography>
-                </Button>
-                <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
-                <Button onClick={handleOpenDelete} sx={{ backgroundColor: 'black' }} size="small" >
-                    <Typography color='white' variant="subtitile1">
-                        ลบ
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        ระยะเวลาการลงทุน : {data.Period || ""}
                     </Typography>
-                </Button>
-                <ModalDelete openDelete={openDelete} handleCloseDelete={handleCloseDelete} />
-            </CardActions>
-        </Card >
-    )
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        เป้าหมาย : {data.Goal || ""}
+                    </Typography>
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        วันที่สร้าง : {data.CreatedDate || ""}
+                    </Typography>
+                </CardContent>
+                <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
+                    <Button onClick={handleOpenStop} sx={{ backgroundColor: 'black' }} size="small" >
+                        <Typography color='white' variant="subtitile1">
+                            หยุด
+                        </Typography>
+                    </Button>
+                    <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
+                    <Button onClick={handleOpenDelete} sx={{ backgroundColor: 'black' }} size="small" >
+                        <Typography color='white' variant="subtitile1">
+                            ลบ
+                        </Typography>
+                    </Button>
+                    <ModalDelete openDelete={openDelete} handleCloseDelete={handleCloseDelete} />
+                </CardActions>
+            </Card >
+        )
+    }
+    else {
+        return (
+            <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
+                <CardMedia
+                    component="img"
+                    height="100"
+                    image=""
+                    alt="icon/image"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                        ชื่อ : {data.Name || ""}
+                    </Typography>
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        ระยะเวลาการลงทุน : ปีต่อปี
+                    </Typography>
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        เป้าหมาย : ลดหย่อนภาษีให้ได้มากที่สุด
+                    </Typography>
+                    <Typography component="div" variant="subtitile1" color="text.secondary">
+                        วันที่สร้าง : {data.CreatedDate || ""}
+                    </Typography>
+                </CardContent>
+                <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
+                    <Button onClick={handleOpenStop} sx={{ backgroundColor: 'black' }} size="small" >
+                        <Typography color='white' variant="subtitile1">
+                            หยุด
+                        </Typography>
+                    </Button>
+                    <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
+                    <Button onClick={handleOpenDelete} sx={{ backgroundColor: 'black' }} size="small" >
+                        <Typography color='white' variant="subtitile1">
+                            ลบ
+                        </Typography>
+                    </Button>
+                    <ModalDelete openDelete={openDelete} handleCloseDelete={handleCloseDelete} />
+                </CardActions>
+            </Card >
+        )
+    }
 }
 
 export default function GoalCard({ Goal }) {
     if (Object.keys(Goal).length > 0) {
         return (
-            Goal.map((card) => {
-                return card.userGoals.map((eachCard) => {
-                    console.log(eachCard);
-                    return <EachCard key={eachCard.Name} data={eachCard} />
-                }
-                )
-            })
+            Goal.map((card) => (
+                <EachCard key={card.Name} data={card} />
+            )
+            )
         )
     }
 }

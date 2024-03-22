@@ -33,6 +33,8 @@ export function NewTaxGoal() {
     const location = useLocation();
 
     const data = location.state.data;
+    const Percentage = location.state.Percentage;
+
 
     const [isloading, setIsloading] = React.useState(true);
 
@@ -826,7 +828,8 @@ export function NewTaxGoal() {
                             <Link
                                 state={{
                                     netIncome: incomeSum - benefitSum - personal - insurance - charity,
-                                    beforeReduction: incomeSum - benefitSum
+                                    beforeReduction: incomeSum - benefitSum,
+                                    Percentage: Percentage
                                 }}
                                 to={"./select-fund"}
                                 style={{ textDecoration: "none", color: "white" }}
