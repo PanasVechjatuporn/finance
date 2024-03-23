@@ -45,7 +45,7 @@ exports.createNewUserWithProvider = async (req, res) => {
             displayName: userData.displayName,
             provider: provider,
           };
-          query = { uid: userData.uid };
+          let query = { uid: userData.uid };
           var findResult = await collection.findOne(query);
           if (findResult) {
             await collection.findOneAndReplace(query, obj, {
@@ -177,15 +177,16 @@ exports.save_tax_goal = async (req, res) => {
 
 exports.get_growthrate = async (req, res) => {
   const db = client.db(dbName);
-  const collection = db.collection("goal");
+  const collection = db.collection("funds");
 
   try {
     const query = {};
     const options = {
-      projection: { _id: 0, growthrat_lastmonth: 1 },
+      _id: 0,
+      growthrat_lastmonth: 1,
     };
 
-    const findResult = collection.find(query).project(options);
+    var findResult = await collection.find(query).project(options).toArray();
     console.log(findResult);
     res.status(200).json({ findResult });
   } catch (error) {
@@ -193,6 +194,7 @@ exports.get_growthrate = async (req, res) => {
     res.status(401).json({ message: error });
   }
 };
+
 exports.upsertUserMultipleMonthlyData = async (req, res) => {
   const upsertData = req.body.upsertData;
   const userToken = req.header("Authorization");

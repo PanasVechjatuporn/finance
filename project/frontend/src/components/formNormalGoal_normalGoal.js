@@ -12,9 +12,9 @@ export const FormGoal = ({ sendData }) => {
   const risk_profile = location.state.profile;
   const [alphabetFields, setAlphabetFields] = useState("");
   const [numbersFields, setNumbersFields] = useState({
-    year: "",
-    amount: "",
-    age: "",
+    year: 0,
+    amount: 0,
+    age: 0,
   });
 
   const handleAlphabetChange = (e) => {
