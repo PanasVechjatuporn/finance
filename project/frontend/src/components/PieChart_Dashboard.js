@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import { Box, Typography } from "@mui/material";
+import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Pie } from "react-chartjs-2";
-import {Chart, ArcElement} from 'chart.js'
-Chart.register(ArcElement);
+// import CustomChartLegend from "./CustomChartLegend_Dashboard";
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
         category: 1,
         label: "เงินเดือน",
+        color: "#abadfd",
     },
     {
         name: "เงินได้ประเภทที่ 2",
         category: 2,
         label: "ค่าจ้างทั่วไป",
+        color: "#abfca3",
     },
     {
         name: "เงินได้ประเภทที่ 3",
         category: 3,
         label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
+        color: "#f7f89a",
         subcategory: [
             {
                 subcategorylabel:
@@ -41,11 +45,13 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 4",
         category: 4,
         label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
+        color: "#fac991",
     },
     {
         name: "เงินได้ประเภทที่ 5",
         category: 5,
         label: "เงินได้จากการให้เช่าทรัพย์สิน",
+        color: "#f688bf",
         subcategory: [
             {
                 subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
@@ -78,6 +84,7 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 6",
         category: 6,
         label: "เงินได้จากวิชาชีพอิสระ",
+        color: "#52f5f5",
         subcategory: [
             {
                 subcategorylabel: "การประกอบโรคศิลปะ",
@@ -95,48 +102,17 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 7",
         category: 7,
         label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
+        color: "#ea7375",
     },
 ];
-const Data = [
-    {
-      id: 1,
-      year: 2016,
-      userGain: 80000,
-      userLost: 823
-    },
-    {
-      id: 2,
-      year: 2017,
-      userGain: 45677,
-      userLost: 345
-    },
-    {
-      id: 3,
-      year: 2018,
-      userGain: 78888,
-      userLost: 555
-    },
-    {
-      id: 4,
-      year: 2019,
-      userGain: 90000,
-      userLost: 4555
-    },
-    {
-      id: 5,
-      year: 2020,
-      userGain: 4300,
-      userLost: 234
-    }
-  ];
+
 export default function PieChartComponent({ userData }) {
     const [highlighted] = useState("item");
     const [faded] = useState("series");
     const [currentYear, setCurrentYear] = useState(
         userData ? userData[0].year : null
     );
-    const [pieExpenseInvestmentParams, setPieExpenseInvestmentParams] =
-        useState(null);
+    const [pieExpenseInvestmentParams, setPieExpenseInvestmentParams] = useState(null);
     const [pieIncomeParams, setPieIncomeParams] = useState(null);
     const [incomePieData, setIncomePieData] = useState(null);
     useEffect(() => {
@@ -158,6 +134,9 @@ export default function PieChartComponent({ userData }) {
                             const incomeTypeLabel = taxableIncome.find(
                                 (entry) => entry.category === incomeSource.type
                             ).label;
+                            const incomeTypeColor = taxableIncome.find(
+                                (entry) => entry.category === incomeSource.type
+                            ).color;
                             if (existingEntry) {
                                 existingEntry.value += parseFloat(incomeSource.amount);
                             } else {
@@ -165,75 +144,44 @@ export default function PieChartComponent({ userData }) {
                                     type: incomeSource.type,
                                     value: parseFloat(incomeSource.amount),
                                     label: incomeTypeLabel,
+                                    color: incomeTypeColor,
                                 });
                             }
                             yearlyIncome += parseFloat(incomeSource.amount);
                         });
-                        console.log('incomePieData :: ',incomePieData)
                         //expenseData
-                        expenseData.forEach((expenseSource) => {
-                            const existingEntry = expensePieData.find(
-                                (entry) => entry.type === expenseData.type
-                            );
-                            if (existingEntry) {
-                                existingEntry.value += parseFloat(expenseSource.amount);
-                            } else {
-                                expensePieData.push({});
-                            }
-                        });
+
                         //investmentData
                     }
                 );
-                // {
-                //     labels: Data.map((data) => data.year), 
-                //     datasets: [
-                //       {
-                //         label: "Users Gained ",
-                //         data: Data.map((data) => data.userGain),
-                //         backgroundColor: [
-                //           "rgba(75,192,192,1)",
-                //           &quot;#ecf0f1",
-                //           "#50AF95",
-                //           "#f3ba2f",
-                //           "#2a71d0"
-                //         ],
-                //         borderColor: "black",
-                //         borderWidth: 2
-                //       }
-                //     ]
-                //   }
+                setIncomePieData(incomePieData)
                 setPieIncomeParams({
-                    labels: Data.map((data) => data.year), 
-                    datasets: [
-                      {
-                        label: "Users Gained ",
-                        data: Data.map((data) => data.userGain),
-                        backgroundColor: [
-                          "rgba(75,192,192,1)",
-                          "#50AF95",
-                          "#f3ba2f",
-                          "#2a71d0"
-                        ],
-                        borderColor: "black",
-                        borderWidth: 2
-                      }
-                    ]
-                  })
-                // setPieIncomeParams({
-                //     series: [
-                //         {
-                //             data: incomePieData,
-                //             highlighted: { additionalRadius: 10 },
-                //         },
-                //     ],
-                //     height: 400,
-                //     paddingAngle: 5,
-                //     cornerRadius: 5,
-                //     margin: { top: 50, bottom: 50 },
-                // });
+                    series: [
+                        {
+                            data: incomePieData,
+                            highlighted: { additionalRadius: 10 },
+                        },
+                    ],
+                    height: 400,
+                    paddingAngle: 5,
+                    cornerRadius: 5,
+                    margin: { top: 50, bottom: 50 },
+                });
             }
         }
-    }, [userData, currentYear]);
+        // console.log('userData[2024] :: ',userData[0].data)
+        // setPieChartsParams({
+        //     series: [
+        //         {
+        //             data: [{ value: 5 }, { value: 10 }],
+        //             label: "Series 1",
+        //             highlighted: { additionalRadius: 10 },
+        //         },
+        //     ],
+        //     height: 400,
+        //     margin: { top: 50, bottom: 50 },
+        // })
+    }, [userData, currentYear])
 
     return (
         <Container maxWidth="md">
@@ -248,28 +196,54 @@ export default function PieChartComponent({ userData }) {
             >
                 <Typography>สรุปรายรับ ปี {currentYear}</Typography>
                 {pieIncomeParams ? (
-                    <div className="chart-container">
-                        <h2 style={{ textAlign: "center" }}>Pie Chart</h2>
-                        <Pie
-                            data={pieIncomeParams}
-                            options={{
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: "Users Gained between 2016-2020"
-                                    }
-                                }
+                    <>
+                        <PieChart
+                            colors={[
+                                "#ea7375",
+                                "#52f5f5",
+                                "#f688bf",
+                                "#fac991",
+                                "#f7f89a",
+                                "#abfca3",
+                                "#abadfd",
+                            ]}
+                            {...pieIncomeParams}
+                            series={pieIncomeParams.series.map((series) => ({
+                                ...series,
+                                highlightScope: {
+                                    highlighted,
+                                    faded,
+                                },
+                                cornerRadius: 5,
+                            }))}
+                            slotProps={{ legend: { hidden: true } }}
+                            onClick={(data, index) => {
+                                //test
                             }}
                         />
-                    </div>
+                        {/* <CustomChartLegend data={incomePieData}></CustomChartLegend> */}
+                    </>
                 ) : (
                     <>No Income Data</>
                 )}
                 <Typography>สรุปรายจ่าย/เงินลงทุน</Typography>
                 {pieExpenseInvestmentParams ? (
-                    <div>
-
-                    </div>
+                    <>
+                        <PieChart
+                            {...pieExpenseInvestmentParams}
+                            series={pieExpenseInvestmentParams.series.map((series) => ({
+                                ...series,
+                                highlightScope: {
+                                    highlighted,
+                                    faded,
+                                },
+                            }))}
+                            onClick={(data, index) => {
+                                //the pie knows their index but not data?
+                            }}
+                        />
+                        {/* <CustomChartLegend ></CustomChartLegend> */}
+                    </>
                 ) : (
                     <>No Expense and Investment Data</>
                 )}
