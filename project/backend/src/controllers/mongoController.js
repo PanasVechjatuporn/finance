@@ -114,43 +114,35 @@ exports.get_user_data_income_expense = async (req, res) => {
   const db = client.db(dbName);
   const collection = db.collection("income_expense");
 
-  try {
-    query = {};
-    var findResult = await collection.find(query).toArray();
-    console.log(findResult);
-    res.json(findResult);
-  } catch (error) {
-    console.log(
-      "Error occured in exports.get_user_data_income_expense: ",
-      error
-    );
-    res.status(401).json({ message: error });
-  }
-};
+    try {
+        query = { userId: req.params.uid }
+        var findResult = await collection.find(query).toArray();
+        console.log(findResult);
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.get_user_data_income_expense: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}
 
 exports.get_funds = async (req, res) => {
   const db = client.db(dbName);
   const collection = db.collection("funds");
 
-  try {
-    query = {};
-    var findResult = await collection
-      .find(query)
-      .project({
-        _id: 1,
-        proj_name_th: 1,
-        proj_name_en: 1,
-        growthrat_lastmonth: 1,
-        url_factsheet: 1,
-      })
-      .toArray();
-    console.log(findResult);
-    res.json(findResult);
-  } catch (error) {
-    console.log("Error occured in exports.get_funds: ", error);
-    res.status(401).json({ message: error });
-  }
-};
+    try {
+        query = {};
+        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1, "url_factsheet": 1 }).sort({ "growthrat_lastmonth": -1 }).toArray();
+        console.log(findResult);
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.get_funds: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}
 
 exports.save_tax_goal = async (req, res) => {
   const db = client.db(dbName);
@@ -160,19 +152,19 @@ exports.save_tax_goal = async (req, res) => {
   const filter = {};
 
   const updateDoc = {
-    $set: {
-      funds: req.body.confirmData,
-    },
-  };
-  const options = { upsert: true };
+    userId: req.body.userId,
+    Name: req.body.Name,
+    Funds: req.body.Funds,
+    Percentage: req.body.Percentage,
+    CreatedDate: new Date().toLocaleDateString("en-GB").split(' ')[0]
+};
+//const options = { upsert: true };
 
   try {
-    //ถ้า filter ไม่เจอ สร้างเป็น obj ใหม่(upsert)
-    await collection.updateOne(filter, updateDoc, options);
+    await collection.insertOne(updateDoc)
   } catch (error) {
-    console.log("Error occured in exports.save_tax_goal: ", error);
+    console.log('Error occured in exports.save_tax_goal: ', error)
     res.status(401).json({ message: error });
-  }
 };
 
 exports.get_growthrate = async (req, res) => {
@@ -185,7 +177,6 @@ exports.get_growthrate = async (req, res) => {
       _id: 0,
       growthrat_lastmonth: 1,
     };
-
     var findResult = await collection.find(query).project(options).toArray();
     console.log(findResult);
     res.status(200).json({ findResult });
@@ -224,7 +215,6 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
           );
         })
       );
-
       res.status(200).json({ upsertData });
     } else {
       throw new Error("unauthorized access");
@@ -284,3 +274,19 @@ exports.deleteUserMonthData = async (req, res) => {
     res.status(401).json({ message: error });
   }
 };
+
+exports.getUserGoal = async (req, res) => {
+    const db = client.db(dbName)
+    const collection = db.collection('goal');
+
+    try {
+        query = { userId: req.params.uid }
+        var findResult = await collection.find(query).toArray();
+        res.json(findResult);
+
+    } catch (error) {
+        console.log('Error occured in exports.getUserGoal: ', error)
+        res.status(401).json({ message: error });
+
+    }
+}

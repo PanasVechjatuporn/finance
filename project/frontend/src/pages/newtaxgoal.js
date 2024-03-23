@@ -22,9 +22,19 @@ import StartIcon from '@mui/icons-material/Start';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Tooltip from '@mui/material/Tooltip';
+import { useSelector } from 'react-redux';
+import { useLocation } from "react-router-dom";
 
 
 export function NewTaxGoal() {
+
+    //const uid = useSelector(state => state.userStore.userId)
+
+    const location = useLocation();
+
+    const data = location.state.data;
+    const Percentage = location.state.Percentage;
+
 
     const [isloading, setIsloading] = React.useState(true);
 
@@ -100,50 +110,48 @@ export function NewTaxGoal() {
 
     async function makeIncomeArr() {
 
-        const response = await axios.get('http://localhost:8000/db/userdata=5');
-        console.log(response.data)
-
         const sumByType = {};
         let sumOfIncome = 0;
         let sumOfBenefit = 0;
 
         // Iterate over each object in the array
-        await Promise.all(response.data.map(item => {
+        await Promise.all(data.map(item => {
             // Iterate over each income object within the item
             item.incomeData.map(incomeItem => {
-                const { type, sub_type, amount } = incomeItem;
+                if (Object.keys(incomeItem).length > 0) {
+                    const { type, sub_type, amount } = incomeItem;
 
-                // Increment sumOfIncome
-                sumOfIncome += parseInt(amount);
+                    // Increment sumOfIncome
+                    sumOfIncome += parseInt(amount);
+                    if (sub_type) {
 
-                if (sub_type) {
+                        // Initialize nested object for type if not present
+                        if (!sumByType[type]) {
+                            sumByType[type] = {};
+                        }
 
-                    // Initialize nested object for type if not present
-                    if (!sumByType[type]) {
-                        sumByType[type] = {};
+                        // Initialize nested object for sub_type if not present
+                        if (!sumByType[type][sub_type]) {
+                            sumByType[type][sub_type] = 0;
+                        }
+
+                        // Convert amount to number and add it to the sum corresponding to its type and sub_type
+                        sumByType[type][sub_type] += parseInt(amount);
                     }
+                    else {
+                        // Initialize nested object for type if not present
+                        if (!sumByType[type]) {
+                            sumByType[type] = {};
+                        }
 
-                    // Initialize nested object for sub_type if not present
-                    if (!sumByType[type][sub_type]) {
-                        sumByType[type][sub_type] = 0;
+                        // Initialize nested object for sub_type if not present
+                        if (!sumByType[type][0]) {
+                            sumByType[type][0] = 0;
+                        }
+
+                        // Convert amount to number and add it to the sum corresponding to its type and sub_type
+                        sumByType[type][0] += parseInt(amount);
                     }
-
-                    // Convert amount to number and add it to the sum corresponding to its type and sub_type
-                    sumByType[type][sub_type] += parseInt(amount);
-                }
-                else {
-                    // Initialize nested object for type if not present
-                    if (!sumByType[type]) {
-                        sumByType[type] = {};
-                    }
-
-                    // Initialize nested object for sub_type if not present
-                    if (!sumByType[type][0]) {
-                        sumByType[type][0] = 0;
-                    }
-
-                    // Convert amount to number and add it to the sum corresponding to its type and sub_type
-                    sumByType[type][0] += parseInt(amount);
                 }
             });
         }));
@@ -820,7 +828,8 @@ export function NewTaxGoal() {
                             <Link
                                 state={{
                                     netIncome: incomeSum - benefitSum - personal - insurance - charity,
-                                    beforeReduction: incomeSum - benefitSum
+                                    beforeReduction: incomeSum - benefitSum,
+                                    Percentage: Percentage
                                 }}
                                 to={"./select-fund"}
                                 style={{ textDecoration: "none", color: "white" }}
