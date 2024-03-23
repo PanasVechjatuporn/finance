@@ -1,7 +1,6 @@
 require("dotenv").config({ path: "../.env" });
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
-const { query } = require("express");
 // Database Name
 const dbName = "dev";
 
@@ -114,35 +113,44 @@ exports.get_user_data_income_expense = async (req, res) => {
   const db = client.db(dbName);
   const collection = db.collection("income_expense");
 
-    try {
-        query = { userId: req.params.uid }
-        var findResult = await collection.find(query).toArray();
-        console.log(findResult);
-        res.json(findResult);
-
-    } catch (error) {
-        console.log('Error occured in exports.get_user_data_income_expense: ', error)
-        res.status(401).json({ message: error });
-
-    }
-}
+  try {
+    query = { userId: req.params.uid };
+    var findResult = await collection.find(query).toArray();
+    console.log(findResult);
+    res.json(findResult);
+  } catch (error) {
+    console.log(
+      "Error occured in exports.get_user_data_income_expense: ",
+      error
+    );
+    res.status(401).json({ message: error });
+  }
+};
 
 exports.get_funds = async (req, res) => {
   const db = client.db(dbName);
   const collection = db.collection("funds");
 
-    try {
-        query = {};
-        var findResult = await collection.find(query).project({ "_id": 1, "proj_name_th": 1, "proj_name_en": 1, "growthrat_lastmonth": 1, "url_factsheet": 1 }).sort({ "growthrat_lastmonth": -1 }).toArray();
-        console.log(findResult);
-        res.json(findResult);
-
-    } catch (error) {
-        console.log('Error occured in exports.get_funds: ', error)
-        res.status(401).json({ message: error });
-
-    }
-}
+  try {
+    query = {};
+    var findResult = await collection
+      .find(query)
+      .project({
+        _id: 1,
+        proj_name_th: 1,
+        proj_name_en: 1,
+        growthrat_lastmonth: 1,
+        url_factsheet: 1,
+      })
+      .sort({ growthrat_lastmonth: -1 })
+      .toArray();
+    console.log(findResult);
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.get_funds: ", error);
+    res.status(401).json({ message: error });
+  }
+};
 
 exports.save_tax_goal = async (req, res) => {
   const db = client.db(dbName);
@@ -156,15 +164,16 @@ exports.save_tax_goal = async (req, res) => {
     Name: req.body.Name,
     Funds: req.body.Funds,
     Percentage: req.body.Percentage,
-    CreatedDate: new Date().toLocaleDateString("en-GB").split(' ')[0]
-};
-//const options = { upsert: true };
+    CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+  };
+  //const options = { upsert: true };
 
   try {
-    await collection.insertOne(updateDoc)
+    await collection.insertOne(updateDoc);
   } catch (error) {
-    console.log('Error occured in exports.save_tax_goal: ', error)
+    console.log("Error occured in exports.save_tax_goal: ", error);
     res.status(401).json({ message: error });
+  }
 };
 
 exports.get_growthrate = async (req, res) => {
@@ -276,17 +285,15 @@ exports.deleteUserMonthData = async (req, res) => {
 };
 
 exports.getUserGoal = async (req, res) => {
-    const db = client.db(dbName)
-    const collection = db.collection('goal');
+  const db = client.db(dbName);
+  const collection = db.collection("goal");
 
-    try {
-        query = { userId: req.params.uid }
-        var findResult = await collection.find(query).toArray();
-        res.json(findResult);
-
-    } catch (error) {
-        console.log('Error occured in exports.getUserGoal: ', error)
-        res.status(401).json({ message: error });
-
-    }
-}
+  try {
+    query = { userId: req.params.uid };
+    var findResult = await collection.find(query).toArray();
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.getUserGoal: ", error);
+    res.status(401).json({ message: error });
+  }
+};
