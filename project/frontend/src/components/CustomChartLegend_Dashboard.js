@@ -14,7 +14,7 @@ export default function CustomChartLegend({ data }) {
                                 height: 16,
                                 borderRadius: 1,
                                 bgcolor: data.color,
-                                marginTop:1
+                                marginTop: 1.5
                             }}
                         />
                     </Grid>

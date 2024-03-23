@@ -103,7 +103,7 @@ export const Dashboard = () => {
     return (
         <React.Fragment>
             <Navigate />
-            <Grid container marginTop={2} >
+            <Grid container marginTop={2} justifyContent={"center"}>
                 <Grid>
                     <PieChartComponent
                         userData={userData}
@@ -116,8 +116,6 @@ export const Dashboard = () => {
                     />
                 </Grid>
             </Grid>
-
-
         </React.Fragment>
     );
 };

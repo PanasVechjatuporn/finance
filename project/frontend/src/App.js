@@ -1,6 +1,6 @@
 import "App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Dashboard } from "pages/Dashboard";
+import { Dashboard } from "pages/dashboard";
 import { Home } from "pages/Homepage";
 import { GoalBased } from "pages/goalbased";
 import { NewTaxGoal } from "pages/newtaxgoal";

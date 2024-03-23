@@ -153,6 +153,8 @@ export default function MonthDataTable({ userData, setUserData }) {
         sx={{
           minWidth: "90vh",
           minHeight: "90vh",
+          maxWidth: "90vh",
+          maxHeight: "90vh",
           borderRadius: 6,
           boxShadow: 6,
           padding: 4,
