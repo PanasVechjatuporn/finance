@@ -287,10 +287,10 @@ export const DataTableRow = ({
                                                 Income
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow key="sub-table-header">
-                                            <TableCell align="center" key="header-amount">Amount</TableCell>
-                                            <TableCell align="center" key="header-type">Type</TableCell>
-                                            <TableCell align="center" key="header-subtype">Subtype</TableCell>
+                                        <TableRow key={"sub-table-header-"+dataMonth.date}>
+                                            <TableCell align="center" key={"header-amount-"+dataMonth.date}>Amount</TableCell>
+                                            <TableCell align="center" key={"header-type-"+dataMonth.date}>Type</TableCell>
+                                            <TableCell align="center" key={"header-subtype-"+dataMonth.date}>Subtype</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
