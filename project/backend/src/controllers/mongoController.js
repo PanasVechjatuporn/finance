@@ -325,6 +325,7 @@ exports.upsertNewGoal = async (req, res) => {
                 Name: req.body.Name,
                 Period: period,
                 Funds: req.body.Funds,
+                Goal: req.body.Goal,
                 Percentage: req.body.Percentage,
                 CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
             },

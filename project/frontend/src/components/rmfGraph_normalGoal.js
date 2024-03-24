@@ -121,9 +121,9 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
   async function minInvestGraph(res) {
     let data_list = [];
     res[0].data.findResult.forEach((e) => {
-      if (e.growthrat_lastmonth == null){
+      if (e.growthrat_lastmonth == null) {
         // do nothing
-      }else{
+      } else {
         data_list.push(e.growthrat_lastmonth);
       }
     });
@@ -132,7 +132,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       0.0
     );
     const obj = memoizedData.data.data; // Ensure this data structure is correct and stable
-    const annualGrowthRate = Math.abs(sum / data_list.length / 100);    
+    const annualGrowthRate = Math.abs(sum / data_list.length / 100);
     const n = parseInt(obj.year) * 12;
     const r = annualGrowthRate / 12;
     const monthlyInvest = (parseInt(obj.amount) * r) / ((1 + r) ** n - 1);
@@ -263,6 +263,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
           userId: userStore.userId,
           Name: memoizedData.data.data.alphabetFields,
           year: memoizedData.data.data.year,
+          Goal: memoizedData.data.data.amount,
           Funds: { ...Funds },
           Percentage: memoizedData.data.data.percentage,
         })
@@ -270,15 +271,17 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
 
       axios.post(
         `${baseURL}/db/change_goal_percentage`,
-        { userId: userStore.userId,
-          goal: memoizedData.data.data.goal, },
         {
-            headers: {
-                Authorization: userStore.userToken,
-                UserId: userStore.userId
-            },
+          userId: userStore.userId,
+          goal: memoizedData.data.data.goal,
+        },
+        {
+          headers: {
+            Authorization: userStore.userToken,
+            UserId: userStore.userId
+          },
         }
-    )
+      )
     }
     e.preventDefault();
   }
@@ -287,11 +290,11 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
     <React.Fragment>
       <div>{JSON.stringify(memoizedData.data.data.goal)}</div>
       <div>{JSON.stringify(avgGrowth)}</div>
-       <div>{JSON.stringify(minAxisX)}</div>
-       <div>{JSON.stringify(minAxisY)}</div>
-       <div>{JSON.stringify(userAxisX)}</div>
-       <div>{JSON.stringify(userAxisY)}</div>
-       <div>{JSON.stringify(UserInvestAmount)}</div>
+      <div>{JSON.stringify(minAxisX)}</div>
+      <div>{JSON.stringify(minAxisY)}</div>
+      <div>{JSON.stringify(userAxisX)}</div>
+      <div>{JSON.stringify(userAxisY)}</div>
+      <div>{JSON.stringify(UserInvestAmount)}</div>
 
       <div className="resultGraph">
         <p>{JSON.stringify(memoizedData.data.selectedValue)}</p>
