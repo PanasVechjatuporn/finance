@@ -62,7 +62,6 @@ function App() {
           path="/Goal-Based"
           element={<RequireAuth redirectTo="/">{<GoalBased />}</RequireAuth>}
         />
-        <Route path="/Goal-Based" element={<GoalBased />} />
         <Route path="/Goal-Based/reduce-tax-goal" element={<NewTaxGoal />} />
         <Route
           path="/Goal-Based/risk-evaluation-normal"
@@ -80,15 +79,10 @@ function App() {
           path="/Goal-Based/normal-goal"
           element={
             <RequireAuth redirectTo="/">
-              {allowedToAccessNormalGoal ? (
-                <NormalGoal />
-              ) : (
-                <Navigate replace to="/" />
-              )}
+              <NormalGoal />
             </RequireAuth>
           }
         />
-
         <Route
           path="/Goal-Based/normal-goal-first"
           element={<RequireAuth redirectTo="/">{<NormalGoal />}</RequireAuth>}

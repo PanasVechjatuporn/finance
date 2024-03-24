@@ -3,7 +3,7 @@
     border: 1px solid #ccc; 
     border-radius: 5px; 
     margin-top: 30px;
-    width: 50%; /* Set width to 50% of the page width */
+    width: 30%; /* Set width to 50% of the page width */
     display: flex;
     justify-content: center;
     margin: 30px auto; /* Center the div horizontally and add margin-top */

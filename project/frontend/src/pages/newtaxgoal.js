@@ -36,7 +36,6 @@ export function NewTaxGoal() {
     const data = location.state.data;
     const Percentage = location.state.Percentage;
 
-
     const [isloading, setIsloading] = React.useState(true);
 
     const [warning1, setWarning1] = React.useState(false);

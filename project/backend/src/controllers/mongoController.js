@@ -114,9 +114,8 @@ exports.get_user_data_income_expense = async (req, res) => {
     const collection = db.collection("income_expense");
 
     try {
-        query = { userId: req.params.uid };
+        query = { userId: req.params.uid, year: "2024" };
         var findResult = await collection.find(query).toArray();
-        console.log(findResult);
         res.json(findResult);
     } catch (error) {
         console.log(
@@ -144,7 +143,6 @@ exports.get_funds = async (req, res) => {
             })
             .sort({ growthrat_lastmonth: -1 })
             .toArray();
-        console.log(findResult);
         res.json(findResult);
     } catch (error) {
         console.log("Error occured in exports.get_funds: ", error);
@@ -187,7 +185,6 @@ exports.get_growthrate = async (req, res) => {
             growthrat_lastmonth: 1,
         };
         var findResult = await collection.find(query).project(options).toArray();
-        console.log(findResult);
         res.status(200).json({ findResult });
     } catch (error) {
         console.log("Error occured in exports.get_growthrate: ", error);
@@ -310,5 +307,63 @@ exports.getUserAsset = async (req, res) => {
     } catch (error) {
         console.log("Error occured in exports.getUserGoal: ", error);
         res.status(401).json({ message: error });
+    }
+};
+
+exports.upsertNewGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const currentDate = new Date();
+    currentDate.setFullYear(currentDate.getFullYear() + parseInt(req.body.year));
+    const period = currentDate.toLocaleDateString("en-GB");
+    //
+    try {
+        const query = { userId: req.body.userId, Name: req.body.Name };
+        const update = {
+            $set: {
+                userId: req.body.userId,
+                Name: req.body.Name,
+                Period: period,
+                Funds: req.body.Funds,
+                Percentage: req.body.Percentage,
+                CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+            },
+        };
+        const options = { upsert: true };
+        const upsertResult = await collection.updateOne(query, update, options);
+        res.status(200).json({ message: "upsert new goal successfully" });
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertNewGoal: ", err);
+    }
+};
+
+exports.changeMultipleGoalPercentage = async (req, res) => {
+    console.log(req);
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            console.log(req.body.goal)
+            await Promise.all(
+                req.body.goal.map(async (data) => {
+                    const query = { userId: data.userId, Name: data.Name };
+                    await collection.updateOne(
+                        query,
+                        {
+                            $set: {
+                                Percentage: data.Percentage,
+                            },
+                        },
+                        { upsert: true }
+                    );
+                })
+            );
+            res.status(200);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.changeGoalPercentage: ", err);
     }
 };

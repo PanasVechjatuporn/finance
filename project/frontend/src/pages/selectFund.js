@@ -2,19 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { Button, CardActionArea, CardActions, TextField } from '@mui/material';
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import { Button, CardActionArea, CardActions, TextField } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import 'pages/selectFund.css'
-import Autocomplete from '@mui/material/Autocomplete';
+import "pages/selectFund.css";
+import Autocomplete from "@mui/material/Autocomplete";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from '@mui/icons-material/Add';
-import DescriptionIcon from '@mui/icons-material/Description';
-import Tooltip from '@mui/material/Tooltip';
-import SaveIcon from '@mui/icons-material/Save';
-import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from "@mui/icons-material/Add";
+import DescriptionIcon from "@mui/icons-material/Description";
+import Tooltip from "@mui/material/Tooltip";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -23,34 +23,27 @@ export const SelectFund = () => {
     const netIncome = location.state.netIncome;
     const beforeReduction = location.state.beforeReduction;
     const Percentage = location.state.Percentage;
-    const uid = useSelector(state => state.userStore.userId);
+    const uid = useSelector((state) => state.userStore.userId);
     const [isLoading, setIsloading] = React.useState(true);
 
     function calTax(netIncome) {
         let tax;
         if (netIncome <= 150000) {
             tax = 0;
-        }
-        else if (netIncome > 150000 && netIncome <= 300000) {
+        } else if (netIncome > 150000 && netIncome <= 300000) {
             tax = (netIncome - 150000) * 0.05;
-        }
-        else if (netIncome > 300000 && netIncome <= 500000) {
-            tax = ((netIncome - 300000) * 0.1) + 7500;
-        }
-        else if (netIncome > 500000 && netIncome <= 750000) {
-            tax = ((netIncome - 500000) * 0.15) + 27500;
-        }
-        else if (netIncome > 750000 && netIncome <= 1000000) {
-            tax = ((netIncome - 750000) * 0.2) + 65000;
-        }
-        else if (netIncome > 1000000 && netIncome <= 2000000) {
-            tax = ((netIncome - 1000000) * 0.25) + 115000;
-        }
-        else if (netIncome > 2000000 && netIncome <= 5000000) {
-            tax = ((netIncome - 2000000) * 0.3) + 365000;
-        }
-        else if (netIncome > 5000000) {
-            tax = ((netIncome - 5000000) * 0.35) + 1265000;
+        } else if (netIncome > 300000 && netIncome <= 500000) {
+            tax = (netIncome - 300000) * 0.1 + 7500;
+        } else if (netIncome > 500000 && netIncome <= 750000) {
+            tax = (netIncome - 500000) * 0.15 + 27500;
+        } else if (netIncome > 750000 && netIncome <= 1000000) {
+            tax = (netIncome - 750000) * 0.2 + 65000;
+        } else if (netIncome > 1000000 && netIncome <= 2000000) {
+            tax = (netIncome - 1000000) * 0.25 + 115000;
+        } else if (netIncome > 2000000 && netIncome <= 5000000) {
+            tax = (netIncome - 2000000) * 0.3 + 365000;
+        } else if (netIncome > 5000000) {
+            tax = (netIncome - 5000000) * 0.35 + 1265000;
         }
         return tax;
     }
@@ -60,7 +53,7 @@ export const SelectFund = () => {
     const [tax, setTax] = React.useState(0);
     const [newTax, setNewTax] = React.useState(0);
 
-    const [funds, setFunds] = React.useState([])
+    const [funds, setFunds] = React.useState([]);
     const [avgInvest, setAvgInvest] = React.useState(0);
     const [investAmount, setInvestAmount] = React.useState(0);
 
@@ -95,16 +88,16 @@ export const SelectFund = () => {
     }, [uid])
 
     /*const [fundName, setFundName] = React.useState('');
+  
+      const handleChange = (event) => {
+          setFundName(event.target.innerHTML);
+          console.log(event.target.innerHTML)
+      };*/
 
-    const handleChange = (event) => {
-        setFundName(event.target.innerHTML);
-        console.log(event.target.innerHTML)
-    };*/
-
-    const [dropdowns, setDropdowns] = React.useState([{ name: '', amount: '' }]);
+    const [dropdowns, setDropdowns] = React.useState([{ name: "", amount: "" }]);
 
     const addDropdown = () => {
-        const newDropdowns = [...dropdowns, { name: '', amount: '' }];
+        const newDropdowns = [...dropdowns, { name: "", amount: "" }];
         setDropdowns(newDropdowns);
     };
 
@@ -141,6 +134,7 @@ export const SelectFund = () => {
         };
     }
 
+
     const navigate = useNavigate();
 
     function saveTaxGoal(e) {
@@ -160,7 +154,7 @@ export const SelectFund = () => {
         };
         e.preventDefault();
     }
-    console.log(dropdowns)
+    console.log(dropdowns);
 
     const [cantSave, setCantSave] = React.useState(false);
 
@@ -331,5 +325,5 @@ export const SelectFund = () => {
                     </Container>
                 </form>)}
         </React.Fragment >
-    );
-};
+    )
+}

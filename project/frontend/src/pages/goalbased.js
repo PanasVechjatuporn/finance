@@ -105,7 +105,7 @@ export const GoalBased = () => {
         function handleSubmit(event) {
             if (isItNormal == true) {
                 handleCloseNewGoal();
-                navigate("./normal-goal", { state: { Percentage: goalPercent } });
+                navigate("./normal-goal", { state: { Percentage: goalPercent, goal: oldGoal } });
                 event.preventDefault();
             } else if (isItNormal == false) {
                 handleCloseNewGoal();
