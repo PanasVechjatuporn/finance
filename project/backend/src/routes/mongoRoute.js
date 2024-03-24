@@ -23,6 +23,10 @@ router.post("/upsert_multiple", mongoController.upsertUserMultipleMonthlyData);
 
 router.post("/delete_monthly", mongoController.deleteUserMonthData);
 
-router.get('/usergoal=:uid', mongoController.getUserGoal)
+router.get("/usergoal=:uid", mongoController.getUserGoal);
+
+router.post("/upsert_new_goal", mongoController.upsertNewGoal);
+
+router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage)
 
 module.exports = router;

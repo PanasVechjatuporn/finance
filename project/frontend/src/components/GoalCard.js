@@ -13,6 +13,7 @@ function EachCard({ data }) {
     const [openStop, setOpenStop] = React.useState(false);
     const handleOpenStop = () => setOpenStop(true);
     const handleCloseStop = () => setOpenStop(false);
+    console.log(data)
     const ModalStop = ({ openStop, handleCloseStop }) => {
         return (
             <Modal

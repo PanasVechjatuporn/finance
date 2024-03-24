@@ -49,6 +49,7 @@ export const ChooseAsset = ({ sendData, data }) => {
         <div className="TextFieldForm">{data.year}</div>
         <div className="TextFieldForm">{data.amount}</div>
         <div className="TextFieldForm">{data.age}</div>
+        <div className="TextFieldForm">{data.percentage}</div>
       </div>
 
       <div className="AssetChoice">

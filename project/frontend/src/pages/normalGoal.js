@@ -8,12 +8,16 @@ import { RmfFactsheet } from "components/rmfGraph_normalGoal";
 import { DepositFactsheet } from "components/depositGraph_normalGoal";
 
 import "./normalGoal.css";
+import { useLocation } from "react-router-dom";
 
 export const NormalGoal = () => {
+  const percentage = useLocation();
   const [showFormGoal, setShowFormGoal] = useState(true);
   const [showChooseAsset, setShowChooseAsset] = useState(false);
   const [showGraph, setShowGraph] = useState("");
   const [dataBetweenComponents, setDataBetweenComponents] = useState({});
+  const [showRmfFactsheet, setShowRmfFactsheet] = useState(true);
+  const [showChooseFund, setShowChooseFund] = useState(false);
 
   const handleNextToChooseAsset = (data) => {
     setDataBetweenComponents(data);
@@ -26,10 +30,18 @@ export const NormalGoal = () => {
     setShowChooseAsset(false);
   };
 
+  const handleNextToShowChooseFund = (data) => {
+    // setShowChooseFund;
+  };
+
   const returnShowGraph = (data) => {
-    console.log(data.selectedValue);
     if (data.selectedValue === "rmf") {
-      return <RmfFactsheet data={dataBetweenComponents} />;
+      return (
+        <RmfFactsheet
+          data={dataBetweenComponents}
+          chooseFund={setShowChooseFund}
+        />
+      );
     } else if (data.selectedValue === "deposit") {
       return <DepositFactsheet data={dataBetweenComponents} />;
     }
