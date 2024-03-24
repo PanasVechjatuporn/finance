@@ -67,19 +67,27 @@ export const SelectFund = () => {
     React.useEffect(() => {
         async function fetchData() {
             if (uid) {
+                setIsloading(true);
+                let avgIn = 0;
                 const fundsResponse = await axios.get('http://localhost:8000/db/funds');
                 setFunds(fundsResponse.data);
                 const userData = await axios.get(`http://localhost:8000/db/userdata=${uid}`);
                 let sumOfInvest = 0;
                 userData.data.forEach(item => {
+                    console.log(item.investmentData)
                     sumOfInvest += parseInt(item.investmentData);
                 });
-                const avgInvest = sumOfInvest / 12;
-                setAvgInvest(avgInvest);
-                const invest = Math.round((investPercent / 100) * avgInvest);
+                if (userData.data.length % 12 == 0) {
+                    avgIn = sumOfInvest;
+                    setAvgInvest(avgIn);
+                } else {
+                    avgIn = (sumOfInvest / userData.data.length);
+                    setAvgInvest(avgIn);
+                }
+                const invest = Math.round((investPercent / 100) * avgIn);
                 setInvestAmount(invest);
                 setTax(calTax(netIncome));
-                setNewTax(calTax(netIncome - invest));
+                setNewTax(calTax(netIncome - (invest * 12)));
                 setIsloading(false);
             }
         }
@@ -114,125 +122,61 @@ export const SelectFund = () => {
             );
             setDropdowns(updatedDropdowns);
         }
-
         else if (type == 'amount') {
-            const updatedDropdowns = dropdowns.map((dropdown, index) =>
-                index === passedIndex ? { ...dropdown, amount: newVal } : dropdown
-            );
-            setDropdowns(updatedDropdowns);
+            let val = '';
+            if (newVal.match(/^[1-9,][0-9,]{0,7}$/)) {
+                val = Number(newVal.replace(/,/g, '')).toLocaleString("en-GB");
+                const updatedDropdowns = dropdowns.map((dropdown, index) =>
+                    index === passedIndex ? { ...dropdown, amount: val } : dropdown
+                );
+                setDropdowns(updatedDropdowns);
+            }
+            else if (!newVal) {
+                val = '';
+                const updatedDropdowns = dropdowns.map((dropdown, index) =>
+                    index === passedIndex ? { ...dropdown, amount: val } : dropdown
+                );
+                setDropdowns(updatedDropdowns);
+            }
         };
     }
 
     const navigate = useNavigate();
 
     function saveTaxGoal(e) {
-        const Funds = dropdowns.map(item => {
-            return ({ fundName: item.name.split(' (')[0], amount: item.amount })
-        });
-        if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
-        else {
-            axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid, Percentage: Percentage })
-                .then(navigate("/Goal-Based"))
+        const sumMoney = dropdowns.reduce((acc, current) => acc + Number(current.amount.replace(/,/g, '') || 0), 0);
+        if (sumMoney != investAmount) {
+            setCantSave(true);
+        } else {
+            setCantSave(false);
+            const Funds = dropdowns.map(item => {
+                return ({ fundName: item.name.split(' (')[0], amount: Number(item.amount.replace(/,/g, '') || 0) })
+            });
+            if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
+            else {
+                axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid, Percentage: Percentage })
+                    .then(navigate("/Goal-Based"))
+            };
         };
         e.preventDefault();
     }
     console.log(dropdowns)
 
+    const [cantSave, setCantSave] = React.useState(false);
+
     return (
         <React.Fragment>
             <Navigate />
-            {isLoading != true && (
+            {isLoading == false && (
                 <form onSubmit={e => { saveTaxGoal(e) }}>
-                    <Container style={{ display: 'flex', marginTop: 20, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
+                    <Container style={{ display: 'flex', marginTop: 30, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
                         {/*<Typography fontWeight={'bold'} marginBottom={1}>
                     เงินได้ที่ต้องเสียภาษี: {beforeReduction} บาท
                 </Typography>
                 <Typography>
                     หลังหักค่าลดหย่อนเป็นเงินได้สุทธิ : {netIncome} บาท
                 </Typography>*/}
-                        <div style={{ textAlign: 'center', width: '60%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography component={'span'} className="tax" variant="h6">
-                                ภาษีที่ต้องจ่าย : {tax} บาท
-                            </Typography>
-                            <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                                <Typography component={'span'} variant="h6" >
-                                    ลดภาษีได้ : {Math.round(tax - newTax)} บาท
-                                </Typography>
-
-                                <Typography component={'span'} variant="h6">
-                                    ภาษีที่ต้องจ่ายจะเป็น : {Math.round(newTax)} บาท
-                                </Typography>
-                            </div>
-                        </div>
-
-
-                        <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
-                            <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                                <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุนเพิ่ม {netIncome - 150000} บาท
-                                </Typography>
-                                <Typography>
-                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3)} บาท
-                                </Typography>
-                                <Typography component={'span'}>
-                                    คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3)} บาท
-                                </Typography>
-                            </div>
-                            <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
-                                <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เงินลงทุนรายเดือน : {Math.round(avgInvest)} บาท
-                                </Typography>
-                                <Typography component={'span'}>
-                                    ลงทุนในสัดส่วน : {Percentage} %
-                                    {/* ลงทุนในสัดส่วน :
-                                    <TextField inputProps={{ style: { textAlign: 'center', width: 50, fontSize: 14 } }} placeholder='0' id="standard-basic" label="" variant="standard" value={investPercent}
-                                        onChange={(e) => {
-                                            if (e.target.value.match(/^[1-9][0-9]{0,2}$/)) {
-                                                setInvestPercent(Math.min(100, parseInt(e.target.value)))
-                                            }
-                                            else if (!e.target.value) {
-                                                setInvestPercent('')
-                                            }
-                                        }} />
-                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
-                                </Typography>
-                                <Typography> คิดเป็นเงิน {investAmount.toString()}</Typography>
-                            </div>
-                        </Container>
-
-                        {/*<Typography >
-                    เงินได้สุทธิจะเป็น : {netIncome - investAmount} บาท
-                </Typography>*/}
-
-                        <div className='suggestion'>
-                            <Typography marginBottom={2} fontWeight={'bold'}>
-                                กองทุนที่แนะนำ
-                            </Typography>
-                            <div style={{ marginLeft: 5 }}>
-                                {funds.slice(0, 4).map((item, index) => (
-                                    <Container key={index} style={{ padding: 6, backgroundColor: 'white', marginBottom: 20, alignItems: 'center', textAlign: 'center', borderRadius: 20, borderWidth: 1, borderStyle: 'solid', borderColor: 'gray' }}>
-                                        <div style={{ padding: 35, paddingLeft: 25, paddingRight: 25, position: 'relative' }}>
-                                            <Typography>{item.proj_name_th}</Typography>
-                                            <Typography>{item.proj_name_en}</Typography>
-                                            <Typography >อัตราการเติบโต : {item.growthrat_lastmonth}</Typography>
-                                            <div style={{ position: 'absolute', right: 0, top: 0 }}>
-                                                <Tooltip title="ข้อมูลกองทุน" placement="right">
-                                                    <Link
-                                                        to={item.url_factsheet}
-                                                        style={{ textDecoration: "none", color: "white" }}
-                                                    >
-                                                        <IconButton >
-                                                            <DescriptionIcon fontSize={'small'} color="info" />
-                                                        </IconButton>
-                                                    </Link>
-                                                </Tooltip>
-                                            </div>
-                                        </div>
-                                    </Container>
-                                ))}
-                            </div>
-                        </div>
-
+                        <Typography marginBottom={2} fontWeight={'bold'}>กองทุนที่จะลงทุนเพื่อการลดภาษี</Typography>
                         {dropdowns.map((dropdown, index) => (
                             <div key={index} style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
                                 <div style={{ width: "50%", marginRight: 5 }}>
@@ -272,11 +216,117 @@ export const SelectFund = () => {
                                 }
                             </div>))}
 
-                        <Container style={{ display: 'flex', width: '50%', marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <IconButton type='submit' >
-                                <SaveIcon color='action' />
-                            </IconButton>
+                        <Container style={{ display: 'flex', width: '70%', marginBottom: 30, justifyContent: 'right', alignItems: 'center' }}>
+                            <Tooltip
+                                title={`จำนวนเงินลงทุนต้องรวมกันได้ ${investAmount.toLocaleString()}`}
+                                componentsProps={{
+                                    tooltip: {
+                                        sx: {
+                                            backgroundColor: "#f4f4f4",
+                                            "& .MuiTooltip-arrow": {
+                                                color: "#f4f4f4",
+                                            },
+                                            color: "red",
+                                            fontSize: 16,
+                                            padding: 2,
+                                        },
+                                    },
+                                }}
+                                placement="left"
+                                arrow
+                                open={cantSave}
+                            >
+                                <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
+                                    <IconButton type='submit' >
+                                        <SaveIcon color='action' />
+                                    </IconButton>
+                                </Tooltip>
+                            </Tooltip>
                         </Container>
+
+                        <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+                                <Typography component={'span'} variant="h6">
+                                    ภาษีที่ต้องจ่าย : {tax.toLocaleString("en-GB")} บาท
+                                </Typography>
+                            </div>
+                            <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+                                <Typography component={'span'} variant="h6">
+                                    เงินลงทุนในเป้าหมายนี้ : {investAmount.toLocaleString("en-GB")} บาท
+                                </Typography>
+                                <Typography component={'span'} variant="h6" >
+                                    ลดภาษีได้ : {Math.round(tax - newTax).toLocaleString("en-GB")} บาท
+                                </Typography>
+                            </div>
+                        </div>
+
+
+                        <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
+                            <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                                <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
+                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {(Math.round((netIncome - 150000) / 12)).toLocaleString("en-GB")} บาท/เดือน
+                                </Typography>
+                                <Typography>
+                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
+                                </Typography>
+                                <Typography component={'span'}>
+                                    คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
+                                </Typography>
+                            </div>
+                            <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
+                                <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
+                                    เงินลงทุนรายเดือน : {Math.round(avgInvest).toLocaleString("en-GB")} บาท
+                                </Typography>
+                                <Typography component={'span'}>
+                                    ลงทุนในสัดส่วน : {Percentage.toLocaleString("en-GB")} %
+                                    {/* ลงทุนในสัดส่วน :
+                                    <TextField inputProps={{ style: { textAlign: 'center', width: 50, fontSize: 14 } }} placeholder='0' id="standard-basic" label="" variant="standard" value={investPercent}
+                                        onChange={(e) => {
+                                            if (e.target.value.match(/^[1-9][0-9]{0,2}$/)) {
+                                                setInvestPercent(Math.min(100, parseInt(e.target.value)))
+                                            }
+                                            else if (!e.target.value) {
+                                                setInvestPercent('')
+                                            }
+                                        }} />
+                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
+                                </Typography>
+                                <Typography> คิดเป็นเงิน {investAmount.toLocaleString("en-GB")} บาท</Typography>
+                            </div>
+                        </Container>
+
+                        {/*<Typography >
+                    เงินได้สุทธิจะเป็น : {netIncome - investAmount} บาท
+                </Typography>*/}
+
+                        <div className='suggestion'>
+                            <Typography marginBottom={2} fontWeight={'bold'}>
+                                กองทุนที่แนะนำ
+                            </Typography>
+                            <div style={{ marginLeft: 5 }}>
+                                {funds.slice(0, 4).map((item, index) => (
+                                    <Container key={index} style={{ padding: 6, backgroundColor: 'white', marginBottom: 20, alignItems: 'center', textAlign: 'center', borderRadius: 20, borderWidth: 1, borderStyle: 'solid', borderColor: 'gray' }}>
+                                        <div style={{ padding: 35, paddingLeft: 25, paddingRight: 25, position: 'relative' }}>
+                                            <Typography>{item.proj_name_th}</Typography>
+                                            <Typography gutterBottom>{item.proj_name_en}</Typography>
+                                            <Typography variant="body2">อัตราการเติบโตของกองทุน : {parseFloat(item.growthrat_lastmonth).toFixed(2).toLocaleString("en-GB")} %</Typography>
+                                            <div style={{ position: 'absolute', right: 0, top: 0 }}>
+                                                <Tooltip title="ข้อมูลกองทุน" placement="right">
+                                                    <Link
+                                                        to={item.url_factsheet}
+                                                        style={{ textDecoration: "none", color: "white" }}
+                                                    >
+                                                        <IconButton >
+                                                            <DescriptionIcon fontSize={'small'} color="info" />
+                                                        </IconButton>
+                                                    </Link>
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                    </Container>
+                                ))}
+                            </div>
+                        </div>
 
                     </Container>
                 </form>)}

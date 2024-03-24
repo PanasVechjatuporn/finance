@@ -20,7 +20,7 @@ export default function IncomeTable({ obj, open }) {
                                             ประเภทที่ {Type}.{subtype}
                                         </TableCell>
                                         <TableCell key={subtype} align="center" style={{ width: "20%" }}>
-                                            {value}
+                                            {value.toLocaleString("en-GB")}
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
