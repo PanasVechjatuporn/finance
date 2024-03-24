@@ -263,6 +263,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
           userId: userStore.userId,
           Name: memoizedData.data.data.alphabetFields,
           year: memoizedData.data.data.year,
+          Goal: memoizedData.data.data.amount,
           Funds: { ...Funds },
           Percentage: memoizedData.data.data.percentage,
         })
