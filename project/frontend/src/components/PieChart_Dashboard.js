@@ -9,6 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CustomChartLegend from "./CustomChartLegend_Dashboard";
+import PieChartInfoModal from "./PieChartInfoModal_Dashboard";
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -105,14 +106,6 @@ const taxableIncome = [
         color: "#f02629",
     },
 ];
-
-// #ea7375
-// #52f5f5
-// #f688bf
-// #fac991
-// #f7f89a
-// #abfca3
-// #abadfd
 const expenseType = [
     {
         name: "รายจ่าย tmp 1",
@@ -161,11 +154,14 @@ export default function PieChartComponent({ userData }) {
     const [currentYear, setCurrentYear] = useState(
         userData ? userData[0].year : null
     );
-    const [pieExpenseInvestmentParams, setPieExpenseInvestmentParams] =
-        useState(null);
+    const [pieExpenseParams, setPieExpenseParams] = useState(null);
     const [pieIncomeParams, setPieIncomeParams] = useState(null);
     const [incomePieData, setIncomePieData] = useState(null);
     const [expensePieData, setExpensePieData] = useState(null);
+    const [modalParams, setModalParams] = useState(null);
+    const [showPieChartModal, setShowPieChartModal] = useState(false);
+    const [modalType, setModalType] = useState(null)
+
     useEffect(() => {
         if (userData && !currentYear) {
             setCurrentYear(userData[0].year);
@@ -178,19 +174,30 @@ export default function PieChartComponent({ userData }) {
                 let yearlyExpense = 0;
                 let incomePieData = [];
                 let expensePieData = [];
+                let incomeSourceEntries = [];
+                let expenseSourceEntries = [];
                 currentYearData.forEach(
-                    ({ incomeData, expenseData, investmentData }) => {
+                    ({ incomeData, expenseData, investmentData, date }) => {
                         //incomeData
                         incomeData.forEach((incomeSource) => {
+                            incomeSourceEntries.push({
+                                amount: incomeSource.amount,
+                                date: date,
+                                type: incomeSource.type,
+                            });
+
                             const existingEntry = incomePieData.find(
                                 (entry) => entry.type === incomeSource.type
                             );
+
                             const incomeTypeLabel = taxableIncome.find(
                                 (entry) => entry.category === incomeSource.type
                             ).label;
+
                             const incomeTypeColor = taxableIncome.find(
                                 (entry) => entry.category === incomeSource.type
                             ).color;
+
                             if (existingEntry) {
                                 existingEntry.value += parseFloat(incomeSource.amount);
                             } else {
@@ -206,6 +213,12 @@ export default function PieChartComponent({ userData }) {
 
                         //expenseData
                         expenseData.forEach((expenseSource) => {
+                            expenseSourceEntries.push({
+                                amount: expenseSource.amount,
+                                date: date,
+                                type: expenseSource.type,
+                            });
+
                             const existingEntry = expensePieData.find(
                                 (entry) => entry.type === expenseSource.type
                             );
@@ -218,6 +231,7 @@ export default function PieChartComponent({ userData }) {
                             if (existingEntry) {
                                 existingEntry.value += parseFloat(expenseSource.amount);
                             } else {
+                                console.log('expenseTypeLabel :: ',expenseTypeLabel)
                                 expensePieData.push({
                                     type: expenseSource.type,
                                     value: parseFloat(expenseSource.amount),
@@ -227,12 +241,37 @@ export default function PieChartComponent({ userData }) {
                             }
                             yearlyExpense += parseFloat(expenseSource.amount);
                         });
-
                         //investmentData
                     }
                 );
+                const incomeEntries = {};
+                incomeSourceEntries.forEach((entry) => {
+                    if (!incomeEntries[entry.type]) {
+                        incomeEntries[entry.type] = [];
+                    }
+                    incomeEntries[entry.type].push(entry);
+                });
+
+                const expenseEntries = {};
+                expenseSourceEntries.forEach((entry) => {
+                    if (!expenseEntries[entry.type]) {
+                        expenseEntries[entry.type] = [];
+                    }
+                    expenseEntries[entry.type].push(entry);
+                });
+
+                incomePieData.forEach((data, index) => {
+                    incomePieData[index].monthEntries =
+                        incomeEntries[incomePieData[index].type];
+                });
+
+                expensePieData.forEach((data, index) => {
+                    expensePieData[index].monthEntries =
+                        expenseEntries[expensePieData[index].type];
+                });
+
                 setIncomePieData(incomePieData);
-                setExpensePieData(expensePieData)
+                setExpensePieData(expensePieData);
                 setPieIncomeParams({
                     series: [
                         {
@@ -244,7 +283,7 @@ export default function PieChartComponent({ userData }) {
                                 ) /
                                 10 +
                                 "%",
-                            arcLabelMinAngle: 25
+                            arcLabelMinAngle: 25,
                         },
                     ],
                     height: 400,
@@ -258,7 +297,7 @@ export default function PieChartComponent({ userData }) {
                         },
                     },
                 });
-                setPieExpenseInvestmentParams({
+                setPieExpenseParams({
                     series: [
                         {
                             data: expensePieData,
@@ -269,7 +308,7 @@ export default function PieChartComponent({ userData }) {
                                 ) /
                                 10 +
                                 "%",
-                            arcLabelMinAngle: 30
+                            arcLabelMinAngle: 30,
                         },
                     ],
                     height: 400,
@@ -287,6 +326,18 @@ export default function PieChartComponent({ userData }) {
         }
     }, [userData, currentYear]);
 
+    const handleOnClickIncomePieChart = (modalParams) => {
+        setModalParams(modalParams)
+        setModalType("income")
+        setShowPieChartModal(true)
+    }
+
+    const handleOnClickExpensePieChart = (modalParams) => {
+        setModalParams(modalParams)
+        setModalType("expense")
+        setShowPieChartModal(true)
+    }
+
     return (
         <Container maxWidth="md">
             <Box
@@ -298,17 +349,19 @@ export default function PieChartComponent({ userData }) {
                     borderRadius: 6,
                     boxShadow: 6,
                     padding: 4,
-                    display: "flex", // Add flex display
-                    flexDirection: "column", // Align children vertically
-                    justifyContent: "space-between", // Space evenly vertically
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                     position: "relative",
                 }}
             >
                 <Container>
-                    <FormControl sx={{
-                        position: "absolute",
-                        right: "5%"
-                    }}>
+                    <FormControl
+                        sx={{
+                            position: "absolute",
+                            right: "5%",
+                        }}
+                    >
                         <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
                         <Select
                             labelId="select-label"
@@ -353,7 +406,7 @@ export default function PieChartComponent({ userData }) {
                                 }))}
                                 slotProps={{ legend: { hidden: true } }}
                                 onClick={(data, index) => {
-                                    //test
+                                    handleOnClickIncomePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
                                 }}
                             />
                         </div>
@@ -364,8 +417,8 @@ export default function PieChartComponent({ userData }) {
                 ) : (
                     <>No Income Data</>
                 )}
-                <Typography>สรุปรายจ่าย/เงินลงทุน</Typography>
-                {pieExpenseInvestmentParams ? (
+                <Typography>สรุปรายจ่าย ปี {currentYear}</Typography>
+                {pieExpenseParams ? (
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
@@ -378,8 +431,8 @@ export default function PieChartComponent({ userData }) {
                                     "#abfca3",
                                     "#abadfd",
                                 ]}
-                                {...pieExpenseInvestmentParams}
-                                series={pieExpenseInvestmentParams.series.map((series) => ({
+                                {...pieExpenseParams}
+                                series={pieExpenseParams.series.map((series) => ({
                                     ...series,
                                     highlightScope: {
                                         highlighted,
@@ -388,7 +441,7 @@ export default function PieChartComponent({ userData }) {
                                 }))}
                                 slotProps={{ legend: { hidden: true } }}
                                 onClick={(data, index) => {
-                                    //test
+                                    handleOnClickExpensePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
                                 }}
                             />
                         </div>
@@ -399,7 +452,7 @@ export default function PieChartComponent({ userData }) {
                 ) : (
                     <>No Expense and Investment Data</>
                 )}
-                
+                <PieChartInfoModal open={showPieChartModal} setOpen={setShowPieChartModal} modalParams={modalParams} modalType={modalType}></PieChartInfoModal>
             </Box>
         </Container>
     );
