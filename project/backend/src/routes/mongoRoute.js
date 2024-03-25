@@ -29,4 +29,7 @@ router.post("/upsert_new_goal", mongoController.upsertNewGoal);
 
 router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage)
 
+router.get("/user_risk_profile=:uid", mongoController.getUserRiskProfile)
+
+router.post("/upsert_risk_profile=:uid", mongoController.upsertRiskProfile)
 module.exports = router;

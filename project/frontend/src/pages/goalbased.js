@@ -40,6 +40,7 @@ export const GoalBased = () => {
   React.useEffect(() => {
     async function fetchData() {
       if (uid != null) {
+        let riskProfile;
         await axios
           .get(`http://localhost:8000/db/userdata=${uid}`)
           .then((response) => {
@@ -50,7 +51,18 @@ export const GoalBased = () => {
           .then((res) => {
             setGoal(res.data);
           });
+        await axios
+          .get(`http://localhost:8000/db/user_risk_profile=${uid}`)
+          .then((response) => {
+            riskProfile = response.data
+          });
         setIsloading(false);
+        if (riskProfile.length > 0) {
+          //true = has risk_profile
+          // do nothing
+        } else {
+          navigate("./risk-evaluation-normal");
+        }
       }
     }
     fetchData();
@@ -104,7 +116,9 @@ export const GoalBased = () => {
     function handleSubmit(event) {
       if (isItNormal == true) {
         handleCloseNewGoal();
-        navigate("./normal-goal", { state: { Percentage: goalPercent, goal: oldGoal } });
+        navigate("./normal-goal", {
+          state: { Percentage: goalPercent, goal: oldGoal },
+        });
         event.preventDefault();
       } else if (isItNormal == false) {
         handleCloseNewGoal();

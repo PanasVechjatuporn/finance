@@ -12,7 +12,6 @@ export const FormGoal = ({ sendData }) => {
   const percentage = location.state.Percentage;
   const risk_profile = location.state.profile;
   const goal = location.state.goal;
-  console.log(goal)
   const [alphabetFields, setAlphabetFields] = useState("");
   const [numbersFields, setNumbersFields] = useState({
     year: "",

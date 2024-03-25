@@ -24,7 +24,7 @@ import "./rmfGraph_normalGoal.css";
 const baseURL = "http://localhost:8000";
 
 export const RmfFactsheet = (data, setShowChooseFund) => {
-  console.log(data)
+  // console.log(data);
   const userStore = useSelector((state) => state.userStore);
 
   const [avgGrowth, setAvgGrowth] = useState(0);
@@ -109,9 +109,12 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       });
       const avgInvest_temp = sumOfInvest / 12;
       setAvgInvest(avgInvest_temp);
+      console.log(memoizedData.data, avgInvest_temp)
+      // console.log(memoizedData.data.data.percentage, avgInvest_temp)
       const invest = Math.round(
         (memoizedData.data.data.percentage / 100) * avgInvest_temp
       );
+      console.log("Invest: ", invest)
       setUserInvestAmount(invest);
     } catch (err) {
       console.log("Err at fetchData function: ", err);
@@ -121,9 +124,9 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
   async function minInvestGraph(res) {
     let data_list = [];
     res[0].data.findResult.forEach((e) => {
-      if (e.growthrat_lastmonth == null){
+      if (e.growthrat_lastmonth == null) {
         // do nothing
-      }else{
+      } else {
         data_list.push(e.growthrat_lastmonth);
       }
     });
@@ -132,7 +135,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       0.0
     );
     const obj = memoizedData.data.data; // Ensure this data structure is correct and stable
-    const annualGrowthRate = Math.abs(sum / data_list.length / 100);    
+    const annualGrowthRate = Math.abs(sum / data_list.length / 100);
     const n = parseInt(obj.year) * 12;
     const r = annualGrowthRate / 12;
     const monthlyInvest = (parseInt(obj.amount) * r) / ((1 + r) ** n - 1);
@@ -184,51 +187,55 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
   }
 
   async function userInvestGraph(res) {
-    const obj = memoizedData.data.data; // Ensure this data structure is correct and stable
-    // AxisX calculation remains the same
-    let listAxisX = [];
-    for (let i = 0; i <= parseInt(obj.year) + 1; i++) {
-      listAxisX.push(i);
-    }
+    try {
+      const obj = memoizedData.data.data; // Ensure this data structure is correct and stable
+      // AxisX calculation remains the same
+      let listAxisX = [];
+      for (let i = 0; i <= parseInt(obj.year) + 1; i++) {
+        listAxisX.push(i);
+      }
 
-    // Optimized AxisY calculation
-    let listAxisY = [];
-    let accum = 0;
-    let accum_2 = 0;
-    for (let i = 0; i < parseInt(obj.year) + 1; i++) {
-      // Calculate monthlyGrowthPercentage with the updated values
-      let monthlyGrowthPercentage = avgGrowth / 12 / 100 + 1;
-      for (let j = 1; j <= 12; j++) {
-        // Corrected loop increment
-        if (i === 0 && j === 1) {
-          accum_2 += UserInvestAmount;
-          listAxisY.push(accum);
-        } else if (i === 0 && j !== 1) {
-          accum_2 *= monthlyGrowthPercentage;
-          accum_2 += UserInvestAmount;
-        } else if (i === 1 && j === 1) {
-          accum = accum_2;
-          listAxisY.push(accum);
-          accum *= monthlyGrowthPercentage;
-          accum += UserInvestAmount;
-        } else if (i === 1 && j > 1) {
-          accum *= monthlyGrowthPercentage;
-          accum += UserInvestAmount;
-        } else if (i > 1 && j === 1) {
-          listAxisY.push(accum);
-          accum *= monthlyGrowthPercentage;
-          accum += UserInvestAmount;
-        } else {
-          accum *= monthlyGrowthPercentage;
-          accum += UserInvestAmount;
+      // Optimized AxisY calculation
+      let listAxisY = [];
+      let accum = 0;
+      let accum_2 = 0;
+      console.log(avgGrowth)
+      console.log(UserInvestAmount)
+      for (let i = 0; i < parseInt(obj.year) + 1; i++) {
+        // Calculate monthlyGrowthPercentage with the updated values
+        let monthlyGrowthPercentage = avgGrowth / 12 / 100 + 1;
+        for (let j = 1; j <= 12; j++) {
+          // Corrected loop increment
+          if (i === 0 && j === 1) {
+            accum_2 += UserInvestAmount;
+            listAxisY.push(accum);
+          } else if (i === 0 && j !== 1) {
+            accum_2 *= monthlyGrowthPercentage;
+            accum_2 += UserInvestAmount;
+          } else if (i === 1 && j === 1) {
+            accum = accum_2;
+            listAxisY.push(accum);
+            accum *= monthlyGrowthPercentage;
+            accum += UserInvestAmount;
+          } else if (i === 1 && j > 1) {
+            accum *= monthlyGrowthPercentage;
+            accum += UserInvestAmount;
+          } else if (i > 1 && j === 1) {
+            listAxisY.push(accum);
+            accum *= monthlyGrowthPercentage;
+            accum += UserInvestAmount;
+          } else {
+            accum *= monthlyGrowthPercentage;
+            accum += UserInvestAmount;
+          }
         }
       }
+      setUserAxisX(listAxisX);
+      setUserAxisY(listAxisY);
+    } catch (error) {
+      console.log("Error in userInvestGraph function: ", error);
     }
-    setUserAxisX(listAxisX);
-    setUserAxisY(listAxisY);
   }
-
-
 
   useEffect(() => {
     Promise.all([fetchGrowthRate(userStore), fetchData(userStore)]).then(
@@ -255,9 +262,8 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
     } else if (totalFundAmount > UserInvestAmount) {
       alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
     } else if (totalFundAmount < UserInvestAmount) {
-      alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน")
-    }
-    else {
+      alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน");
+    } else {
       axios
         .post(`${baseURL}/db/upsert_new_goal`, {
           userId: userStore.userId,
@@ -271,15 +277,14 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
 
       axios.post(
         `${baseURL}/db/change_goal_percentage`,
-        { userId: userStore.userId,
-          goal: memoizedData.data.data.goal, },
+        { userId: userStore.userId, goal: memoizedData.data.data.goal },
         {
-            headers: {
-                Authorization: userStore.userToken,
-                UserId: userStore.userId
-            },
+          headers: {
+            Authorization: userStore.userToken,
+            UserId: userStore.userId,
+          },
         }
-    )
+      );
     }
     e.preventDefault();
   }
@@ -288,11 +293,11 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
     <React.Fragment>
       <div>{JSON.stringify(memoizedData.data.data.goal)}</div>
       <div>{JSON.stringify(avgGrowth)}</div>
-       <div>{JSON.stringify(minAxisX)}</div>
-       <div>{JSON.stringify(minAxisY)}</div>
-       <div>{JSON.stringify(userAxisX)}</div>
-       <div>{JSON.stringify(userAxisY)}</div>
-       <div>{JSON.stringify(UserInvestAmount)}</div>
+      <div>{JSON.stringify(minAxisX)}</div>
+      <div>{JSON.stringify(minAxisY)}</div>
+      <div>{JSON.stringify(userAxisX)}</div>
+      <div>{JSON.stringify(userAxisY)}</div>
+      <div>{JSON.stringify(UserInvestAmount)}</div>
 
       <div className="resultGraph">
         <p>{JSON.stringify(memoizedData.data.selectedValue)}</p>

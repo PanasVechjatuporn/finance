@@ -351,3 +351,65 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
     console.log("Error occured in mongoController.changeGoalPercentage: ", err);
   }
 };
+
+exports.getUserGoal = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("goal");
+
+  try {
+    query = { userId: req.params.uid };
+    var findResult = await collection.find(query).toArray();
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.getUserGoal: ", error);
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.getUserRiskProfile = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("users");
+  try {
+    query = { uid: req.params.uid, riskProfile: { $exists: true } };
+
+    var findResult = await collection.find(query).toArray();
+    console.log(findResult);
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.testUser: ", error);
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.upsertRiskProfile = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("users");
+  const userToken = req.header("Authorization");
+  const userId = req.header("UserId");
+  try {
+    const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+    if (isVerify) {
+      // console.log("params: ",req.body)
+      // console.log(req.params.riskProfile);
+      const query = { uid: req.body.userId };
+      const update = {
+        $set: {
+          riskProfile: req.body.riskProfile,
+        },
+      };
+      const option = { upsert: true };
+      updateResult = await collection.updateOne(query, update, option);
+      console.log(updateResult);
+      if (updateResult.upsertedCount > 0) {
+        console.log(`A new document was inserted with the uid: ${query.uid}`);
+      } else if (updateResult.modifiedCount > 0) {
+        console.log(`The document with the uid: ${query.uid} was updated`);
+      } else {
+        console.log(`No changes were made for the document with the uid: ${query.uid}`);
+      }
+      res.status(200);
+    }
+  } catch (err) {
+    console.log("Error occured in mongoController.changeGoalPercentage: ", err);
+  }
+};
