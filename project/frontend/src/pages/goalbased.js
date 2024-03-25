@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import { AssetSummary } from "components/AssetSummary_GoalBased";
 
 const warnTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -89,7 +90,6 @@ export const GoalBased = () => {
             handleOpenCreate();
         }
     }
-    console.log(isItNormal);
     const [openNewGoal, setOpenNewGoal] = React.useState(false);
     const handleOpenNewGoal = () => {
         setOpenNewGoal(true);
@@ -272,12 +272,12 @@ export const GoalBased = () => {
                                                 let updatedGoal = [...oldGoal];
                                                 updatedGoal[index].Percentage = e.target.value;
                                                 setOldGoal(updatedGoal);
-                                                console.log(oldGoal);
+                                                // console.log(oldGoal);
                                             } else if (!e.target.value) {
                                                 let updatedGoal = [...oldGoal];
                                                 updatedGoal[index].Percentage = "";
                                                 setOldGoal(updatedGoal);
-                                                console.log(oldGoal);
+                                                // console.log(oldGoal);
                                             }
                                         }}
                                     />
@@ -471,6 +471,7 @@ export const GoalBased = () => {
                     </Card>
                 </Container>
             )}
+            <AssetSummary></AssetSummary>
         </React.Fragment>
     );
 };
