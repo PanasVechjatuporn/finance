@@ -25,11 +25,14 @@ import axios from 'axios';
 import Tooltip from '@mui/material/Tooltip';
 import { useSelector } from 'react-redux';
 import { useLocation } from "react-router-dom";
+import { Button } from '@mui/joy';
+import { useNavigate } from 'react-router-dom';
 
 
 export function TaxCal() {
 
     const uid = useSelector(state => state.userStore.userId)
+    const navigate = useNavigate();
 
     const [isloading, setIsloading] = React.useState(true);
 
@@ -146,7 +149,6 @@ export function TaxCal() {
 
 
     async function makeIncomeArr() {
-
         const sumByType = {};
         let sumOfIncome = 0;
         let sumOfBenefit = 0;
@@ -273,6 +275,14 @@ export function TaxCal() {
 
     //console.log(benefitObj);
     //console.log(incomeObj);
+
+    function handleClick() {
+        if (warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund <= 150000) {
+            alert("เงินได้สุทธิของคุณอยู่ในเกณฑ์ที่ไม่ต้องเสียภาษี")
+        } else {
+            navigate('../Goal-Based')
+        }
+    }
 
     return (
         <React.Fragment>
@@ -852,16 +862,16 @@ export function TaxCal() {
                         </Table>
                     </TableContainer>
 
-                    {!(incomeSum - benefitSum - personal - insurance - charity < 0) ?
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
-                            <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                                เงินได้สุทธิ
-                            </Typography>
-                            <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                                {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
-                            </Typography>
-                        </Container>
-                        :
+                    {/* {!(incomeSum - benefitSum - personal - insurance - charity < 0) ? */}
+                    <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            เงินได้สุทธิ
+                        </Typography>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
+                        </Typography>
+                    </Container>
+                    {/* :
                         <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
                             <Typography variant="subtitile1" style={{ fontSize: 17 }}>
                                 เงินได้สุทธิ
@@ -870,7 +880,7 @@ export function TaxCal() {
                                 {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
                             </Typography>
                         </Container>
-                    }
+                    } */}
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
@@ -882,26 +892,12 @@ export function TaxCal() {
                     </Container>
 
 
-                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund < 0) ?
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <div
-                                style={{ padding: 7, textDecoration: "none", color: "black", backgroundColor: '#66eb52', borderRadius: 10, borderStyle: 'solid', borderWidth: 1 }}
-                            >
-                                <Typography style={{ width: 170, textAlign: 'center', fontStyle: 'italic' }}>ลดหย่อนภาษีเพิ่มเติม !</Typography>
-                            </div>
-                        </Container>
-                        :
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                                <Link
-                                    to={"../Goal-Based"}
-                                    style={{ padding: 7, textDecoration: "none", color: "black", backgroundColor: '#66eb52', borderRadius: 20, borderStyle: 'solid', borderWidth: 1 }}
-                                >
-                                    <Typography style={{ width: 170, textAlign: 'center', fontStyle: 'italic' }}>ลดหย่อนภาษีเพิ่มเติม !</Typography>
-                                </Link>
-                            </Tooltip>
-                        </Container>
-                    }
+                    <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
+                        <Tooltip title="Goal-Based Feature !" arrow placement='right'>
+                            <Button onClick={handleClick} style={{ padding: 7, color: "black", backgroundColor: '#66eb52', borderRadius: 20, borderStyle: 'solid', borderWidth: 1, width: 170, textAlign: 'center', fontStyle: 'italic', fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                        </Tooltip>
+                    </Container>
+
                 </div>) : null
             }
         </React.Fragment >

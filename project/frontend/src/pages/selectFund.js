@@ -253,7 +253,7 @@ export const SelectFund = () => {
                         <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    ภาษีที่ต้องจ่าย : {tax.toLocaleString("en-GB")} บาท
+                                    ภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
@@ -261,7 +261,7 @@ export const SelectFund = () => {
                                     เงินลงทุน : {investAmount.toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
-                                    ลดภาษีได้ : {Math.round(tax - newTax).toLocaleString("en-GB")} บาท
+                                    ลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                         </div>
@@ -270,7 +270,7 @@ export const SelectFund = () => {
                         <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {(Math.round((netIncome - 150000) / 12)).toLocaleString("en-GB")} บาท/เดือน
+                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography>
                                     คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี

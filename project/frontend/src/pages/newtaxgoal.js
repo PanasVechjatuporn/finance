@@ -244,6 +244,7 @@ export function NewTaxGoal() {
             <Navigate />
             {isloading == false &&
                 (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography marginBottom={2} fontWeight={'bold'}>การคำนวนเงินได้สุทธิเพื่อนำไปคำนวนภาษี</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>
@@ -816,31 +817,22 @@ export function NewTaxGoal() {
                         </Table>
                     </TableContainer>
 
-                    {!(incomeSum - benefitSum - personal - insurance - charity < 0) ?
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
-                            <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                                เงินได้สุทธิ
-                            </Typography>
-                            <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                                {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
-                            </Typography>
-                        </Container>
-                        :
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
-                            <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                                เงินได้สุทธิ
-                            </Typography>
-                            <Typography variant="subtitile1" style={{ fontSize: 17, color: 'red' }}>
-                                {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
-                            </Typography>
-                        </Container>
-                    }
+                    <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            เงินได้สุทธิ
+                        </Typography>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
+                        </Typography>
+                    </Container>
 
-                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund < 0) ?
+                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund <= 150000) ?
                         <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <IconButton disabled={true}>
-                                <StartIcon color='error' />
-                            </IconButton>
+                            <Tooltip title="เงินได้ของคุณอยู่ในเกณฑ์ที่ไม่ต้องเสียภาษี" arrow placement='right'>
+                                <IconButton >
+                                    <StartIcon color='error' />
+                                </IconButton>
+                            </Tooltip>
                         </Container>
                         :
                         <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
