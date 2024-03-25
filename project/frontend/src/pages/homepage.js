@@ -4,8 +4,8 @@ import CarouselInterval from "components/Carousel";
 export const Home = () => {
   return (
     <React.Fragment>
-        <Navigate />
-        <CarouselInterval />
+      <Navigate />
+      <CarouselInterval />
     </React.Fragment>
   );
 };

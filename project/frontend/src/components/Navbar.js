@@ -60,8 +60,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navigate() {
-  const userStore = useSelector(state => state.userStore)
-  const dispatch = useDispatch()
+  const userStore = useSelector((state) => state.userStore);
+  const dispatch = useDispatch();
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showNotLoggedIn, setShowNotLoggedIn] = useState(false);
@@ -69,7 +69,7 @@ function Navigate() {
   const handleShowSignIn = () => setShowSignIn(true);
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ background: '#2E3B55' }}>
+      <AppBar position="static" style={{ background: "#2E3B55" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -99,32 +99,44 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href={'/Dashboard'} onClick={(e) => {
-              if (!userStore.isLogIn) {
-                setShowNotLoggedIn(true)
-                e.preventDefault();
-              }
-            }}
+            <Navbar.Brand
+              href={"/Dashboard"}
+              onClick={(e) => {
+                if (!userStore.isLogIn) {
+                  setShowNotLoggedIn(true);
+                  e.preventDefault();
+                }
+              }}
             >
               Dashboard
             </Navbar.Brand>
-            <SignUpModal show={showNotLoggedIn} setShow={setShowNotLoggedIn} mode="notloggedin" />
+            <SignUpModal
+              show={showNotLoggedIn}
+              setShow={setShowNotLoggedIn}
+              mode="notloggedin"
+            />
           </Typography>
           <Typography
             variant="h8"
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href={'/Goal-Based'} onClick={(e) => {
-              if (!userStore.isLogIn) {
-                setShowNotLoggedIn(true)
-                e.preventDefault();
-              }
-            }}
+            <Navbar.Brand
+              href={"/Goal-Based"}
+              onClick={(e) => {
+                if (!userStore.isLogIn) {
+                  setShowNotLoggedIn(true);
+                  e.preventDefault();
+                }
+              }}
             >
               Goal-Based
             </Navbar.Brand>
-            <SignUpModal show={showNotLoggedIn} setShow={setShowNotLoggedIn} mode="notloggedin" />
+            <SignUpModal
+              show={showNotLoggedIn}
+              setShow={setShowNotLoggedIn}
+              mode="notloggedin"
+            />
           </Typography>
           <Typography
             variant="h8"
@@ -137,8 +149,7 @@ function Navigate() {
             variant="h8"
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-          </Typography>
+          ></Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -150,29 +161,43 @@ function Navigate() {
           </Search>
           {userStore.isLogIn ? (
             <>
-              <Button variant="primary" onClick={() => {
-                dispatch(Logout())
-                localStorage.removeItem("userData");
-              }}>Logout
+              <Button
+                variant="primary"
+                onClick={() => {
+                  dispatch(Logout());
+                  localStorage.removeItem("userData");
+                }}
+              >
+                Logout
               </Button>
               <Typography>{userStore.userName}</Typography>
             </>
-          ) : (<Nav>
-            <Nav.Link href="#sign_up">
-              <>
-                <Button variant="primary" onClick={handleShowSignUp}>
-                  Sign Up
+          ) : (
+            <Nav>
+              <Nav.Link href="#sign_up">
+                <>
+                  <Button variant="primary" onClick={handleShowSignUp}>
+                    Sign Up
+                  </Button>
+                  <SignUpModal
+                    show={showSignUp}
+                    setShow={setShowSignUp}
+                    mode="signup"
+                  />
+                </>
+              </Nav.Link>
+              <Nav.Link eventKey={2} href="#sign_in">
+                <Button variant="secondary" onClick={handleShowSignIn}>
+                  Sign In
                 </Button>
-                <SignUpModal show={showSignUp} setShow={setShowSignUp} mode="signup" />
-              </>
-            </Nav.Link>
-            <Nav.Link eventKey={2} href="#sign_in">
-              <Button variant="secondary" onClick={handleShowSignIn}>
-                Sign In
-              </Button>
-              <SignUpModal show={showSignIn} setShow={setShowSignIn} mode="signin" />
-            </Nav.Link>
-          </Nav>)}
+                <SignUpModal
+                  show={showSignIn}
+                  setShow={setShowSignIn}
+                  mode="signin"
+                />
+              </Nav.Link>
+            </Nav>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

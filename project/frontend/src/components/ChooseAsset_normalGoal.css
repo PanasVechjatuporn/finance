@@ -1,0 +1,14 @@
+.Risk{
+    display: flex;
+}
+.FormResult {
+    display: flex; /* Enable Flexbox */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Align children vertically at the center */
+    justify-content: center; /* Optional: Align children horizontally at the center */
+    margin-top: 20px; /* Set the height of the FormResult div */
+  }
+  
+  .TextFieldForm {
+    /* Styles for your text fields */
+  }
