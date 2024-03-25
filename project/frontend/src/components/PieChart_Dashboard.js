@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -106,46 +104,55 @@ const taxableIncome = [
         color: "#566dff",
     },
 ];
+
 const expenseType = [
     {
         name: "รายจ่าย tmp 1",
         category: 1,
-        color: "#2f346b",
+        color: "#95c2dc",
+        index: 1
     },
     {
         name: "รายจ่าย tmp 2",
         category: 2,
-        color: "#24798e",
+        color: "#ec843e",
+        index: 2
     },
     {
         name: "รายจ่าย tmp 3",
         category: 3,
-        color: "#fac76e",
+        color: "#e7dc8c",
+        index: 3
     },
     {
         name: "รายจ่าย tmp 4",
         category: 4,
-        color: "#ed8e5e",
+        color: "#84ceb9",
+        index: 4
     },
     {
         name: "รายจ่าย tmp 5",
         category: 5,
-        color: "#f7f89a",
+        color: "#6681a5",
+        index: 5
     },
     {
         name: "รายจ่าย tmp 6",
         category: 6,
-        color: "#b03e6f",
+        color: "#fb7d7e",
+        index: 6
     },
     {
         name: "รายจ่าย tmp 7",
         category: 7,
-        color: "#907f50",
+        color: "#485ea1",
+        index: 7
     },
     {
         name: "อื่นๆ",
         category: 8,
-        color: "#59424f",
+        color: "#b7f1a5",
+        index: 8
     },
 ];
 
@@ -408,7 +415,7 @@ export default function PieChartComponent({ userData }) {
                             />
                         </div>
                         <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
-                            <CustomChartLegend data={incomePieData} />
+                            <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome}/>
                         </div>
                     </div>
                 ) : (
@@ -419,15 +426,6 @@ export default function PieChartComponent({ userData }) {
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                // colors={[
-                                //     "#ea7375",
-                                //     "#52f5f5",
-                                //     "#f688bf",
-                                //     "#fac991",
-                                //     "#f7f89a",
-                                //     "#abfca3",
-                                //     "#abadfd",
-                                // ]}
                                 {...pieExpenseParams}
                                 series={pieExpenseParams.series.map((series) => ({
                                     ...series,
@@ -449,7 +447,7 @@ export default function PieChartComponent({ userData }) {
                             />
                         </div>
                         <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
-                            <CustomChartLegend data={expensePieData} />
+                            <CustomChartLegend data={expensePieData} expenseType={expenseType}/>
                         </div>
                     </div>
                 ) : (
