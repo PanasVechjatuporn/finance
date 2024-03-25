@@ -8,8 +8,6 @@ import "./RiskLevel_RiskEvalNormal.css";
 
 export const RiskLevel = ({
   evaluationResult,
-  setshowRiskLevel,
-  setAllowedToAccessNormalGoal,
 }) => {
   const userStore = useSelector((state) => state.userStore);
   const navigate = useNavigate();
@@ -28,13 +26,9 @@ export const RiskLevel = ({
     riskProfile = "very high";
   }
 
-  const handleBackButton = () => {
-    setshowRiskLevel(false);
-  };
 
   const handleCreateGoal = (e) => {
     // console.log(userStore);
-    setAllowedToAccessNormalGoal(true);
     // console.log("risk profile", riskProfile);
     // console.log(userStore.userId)
     // const params = { userId: userStore.userId, riskProfile: riskProfile };
@@ -62,9 +56,6 @@ export const RiskLevel = ({
       </div>
       <div className="BackAndCreateGoalButton">
         <Stack spacing={2} direction="row">
-          <Button variant="outlined" onClick={handleBackButton}>
-            Back
-          </Button>
           <Button variant="contained" onClick={handleCreateGoal}>
             Create Goal
           </Button>

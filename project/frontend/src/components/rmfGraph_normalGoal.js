@@ -3,7 +3,11 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import Grid from "@mui/material/Grid";
 import { Container } from "react-bootstrap";
+import { Container as ContainerMui } from "@mui/material";
+
+import { Box, Typography } from "@mui/material";
 
 import { TextField } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
@@ -12,7 +16,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Tooltip from "@mui/material/Tooltip";
 import DescriptionIcon from "@mui/icons-material/Description";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
@@ -149,27 +152,27 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
     let listAxisY = [];
     let accum = 0;
     let accum_2 = 0;
-    for (let i = 0; i <= parseInt(obj.year) + 1; i++) {
+    for (let i = 0; i < parseInt(obj.year) + 1; i++) {
       // Calculate monthlyGrowthPercentage with the updated values
       let monthlyGrowthPercentage = r + 1;
       for (let j = 1; j <= 12; j++) {
         // Corrected loop increment
         if (i === 0 && j === 1) {
           accum_2 += monthlyInvest;
-          listAxisY.push(accum);
+          listAxisY.push(Math.round(accum));
         } else if (i === 0 && j !== 1) {
           accum_2 *= monthlyGrowthPercentage;
           accum_2 += monthlyInvest;
         } else if (i === 1 && j === 1) {
           accum = accum_2;
-          listAxisY.push(accum);
+          listAxisY.push(Math.round(accum));
           accum *= monthlyGrowthPercentage;
           accum += monthlyInvest;
         } else if (i === 1 && j > 1) {
           accum *= monthlyGrowthPercentage;
           accum += monthlyInvest;
         } else if (i > 1 && j === 1) {
-          listAxisY.push(accum);
+          listAxisY.push(Math.round(accum));
           accum *= monthlyGrowthPercentage;
           accum += monthlyInvest;
         } else {
@@ -208,20 +211,20 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
           // Corrected loop increment
           if (i === 0 && j === 1) {
             accum_2 += UserInvestAmount;
-            listAxisY.push(accum);
+            listAxisY.push(Math.round(accum));
           } else if (i === 0 && j !== 1) {
             accum_2 *= monthlyGrowthPercentage;
             accum_2 += UserInvestAmount;
           } else if (i === 1 && j === 1) {
             accum = accum_2;
-            listAxisY.push(accum);
+            listAxisY.push(Math.round(accum));
             accum *= monthlyGrowthPercentage;
             accum += UserInvestAmount;
           } else if (i === 1 && j > 1) {
             accum *= monthlyGrowthPercentage;
             accum += UserInvestAmount;
           } else if (i > 1 && j === 1) {
-            listAxisY.push(accum);
+            listAxisY.push(Math.round(accum));
             accum *= monthlyGrowthPercentage;
             accum += UserInvestAmount;
           } else {
@@ -291,65 +294,126 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
 
   return (
     <React.Fragment>
-      {/* <div>{JSON.stringify(memoizedData.data.data.goal)}</div>
-      <div>{JSON.stringify(avgGrowth)}</div>
-      <div>{JSON.stringify(minAxisX)}</div>
-      <div>{JSON.stringify(minAxisY)}</div>
-      <div>{JSON.stringify(userAxisX)}</div>
-      <div>{JSON.stringify(userAxisY)}</div>
-      <div>{JSON.stringify(UserInvestAmount)}</div> */}
+      {/* <div>{JSON.stringify(memoizedData.data.data.goal)}</div> */}
+      {/* <div>{JSON.stringify(avgGrowth)}</div> */}
+      {/* <div>{JSON.stringify(minAxisX)}</div> */}
+      {/* <div>{JSON.stringify(minAxisY.length)}</div> */}
+      {/* <div>{JSON.stringify(userAxisX)}</div> */}
+      {/* <div>{JSON.stringify(userAxisY.length)}</div> */}
+      {/* <div>{JSON.stringify(memoizedData.data.data.year)}</div> */}
+      {/* <div>{JSON.stringify(UserInvestAmount)}</div> */}
+      <Grid
+        container
+        spacing={1}
+        marginTop={2}
+        marginLeft={2}
+        justifyContent={"center"}
+      >
+        <Grid container spacing={1}>
+          <Grid>
+            <Grid item xs={4}>
+              <Box
+                sx={{
+                  minWidth: "80vh",
+                  minHeight: "80vh",
+                  maxWidth: "80vh",
+                  maxHeight: "80vh",
+                  borderRadius: 6,
+                  boxShadow: 6,
+                  padding: 4,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  position: "relative",
+                }}
+              >
+                <ContainerMui>
+                  <Typography
+                    variant="h5"
+                    style={{
+                      color: "#757575",
+                      textDecoration: "underline",
+                      textDecorationColor: "transparent",
+                      borderBottom: "2px solid #757575",
+                      display: "inline-block",
+                      width: "100%",
+                      paddingBottom: "8px",
+                      userSelect: "none",
+                      marginBottom: "12px",
+                      fontWeight: "bold",
+                    }}
+                    sx={{ textAlign: "center" }}
+                  >
+                    เงินลงทุนที่แนะนำ {Math.round(minInvest)} บาทต่อเดือน
+                  </Typography>
+                  <div style={{justifyContent: 'center'}}>
+                    {isLoading ? (
+                      <LineChart
+                        sx={{
+                          "& .MuiLineElement-series-Predict": {
+                            strokeDasharray: "10 5",
+                            strokeWidth: 4,
+                          },
+                          border: "1px solid #757575",
+                          position: "absolute",
+                        }}
+                        xAxis={[{ data: minAxisX, label: "ปี" }]}
+                        series={[
+                          {
+                            id: "Recommend",
+                            stack: "total",
+                            data: minAxisY,
+                            label: "เงินลงทุนที่แนะนำ",
+                            showMark: false,
+                          },
+                          {
+                            id: "Predict",
+                            stack: "total",
+                            data: userAxisY,
+                            label: "เงินที่คาดว่าจะเติบโต (Predict)",
+                            showMark: false,
+                          },
+                        ]}
+                        width={500}
+                        height={300}
+                      />
+                    ) : (
+                      <p>waiting for graph to load...</p>
+                    )}
+                  </div>
+                </ContainerMui>
+              </Box>
+            </Grid>
+            <Grid item xs={8}>
+              <Box>
+                <div>
+                  <p>
+                    เงินลงทุนขั้นต่ำต่อเดือน {Math.round(UserInvestAmount)} บาท
+                  </p>
+                </div>
+                <div>
+                  {isLoading ? (
+                    <LineChart 
+                      xAxis={[{ data: userAxisX, label: "ปี" }]}
+                      yAxis={[{ label: "บาท" }]}
+                      series={[
+                        {
+                          data: userAxisY,
+                        },
+                      ]}
+                      width={500}
+                      height={300}
+                    />
+                  ) : (
+                    <p>waiting for graph to load...</p>
+                  )}
+                </div>
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
 
-      <div className="resultGraph">
-        <p>rmf</p>
-      </div>
-      <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {minInvest} บาท</p>
-      </div>
-      <div className="resultGraph">
-        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'right'}}>บาท</div>
-        {isLoading ? (
-          <LineChart
-            xAxis={[{ data: minAxisX, label: "ปี" }]}
-            series={[
-              {
-                data: minAxisY,
-                label: "เงินลงทุนที่แนะนำ",
-                showMark: false,
-              },
-              {
-                data: userAxisY,
-                label: "เงินที่คาดว่าจะเติบโต (Predict)",
-                showMark: false,
-              },
-            ]}
-            width={500}
-            height={300}
-          />
-        ) : (
-          <p>waiting for graph to load...</p>
-        )}
-      </div>
-
-      <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {UserInvestAmount} บาท</p>
-      </div>
-      <div className="resultGraph">
-        {isLoading ? (
-          <LineChart
-            xAxis={[{ data: userAxisX, label: "ปี" }]}
-            yAxis={[{ label: "บาท" }]}
-            series={[
-              {
-                data: userAxisY,
-              },
-            ]}
-            width={500}
-            height={300}
-          />
-        ) : (
-          <p>waiting for graph to load...</p>
-        )}
-      </div>
       <form
         onSubmit={(e) => {
           saveTaxGoal(e);
