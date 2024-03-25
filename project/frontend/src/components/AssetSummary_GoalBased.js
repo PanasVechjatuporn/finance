@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useSelector } from "react-redux";
 import { AssetSummaryGoalTable } from "./AssetSummaryGoalTable_GoalBased";
+import { AssetSummaryGoalPieChart } from "./AssetSummaryGoalPieChart_GoalBased";
 import axios from "axios";
 
 const baseURL = "http://localhost:8000";
@@ -95,6 +96,12 @@ export const AssetSummary = () => {
                     <AssetSummaryGoalTable
                         selectedData={selectedData}
                     ></AssetSummaryGoalTable>
+                </Box>
+                <Box>
+                    <AssetSummaryGoalPieChart
+                        selectedData={selectedData}
+                    >
+                    </AssetSummaryGoalPieChart>
                 </Box>
             </Container>
         );
