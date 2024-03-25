@@ -148,7 +148,7 @@ export default function MonthDataTable({ userData, setUserData }) {
   }
 
   return (
-    <Container maxWidth="md" overflow= "auto" >
+    <Container maxWidth="md" overflow="auto" >
       <Box
         sx={{
           minWidth: "90vh",
@@ -161,10 +161,10 @@ export default function MonthDataTable({ userData, setUserData }) {
           overflow: "auto"
         }}
       >
-        <Paper 
-          style={{ position: "relative", paddingBottom: "70px", borderRadius: 6}}
+        <Paper
+          style={{ position: "relative", paddingBottom: "70px", borderRadius: 6 }}
           sx={{
-            borderRadius:6
+            borderRadius: 6
           }}
         >
           <Typography sx={{
@@ -266,7 +266,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 }}
               >
                 {allYear.map((item, index) => (
-                  <MenuItem key={index+"-menuitem-"+item+selectedYear} value={item}>
+                  <MenuItem key={index + "-menuitem-" + item + selectedYear} value={item}>
                     {item}
                   </MenuItem>
                 ))}
