@@ -23,6 +23,9 @@ export const SelectFund = () => {
     const netIncome = location.state.netIncome;
     const beforeReduction = location.state.beforeReduction;
     const Percentage = location.state.Percentage;
+    const oldGoal = location.state.oldGoal;
+
+    const token = useSelector((state) => state.userStore.userToken);
     const uid = useSelector((state) => state.userStore.userId);
     const [isLoading, setIsloading] = React.useState(true);
 
@@ -149,7 +152,21 @@ export const SelectFund = () => {
             if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
             else {
                 axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid, Percentage: Percentage })
-                    .then(navigate("/Goal-Based"))
+                    .then(navigate("/Goal-Based"));
+                axios.post(
+                    `http://localhost:8000/db/change_goal_percentage`,
+                    {
+                        userId: uid,
+                        goal: oldGoal,
+                    },
+                    {
+                        headers: {
+                            Authorization: token,
+                            UserId: uid
+                        },
+                    }
+                )
+
             };
         };
         e.preventDefault();
@@ -246,7 +263,7 @@ export const SelectFund = () => {
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    เงินลงทุนในเป้าหมายนี้ : {investAmount.toLocaleString("en-GB")} บาท
+                                    เงินลงทุน : {investAmount.toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
                                     ลดภาษีได้ : {Math.round(tax - newTax).toLocaleString("en-GB")} บาท

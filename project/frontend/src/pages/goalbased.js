@@ -110,7 +110,7 @@ export const GoalBased = () => {
             } else if (isItNormal == false) {
                 handleCloseNewGoal();
                 navigate("./reduce-tax-goal", {
-                    state: { Percentage: goalPercent, data: data },
+                    state: { Percentage: goalPercent, data: data, oldGoal: oldGoal },
                 });
                 event.preventDefault();
             }
