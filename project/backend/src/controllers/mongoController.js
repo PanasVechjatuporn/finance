@@ -284,7 +284,6 @@ exports.deleteUserMonthData = async (req, res) => {
 exports.getUserGoal = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("goal");
-
     try {
         query = { userId: req.params.uid };
         var findResult = await collection.find(query).toArray();
@@ -339,7 +338,6 @@ exports.upsertNewGoal = async (req, res) => {
 };
 
 exports.changeMultipleGoalPercentage = async (req, res) => {
-    console.log(req);
     const db = client.db(dbName);
     const collection = db.collection("goal");
     const userToken = req.header("Authorization");
@@ -368,3 +366,47 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
         console.log("Error occured in mongoController.changeGoalPercentage: ", err);
     }
 };
+
+exports.getUserGoalGoalBased = async (req, res) => {
+    const userId = req.header("userId");
+    const userToken = req.header("Authorization");
+    const queryYear = req.header("year");
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    try {
+        let query = { userId: userId };
+        if (queryYear) {
+            query.year = queryYear;
+        }
+        const queryResult = await collection.find(query).toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.log(
+            "Error occured in mongoController.getUserDataDashboard: ",
+            error
+        );
+        res.status(401).json({ message: error });
+    }
+}
+
+exports.getUserAssetGoalBased = async (req, res) => {
+    const userId = req.header("userId");
+    const userToken = req.header("Authorization");
+    const queryYear = req.header("year");
+    const db = client.db(dbName);
+    const collection = db.collection("assets");
+    try {
+        let query = { userId: userId };
+        if (queryYear) {
+            query.year = queryYear;
+        }
+        const queryResult = await collection.find(query).toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.log(
+            "Error occured in mongoController.getUserDataDashboard: ",
+            error
+        );
+        res.status(401).json({ message: error });
+    }
+}
