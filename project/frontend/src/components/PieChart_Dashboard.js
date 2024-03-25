@@ -15,19 +15,19 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 1",
         category: 1,
         label: "เงินเดือน",
-        color: "#fb7ffe",
+        color: "#ac00fd",
     },
     {
         name: "เงินได้ประเภทที่ 2",
         category: 2,
         label: "ค่าจ้างทั่วไป",
-        color: "#d16ef9",
+        color: "#e000d7",
     },
     {
         name: "เงินได้ประเภทที่ 3",
         category: 3,
         label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
-        color: "#f6ea00",
+        color: "#ff56c1",
         subcategory: [
             {
                 subcategorylabel:
@@ -46,13 +46,13 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 4",
         category: 4,
         label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
-        color: "#00b4f9",
+        color: "#ff266a",
     },
     {
         name: "เงินได้ประเภทที่ 5",
         category: 5,
         label: "เงินได้จากการให้เช่าทรัพย์สิน",
-        color: "#f69b44",
+        color: "#fd7a1a",
         subcategory: [
             {
                 subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
@@ -85,7 +85,7 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 6",
         category: 6,
         label: "เงินได้จากวิชาชีพอิสระ",
-        color: "#00fc00",
+        color: "#32a6fb",
         subcategory: [
             {
                 subcategorylabel: "การประกอบโรคศิลปะ",
@@ -103,7 +103,7 @@ const taxableIncome = [
         name: "เงินได้ประเภทที่ 7",
         category: 7,
         label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
-        color: "#f02629",
+        color: "#566dff",
     },
 ];
 const expenseType = [
@@ -231,7 +231,6 @@ export default function PieChartComponent({ userData }) {
                             if (existingEntry) {
                                 existingEntry.value += parseFloat(expenseSource.amount);
                             } else {
-                                console.log('expenseTypeLabel :: ',expenseTypeLabel)
                                 expensePieData.push({
                                     type: expenseSource.type,
                                     value: parseFloat(expenseSource.amount),
@@ -333,6 +332,7 @@ export default function PieChartComponent({ userData }) {
     }
 
     const handleOnClickExpensePieChart = (modalParams) => {
+        console.log('modalParams :: ',modalParams)
         setModalParams(modalParams)
         setModalType("expense")
         setShowPieChartModal(true)
@@ -387,15 +387,15 @@ export default function PieChartComponent({ userData }) {
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                colors={[
-                                    "#ea7375",
-                                    "#52f5f5",
-                                    "#f688bf",
-                                    "#fac991",
-                                    "#f7f89a",
-                                    "#abfca3",
-                                    "#abadfd",
-                                ]}
+                                // colors={[
+                                //     "#ea7375",
+                                //     "#52f5f5",
+                                //     "#f688bf",
+                                //     "#fac991",
+                                //     "#f7f89a",
+                                //     "#abfca3",
+                                //     "#abadfd",
+                                // ]}
                                 {...pieIncomeParams}
                                 series={pieIncomeParams.series.map((series) => ({
                                     ...series,
@@ -408,6 +408,12 @@ export default function PieChartComponent({ userData }) {
                                 onClick={(data, index) => {
                                     handleOnClickIncomePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
                                 }}
+                                sx={{
+                                    [`& .${pieArcLabelClasses.root}`]: {
+                                      fill: 'white',
+                                      fontWeight: 'bold',
+                                    },
+                                  }}
                             />
                         </div>
                         <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
@@ -422,15 +428,15 @@ export default function PieChartComponent({ userData }) {
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                colors={[
-                                    "#ea7375",
-                                    "#52f5f5",
-                                    "#f688bf",
-                                    "#fac991",
-                                    "#f7f89a",
-                                    "#abfca3",
-                                    "#abadfd",
-                                ]}
+                                // colors={[
+                                //     "#ea7375",
+                                //     "#52f5f5",
+                                //     "#f688bf",
+                                //     "#fac991",
+                                //     "#f7f89a",
+                                //     "#abfca3",
+                                //     "#abadfd",
+                                // ]}
                                 {...pieExpenseParams}
                                 series={pieExpenseParams.series.map((series) => ({
                                     ...series,
@@ -441,8 +447,14 @@ export default function PieChartComponent({ userData }) {
                                 }))}
                                 slotProps={{ legend: { hidden: true } }}
                                 onClick={(data, index) => {
-                                    handleOnClickExpensePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
+                                    handleOnClickExpensePieChart(pieExpenseParams.series[0].data[index.dataIndex]);
                                 }}
+                                sx={{
+                                    [`& .${pieArcLabelClasses.root}`]: {
+                                      fill: 'white',
+                                      fontWeight: 'bold',
+                                    },
+                                  }}
                             />
                         </div>
                         <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
