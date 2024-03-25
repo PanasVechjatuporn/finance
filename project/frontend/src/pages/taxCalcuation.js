@@ -27,15 +27,9 @@ import { useSelector } from 'react-redux';
 import { useLocation } from "react-router-dom";
 
 
-export function NewTaxGoal() {
+export function TaxCal() {
 
-    //const uid = useSelector(state => state.userStore.userId)
-
-    const location = useLocation();
-
-    const data = location.state.data;
-    const Percentage = location.state.Percentage;
-    const oldGoal = location.state.oldGoal;
+    const uid = useSelector(state => state.userStore.userId)
 
     const [isloading, setIsloading] = React.useState(true);
 
@@ -82,10 +76,50 @@ export function NewTaxGoal() {
         setCharities(updatedCharities);
     };
 
+    const [tax, setTax] = React.useState(0);
+
+    function calTax(netIncome) {
+        let tax;
+        if (netIncome <= 150000) {
+            tax = 0;
+        } else if (netIncome > 150000 && netIncome <= 300000) {
+            tax = (netIncome - 150000) * 0.05;
+        } else if (netIncome > 300000 && netIncome <= 500000) {
+            tax = (netIncome - 300000) * 0.1 + 7500;
+        } else if (netIncome > 500000 && netIncome <= 750000) {
+            tax = (netIncome - 500000) * 0.15 + 27500;
+        } else if (netIncome > 750000 && netIncome <= 1000000) {
+            tax = (netIncome - 750000) * 0.2 + 65000;
+        } else if (netIncome > 1000000 && netIncome <= 2000000) {
+            tax = (netIncome - 1000000) * 0.25 + 115000;
+        } else if (netIncome > 2000000 && netIncome <= 5000000) {
+            tax = (netIncome - 2000000) * 0.3 + 365000;
+        } else if (netIncome > 5000000) {
+            tax = (netIncome - 5000000) * 0.35 + 1265000;
+        }
+        return tax;
+    }
+
+    const [data, setData] = React.useState([]);
+    React.useEffect(() => {
+        async function fetchData() {
+            if (uid != null) {
+                await axios
+                    .get(`http://localhost:8000/db/userdata=${uid}`)
+                    .then((response) => {
+                        setData(response.data);
+                    });
+            }
+        }
+        fetchData();
+        makeIncomeArr();
+        setTax(calTax(incomeSum - benefitSum - personal - insurance - charity - fund));
+    }, [uid, data]);
+
+
     const [fund, setFund] = React.useState('');
     const [totalReduce, setTotalReduce] = React.useState('');
     React.useEffect(() => {
-        makeIncomeArr();
         const sumPersonal = Number(personal1.replace(/,/g, '') || 0) + Number(personal2.replace(/,/g, '') || 0) + Number(personal3.replace(/,/g, '') || 0) + Number(personal4.replace(/,/g, '') || 0) + Number(personal5.replace(/,/g, '') || 0) + Number(personal6.replace(/,/g, '') || 0);
         setPersonal(sumPersonal);
         const sumInsurance = Number(insurance1.replace(/,/g, '') || 0) + Number(insurance2.replace(/,/g, '') || 0) + Number(insurance3.replace(/,/g, '') || 0) + Number(insurance4.replace(/,/g, '') || 0) + Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance8.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0);
@@ -96,6 +130,7 @@ export function NewTaxGoal() {
         setTotalReduce(sumAll);
         if (Number(insurance2 || 0) + Number(insurance3 || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
         if (Number(insurance5 || 0) + Number(insurance6 || 0) + Number(insurance7 || 0) + Number(insurance9 || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
+        setIsloading(false)
     }, [personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
     );
 
@@ -242,8 +277,9 @@ export function NewTaxGoal() {
     return (
         <React.Fragment>
             <Navigate />
-            {isloading == false &&
+            {isloading == false && data.length > 0 ?
                 (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography marginBottom={2} fontWeight={'bold'}>การคำนวนภาษี</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>
@@ -836,34 +872,38 @@ export function NewTaxGoal() {
                         </Container>
                     }
 
+                    <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            ภาษีที่ต้องจ่ายในปีนี้
+                        </Typography>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            {(tax).toLocaleString("en-GB")} บาท
+                        </Typography>
+                    </Container>
+
+
                     {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund < 0) ?
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <IconButton disabled={true}>
-                                <StartIcon color='error' />
-                            </IconButton>
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
+                            <div
+                                style={{ padding: 7, textDecoration: "none", color: "black", backgroundColor: '#66eb52', borderRadius: 10, borderStyle: 'solid', borderWidth: 1 }}
+                            >
+                                <Typography style={{ width: 170, textAlign: 'center', fontStyle: 'italic' }}>ลดหย่อนภาษีเพิ่มเติม !</Typography>
+                            </div>
                         </Container>
                         :
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
-                            <Tooltip title="ต่อไป" arrow placement='right'>
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
+                            <Tooltip title="Goal-Based Feature !" arrow placement='right'>
                                 <Link
-                                    state={{
-                                        netIncome: incomeSum - benefitSum - personal - insurance - charity - fund,
-                                        beforeReduction: incomeSum - benefitSum,
-                                        Percentage: Percentage,
-                                        oldGoal: oldGoal
-                                    }}
-                                    to={"./select-fund"}
-                                    style={{ textDecoration: "none", color: "black" }}
+                                    to={"../Goal-Based"}
+                                    style={{ padding: 7, textDecoration: "none", color: "black", backgroundColor: '#66eb52', borderRadius: 20, borderStyle: 'solid', borderWidth: 1 }}
                                 >
-                                    <IconButton>
-                                        <StartIcon color='action' />
-                                    </IconButton>
+                                    <Typography style={{ width: 170, textAlign: 'center', fontStyle: 'italic' }}>ลดหย่อนภาษีเพิ่มเติม !</Typography>
                                 </Link>
                             </Tooltip>
                         </Container>
                     }
-                </div>)}
-
+                </div>) : null
+            }
         </React.Fragment >
     );
 }

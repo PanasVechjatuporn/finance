@@ -318,7 +318,7 @@ export const GoalBased = () => {
                             </Button>
                             {Exceed == true ? (
                                 <Button
-                                    disable="true"
+                                    disabled="true"
                                     type="submit"
                                     sx={{
                                         backgroundColor: "gray",

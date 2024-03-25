@@ -73,13 +73,8 @@ export const SelectFund = () => {
                     console.log(item.investmentData)
                     sumOfInvest += parseInt(item.investmentData);
                 });
-                if (userData.data.length % 12 == 0) {
-                    avgIn = sumOfInvest;
-                    setAvgInvest(avgIn);
-                } else {
-                    avgIn = (sumOfInvest / userData.data.length);
-                    setAvgInvest(avgIn);
-                }
+                avgIn = (sumOfInvest / userData.data.length);
+                setAvgInvest(avgIn);
                 const invest = Math.round((investPercent / 100) * avgIn);
                 setInvestAmount(invest);
                 setTax(calTax(netIncome));
@@ -286,7 +281,7 @@ export const SelectFund = () => {
                             </div>
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เงินลงทุนรายเดือน : {Math.round(avgInvest).toLocaleString("en-GB")} บาท
+                                    เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'}>
                                     ลงทุนในสัดส่วน : {Percentage.toLocaleString("en-GB")} %
@@ -302,7 +297,7 @@ export const SelectFund = () => {
                                         }} />
                                     % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
                                 </Typography>
-                                <Typography> คิดเป็นเงิน {investAmount.toLocaleString("en-GB")} บาท</Typography>
+                                <Typography> คิดเป็นเงินประมาณ {investAmount.toLocaleString("en-GB")} บาท/เดือน</Typography>
                             </div>
                         </Container>
 
