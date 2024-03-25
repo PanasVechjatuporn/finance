@@ -12,7 +12,7 @@ exports.signUp = async (req, res) => {
       displayName: displayName
     })
     .then(async (userRecord) => {
-      mongoController.create_new_user(userRecord)
+      mongoController.createNewUser(userRecord)
       res.status(200).json({ userRecord });
     })
     .catch((error) => {

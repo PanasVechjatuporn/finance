@@ -20,6 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import OverlayLoading from "./OverlayLoading";
 import axios from "axios";
+import { Typography } from "@mui/material";
 
 const baseURL = "http://localhost:8000";
 
@@ -147,9 +148,28 @@ export default function MonthDataTable({ userData, setUserData }) {
   }
 
   return (
-    <Container>
-      <Box style={{ marginTop: "5%" }}>
-        <Paper style={{ position: "relative", paddingBottom: "70px" }}>
+    <Container maxWidth="md" overflow= "auto" >
+      <Box
+        sx={{
+          minWidth: "90vh",
+          minHeight: "90vh",
+          maxWidth: "90vh",
+          maxHeight: "90vh",
+          borderRadius: 6,
+          boxShadow: 6,
+          padding: 4,
+          overflow: "auto"
+        }}
+      >
+        <Paper 
+          style={{ position: "relative", paddingBottom: "70px", borderRadius: 6}}
+          sx={{
+            borderRadius:6
+          }}
+        >
+          <Typography sx={{
+            padding: 1
+          }}>เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน</Typography>
           <TableContainer style={{ height: "70vh" }}>
             <Table stickyHeader>
               <TableHead
@@ -177,7 +197,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 <TableBody>
                   {currentYearData.data.map((monthData, index) => (
                     <DataTableRow
-                      key={`data-table-row-${index}`}
+                      key={`data-table-row-${index}-${selectedYear}`}
                       dataMonth={monthData}
                       currentYearData={currentYearData}
                       userData={userData}
@@ -185,7 +205,8 @@ export default function MonthDataTable({ userData, setUserData }) {
                       selectedYear={selectedYear}
                       isDeleteActive={
                         parseInt(currentYearData.data.length) ===
-                          parseInt(index + 1) && (currentYearData.data.length !== 1)
+                          parseInt(index + 1) &&
+                          currentYearData.data.length !== 1
                           ? true
                           : false
                       }
@@ -205,6 +226,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                         handleNewMonthClick();
                       }}
                       style={{ cursor: "pointer" }}
+                      key={"add-new-month-data"}
                     >
                       <IconButton
                         children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
@@ -244,7 +266,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 }}
               >
                 {allYear.map((item, index) => (
-                  <MenuItem key={index} value={item}>
+                  <MenuItem key={index+"-menuitem-"+item+selectedYear} value={item}>
                     {item}
                   </MenuItem>
                 ))}
