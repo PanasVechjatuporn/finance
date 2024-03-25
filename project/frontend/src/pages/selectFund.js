@@ -17,6 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/joy";
 
 export const SelectFund = () => {
     const location = useLocation();
@@ -173,7 +174,7 @@ export const SelectFund = () => {
     return (
         <React.Fragment>
             <Navigate />
-            {isLoading == false && (
+            {isLoading == false ? (
                 <form onSubmit={e => { saveTaxGoal(e) }}>
                     <Container style={{ display: 'flex', marginTop: 30, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
                         {/*<Typography fontWeight={'bold'} marginBottom={1}>
@@ -333,9 +334,15 @@ export const SelectFund = () => {
                                 ))}
                             </div>
                         </div>
-
                     </Container>
-                </form>)}
+                </form>) :
+                <Container style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40 }}>
+                    <CircularProgress
+                        color="neutral"
+                        value={35}
+                        variant="plain"
+                    />
+                </Container>}
         </React.Fragment >
     )
 }

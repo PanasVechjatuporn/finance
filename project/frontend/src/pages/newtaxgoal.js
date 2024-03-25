@@ -243,7 +243,7 @@ export function NewTaxGoal() {
         <React.Fragment>
             <Navigate />
             {isloading == false &&
-                (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center' }}>
+                (<div style={{ display: 'flex', marginTop: 30, flexDirection: 'column', alignItems: 'center' }}>
                     <Typography marginBottom={2} fontWeight={'bold'}>การคำนวนเงินได้สุทธิเพื่อนำไปคำนวนภาษี</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">

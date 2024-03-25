@@ -289,7 +289,7 @@ export function TaxCal() {
             <Navigate />
             {isloading == false && data.length > 0 ?
                 (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography marginBottom={2} fontWeight={'bold'}>การคำนวนภาษี</Typography>
+                    <Typography marginBottom={5} marginTop={3} variant="h5" textAlign={"center"} fontWeight={'bold'}>Tax Calculation</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>

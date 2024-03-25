@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import CircularProgress from '@mui/joy/CircularProgress';
 
 const warnTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -422,55 +423,60 @@ export const GoalBased = () => {
     return (
         <React.Fragment>
             <Navigate />
-            {isloading == false && (
-                <Container
-                    style={{
-                        display: "flex",
-                        marginTop: 20,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        width: "70%",
-                        maxHeight: 400,
-                        overflow: "auto",
-                        backgroundColor: "#F0F0F0",
+            <Typography marginBottom={5} marginTop={5} variant="h5" textAlign={"center"} fontWeight={'bold'}>Goal-Based Investment</Typography>
+            <Container
+                style={{
+                    display: "flex",
+                    marginTop: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    width: "70%",
+                    maxHeight: 400,
+                    overflow: "auto",
+                    backgroundColor: "#F0F0F0",
+                }}
+            >
+                <GoalCard Goal={goal} />
+                <Card
+                    sx={{
+                        minHeight: 300,
+                        minWidth: 300,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        margin: 1,
                     }}
                 >
-                    <GoalCard Goal={goal} />
-                    <Card
+                    <CardActions
                         sx={{
-                            minHeight: 300,
-                            minWidth: 300,
-                            paddingTop: 1,
-                            paddingBottom: 1,
-                            margin: 1,
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}
                     >
-                        <CardActions
-                            sx={{
-                                width: "100%",
-                                height: "100%",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
+                        {isloading == false ? <Button
+                            onClick={handleCreateGoal}
+                            sx={{ backgroundColor: "black" }}
+                            size="large"
                         >
-                            <Button
-                                onClick={handleCreateGoal}
-                                sx={{ backgroundColor: "black" }}
-                                size="large"
-                            >
-                                <Typography color="white" variant="subtitile1">
-                                    สร้างเป้าหมาย
-                                </Typography>
-                            </Button>
-                            <ModalCreate
-                                openCreate={openCreate}
-                                handleCloseCreate={handleCloseCreate}
-                            />
-                            <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} />
-                        </CardActions>
-                    </Card>
-                </Container>
-            )}
+                            <Typography color="white" variant="subtitile1">
+                                สร้างเป้าหมาย
+                            </Typography>
+                        </Button>
+                            :
+                            <CircularProgress
+                                color="neutral"
+                                value={35}
+                                variant="plain"
+                            />}
+                        <ModalCreate
+                            openCreate={openCreate}
+                            handleCloseCreate={handleCloseCreate}
+                        />
+                        <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} />
+                    </CardActions>
+                </Card>
+            </Container>
         </React.Fragment>
     );
 };
