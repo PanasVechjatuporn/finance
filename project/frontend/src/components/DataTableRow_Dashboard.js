@@ -142,13 +142,13 @@ const expenseType = [
     },
 ];
 
-async function deleteCurrentMonthData(dataMonth, userData, setUserData, userStore){
+async function deleteCurrentMonthData(dataMonth, userData, setUserData, userStore) {
     await axios.post(
         `${baseURL}/db/delete_monthly`,
-         { 
-            month : dataMonth.month,
-            year : dataMonth.year
-         },
+        {
+            month: dataMonth.month,
+            year: dataMonth.year
+        },
         {
             headers: {
                 Authorization: userStore.userToken,
@@ -274,8 +274,8 @@ export const DataTableRow = ({
                             <div style={{ display: "flex" }}>
                                 {/* Sub Table Income, Investment, Expense */}
                                 <Table className="sub-table">
-                                    <TableHead>
-                                        <TableRow>
+                                    <TableHead >
+                                        <TableRow >
                                             <TableCell
                                                 align="center"
                                                 colSpan={3}
@@ -287,19 +287,19 @@ export const DataTableRow = ({
                                                 Income
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow>
-                                            <TableCell align="center">Amount</TableCell>
-                                            <TableCell align="center">Type</TableCell>
-                                            <TableCell align="center">Subtype</TableCell>
+                                        <TableRow key={"sub-table-header-"+dataMonth.date}>
+                                            <TableCell align="center" key={"header-amount-"+dataMonth.date}>Amount</TableCell>
+                                            <TableCell align="center" key={"header-type-"+dataMonth.date}>Type</TableCell>
+                                            <TableCell align="center" key={"header-subtype-"+dataMonth.date}>Subtype</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dataMonth.incomeData.map((item, index) => (
                                             <TableRow>
-                                                <TableCell key={item.amount + index} align="center">
+                                                <TableCell key={item.amount + index + "-income-" + selectedYear} align="center">
                                                     {item.amount}
                                                 </TableCell>
-                                                <TableCell key={item.type + index} align="center">
+                                                <TableCell key={item.type + index + "-income-type-" + selectedYear} align="center">
                                                     {item.type}
                                                 </TableCell>
                                                 <TableCell
@@ -334,10 +334,10 @@ export const DataTableRow = ({
                                     <TableBody>
                                         {dataMonth.expenseData.map((item, index) => (
                                             <TableRow>
-                                                <TableCell key={item.amount + index} align="center">
+                                                <TableCell key={item.amount + index + dataMonth.date} align="center">
                                                     {item.amount}
                                                 </TableCell>
-                                                <TableCell key={item.type + index} align="center">
+                                                <TableCell key={item.type + index + dataMonth.date} align="center">
                                                     {item.type}
                                                 </TableCell>
                                             </TableRow>
@@ -386,7 +386,7 @@ export const DataTableRow = ({
             <Modal show={openDeleteModal} backdrop="static">
                 <Modal.Header closeButton onHide={handleCloseDeleteModal}>
                     <Modal.Title>
-                       Deleting
+                        Deleting
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

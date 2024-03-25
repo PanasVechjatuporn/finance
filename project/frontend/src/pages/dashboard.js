@@ -4,6 +4,7 @@ import MonthDataTable from "components/DataTable_Dashboard";
 import PieChartComponent from "components/PieChart_Dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from "../store/UserSlice";
+import { Grid } from "@mui/joy";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
 
@@ -32,16 +33,16 @@ function fetchUserData(userStore) {
 
 const groupDataByYear = (data) => {
     return data.reduce((acc, item) => {
-      const year = item.date.split("-")[0];
-      const existingYear = acc.find((entry) => entry.year === year);
-      if (existingYear) {
-        existingYear.data.push(item);
-      } else {
-        acc.push({ year, data: [item] });
-      }
-      return acc;
+        const year = item.date.split("-")[0];
+        const existingYear = acc.find((entry) => entry.year === year);
+        if (existingYear) {
+            existingYear.data.push(item);
+        } else {
+            acc.push({ year, data: [item] });
+        }
+        return acc;
     }, []);
-  };
+};
 
 export const Dashboard = () => {
     const userStore = useSelector((state) => state.userStore);
@@ -102,13 +103,19 @@ export const Dashboard = () => {
     return (
         <React.Fragment>
             <Navigate />
-            <MonthDataTable
-                userData={userData}
-                setUserData={setUserData}
-            />
-            <PieChartComponent 
-                userData={userData}
-            />
+            <Grid container marginTop={2} justifyContent={"center"}>
+                <Grid>
+                    <PieChartComponent
+                        userData={userData}
+                    />
+                </Grid>
+                <Grid>
+                    <MonthDataTable
+                        userData={userData}
+                        setUserData={setUserData}
+                    />
+                </Grid>
+            </Grid>
         </React.Fragment>
     );
 };
