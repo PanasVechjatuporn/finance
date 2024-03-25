@@ -45,6 +45,12 @@ export const NormalGoal = () => {
     } else if (data.selectedValue === "deposit") {
       return <DepositFactsheet data={dataBetweenComponents} />;
     }
+      // else if (data.selectedValue === "fund"){
+      //   return <FundFactsheet data={dataBetweenComponents} />;
+      // }
+      // else if (data.selectedValue === "ssf"){
+      //   return <SsfFactsheet data={dataBetweenComponents} />;
+      // }
   };
 
   return (

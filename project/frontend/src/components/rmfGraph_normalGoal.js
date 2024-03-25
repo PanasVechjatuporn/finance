@@ -109,12 +109,12 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       });
       const avgInvest_temp = sumOfInvest / 12;
       setAvgInvest(avgInvest_temp);
-      console.log(memoizedData.data, avgInvest_temp)
+      console.log(memoizedData.data, avgInvest_temp);
       // console.log(memoizedData.data.data.percentage, avgInvest_temp)
       const invest = Math.round(
         (memoizedData.data.data.percentage / 100) * avgInvest_temp
       );
-      console.log("Invest: ", invest)
+      console.log("Invest: ", invest);
       setUserInvestAmount(invest);
     } catch (err) {
       console.log("Err at fetchData function: ", err);
@@ -199,8 +199,8 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       let listAxisY = [];
       let accum = 0;
       let accum_2 = 0;
-      console.log(avgGrowth)
-      console.log(UserInvestAmount)
+      console.log(avgGrowth);
+      console.log(UserInvestAmount);
       for (let i = 0; i < parseInt(obj.year) + 1; i++) {
         // Calculate monthlyGrowthPercentage with the updated values
         let monthlyGrowthPercentage = avgGrowth / 12 / 100 + 1;
@@ -291,32 +291,35 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
 
   return (
     <React.Fragment>
-      <div>{JSON.stringify(memoizedData.data.data.goal)}</div>
+      {/* <div>{JSON.stringify(memoizedData.data.data.goal)}</div>
       <div>{JSON.stringify(avgGrowth)}</div>
       <div>{JSON.stringify(minAxisX)}</div>
       <div>{JSON.stringify(minAxisY)}</div>
       <div>{JSON.stringify(userAxisX)}</div>
       <div>{JSON.stringify(userAxisY)}</div>
-      <div>{JSON.stringify(UserInvestAmount)}</div>
+      <div>{JSON.stringify(UserInvestAmount)}</div> */}
 
       <div className="resultGraph">
-        <p>{JSON.stringify(memoizedData.data.selectedValue)}</p>
+        <p>rmf</p>
       </div>
       <div className="resultGraph">
         <p>เงินลงทุนขั้นต่ำต่อเดือน {minInvest} บาท</p>
       </div>
       <div className="resultGraph">
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'right'}}>บาท</div>
         {isLoading ? (
           <LineChart
-            xAxis={[{ data: minAxisX }]}
+            xAxis={[{ data: minAxisX, label: "ปี" }]}
             series={[
               {
                 data: minAxisY,
                 label: "เงินลงทุนที่แนะนำ",
+                showMark: false,
               },
               {
                 data: userAxisY,
-                label: "เงินลงทุน",
+                label: "เงินที่คาดว่าจะเติบโต (Predict)",
+                showMark: false,
               },
             ]}
             width={500}
@@ -333,7 +336,8 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       <div className="resultGraph">
         {isLoading ? (
           <LineChart
-            xAxis={[{ data: userAxisX }]}
+            xAxis={[{ data: userAxisX, label: "ปี" }]}
+            yAxis={[{ label: "บาท" }]}
             series={[
               {
                 data: userAxisY,

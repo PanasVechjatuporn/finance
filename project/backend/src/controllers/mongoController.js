@@ -368,9 +368,9 @@ exports.getUserGoal = async (req, res) => {
 
 exports.getUserRiskProfile = async (req, res) => {
   const db = client.db(dbName);
-  const collection = db.collection("users");
+  const collection = db.collection("risk_profile");
   try {
-    query = { uid: req.params.uid, riskProfile: { $exists: true } };
+    query = { uid: req.params.uid };
 
     var findResult = await collection.find(query).toArray();
     console.log(findResult);
@@ -383,7 +383,7 @@ exports.getUserRiskProfile = async (req, res) => {
 
 exports.upsertRiskProfile = async (req, res) => {
   const db = client.db(dbName);
-  const collection = db.collection("users");
+  const collection = db.collection("risk_profile");
   const userToken = req.header("Authorization");
   const userId = req.header("UserId");
   try {
