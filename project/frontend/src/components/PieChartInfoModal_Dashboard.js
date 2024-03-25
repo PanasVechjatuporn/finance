@@ -107,9 +107,6 @@ export default function PieChartInfoModal({
                                                 <StyledTableCell align="center">
                                                     {data.amount}
                                                 </StyledTableCell>
-                                                {/* <StyledTableCell>
-                                                    {modalParams.label}
-                                                </StyledTableCell> */}
                                             </StyledTableRow>
                                         ))}
                                         <StyledTableRow>
@@ -129,6 +126,6 @@ export default function PieChartInfoModal({
             </>
         );
     } else {
-        return <>No Modal</>;
+        return <></>;
     }
 }

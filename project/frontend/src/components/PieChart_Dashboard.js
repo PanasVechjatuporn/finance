@@ -110,22 +110,22 @@ const expenseType = [
     {
         name: "รายจ่าย tmp 1",
         category: 1,
-        color: "#ea7375",
+        color: "#2f346b",
     },
     {
         name: "รายจ่าย tmp 2",
         category: 2,
-        color: "#52f5f5",
+        color: "#24798e",
     },
     {
         name: "รายจ่าย tmp 3",
         category: 3,
-        color: "#f688bf",
+        color: "#fac76e",
     },
     {
         name: "รายจ่าย tmp 4",
         category: 4,
-        color: "#fac991",
+        color: "#ed8e5e",
     },
     {
         name: "รายจ่าย tmp 5",
@@ -135,17 +135,17 @@ const expenseType = [
     {
         name: "รายจ่าย tmp 6",
         category: 6,
-        color: "#abfca3",
+        color: "#b03e6f",
     },
     {
         name: "รายจ่าย tmp 7",
         category: 7,
-        color: "#abadfd",
+        color: "#907f50",
     },
     {
         name: "อื่นๆ",
         category: 8,
-        color: "grey",
+        color: "#59424f",
     },
 ];
 
@@ -387,15 +387,6 @@ export default function PieChartComponent({ userData }) {
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                // colors={[
-                                //     "#ea7375",
-                                //     "#52f5f5",
-                                //     "#f688bf",
-                                //     "#fac991",
-                                //     "#f7f89a",
-                                //     "#abfca3",
-                                //     "#abadfd",
-                                // ]}
                                 {...pieIncomeParams}
                                 series={pieIncomeParams.series.map((series) => ({
                                     ...series,
