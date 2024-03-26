@@ -33,6 +33,16 @@ async function getUserGoal(userStore) {
 }
 
 function combineGoalAndAsset(assetData, goalData) {
+    assetData.forEach((asset, index) => {
+        const depositAssets = asset.Funds.filter(
+            (deposit) => deposit.assetType === "deposit"
+        )
+        const newAssets = asset.Funds.filter(
+            (deposit) => deposit.assetType !== "deposit"
+        )
+        const sortedAssets = newAssets.concat(depositAssets)
+        assetData[index].Funds = sortedAssets
+    })
     goalData.forEach((goal, index) => {
         const thisGoalAssets = assetData.filter(
             (asset) => asset.goalObjId === goal._id
@@ -65,14 +75,14 @@ export const AssetSummary = () => {
     }, [userStore]);
 
     useEffect(() => {
-        if(userData){
+        if (userData) {
             setSelectedData(userData.find((data) => data.Name === selectGoalValue));
         }
     }, [selectGoalValue, userData]);
     if (userData) {
         return (
             <Container sx={{ marginTop: 5, display: "flex", position: "relative" }}>
-                <Box sx={{ width: 140, position: "absolute", right: 0 }}>
+                <Box sx={{ width: 140, }}>
                     <FormControl sx={{ width: "100%" }}>
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
@@ -85,7 +95,7 @@ export const AssetSummary = () => {
                             }}
                         >
                             {userData.map((data, index) => (
-                                <MenuItem key={data._id + "-select-item"} value={data.Name}>
+                                <MenuItem key={data._id + "-select-item-" + index} value={data.Name}>
                                     {data.Name}
                                 </MenuItem>
                             ))}
