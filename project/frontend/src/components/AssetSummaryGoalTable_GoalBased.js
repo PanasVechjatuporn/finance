@@ -99,7 +99,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                                                             : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
                                             </StyledTableCell>
                                             <StyledTableCell
-                                                align={subAsset.assetType === "deposit" ? "center" : ""}
+                                                align={subAsset.assetType === "deposit" ? "center" : "left"}
                                             >
                                                 {subAsset.fundName && subAsset.assetType !== "deposit"
                                                     ? subAsset.fundName
