@@ -335,36 +335,20 @@ export const GoalBased = () => {
                                     ยกเลิก
                                 </Typography>
                             </Button>
-                            {Exceed == true ? (
-                                <Button
-                                    disabled="true"
-                                    type="submit"
-                                    sx={{
-                                        backgroundColor: "gray",
-                                        paddingLeft: 2,
-                                        paddingRight: 2,
-                                    }}
-                                    size="medium"
-                                >
-                                    <Typography color="white" variant="subtitile1">
-                                        ยืนยัน
-                                    </Typography>
-                                </Button>
-                            ) : (
-                                <Button
-                                    type="submit"
-                                    sx={{
-                                        backgroundColor: "black",
-                                        paddingLeft: 2,
-                                        paddingRight: 2,
-                                    }}
-                                    size="medium"
-                                >
-                                    <Typography color="white" variant="subtitile1">
-                                        ยืนยัน
-                                    </Typography>
-                                </Button>
-                            )}
+                            <Button
+                                disabled={Exceed}
+                                type="submit"
+                                sx={{
+                                    backgroundColor: Exceed == true ? "gray" : "black",
+                                    paddingLeft: 2,
+                                    paddingRight: 2,
+                                }}
+                                size="medium"
+                            >
+                                <Typography color="white" variant="subtitile1">
+                                    ยืนยัน
+                                </Typography>
+                            </Button>
                         </Container>
                     </form>
                 </Tooltip>
