@@ -9,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
+import Typography from "@mui/material/Typography";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -29,7 +30,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    
+    // "&:nth-of-type(even)": {
+    //     backgroundColor: theme.palette.action.hover,
+    // },
     "&:last-child td, &:last-child th": {
         borderStyle: "hidden !important"
     },
@@ -37,8 +40,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export const AssetSummaryGoalTable = ({ selectedData }) => {
     if (selectedData) {
+        console.log('selectedData.assets :: ',selectedData.assets.length)
         return (
             <Container>
+                <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            paddingBottom: "8px",
+                            userSelect: "none",
+                            marginBottom: "15px",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        ตารางแสดงการลงทุนภายในเป้าหมาย {selectedData.Name}
+                    </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
@@ -70,7 +91,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            <>
+                            {selectedData.assets.length > 0 ? (<>
                                 {selectedData.assets.map((asset, index) => (
                                     <React.Fragment
                                         key={asset.CreatedDate + "-" + index + "-fragment"}
@@ -128,7 +149,10 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                                         ))}
                                     </React.Fragment>
                                 ))}
-                            </>
+                            </>) : (<TableRow>
+                                <TableCell colSpan={7} align="center">ไม่พบข้อมูล</TableCell>
+                            </TableRow>)}
+                            
                         </TableBody>
                     </Table>
                 </TableContainer>

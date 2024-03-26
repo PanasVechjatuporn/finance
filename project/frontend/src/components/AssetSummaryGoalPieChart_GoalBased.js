@@ -9,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
+import Typography from "@mui/material/Typography";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -29,12 +30,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
+    "&:nth-of-type(even)": {
         backgroundColor: theme.palette.action.hover,
     },
-    "&:last-child td, &:last-child th": {
-        borderStyle: "hidden !important",
-    },
+    // "&:last-child td, &:last-child th": {
+    //     borderStyle: "hidden !important",
+    // },
 }));
 
 export const AssetSummaryGoalPieChart = ({ assetData }) => {
@@ -81,74 +82,94 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
     if (assetData.length > 0) {
         return (
             <Container>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: "100%" }} aria-label="customized table">
-                    <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell>ชื่อกองทุน</StyledTableCell>
-                            <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
-                            <StyledTableCell>จำนวนหน่วยลงทุน</StyledTableCell>
-                            <StyledTableCell>ประเภทของกองทุน</StyledTableCell>
-                        </StyledTableRow>
-                    </TableHead>
-                    <TableBody>
-                        {allFundsObj.map((asset,index) => (
-                            (asset.assetType !== "deposit") &&
-                            <StyledTableRow key={asset.assetType+"-row-data-"+index}>
-                                <StyledTableCell align={asset.assetType === "deposit" ? "center" : "left"}>
-                                    {asset.fundName && asset.assetType !== "deposit" ? asset.fundName : "-"}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                    {asset.assetType === "deposit"
-                                        ? "เงินฝากประจำ"
-                                        : asset.assetType === "rmf"
-                                            ? "กองทุนรวม RMF"
-                                            : asset.assetType === "ssf"
-                                                ? "กองทุนรวม SSF"
-                                                : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                    {asset.buyPrice && asset.buyPrice !== 0 ? roundNumber(asset.unit, 2) : "-"}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                    {asset.spec_code ? asset.spec_code : "-"}
-                                </StyledTableCell>
+                <div>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            paddingBottom: "8px",
+                            userSelect: "none",
+                            marginBottom: "15px",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        สรุปการลงทุนทั้งหมด
+                    </Typography>
+                </div>
+                
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell>ชื่อกองทุน</StyledTableCell>
+                                <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
+                                <StyledTableCell>จำนวนหน่วยลงทุน</StyledTableCell>
+                                <StyledTableCell>ประเภทของกองทุน</StyledTableCell>
                             </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {allFundsObj.map((asset, index) => (
+                                (asset.assetType !== "deposit") &&
+                                <StyledTableRow key={asset.assetType + "-row-data-" + index}>
+                                    <StyledTableCell align={asset.assetType === "deposit" ? "center" : "left"}>
+                                        {asset.fundName && asset.assetType !== "deposit" ? asset.fundName : "-"}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {asset.assetType === "deposit"
+                                            ? "เงินฝากประจำ"
+                                            : asset.assetType === "rmf"
+                                                ? "กองทุนรวม RMF"
+                                                : asset.assetType === "ssf"
+                                                    ? "กองทุนรวม SSF"
+                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {asset.buyPrice && asset.buyPrice !== 0 ? roundNumber(asset.unit, 2) : "-"}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {asset.spec_code ? asset.spec_code : "-"}
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-            <TableContainer component={Paper} sx={{ marginTop: "5%"}}>
-            <Table sx={{ minWidth: "100%"}} aria-label="customized table">
-                <TableHead>
-                    <StyledTableRow>
-                        <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
-                        <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(บาท)</StyledTableCell>
-                    </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                    {allFundsObj.map((asset,index) => (
-                        (asset.assetType === "deposit") &&
-                        <StyledTableRow key={asset.assetType+"-row-data-"+index}>
-                            <StyledTableCell>
-                                {asset.assetType === "deposit"
-                                    ? "เงินฝากประจำ"
-                                    : asset.assetType === "rmf"
-                                        ? "กองทุนรวม RMF"
-                                        : asset.assetType === "ssf"
-                                            ? "กองทุนรวม SSF"
-                                            : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                    {formatNumberWithCommas(asset.amount)}
-                            </StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-        </Container>
+                <TableContainer component={Paper} sx={{ marginTop: "5%" }}>
+                    <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
+                                <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(บาท)</StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                            {allFundsObj.map((asset, index) => (
+                                (asset.assetType === "deposit") &&
+                                <StyledTableRow key={asset.assetType + "-row-data-" + index}>
+                                    <StyledTableCell>
+                                        {asset.assetType === "deposit"
+                                            ? "เงินฝากประจำ"
+                                            : asset.assetType === "rmf"
+                                                ? "กองทุนรวม RMF"
+                                                : asset.assetType === "ssf"
+                                                    ? "กองทุนรวม SSF"
+                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatNumberWithCommas(asset.amount)}
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Container>
         );
     }
 };

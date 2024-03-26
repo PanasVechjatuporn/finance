@@ -83,7 +83,14 @@ export const AssetSummary = () => {
     }, [selectGoalValue, userData]);
     if (userData) {
         return (
-            <Container sx={{ marginTop: 5}}>
+            <Container sx={{
+                marginTop: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh', // This will make the container take the full height of the viewport
+            }}>
                 <Box sx={{
                     minWidth: "90%",
                     minHeight: "90%",
@@ -93,7 +100,7 @@ export const AssetSummary = () => {
                     boxShadow: 6,
                     padding: 4,
                     position: "relative",
-                    overflow : "auto"
+                    overflow : "auto",
                 }}>
                     <AssetSummaryGoalPieChart
                         assetData={assetData}
@@ -101,7 +108,7 @@ export const AssetSummary = () => {
                     </AssetSummaryGoalPieChart>
                 </Box>
                 <Box sx={{
-                    marginTop: "10vh",
+                    marginTop: "5vh",
                     minWidth: "90%",
                     minHeight: "90%",
                     maxWidth: "90%",
@@ -110,9 +117,11 @@ export const AssetSummary = () => {
                     boxShadow: 6,
                     padding: 4,
                     position: "relative",
-                    overflow : "auto"
+                    overflow : "auto",
+                    marginBottom: "5vh"
                 }}>
-                    <FormControl sx={{ width: "10%" }}>
+                    <FormControl sx={{ width: "10%", position: "absolute",
+                            right: "5.5%",top: "1%"}}>
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
                             labelId="select-goal"
