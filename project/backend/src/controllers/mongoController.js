@@ -134,13 +134,6 @@ exports.get_funds = async (req, res) => {
     query = {};
     var findResult = await collection
       .find(query)
-      .project({
-        _id: 1,
-        proj_name_th: 1,
-        proj_name_en: 1,
-        growthrat_lastmonth: 1,
-        url_factsheet: 1,
-      })
       .sort({ growthrat_lastmonth: -1 })
       .toArray();
     res.json(findResult);

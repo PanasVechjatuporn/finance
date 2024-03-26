@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, memo } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -52,6 +52,8 @@ export const Graph = (data) => {
   const [dropdownsCompareFund, setDropdownsCompareFund] = useState([
     { name: "", amount: "", growthrat_lastmonth: "" },
   ]);
+
+  const [depositTextField, setDepositTextField] = useState(0);
 
   const memoizedData = useMemo(
     () => ({
@@ -115,6 +117,10 @@ export const Graph = (data) => {
     console.log(dropdownsCompareFund);
   };
 
+  const handleDepositTextField = (e) =>{
+    console.log(e.target.value)
+  }
+
   async function fetchGrowthRate(userStore) {
     try {
       const resFetchNewData = await axios.get(`${baseURL}/db/get_growthrate`, {
@@ -132,6 +138,7 @@ export const Graph = (data) => {
   async function fetchData(userStore) {
     try {
       const fundsResponse = await axios.get("http://localhost:8000/db/funds");
+      console.log(fundsResponse.data)
       setFunds(fundsResponse.data);
       const userData = await axios.get(
         `http://localhost:8000/db/userdata=${userStore.userId}`
@@ -243,10 +250,8 @@ export const Graph = (data) => {
       let accum_2 = 0;
       for (let i = 0; i <= parseInt(obj.year); i++) {
         // Calculate monthlyGrowthPercentage with the updated values
-        console.log(compareFundGrowth);
         let monthlyGrowthPercentage =
           parseFloat(compareFundGrowth) / 12 / 100 + 1;
-        console.log(monthlyGrowthPercentage);
         for (let j = 1; j <= 12; j++) {
           // Corrected loop increment
           if (i === 0 && j === 1) {
@@ -275,7 +280,6 @@ export const Graph = (data) => {
       }
       setUserAxisX(listAxisX);
       setUserAxisY(listAxisY);
-      console.log(dropdownsCompareFund);
     } catch (error) {
       console.log("Error in userInvestGraph function: ", error);
     }
@@ -291,6 +295,7 @@ export const Graph = (data) => {
     );
   }, [userStore, UserInvestAmount, dropdownsCompareFund]);
   // compareFundGrowth
+
   function saveTaxGoal(e) {
     const Funds = dropdowns.map((item) => {
       return { fundName: item.name.split(" (")[0], amount: item.amount };
@@ -301,35 +306,64 @@ export const Graph = (data) => {
       0
     );
 
-    if (Funds.includes("")) {
-      alert("กรุณาใส่ข้อมูลให้ครบ");
-    } else if (totalFundAmount > UserInvestAmount) {
-      alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
-    } else if (totalFundAmount < UserInvestAmount) {
-      alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน");
-    } else {
-      axios
-        .post(`${baseURL}/db/upsert_new_goal`, {
-          userId: userStore.userId,
-          Name: memoizedData.data.alphabetFields,
-          year: memoizedData.data.year,
-          Goal: memoizedData.data.amount,
-          Funds: { ...Funds },
-          Percentage: memoizedData.data.percentage,
-        })
-        .then(navigate("/Goal-Based"));
+    
+    // const obj = {
+    //         userId: userStore.userId,
+    //         Name: memoizedData.data.alphabetFields,
+    //         year: memoizedData.data.year,
+    //         Goal: memoizedData.data.amount,
+    //         Funds: { ...Funds },
+    //         Percentage: memoizedData.data.percentage,
+    //       }
 
-      axios.post(
-        `${baseURL}/db/change_goal_percentage`,
-        { userId: userStore.userId, goal: memoizedData.data.goal },
-        {
-          headers: {
-            Authorization: userStore.userToken,
-            UserId: userStore.userId,
-          },
-        }
-      );
-    }
+    // const sth = dropdowns.map((item) => {
+      // console.log(item)
+    // })
+
+    console.log(funds)
+
+      const obj_asset ={
+        "fundName": "กองทุนเปิดไทยพาณิชย์หุ้นระยะยาว",
+        "amount": "2000",
+        "proj_id": "M0464_2548",
+        "buyPrice": 10,
+        "unit": 200,
+        "spec_code": "LTF,SSF",
+        "assetType": "ssf",
+        "buyDay": "1",
+        "buyMonth": "1",
+        "buyYear": "2024"
+      }
+
+    // if (Funds.includes("")) {
+    //   alert("กรุณาใส่ข้อมูลให้ครบ");
+    // } else if (totalFundAmount > UserInvestAmount) {
+    //   alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
+    // } else if (totalFundAmount < UserInvestAmount) {
+    //   alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน");
+    // } else {
+    //   axios
+    //     .post(`${baseURL}/db/upsert_new_goal`, {
+    //       userId: userStore.userId,
+    //       Name: memoizedData.data.alphabetFields,
+    //       year: memoizedData.data.year,
+    //       Goal: memoizedData.data.amount,
+    //       Funds: { ...Funds },
+    //       Percentage: memoizedData.data.percentage,
+    //     })
+    //     .then(navigate("/Goal-Based"));
+
+    //   axios.post(
+    //     `${baseURL}/db/change_goal_percentage`,
+    //     { userId: userStore.userId, goal: memoizedData.data.goal },
+    //     {
+    //       headers: {
+    //         Authorization: userStore.userToken,
+    //         UserId: userStore.userId,
+    //       },
+    //     }
+    //   );
+    // }
     e.preventDefault();
   }
 
@@ -343,7 +377,7 @@ export const Graph = (data) => {
       {/* <div>{JSON.stringify(userAxisY.length)}</div> */}
       {/* <div>{JSON.stringify(memoizedData.data.data.year)}</div> */}
       {/* <div>{JSON.stringify(UserInvestAmount)}</div> */}
-      <Grid container marginTop={2}>
+      <Grid container marginTop={1}>
         <Grid item xs={4}>
           <ContainerMui maxWidth="md">
             <Box
@@ -358,8 +392,8 @@ export const Graph = (data) => {
                 flexDirection: "column",
                 justifyContent: "space-between",
                 position: "relative",
-                minHeight: "60vh",
-                maxHeight: "60vh",
+                minHeight: "68vh",
+                maxHeight: "68vh",
               }}
             >
               <Typography
@@ -444,7 +478,7 @@ export const Graph = (data) => {
                 >
                   {dropdownsCompareFund.map((dropdown, index) => (
                     <div
-                      key={"dropdownCompareFund"}
+                      key={index}
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -506,7 +540,180 @@ export const Graph = (data) => {
             </Box>
           </ContainerMui>
         </Grid>
-
+        <Grid item xs={4}>
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "34vh",
+                maxHeight: "34vh",
+              }}
+            >
+              <Box
+                sx={{
+                  height: "100%",
+                  overflowY: "auto",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  style={{
+                    color: "#757575",
+                    textDecoration: "underline",
+                    textDecorationColor: "transparent",
+                    borderBottom: "2px solid #757575",
+                    display: "inline-block",
+                    width: "100%",
+                    paddingBottom: "8px",
+                    userSelect: "none",
+                    marginBottom: "12px",
+                    fontWeight: "bold",
+                  }}
+                  sx={{ textAlign: "center" }}
+                >
+                  กองทุนรวม
+                </Typography>
+                {dropdowns.map((dropdown, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={{ width: "60%", marginRight: 5 }}>
+                      <Autocomplete
+                        freeSolo
+                        //isOptionEqualToValue={(option, value) => option == value || '' == value}
+                        id="free-solo-2-demo"
+                        disableClearable
+                        value={dropdown.name}
+                        onChange={(e) =>
+                          handleDropdownChange(
+                            index,
+                            e.target.innerHTML,
+                            "name"
+                          )
+                        }
+                        options={funds.map(
+                          (item) =>
+                            item.proj_name_th + ` (${item.proj_name_en})`
+                        )}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="กองทุน"
+                            InputProps={{
+                              ...params.InputProps,
+                              type: "search",
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                    <TextField
+                      required
+                      label="จำนวนเงิน (บาท)"
+                      style={{ width: "30%" }}
+                      value={dropdown.amount}
+                      onChange={(e) => {
+                        handleDropdownChange(index, e.target.value, "amount");
+                        console.log(e.target.innerHTML);
+                      }}
+                    />
+                    {index == dropdowns.length - 1 ? (
+                      <IconButton onClick={addDropdown}>
+                        <AddIcon color="success" />
+                      </IconButton>
+                    ) : (
+                      <IconButton onClick={(e) => deleteDropdown(index)}>
+                        <ClearIcon color="error" />
+                      </IconButton>
+                    )}
+                  </div>
+                ))}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "hidden",
+                minHeight: "34vh",
+                maxHeight: "34vh",
+              }}
+            >
+              <Grid container spacing={1} sx={{ height: "100%" }}>
+                <Grid item xs={12} sx={{ height: "50%" }}>
+                  <Box
+                    sx={{
+                      height: "100%",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      style={{
+                        color: "#757575",
+                        textDecoration: "underline",
+                        textDecorationColor: "transparent",
+                        borderBottom: "2px solid #757575",
+                        display: "inline-block",
+                        width: "100%",
+                        paddingBottom: "8px",
+                        userSelect: "none",
+                        marginBottom: "12px",
+                        fontWeight: "bold",
+                      }}
+                      sx={{ textAlign: "center" }}
+                    >
+                      เงินฝาก
+                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TextField
+                        required
+                        id="outlined-number"
+                        label="จำนวนเงิน (บาท)"
+                        style={{ width: "50%" }}
+                        type="number"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        onChange={(e) => {
+                          handleDepositTextField(e)
+                        }}
+                      />
+                    </div>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </ContainerMui>
+        </Grid>
         <Grid item xs={4}>
           <ContainerMui maxWidth="md">
             <Box
@@ -516,74 +723,15 @@ export const Graph = (data) => {
                 height: "100%",
                 borderRadius: 6,
                 boxShadow: 6,
-                padding: 4,
+                padding: 2,
                 display: "flex",
                 flexDirection: "column",
                 position: "relative",
-                overflowY: "auto",
-                minHeight: "60vh",
-                maxHeight: "60vh",
+                overflowY: "hidden",
+                minHeight: "68vh",
+                maxHeight: "68vh",
               }}
             >
-              {dropdowns.map((dropdown, index) => (
-                <div
-                  key={"dropdown"}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ width: "50%", marginRight: 5 }}>
-                    <Autocomplete
-                      freeSolo
-                      //isOptionEqualToValue={(option, value) => option == value || '' == value}
-                      id="free-solo-2-demo"
-                      disableClearable
-                      value={dropdown.name}
-                      onChange={(e) =>
-                        handleDropdownChange(index, e.target.innerHTML, "name")
-                      }
-                      options={funds.map(
-                        (item) => item.proj_name_th + ` (${item.proj_name_en})`
-                      )}
-                      renderInput={(params) => (
-                        <TextField
-                          required
-                          {...params}
-                          label="กองทุน"
-                          InputProps={{
-                            ...params.InputProps,
-                            type: "search",
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-                  <TextField
-                    required
-                    label="จำนวนเงิน (บาท)"
-                    style={{ width: "20%" }}
-                    value={dropdown.amount}
-                    onChange={(e) => {
-                      handleDropdownChange(index, e.target.value, "amount");
-                      console.log(e.target.innerHTML);
-                    }}
-                  />
-                  {index == dropdowns.length - 1 ? (
-                    <IconButton onClick={addDropdown}>
-                      <AddIcon color="success" />
-                    </IconButton>
-                  ) : (
-                    <IconButton onClick={(e) => deleteDropdown(index)}>
-                      <ClearIcon color="error" />
-                    </IconButton>
-                  )}
-                </div>
-              ))}
-              <div>{JSON.stringify(memoizedData.data.percentage)}</div>
               <form
                 onSubmit={(e) => {
                   saveTaxGoal(e);
@@ -606,51 +754,54 @@ export const Graph = (data) => {
             </Box>
           </ContainerMui>
         </Grid>
-        <Grid item xs={4}>
-          <div>idk</div>
-        </Grid>
       </Grid>
 
       <Grid container marginTop={2}>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              boxSizing: "border-box",
-              width: "100%",
-              height: "100%",
-              borderRadius: 6,
-              boxShadow: 6,
-              padding: 2,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              position: "relative",
-              flexWrap: 'wrap'
-            }}
-          >
-            <div className="suggestion">
+        <Grid item xs={12}>
+          <ContainerMui maxWidth="false">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                width: "100%",
+                height: "100%",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column", // Changed to column for vertical layout of children
+                position: "relative",
+                overflowX: "hidden", // Prevent horizontal scrolling at the Box level
+              }}
+            >
               <Typography marginBottom={2} fontWeight={"bold"}>
                 กองทุนที่แนะนำ
               </Typography>
-              <div style={{ marginLeft: 5, flexDirection: 'row', flexWrap: 'wrap' }}>
-                {funds.slice(0, 4).map((item, index) => (
+              <div
+                style={{
+                  display: "flex", // Added for horizontal layout
+                  flexDirection: "row", // Ensure children are laid out in a row
+                  overflowX: "auto", // Enable horizontal scrolling
+                  marginLeft: 5,
+                }}
+              >
+                {funds.slice(0, 20).map((item, index) => (
                   <Container
                     key={index}
                     style={{
                       padding: 6,
                       backgroundColor: "white",
-                      marginBottom: 20,
+                      marginRight: 20, // Adjusted for spacing between items, from marginBottom to marginRight
                       alignItems: "center",
                       textAlign: "center",
                       borderRadius: 20,
                       borderWidth: 1,
                       borderStyle: "solid",
-                      borderColor: "gray",
+                      minWidth: 500, // Optional: Ensure each container has a minimum width for better layout control
                     }}
                   >
                     <div
                       style={{
-                        padding: 35,
+                        paddingTop: 25,
                         paddingLeft: 25,
                         paddingRight: 25,
                         position: "relative",
@@ -680,12 +831,10 @@ export const Graph = (data) => {
                   </Container>
                 ))}
               </div>
-            </div>
-          </Box>
+            </Box>
+          </ContainerMui>
         </Grid>
       </Grid>
-
-      <div className="resultGraph"></div>
     </React.Fragment>
   );
 };

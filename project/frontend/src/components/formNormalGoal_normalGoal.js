@@ -10,7 +10,7 @@ export const FormGoal = ({ sendData }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const percentage = location.state.Percentage;
-  const risk_profile = location.state.profile;
+  const riskProfile = location.state.riskProfile;
   const goal = location.state.goal;
   const [alphabetFields, setAlphabetFields] = useState("");
   const [numbersFields, setNumbersFields] = useState({
@@ -48,7 +48,7 @@ export const FormGoal = ({ sendData }) => {
     const combinedData = {
       alphabetFields,
       ...numbersFields,
-      risk_profile,
+      riskProfile,
       percentage,
       goal
     };

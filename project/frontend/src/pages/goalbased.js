@@ -34,13 +34,13 @@ export const GoalBased = () => {
   const [data, setData] = React.useState([]);
   const [goal, setGoal] = React.useState([]);
   const [isloading, setIsloading] = React.useState(true);
-
+  const [riskProfile, setRiskProfile] = React.useState('');
   const [isItNormal, setIsitNormal] = React.useState();
 
   React.useEffect(() => {
     async function fetchData() {
       if (uid != null) {
-        let riskProfile;
+        let riskProfileTemp;
         await axios
           .get(`http://localhost:8000/db/userdata=${uid}`)
           .then((response) => {
@@ -54,12 +54,13 @@ export const GoalBased = () => {
         await axios
           .get(`http://localhost:8000/db/user_risk_profile=${uid}`)
           .then((response) => {
-            riskProfile = response.data
+            riskProfileTemp = response.data[0].riskProfile
           });
         setIsloading(false);
-        if (riskProfile.length > 0) {
+        if (riskProfileTemp.length > 0) {
           //true = has risk_profile
           // do nothing
+          setRiskProfile(riskProfileTemp)
         } else {
           navigate("./risk-evaluation-normal");
         }
@@ -79,7 +80,7 @@ export const GoalBased = () => {
       handleOpenNewGoal();
     } else {
       if (type == "normal") {
-        navigate("./normal-goal", { state: { Percentage: 100 } });
+        navigate("./normal-goal", { state: { Percentage: 100, riskProfile: riskProfile  } });
       } else if (type == "tax") {
         navigate("./reduce-tax-goal", {
           state: { Percentage: 100, data: data },
@@ -116,8 +117,10 @@ export const GoalBased = () => {
     function handleSubmit(event) {
       if (isItNormal == true) {
         handleCloseNewGoal();
+        console.log("Percentage::  ", goalPercent)
+        console.log("riskProfile::  ", riskProfile)
         navigate("./normal-goal", {
-          state: { Percentage: goalPercent, goal: oldGoal },
+          state: { Percentage: goalPercent, goal: oldGoal, riskProfile: riskProfile  },
         });
         event.preventDefault();
       } else if (isItNormal == false) {
