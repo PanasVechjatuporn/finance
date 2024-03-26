@@ -152,7 +152,7 @@ function Navigate() {
                 }
               }}
             >
-              Tax-Calculation
+              Tax Calculation
             </Navbar.Brand>
             <SignUpModal
               show={showNotLoggedIn}

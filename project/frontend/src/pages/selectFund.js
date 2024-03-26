@@ -67,7 +67,8 @@ export const SelectFund = () => {
                 setIsloading(true);
                 let avgIn = 0;
                 const fundsResponse = await axios.get('http://localhost:8000/db/funds');
-                setFunds(fundsResponse.data);
+                const displayData = fundsResponse.data.filter((fund) => { if (fund.spec_code) { return (fund.spec_code.includes("SSF") || fund.spec_code.includes("RMF")) } })
+                setFunds(displayData);
                 const userData = await axios.get(`http://localhost:8000/db/userdata=${uid}`);
                 let sumOfInvest = 0;
                 userData.data.forEach(item => {
@@ -254,15 +255,15 @@ export const SelectFund = () => {
                         <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    ภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} บาท
+                                    สรุปภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    เงินลงทุน : {investAmount.toLocaleString("en-GB")} บาท/เดือน
+                                    เงินลงทุนของคุณ : {investAmount.toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
-                                    ลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} บาท
+                                    ซึ่งจะลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                         </div>

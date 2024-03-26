@@ -32,6 +32,7 @@ export const GoalBased = () => {
     const navigate = useNavigate();
 
     const uid = useSelector((state) => state.userStore.userId);
+    const token = useSelector((state) => state.userStore.userToken);
     const [data, setData] = React.useState([]);
     const [goal, setGoal] = React.useState([]);
     const [isloading, setIsloading] = React.useState(true);
@@ -420,6 +421,220 @@ export const GoalBased = () => {
         );
     };
 
+    const [openEditGoal, setOpenEditGoal] = React.useState(false);
+    const handleOpenEditGoal = () => {
+        setOpenEditGoal(true);
+    };
+    const handleCloseEditGoal = () => setOpenEditGoal(false);
+    const ModalEditGoal = ({ open, close }) => {
+        const [editGoalPercent, setEditGoalPercent] = React.useState(
+            JSON.parse(JSON.stringify(goal))
+        );
+
+        function handleSubmit(event) {
+            axios.post(
+                `http://localhost:8000/db/change_goal_percentage`,
+                {
+                    userId: uid,
+                    goal: editGoalPercent,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        UserId: uid
+                    },
+                }
+            )
+            event.preventDefault();
+            handleCloseEditGoal();
+            window.location.reload(false);
+        }
+
+        let Exceed = false;
+        const sumPercent =
+            editGoalPercent.reduce(
+                (acc, current) => acc + Number(current.Percentage || 0),
+                0
+            );
+        if (sumPercent != 100) {
+            Exceed = true;
+        } else {
+            Exceed = false;
+        }
+
+        return (
+            <Modal
+                open={open}
+                onClose={close}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Tooltip
+                    title="สัดส่วนการลงทุนต้องรวมกันได้ 100 %"
+                    componentsProps={{
+                        tooltip: {
+                            sx: {
+                                backgroundColor: "white",
+                                "& .MuiTooltip-arrow": {
+                                    color: "white",
+                                },
+                                color: "red",
+                                fontSize: 16,
+                                padding: 1,
+                            },
+                        },
+                    }}
+                    placement="top"
+                    arrow
+                    open={Exceed}
+                >
+                    <form
+                        onSubmit={(event) => {
+                            handleSubmit(event);
+                        }}
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            minWidth: 380,
+                            backgroundColor: "white",
+                            border: "0px solid #000",
+                            borderRadius: 7,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            paddingTop: 30,
+                            paddingBottom: 30,
+                        }}
+                    >
+                        <Typography
+                            gutterBottom
+                            id="modal-modal-title"
+                            variant="subtitile1"
+                            fontWeight={"bold"}
+                        >
+                            เงินลงทุนในเป้าหมายทั้งหมด :
+                        </Typography>
+                        {editGoalPercent.length > 0
+                            ? editGoalPercent.map((eachGoal, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        marginTop: 15,
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Typography
+                                        marginRight={1}
+                                        id="modal-modal-title"
+                                        variant="subtitile1"
+                                    >
+                                        {eachGoal.Name} :
+                                    </Typography>
+                                    <TextField
+                                        required
+                                        inputProps={{
+                                            style: {
+                                                textAlign: "center",
+                                                fontSize: 14,
+                                                height: 10,
+                                                width: 70,
+                                            },
+                                        }}
+                                        placeholder="สัดส่วน"
+                                        id="standard-basic"
+                                        label=""
+                                        value={eachGoal.Percentage}
+                                        onChange={(e) => {
+                                            if (e.target.value.match(/^[1-9][0-9]{0,1}$/)) {
+                                                let updatedGoal = [...editGoalPercent];
+                                                updatedGoal[index].Percentage = e.target.value;
+                                                setEditGoalPercent(updatedGoal);
+                                            } else if (!e.target.value) {
+                                                let updatedGoal = [...editGoalPercent];
+                                                updatedGoal[index].Percentage = "";
+                                                setEditGoalPercent(updatedGoal);
+                                            }
+                                        }}
+                                    />
+                                    <Typography
+                                        marginLeft={1}
+                                        id="modal-modal-title"
+                                        variant="subtitile1"
+                                    >
+                                        %
+                                    </Typography>
+                                </div>
+                            ))
+                            : null}
+
+                        <Container
+                            style={{
+                                marginTop: 30,
+                                width: "65%",
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <Button
+                                onClick={handleCloseEditGoal}
+                                sx={{
+                                    paddingLeft: 2,
+                                    paddingRight: 2,
+                                    backgroundColor: "black",
+                                    marginRight: 2,
+                                }}
+                                size="medium"
+                            >
+                                <Typography color="white" variant="subtitile1">
+                                    ยกเลิก
+                                </Typography>
+                            </Button>
+                            {Exceed == true ? (
+                                <Button
+                                    disabled="true"
+                                    type="submit"
+                                    sx={{
+                                        backgroundColor: "gray",
+                                        paddingLeft: 2,
+                                        paddingRight: 2,
+                                    }}
+                                    size="medium"
+                                >
+                                    <Typography color="white" variant="subtitile1">
+                                        ยืนยัน
+                                    </Typography>
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="submit"
+                                    sx={{
+                                        backgroundColor: "black",
+                                        paddingLeft: 2,
+                                        paddingRight: 2,
+                                    }}
+                                    size="medium"
+                                >
+                                    <Typography color="white" variant="subtitile1">
+                                        ยืนยัน
+                                    </Typography>
+                                </Button>
+                            )}
+                        </Container>
+                    </form>
+                </Tooltip>
+            </Modal>
+        );
+    };
+
+
     return (
         <React.Fragment>
             <Navigate />
@@ -427,7 +642,7 @@ export const GoalBased = () => {
             <Container
                 style={{
                     display: "flex",
-                    marginTop: 20,
+                    marginTop: 10,
                     paddingTop: 10,
                     paddingBottom: 10,
                     width: "70%",
@@ -477,6 +692,16 @@ export const GoalBased = () => {
                     </CardActions>
                 </Card>
             </Container>
+            {goal.length > 0 ?
+                <Container style={{ display: 'flex', justifyContent: 'right', width: '70%', marginTop: 10 }}>
+                    <Tooltip title='แก้ไสัดส่วนการลงทุน' arrow placement="right">
+                        <Button onClick={handleOpenEditGoal} sx={{ backgroundColor: 'green', color: 'white', fontWeight: 'normal' }}>
+                            แก้ไข
+                        </Button>
+                    </Tooltip>
+                    <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
+                </Container> : null}
+
         </React.Fragment>
     );
 };

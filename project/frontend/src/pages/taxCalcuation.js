@@ -894,7 +894,7 @@ export function TaxCal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
                         <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                            <Button onClick={handleClick} style={{ padding: 7, color: "black", backgroundColor: '#66eb52', borderRadius: 20, borderStyle: 'solid', borderWidth: 1, width: 170, textAlign: 'center', fontStyle: 'italic', fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                            <Button onClick={handleClick} color={"success"} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
                         </Tooltip>
                     </Container>
 

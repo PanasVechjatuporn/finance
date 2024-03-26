@@ -29,6 +29,10 @@ router.get('/userassets=:uid', mongoController.getUserAsset)
 
 router.post("/upsert_new_goal", mongoController.upsertNewGoal);
 
-router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage)
+router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage);
+
+router.post('/stop_goal', mongoController.stopGoal);
+
+router.post('/delete_goal', mongoController.deleteGoal);
 
 module.exports = router;
