@@ -36,6 +36,7 @@ export const GoalBased = () => {
     const [data, setData] = React.useState([]);
     const [goal, setGoal] = React.useState([]);
     const [isloading, setIsloading] = React.useState(true);
+    const [needAllocate, setNeedAllocate] = React.useState(false)
 
     const [isItNormal, setIsitNormal] = React.useState();
 
@@ -51,12 +52,28 @@ export const GoalBased = () => {
                     .get(`http://localhost:8000/db/usergoal=${uid}`)
                     .then((res) => {
                         setGoal(res.data);
+                        if (res.data.length > 0) {
+                            const sumPercent =
+                                res.data.reduce(
+                                    (acc, current) => acc + Number(current.Percentage || 0),
+                                    0
+                                );
+                            if (sumPercent != 100) {
+                                setNeedAllocate(true)
+                            } else {
+                                setNeedAllocate(false)
+                            }
+                        }
                     });
                 setIsloading(false);
+                console.log(needAllocate)
+                if (needAllocate == true) { handleOpenEditGoal() }
             }
         }
         fetchData();
-    }, [uid]);
+    }, [uid, needAllocate]);
+
+
 
     function handleGoalTypeClick(type) {
         if (type == "normal") {
@@ -515,7 +532,7 @@ export const GoalBased = () => {
                             variant="subtitile1"
                             fontWeight={"bold"}
                         >
-                            เงินลงทุนในเป้าหมายทั้งหมด :
+                            {needAllocate == true ? "จัดสรรสัดส่วนการลงทุนใหม่ :" : "เงินลงทุนในเป้าหมายทั้งหมด :"}
                         </Typography>
                         {editGoalPercent.length > 0
                             ? editGoalPercent.map((eachGoal, index) => (
@@ -551,7 +568,7 @@ export const GoalBased = () => {
                                         label=""
                                         value={eachGoal.Percentage}
                                         onChange={(e) => {
-                                            if (e.target.value.match(/^[1-9][0-9]{0,1}$/)) {
+                                            if (e.target.value.match(/^[1-9][0-9]{0,2}$/)) {
                                                 let updatedGoal = [...editGoalPercent];
                                                 updatedGoal[index].Percentage = e.target.value;
                                                 setEditGoalPercent(updatedGoal);
@@ -588,10 +605,11 @@ export const GoalBased = () => {
                                 sx={{
                                     paddingLeft: 2,
                                     paddingRight: 2,
-                                    backgroundColor: "black",
+                                    backgroundColor: needAllocate == true ? "gray" : "black",
                                     marginRight: 2,
                                 }}
                                 size="medium"
+                                disabled={needAllocate}
                             >
                                 <Typography color="white" variant="subtitile1">
                                     ยกเลิก
@@ -701,7 +719,6 @@ export const GoalBased = () => {
                     </Tooltip>
                     <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
                 </Container> : null}
-
         </React.Fragment>
     );
 };

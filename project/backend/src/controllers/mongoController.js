@@ -406,7 +406,7 @@ exports.stopGoal = async (req, res) => {
             };
             const isActive = await collectionGoal.find(queryGoal).project({ isActive: 1, Name: 1 }).toArray()
             //console.log(isActive[0].isActive)
-            if (isActive[0].isActive == true) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } }) }
+            if (isActive[0].isActive == true || isActive[0].isActive == undefined) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } }) }
             else if (isActive[0].isActive == false) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } }) };
             //await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } })
             res.status(200);

@@ -17,7 +17,6 @@ function EachCard({ data }) {
     const [openStop, setOpenStop] = React.useState(false);
     const handleOpenStop = () => setOpenStop(true);
     const handleCloseStop = () => setOpenStop(false);
-    console.log(data)
     const ModalStop = ({ openStop, handleCloseStop }) => {
         function handleStopGoal() {
             axios.post(`http://localhost:8000/db/stop_goal`,
@@ -35,7 +34,7 @@ function EachCard({ data }) {
             handleCloseStop();
             window.location.reload(false);
         }
-        if (data.isActive == true) return (
+        if (data.isActive == true || data.isActive == undefined) return (
             <Modal
                 open={openStop}
                 onClose={handleCloseStop}
@@ -279,7 +278,6 @@ function EachCard({ data }) {
                         </Button>
                     }
                     <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
-                    {/* <ModalContinue openContinue={openContinue} handleCloseContinue={handleCloseContinue} /> */}
                     <Button onClick={handleOpenDelete} sx={{ backgroundColor: 'brown' }} size="small" >
                         <Typography color='white' variant="subtitile1">
                             ลบ

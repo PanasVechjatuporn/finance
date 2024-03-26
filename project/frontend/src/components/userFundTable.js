@@ -15,8 +15,12 @@ export default function UserFundTable({ setFund, open }) {
     React.useEffect(() => {
         async function fetchData() {
             let sumFund = 0;
-            axios.get(`http://localhost:8000/db/userassets=${uid}`)
-                .then(response => { setArr(response.data); });
+            if (arr.length == 0) {
+                await axios.get(`http://localhost:8000/db/userassets=${uid}`)
+                    .then(response => {
+                        setArr(response.data);
+                    });
+            }
             await Promise.all(arr.map((asset) => (
                 Object.values(asset.Funds).map((eachFund) => {
                     sumFund += Number(eachFund.amount);

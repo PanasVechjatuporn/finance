@@ -96,7 +96,7 @@ export function NewTaxGoal() {
         setTotalReduce(sumAll);
         if (Number(insurance2 || 0) + Number(insurance3 || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
         if (Number(insurance5 || 0) + Number(insurance6 || 0) + Number(insurance7 || 0) + Number(insurance9 || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
-    }, [personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
+    }, [fund, personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
     );
 
     // Helper function to create a deep copy of an object
