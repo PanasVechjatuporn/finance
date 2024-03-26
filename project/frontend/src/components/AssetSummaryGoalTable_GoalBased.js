@@ -7,17 +7,22 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
+        backgroundColor: "#3e5074",
+        color: "white",
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
     "&.dateCell": {
         backgroundColor: theme.palette.common.white,
+    },
+    "&.subHeader": {
+        backgroundColor: "#7a8fb8",
+        color: "white",
     },
 }));
 
@@ -37,58 +42,88 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                     <TableHead>
                         <StyledTableRow>
-                            <StyledTableCell rowSpan={2}>
-                                วันที่ซื้อ&nbsp;(วว/ดด/ปป)
+                            <StyledTableCell>วันที่ซื้อ&nbsp;(วว/ดด/ปป)</StyledTableCell>
+                            <StyledTableCell align="center" colSpan={6}>
+                                สินทรัพย์ที่ลงทุน
                             </StyledTableCell>
-                            <StyledTableCell>ชื่อกองทุน</StyledTableCell>
-                            <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(บาท)</StyledTableCell>
-                            <StyledTableCell>ราคาที่ซื้อ&nbsp;(บาท)</StyledTableCell>
-                            <StyledTableCell>จำนวนหน่วยที่ซื้อ</StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        {selectedData.assets.map((asset, index) => (
-                            <React.Fragment key={index}>
-                                <StyledTableRow>
-                                    <StyledTableCell
-                                        rowSpan={asset.Funds.length}
-                                        className="dateCell"
+                        <>
+                            {selectedData.assets.map((asset, index) => (
+                                <React.Fragment
+                                    key={asset.CreatedDate + "-" + index + "-fragment"}
+                                >
+                                    <StyledTableRow
+                                        key={asset.CreatedDate + "-" + index + "-header"}
                                     >
-                                        {asset.CreatedDate}
-                                    </StyledTableCell>
-                                    {asset.Funds.length > 0 && (
-                                        <React.Fragment>
-                                            <StyledTableCell>
-                                                {asset.Funds[0].fundName}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {asset.Funds[0].amount}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {asset.Funds[0].buyPrice}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                           {Math.round((asset.Funds[0].unit + Number.EPSILON)*100)/100}
-                                            </StyledTableCell>
-                                        </React.Fragment>
-                                    )}
-                                </StyledTableRow>
-                                {asset.Funds.slice(1).map((fund, index) => (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell>{fund.fundName}</StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {fund.amount}
+                                        <StyledTableCell rowSpan={asset.Funds.length + 1}>
+                                            {asset.CreatedDate}
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {fund.buyPrice}
+                                        <StyledTableCell className="subHeader">
+                                            ประเภทของสินทรัพย์ที่ลงทุน
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {Math.round((fund.unit + Number.EPSILON) * 100) / 100}
+                                        <StyledTableCell className="subHeader">
+                                            ชื่อกองทุน
+                                        </StyledTableCell>
+                                        <StyledTableCell className="subHeader">
+                                            จำนวนเงินที่ซื้อ&nbsp;(บาท)
+                                        </StyledTableCell>
+                                        <StyledTableCell className="subHeader">
+                                            ราคาที่ซื้อ&nbsp;(บาท)
+                                        </StyledTableCell>
+                                        <StyledTableCell className="subHeader">
+                                            จำนวนหน่วยที่ซื้อ
+                                        </StyledTableCell>
+                                        <StyledTableCell className="subHeader">
+                                            ประเภทของกองทุน
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                ))}
-                            </React.Fragment>
-                        ))}
+                                    {asset.Funds.map((subAsset, indexSubAsset) => (
+                                        <StyledTableRow
+                                            key={
+                                                asset.CreatedDate +
+                                                "-" +
+                                                index +
+                                                "-body-" +
+                                                subAsset.fundName
+                                            }
+                                        >
+                                            <StyledTableCell>
+                                                {subAsset.assetType === "deposit"
+                                                    ? "เงินฝากประจำ"
+                                                    : subAsset.assetType === "rmf"
+                                                        ? "กองทุนรวม RMF"
+                                                        : subAsset.assetType === "ssf"
+                                                            ? "กองทุนรวม SSF"
+                                                            : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                align={subAsset.assetType === "deposit" ? "center" : ""}
+                                            >
+                                                {subAsset.fundName && subAsset.assetType !== "deposit"
+                                                    ? subAsset.fundName
+                                                    : "-"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {formatNumberWithCommas(subAsset.amount)}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {subAsset.buyPrice ? subAsset.buyPrice : "-"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {subAsset.buyPrice && subAsset.buyPrice !== 0
+                                                    ? roundNumber(subAsset.unit, 2)
+                                                    : "-"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </>
                     </TableBody>
                 </Table>
             </TableContainer>
