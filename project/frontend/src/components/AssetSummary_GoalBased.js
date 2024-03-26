@@ -57,6 +57,7 @@ export const AssetSummary = () => {
     const [userData, setUserData] = useState(null);
     const [selectGoalValue, setSelectGoalValue] = useState("");
     const [selectedData, setSelectedData] = useState(null);
+    const [assetData,setAssetData] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -66,6 +67,7 @@ export const AssetSummary = () => {
                 if (userData.length > 0) {
                     setSelectGoalValue(userData[0].Name);
                 }
+                setAssetData(assetData)
                 setUserData(userData);
             } catch (error) {
                 console.error("Error fetching user assets:", error);
@@ -81,9 +83,36 @@ export const AssetSummary = () => {
     }, [selectGoalValue, userData]);
     if (userData) {
         return (
-            <Container sx={{ marginTop: 5, display: "flex", position: "relative" }}>
-                <Box sx={{ width: 140, }}>
-                    <FormControl sx={{ width: "100%" }}>
+            <Container sx={{ marginTop: 5}}>
+                <Box sx={{
+                    minWidth: "90%",
+                    minHeight: "90%",
+                    maxWidth: "90%",
+                    maxHeight: "90%",
+                    borderRadius: 6,
+                    boxShadow: 6,
+                    padding: 4,
+                    position: "relative",
+                    overflow : "auto"
+                }}>
+                    <AssetSummaryGoalPieChart
+                        assetData={assetData}
+                    >
+                    </AssetSummaryGoalPieChart>
+                </Box>
+                <Box sx={{
+                    marginTop: "10vh",
+                    minWidth: "90%",
+                    minHeight: "90%",
+                    maxWidth: "90%",
+                    maxHeight: "90%",
+                    borderRadius: 6,
+                    boxShadow: 6,
+                    padding: 4,
+                    position: "relative",
+                    overflow : "auto"
+                }}>
+                    <FormControl sx={{ width: "10%" }}>
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
                             labelId="select-goal"
@@ -101,21 +130,12 @@ export const AssetSummary = () => {
                             ))}
                         </Select>
                     </FormControl>
-                </Box>
-                <Box>
                     <AssetSummaryGoalTable
                         selectedData={selectedData}
                     ></AssetSummaryGoalTable>
                 </Box>
-                <Box>
-                    <AssetSummaryGoalPieChart
-                        selectedData={selectedData}
-                    >
-                    </AssetSummaryGoalPieChart>
-                </Box>
+                
             </Container>
         );
-    } else {
-        return <></>;
     }
 };

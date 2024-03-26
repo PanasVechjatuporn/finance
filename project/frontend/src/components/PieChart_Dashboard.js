@@ -356,9 +356,6 @@ export default function PieChartComponent({ userData }) {
                     borderRadius: 6,
                     boxShadow: 6,
                     padding: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
                     position: "relative",
                 }}
             >
