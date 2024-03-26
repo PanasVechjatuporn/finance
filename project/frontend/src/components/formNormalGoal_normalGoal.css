@@ -1,15 +1,17 @@
 .Container{
   position: fixed; /* Use fixed or absolute depending on your needs */
-    top: 50%; /* Middle of the page vertically */
-    right: 10%; /* Align to the right of the page */
-    transform: translateY(-50%); /* Adjust for the container's height to truly center it */
-    display: flex;
-    flex-direction: column; /* Stack child elements (buttons) vertically */
-    align-items: center; /* Align buttons in the center of the 'div' */
-    padding: 10px;
-    border: 2px solid #ccc; /* Example styling */
-    border-radius: 10px; /* Example styling */
-  }
+  top: 50%; /* Middle of the page vertically */
+  left: 50%; /* Middle of the page horizontally */
+  transform: translate(-50%, -50%); /* Adjust for the container's dimensions to truly center it */
+  display: flex;
+  flex-direction: column; /* Stack child elements (buttons) vertically */
+  align-items: center; /* Align buttons in the center of the 'div' */
+  align-content: center;
+  padding: 10px;
+  border: 2px solid #ccc; /* Example styling */
+  border-radius: 10px; /* Example styling */
+}
+
 
 .TextField{
   margin: 10px 0; /* Add space between buttons */
