@@ -23,6 +23,7 @@ import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import "./graph_normalGoal.css";
+import { formatNumberWithCommas, roundNumber } from "../utils/numberUtil";
 
 const baseURL = "http://localhost:8000";
 
@@ -222,8 +223,10 @@ export const Graph = (data) => {
                   textAlign: "center", // Ensure text within the div is centered if not behaving as expected
                 }}
               >
-                เงินฝาก {parseFloat(UserInvestAmount) * 0.6} บาท | กองทุนรวม{" "}
-                {parseFloat(UserInvestAmount) * 0.4} บาท
+                เงินฝาก{" "}
+                {formatNumberWithCommas(parseFloat(UserInvestAmount) * 0.6)} บาท
+                | กองทุนรวม{" "}
+                {formatNumberWithCommas(parseFloat(UserInvestAmount) * 0.4)} บาท
               </div>
             </Box>
           </ContainerMui>
@@ -569,9 +572,12 @@ export const Graph = (data) => {
       const fundsResponse = await axios.get("http://localhost:8000/db/funds");
       // const newFundsObject = filterFunds(fundsResponse.data);
       // console.log(newFundsObject)
-      const suitableFunds = filterByRiskProfile(fundsResponse.data, memoizedData.data.riskProfile);
+      const suitableFunds = filterByRiskProfile(
+        fundsResponse.data,
+        memoizedData.data.riskProfile
+      );
 
-      console.log(suitableFunds)
+      console.log(suitableFunds);
       // setFunds(newFundsObject);
       // setFunds(fundsResponse.data);
       setFunds(suitableFunds);
@@ -877,7 +883,8 @@ export const Graph = (data) => {
                 }}
                 sx={{ textAlign: "center" }}
               >
-                เงินลงทุนที่แนะนำ {Math.round(minInvest)} บาทต่อเดือน
+                เงินลงทุนที่แนะนำ{" "}
+                {formatNumberWithCommas(Math.round(minInvest))} บาทต่อเดือน
               </Typography>
               {isLoading ? (
                 <LineChart
@@ -885,9 +892,6 @@ export const Graph = (data) => {
                     "& .MuiLineElement-series-Predict": {
                       strokeDasharray: "10 5",
                       strokeWidth: 4,
-                    },
-                    "& .MuiLineElement-series-Recommend": {
-                      stroke: "#fc8a00",
                     },
                     // border: "1px solid #757575",
                     position: "absolute",
@@ -931,7 +935,8 @@ export const Graph = (data) => {
                   }}
                   sx={{ textAlign: "center" }}
                 >
-                  เงินลงทุนขั้นต่ำต่อเดือน {Math.round(UserInvestAmountFix)} บาท
+                  เงินลงทุนขั้นต่ำต่อเดือน{" "}
+                  {formatNumberWithCommas(Math.round(UserInvestAmountFix))} บาท
                 </Typography>
               </div>
               <div>
@@ -1201,25 +1206,26 @@ export const Graph = (data) => {
                 marginBottom: "1vh",
               }}
             >
-              <form
-                onSubmit={(e) => {
-                  saveTaxGoal(e);
+              <Container
+                style={{
+                  display: "flex",
+                  width: "50%",
+                  marginBottom: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <Container
-                  style={{
-                    display: "flex",
-                    width: "50%",
-                    marginBottom: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
+                <form
+                  onSubmit={(e) => {
+                    saveTaxGoal(e);
                   }}
                 >
                   <IconButton type="submit">
                     <Button variant="contained">Create Goal</Button>
                   </IconButton>
-                </Container>
-              </form>
+                </form>
+
+              </Container>
             </Box>
             <Box
               sx={{
@@ -1296,7 +1302,7 @@ export const Graph = (data) => {
                       <Typography>{item.proj_name_th}</Typography>
                       <Typography>{item.proj_name_en}</Typography>
                       <Typography>
-                        อัตราการเติบโต : {item.growthrat_lastmonth}
+                        อัตราการเติบโต : {formatNumberWithCommas(item.growthrat_lastmonth)} %
                       </Typography>
                       <div style={{ position: "absolute", right: 0, top: 0 }}>
                         <Tooltip title="ข้อมูลกองทุน" placement="right">

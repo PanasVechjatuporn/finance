@@ -43,7 +43,7 @@ export const RiskLevel = ({
         },
       }
     );
-    navigate("../Goal-based/normal-goal", { state: { profile: riskProfile, Percentage: 100 } });
+    navigate("../Goal-based/normal-goal", { state: { riskProfile: riskProfile, Percentage: 100 } });
   };
 
   return (
@@ -52,7 +52,7 @@ export const RiskLevel = ({
         <p>คะแนนของคุณคือ: {score}</p>
       </div>
       <div className="EvaluationResult">
-        <p>คะแนนของคุณคือ: {riskProfile}</p>
+        <p>ความเสี่ยงที่รับได้คือ: {riskProfile}</p>
       </div>
       <div className="BackAndCreateGoalButton">
         <Stack spacing={2} direction="row">

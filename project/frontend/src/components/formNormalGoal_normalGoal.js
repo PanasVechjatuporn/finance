@@ -31,6 +31,7 @@ export const FormGoal = ({ sendData }) => {
   });
 
   const handleAlphabetChange = (e) => {
+    console.log(riskProfile)
     const value = e.target.value;
     const isValid = /^[A-Za-z]*$/.test(value); // Regular expression for alphabet validation
     if (isValid) {
