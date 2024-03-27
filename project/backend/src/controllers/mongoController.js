@@ -140,6 +140,7 @@ exports.get_funds = async (req, res) => {
                 proj_name_en: 1,
                 growthrat_lastmonth: 1,
                 url_factsheet: 1,
+                spec_code: 1
             })
             .sort({ growthrat_lastmonth: -1 })
             .toArray();
@@ -163,6 +164,7 @@ exports.save_tax_goal = async (req, res) => {
         Funds: req.body.Funds,
         Percentage: req.body.Percentage,
         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+        isActive: true
     };
     //const options = { upsert: true };
 
@@ -173,6 +175,26 @@ exports.save_tax_goal = async (req, res) => {
         res.status(401).json({ message: error });
     }
 };
+
+// exports.mockTaxGoalAsset = async (req, res)=>{
+//     const collectionAsset = db.collection("assets");
+//     for(i in [1,2,3]){
+//     const obj = {
+//         Funds: req.body.Funds,
+//         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+//         userId: req.body.userId,
+//         goalObjId: req.body.goalId,
+
+//     };
+//     //const options = { upsert: true };
+
+//     try {
+//         await collectionAsset.insertOne(obj);
+//     } catch (error) {
+//         console.log("Error occured in exports.mockTaxGoalAsset: ", error);
+//         res.status(401).json({ message: error });
+//     }}
+// ;}
 
 exports.get_growthrate = async (req, res) => {
     const db = client.db(dbName);
@@ -304,7 +326,7 @@ exports.getUserAsset = async (req, res) => {
         res.json(findResult);
         console.log(findResult)
     } catch (error) {
-        console.log("Error occured in exports.getUserGoal: ", error);
+        console.log("Error occured in exports.getUserAsset: ", error);
         res.status(401).json({ message: error });
     }
 };
@@ -410,3 +432,59 @@ exports.getUserAssetGoalBased = async (req, res) => {
         res.status(401).json({ message: error });
     }
 }
+exports.stopGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collectionGoal = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    console.log(req.body.Name)
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const queryGoal = {
+                userId: userId,
+                Name: req.body.Name
+            };
+            const isActive = await collectionGoal.find(queryGoal).project({ isActive: 1, Name: 1 }).toArray()
+            //console.log(isActive[0].isActive)
+            if (isActive[0].isActive == true || isActive[0].isActive == undefined) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } }) }
+            else if (isActive[0].isActive == false) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } }) };
+            //await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } })
+            res.status(200);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.stopGoal: ", err);
+    }
+};
+
+exports.deleteGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collectionAsset = db.collection("assets");
+    const collectionGoal = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const queryAsset = {
+                userId: userId,
+                goalObjId: req.body.goalId
+            };
+            // await collection.find(query).toArray().then(x => console.log(x))
+            await collectionAsset.updateMany(queryAsset, { $unset: { goalObjId: '' } })
+
+            const queryGoal = {
+                userId: userId,
+                Name: req.body.Name
+            };
+            await collectionGoal.deleteOne(queryGoal)
+
+
+            res.status(200);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.deleteGoal: ", err);
+    }
+}
+
+
