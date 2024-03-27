@@ -81,7 +81,6 @@ export const AssetSummary = () => {
             setSelectedData(userData.find((data) => data.Name === selectGoalValue));
         }
     }, [selectGoalValue, userData]);
-    if (userData) {
         return (
             <Container sx={{
                 marginTop: 5,
@@ -89,7 +88,7 @@ export const AssetSummary = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '100vh', // This will make the container take the full height of the viewport
+                minHeight: '100vh',
             }}>
                 <Box sx={{
                     minWidth: "90%",
@@ -120,7 +119,7 @@ export const AssetSummary = () => {
                     overflow : "auto",
                     marginBottom: "5vh"
                 }}>
-                    <FormControl sx={{ width: "10%", position: "absolute",
+                    {userData && (<FormControl sx={{ width: "10%", position: "absolute",
                             right: "5.5%",top: "1%"}}>
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
@@ -138,7 +137,7 @@ export const AssetSummary = () => {
                                 </MenuItem>
                             ))}
                         </Select>
-                    </FormControl>
+                    </FormControl>)}
                     <AssetSummaryGoalTable
                         selectedData={selectedData}
                     ></AssetSummaryGoalTable>
@@ -146,5 +145,4 @@ export const AssetSummary = () => {
                 
             </Container>
         );
-    }
 };

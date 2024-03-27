@@ -39,47 +39,52 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const AssetSummaryGoalPieChart = ({ assetData }) => {
-    const [allFundsObj, setAllFundsObj] = useState(null);
+    const [allFundsObj, setAllFundsObj] = useState([]);
     useEffect(() => {
         let tmpObjArray = [];
-        assetData.forEach((asset) => {
-            asset.Funds.forEach((eachFunds) => {
-                let existingFund = tmpObjArray.find(obj => obj.fundName === eachFunds.fundName);
-                if (!existingFund) {
-                    if (eachFunds.assetType === "deposit") {
-                        tmpObjArray.push({
-                            fundName: eachFunds.fundName,
-                            amount: parseFloat(eachFunds.amount),
-                            proj_id: null,
-                            buyPrice: null,
-                            unit: null,
-                            spec_code: null,
-                            assetType: eachFunds.assetType,
-                        });
+        console.log('assetData :: ',assetData)
+        if(assetData){
+            assetData.forEach((asset) => {
+                asset.Funds.forEach((eachFunds) => {
+                    let existingFund = tmpObjArray.find(
+                        (obj) => obj.fundName === eachFunds.fundName
+                    );
+                    if (!existingFund) {
+                        if (eachFunds.assetType === "deposit") {
+                            tmpObjArray.push({
+                                fundName: eachFunds.fundName,
+                                amount: parseFloat(eachFunds.amount),
+                                proj_id: null,
+                                buyPrice: null,
+                                unit: null,
+                                spec_code: null,
+                                assetType: eachFunds.assetType,
+                            });
+                        } else {
+                            tmpObjArray.push({
+                                fundName: eachFunds.fundName,
+                                amount: null,
+                                proj_id: eachFunds.proj_id,
+                                buyPrice: eachFunds.buyPrice,
+                                unit: parseFloat(eachFunds.unit),
+                                spec_code: eachFunds.spec_code,
+                                assetType: eachFunds.assetType,
+                            });
+                        }
                     } else {
-                        tmpObjArray.push({
-                            fundName: eachFunds.fundName,
-                            amount: null,
-                            proj_id: eachFunds.proj_id,
-                            buyPrice: eachFunds.buyPrice,
-                            unit: parseFloat(eachFunds.unit),
-                            spec_code: eachFunds.spec_code,
-                            assetType: eachFunds.assetType,
-                        });
+                        if (eachFunds.assetType === "deposit") {
+                            existingFund.amount += parseFloat(eachFunds.amount);
+                        } else {
+                            existingFund.unit += parseFloat(eachFunds.unit);
+                        }
                     }
-                } else {
-                    if (eachFunds.assetType === "deposit") {
-                        existingFund.amount += parseFloat(eachFunds.amount);
-                    } else {
-                        existingFund.unit += parseFloat(eachFunds.unit);
-                    }
-                }
+                });
             });
-        });
-        setAllFundsObj(tmpObjArray)
-    }, [assetData])
+        }
+        console.log('tmpObjArray :: ',tmpObjArray)
+        setAllFundsObj(tmpObjArray);
+    }, [assetData]);
 
-    if (assetData.length > 0) {
         return (
             <Container>
                 <div>
@@ -90,18 +95,17 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             textDecoration: "underline",
                             textDecorationColor: "transparent",
                             borderBottom: "2px solid #757575",
-                            display: "inline-block",
                             width: "100%",
                             paddingBottom: "8px",
                             userSelect: "none",
                             marginBottom: "15px",
-                            fontWeight: "bold"
+                            fontWeight: "bold",
                         }}
                     >
                         สรุปการลงทุนทั้งหมด
                     </Typography>
                 </div>
-                
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
@@ -113,33 +117,47 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {allFundsObj.map((asset, index) => (
-                                (asset.assetType !== "deposit") &&
-                                <StyledTableRow key={asset.assetType + "-row-data-" + index}>
-                                    <StyledTableCell align={asset.assetType === "deposit" ? "center" : "left"}>
-                                        {asset.fundName && asset.assetType !== "deposit" ? asset.fundName : "-"}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {asset.assetType === "deposit"
-                                            ? "เงินฝากประจำ"
-                                            : asset.assetType === "rmf"
-                                                ? "กองทุนรวม RMF"
-                                                : asset.assetType === "ssf"
-                                                    ? "กองทุนรวม SSF"
-                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {asset.buyPrice && asset.buyPrice !== 0 ? roundNumber(asset.unit, 2) : "-"}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {asset.spec_code ? asset.spec_code : "-"}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))}
+                            {allFundsObj.length > 0 ? (<>{allFundsObj.map(
+                                (asset, index) =>
+                                    asset.assetType !== "deposit" && (
+                                        <StyledTableRow
+                                            key={asset.assetType + "-row-data-" + index}
+                                        >
+                                            <StyledTableCell
+                                                align={
+                                                    asset.assetType === "deposit" ? "center" : "left"
+                                                }
+                                            >
+                                                {asset.fundName && asset.assetType !== "deposit"
+                                                    ? asset.fundName
+                                                    : "-"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {asset.assetType === "deposit"
+                                                    ? "เงินฝากประจำ"
+                                                    : asset.assetType === "rmf"
+                                                        ? "กองทุนรวม RMF"
+                                                        : asset.assetType === "ssf"
+                                                            ? "กองทุนรวม SSF"
+                                                            : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {asset.buyPrice && asset.buyPrice !== 0
+                                                    ? roundNumber(asset.unit, 2)
+                                                    : "-"}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {asset.spec_code ? asset.spec_code : "-"}
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    )
+                            )}</>) : (<TableCell colSpan={4} align="center">
+                                ไม่พบข้อมูล
+                            </TableCell>)}
+
                         </TableBody>
                     </Table>
                 </TableContainer>
-
                 <TableContainer component={Paper} sx={{ marginTop: "5%" }}>
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
@@ -149,27 +167,38 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {allFundsObj.map((asset, index) => (
-                                (asset.assetType === "deposit") &&
-                                <StyledTableRow key={asset.assetType + "-row-data-" + index}>
-                                    <StyledTableCell>
-                                        {asset.assetType === "deposit"
-                                            ? "เงินฝากประจำ"
-                                            : asset.assetType === "rmf"
-                                                ? "กองทุนรวม RMF"
-                                                : asset.assetType === "ssf"
-                                                    ? "กองทุนรวม SSF"
-                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {formatNumberWithCommas(asset.amount)}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))}
+                            {allFundsObj.length > 0 ? (
+                                <>
+                                    {allFundsObj.map(
+                                        (asset, index) =>
+                                            asset.assetType === "deposit" && (
+                                                <StyledTableRow
+                                                    key={asset.assetType + "-row-data-" + index}
+                                                >
+                                                    <StyledTableCell>
+                                                        {asset.assetType === "deposit"
+                                                            ? "เงินฝากประจำ"
+                                                            : asset.assetType === "rmf"
+                                                                ? "กองทุนรวม RMF"
+                                                                : asset.assetType === "ssf"
+                                                                    ? "กองทุนรวม SSF"
+                                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
+                                                        {formatNumberWithCommas(asset.amount)}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            )
+                                    )}
+                                </>
+                            ) : (
+                                <TableCell colSpan={2} align="center">
+                                    ไม่พบข้อมูล
+                                </TableCell>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Container>
         );
-    }
 };
