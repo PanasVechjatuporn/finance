@@ -9,10 +9,20 @@ import "./formNormalGoal_normalGoal.css";
 export const FormGoal = ({ sendData }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const percentage = location.state.Percentage;
-  const risk_profile = location.state.profile;
-  const goal = location.state.goal;
-  console.log(goal)
+
+  // let percentage;
+  // let riskProfile;
+  // let goal;
+  let percentage = location.state.Percentage;
+  let riskProfile = location.state.riskProfile;
+  let goal = location.state.goal;
+
+  if (location.state !== null) {
+    percentage = location.state.Percentage;
+    riskProfile = location.state.riskProfile;
+    goal = location.state.goal;
+  }
+  
   const [alphabetFields, setAlphabetFields] = useState("");
   const [numbersFields, setNumbersFields] = useState({
     year: "",
@@ -21,6 +31,7 @@ export const FormGoal = ({ sendData }) => {
   });
 
   const handleAlphabetChange = (e) => {
+    console.log(riskProfile)
     const value = e.target.value;
     const isValid = /^[A-Za-z]*$/.test(value); // Regular expression for alphabet validation
     if (isValid) {
@@ -49,9 +60,9 @@ export const FormGoal = ({ sendData }) => {
     const combinedData = {
       alphabetFields,
       ...numbersFields,
-      risk_profile,
+      riskProfile,
       percentage,
-      goal
+      goal,
     };
     console.log(combinedData);
     sendData(combinedData);
