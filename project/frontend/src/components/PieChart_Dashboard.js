@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -106,46 +104,55 @@ const taxableIncome = [
         color: "#566dff",
     },
 ];
+
 const expenseType = [
     {
-        name: "รายจ่าย tmp 1",
+        name: "อาหาร",
         category: 1,
-        color: "#ea7375",
+        color: "#95c2dc",
+        index: 1
     },
     {
-        name: "รายจ่าย tmp 2",
+        name: "ที่พักอาศัย",
         category: 2,
-        color: "#52f5f5",
+        color: "#ec843e",
+        index: 2
     },
     {
-        name: "รายจ่าย tmp 3",
+        name: "สิ่งบันเทิง",
         category: 3,
-        color: "#f688bf",
+        color: "#e7dc8c",
+        index: 3
     },
     {
-        name: "รายจ่าย tmp 4",
+        name: "ท่องเที่ยว",
         category: 4,
-        color: "#fac991",
+        color: "#84ceb9",
+        index: 4
     },
     {
-        name: "รายจ่าย tmp 5",
+        name: "การศึกษา",
         category: 5,
-        color: "#f7f89a",
+        color: "#6681a5",
+        index: 5
     },
     {
-        name: "รายจ่าย tmp 6",
+        name: "ค่าเดินทาง",
         category: 6,
-        color: "#abfca3",
+        color: "#fb7d7e",
+        index: 6
     },
     {
-        name: "รายจ่าย tmp 7",
+        name: "ค่าใช้จ่ายจิปาถะ",
         category: 7,
-        color: "#abadfd",
+        color: "#485ea1",
+        index: 7
     },
     {
         name: "อื่นๆ",
         category: 8,
-        color: "grey",
+        color: "#b7f1a5",
+        index: 8
     },
 ];
 
@@ -332,7 +339,6 @@ export default function PieChartComponent({ userData }) {
     }
 
     const handleOnClickExpensePieChart = (modalParams) => {
-        console.log('modalParams :: ',modalParams)
         setModalParams(modalParams)
         setModalType("expense")
         setShowPieChartModal(true)
@@ -348,10 +354,6 @@ export default function PieChartComponent({ userData }) {
                     maxHeight: "90vh",
                     borderRadius: 6,
                     boxShadow: 6,
-                    padding: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
                     position: "relative",
                 }}
             >
@@ -360,6 +362,8 @@ export default function PieChartComponent({ userData }) {
                         sx={{
                             position: "absolute",
                             right: "5%",
+                            width: "15%",
+                            height: "10%"
                         }}
                     >
                         <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
@@ -382,20 +386,34 @@ export default function PieChartComponent({ userData }) {
                         </Select>
                     </FormControl>
                 </Container>
-                <Typography>สรุปรายรับ ปี {currentYear}</Typography>
+                <Container>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            userSelect: "none",
+                            fontWeight: "bold",
+                            paddingBottom: "2%",
+                            
+                        }}
+                        sx={{
+                            paddingTop: 1,
+                        }}
+                    >
+                        สรุปรายรับ ปี {currentYear}
+                    </Typography>
+                </Container>
+
                 {pieIncomeParams ? (
+                    <Container style={{marginLeft: "10%"}}>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                // colors={[
-                                //     "#ea7375",
-                                //     "#52f5f5",
-                                //     "#f688bf",
-                                //     "#fac991",
-                                //     "#f7f89a",
-                                //     "#abfca3",
-                                //     "#abadfd",
-                                // ]}
                                 {...pieIncomeParams}
                                 series={pieIncomeParams.series.map((series) => ({
                                     ...series,
@@ -410,33 +428,46 @@ export default function PieChartComponent({ userData }) {
                                 }}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
-                                      fill: 'white',
-                                      fontWeight: 'bold',
-                                    },
-                                  }}
+                                        fill: 'white',
+                                        fontWeight: 'bold',
+                                    }
+                                }}
                             />
                         </div>
                         <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
-                            <CustomChartLegend data={incomePieData} />
+                            <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
                         </div>
                     </div>
+                    </Container>
+
                 ) : (
                     <>No Income Data</>
                 )}
-                <Typography>สรุปรายจ่าย ปี {currentYear}</Typography>
+                <Container>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            userSelect: "none",
+                            fontWeight: "bold"
+                        }}
+                        sx={{
+                            padding: 1
+                        }}
+                    >
+                        สรุปรายจ่าย ปี {currentYear}
+                    </Typography>
+                </Container>
                 {pieExpenseParams ? (
+                    <Container style={{marginLeft: "10%"}}>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ flex: 1 }}>
                             <PieChart
-                                // colors={[
-                                //     "#ea7375",
-                                //     "#52f5f5",
-                                //     "#f688bf",
-                                //     "#fac991",
-                                //     "#f7f89a",
-                                //     "#abfca3",
-                                //     "#abadfd",
-                                // ]}
                                 {...pieExpenseParams}
                                 series={pieExpenseParams.series.map((series) => ({
                                     ...series,
@@ -451,16 +482,18 @@ export default function PieChartComponent({ userData }) {
                                 }}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
-                                      fill: 'white',
-                                      fontWeight: 'bold',
+                                        fill: 'white',
+                                        fontWeight: 'bold',
                                     },
-                                  }}
+                                }}
                             />
                         </div>
-                        <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
-                            <CustomChartLegend data={expensePieData} />
+                        <div style={{ flex: 1, marginTop: 80 }}>
+                            <CustomChartLegend data={expensePieData} expenseType={expenseType} />
                         </div>
                     </div>
+                    </Container>
+
                 ) : (
                     <>No Expense and Investment Data</>
                 )}

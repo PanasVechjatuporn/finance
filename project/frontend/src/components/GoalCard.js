@@ -167,7 +167,7 @@ function EachCard({ data }) {
                         ชื่อ : {data.Name || ""}
                     </Typography>
                     <Typography component="div" variant="subtitile1" color="text.secondary">
-                        ระยะเวลาการลงทุน : ปีต่อปี
+                        ระยะเวลาการลงทุน : -
                     </Typography>
                     <Typography component="div" variant="subtitile1" color="text.secondary">
                         เป้าหมาย : ลดหย่อนภาษีให้ได้มากที่สุด

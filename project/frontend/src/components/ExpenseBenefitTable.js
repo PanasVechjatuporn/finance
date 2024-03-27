@@ -21,7 +21,7 @@ export default function ExpenseBenefitTable({ obj, open }) {
                                                 หักค่าใช้จ่ายประเภทที่ 1.0 และ 2.0
                                             </TableCell>
                                             <TableCell key={subtype} align="center" style={{ width: "20%" }}>
-                                                {value}
+                                                {value.toLocaleString("en-GB")}
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -32,7 +32,7 @@ export default function ExpenseBenefitTable({ obj, open }) {
                                                     หักค่าใช้จ่ายประเภทที่ {Type}.{subtype}
                                                 </TableCell>
                                                 <TableCell key={subtype} align="center" style={{ width: "20%" }}>
-                                                    {value}
+                                                    {value.toLocaleString("en-GB")}
                                                 </TableCell>
                                             </TableRow>
                                         )}

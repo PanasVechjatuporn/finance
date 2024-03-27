@@ -115,36 +115,52 @@ const taxableIncome = [
 
 const expenseType = [
     {
-        name: "รายจ่าย tmp 1",
+        name: "อาหาร",
         category: 1,
+        color: "#95c2dc",
+        index: 1
     },
     {
-        name: "รายจ่าย tmp 2",
+        name: "ที่พักอาศัย",
         category: 2,
+        color: "#ec843e",
+        index: 2
     },
     {
-        name: "รายจ่าย tmp 3",
+        name: "สิ่งบันเทิง",
         category: 3,
+        color: "#e7dc8c",
+        index: 3
     },
     {
-        name: "รายจ่าย tmp 4",
+        name: "ท่องเที่ยว",
         category: 4,
+        color: "#84ceb9",
+        index: 4
     },
     {
-        name: "รายจ่าย tmp 5",
+        name: "การศึกษา",
         category: 5,
+        color: "#6681a5",
+        index: 5
     },
     {
-        name: "รายจ่าย tmp 6",
+        name: "ค่าเดินทาง",
         category: 6,
+        color: "#fb7d7e",
+        index: 6
     },
     {
-        name: "รายจ่าย tmp 7",
+        name: "ค่าใช้จ่ายจิปาถะ",
         category: 7,
+        color: "#485ea1",
+        index: 7
     },
     {
         name: "อื่นๆ",
         category: 8,
+        color: "#b7f1a5",
+        index: 8
     },
 ];
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -107,9 +107,6 @@ export default function PieChartInfoModal({
                                                 <StyledTableCell align="center">
                                                     {data.amount}
                                                 </StyledTableCell>
-                                                {/* <StyledTableCell>
-                                                    {modalParams.label}
-                                                </StyledTableCell> */}
                                             </StyledTableRow>
                                         ))}
                                         <StyledTableRow>
@@ -129,6 +126,6 @@ export default function PieChartInfoModal({
             </>
         );
     } else {
-        return <>No Modal</>;
+        return <></>;
     }
 }

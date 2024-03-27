@@ -1,6 +1,7 @@
 .tax {
+    min-width:48%;
+    height: 90px;
     background: rgb(255, 184, 184);
-    height: min-content;
      padding:  15px;
      border-radius: 20px;  
      border-style:solid;
@@ -8,6 +9,8 @@
      border-color: rgb(170, 185, 205); 
 }
 .newTax{
+    min-width:48%;
+    height: 90px;
     background: rgb(193, 255, 184);
     padding:  15px;
     border-radius: 20px;  

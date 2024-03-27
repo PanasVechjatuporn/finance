@@ -148,7 +148,7 @@ export default function MonthDataTable({ userData, setUserData }) {
   }
 
   return (
-    <Container maxWidth="md" overflow= "auto" >
+    <Container maxWidth="md" >
       <Box
         sx={{
           minWidth: "90vh",
@@ -157,19 +157,35 @@ export default function MonthDataTable({ userData, setUserData }) {
           maxHeight: "90vh",
           borderRadius: 6,
           boxShadow: 6,
-          padding: 4,
-          overflow: "auto"
+          padding: 2,
         }}
       >
-        <Paper 
-          style={{ position: "relative", paddingBottom: "70px", borderRadius: 6}}
+        <Box
+          style={{ position: "relative", paddingBottom: "70px"}}
           sx={{
-            borderRadius:6
+            padding: 2
           }}
         >
-          <Typography sx={{
-            padding: 1
-          }}>เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน</Typography>
+          <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            paddingBottom: "8px",
+                            userSelect: "none",
+                            marginBottom: "15px",
+                            fontWeight: "bold"
+                        }}
+                        sx={{
+                          padding: 1
+                        }}
+                    >
+                        เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
+                    </Typography>
           <TableContainer style={{ height: "70vh" }}>
             <Table stickyHeader>
               <TableHead
@@ -177,6 +193,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                   "& th": {
                     color: "white",
                     backgroundColor: "orange",
+                    borderStyle: "hidden !important"
                   },
                 }}
                 key={"table-header"}
@@ -220,7 +237,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 <TableBody>
                   <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
                     <TableCell
-                      colSpan={6}
+                      colSpan={7}
                       align="center"
                       onClick={(e) => {
                         handleNewMonthClick();
@@ -241,7 +258,6 @@ export default function MonthDataTable({ userData, setUserData }) {
           </TableContainer>
           <Box
             style={{
-              position: "absolute",
               bottom: 0,
               left: 0,
               right: 0,
@@ -252,7 +268,7 @@ export default function MonthDataTable({ userData, setUserData }) {
           >
             <FormControl
               variant="standard"
-              style={{ marginLeft: "10px", marginRight: "12px" }}
+              style={{ marginLeft: "10px", marginRight: "30px" }}
             >
               <InputLabel id="year-selection-input-label">Year</InputLabel>
               <Select
@@ -266,7 +282,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 }}
               >
                 {allYear.map((item, index) => (
-                  <MenuItem key={index+"-menuitem-"+item+selectedYear} value={item}>
+                  <MenuItem key={index + "-menuitem-" + item + selectedYear} value={item}>
                     {item}
                   </MenuItem>
                 ))}
@@ -284,7 +300,7 @@ export default function MonthDataTable({ userData, setUserData }) {
               </FormHelperText>
             </FormControl>
           </Box>
-        </Paper>
+        </Box>
       </Box>
       <EditMonthDataModal
         show={openNewMonthModal}

@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoController = require("../controllers/mongoController");
 
-router.post(
-  "/createuser_provider=:provider",
-  mongoController.createNewUserWithProvider
-);
+router.post("/createuser_provider=:provider", mongoController.createNewUserWithProvider);
 
 router.post("/upsert_monthly", mongoController.upsertUserMonthlyData);
 
@@ -23,11 +20,17 @@ router.post("/upsert_multiple", mongoController.upsertUserMultipleMonthlyData);
 
 router.post("/delete_monthly", mongoController.deleteUserMonthData);
 
-router.get("/usergoal=:uid", mongoController.getUserGoal);
+router.get('/usergoal=:uid', mongoController.getUserGoal);
+
+router.get('/userassets=:uid', mongoController.getUserAsset);
 
 router.post("/upsert_new_goal", mongoController.insertNewGoal);
 
-router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage)
+router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage);
+
+router.get("/get_user_asset", mongoController.getUserAssetGoalBased);
+
+router.get("/get_user_goal", mongoController.getUserGoalGoalBased);
 
 router.get("/user_risk_profile=:uid", mongoController.getUserRiskProfile)
 
