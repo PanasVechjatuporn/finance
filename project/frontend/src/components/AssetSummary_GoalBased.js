@@ -118,7 +118,7 @@ export const AssetSummary = () => {
                     marginBottom: "5vh"
                 }}>
                     {userData && (<FormControl sx={{ width: "10%", position: "absolute",
-                            right: "5.5%",top: "1%"}}>
+                            right: "5.5%",top: "3%"}}>
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
                             labelId="select-goal"
@@ -128,6 +128,7 @@ export const AssetSummary = () => {
                             onChange={(e) => {
                                 setSelectGoalValue(e.target.value);
                             }}
+                            disabled={userData.length > 0 ? (false) : (true)}
                         >
                             {userData.map((data, index) => (
                                 <MenuItem key={data._id + "-select-item-" + index} value={data.Name}>

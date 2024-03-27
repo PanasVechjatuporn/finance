@@ -39,8 +39,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const AssetSummaryGoalTable = ({ selectedData }) => {
-    if (selectedData) {
-        console.log('selectedData.assets :: ',selectedData.assets.length)
         return (
             <Container>
                 <Typography
@@ -58,7 +56,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                             fontWeight: "bold"
                         }}
                     >
-                        ตารางแสดงการลงทุนภายในเป้าหมาย {selectedData.Name}
+                        ตารางแสดงการลงทุนภายในเป้าหมาย {(selectedData && (selectedData.Name))}
                     </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
@@ -91,7 +89,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {selectedData.assets.length > 0 ? (<>
+                            {selectedData ? (<>
                                 {selectedData.assets.map((asset, index) => (
                                     <React.Fragment
                                         key={asset.CreatedDate + "-" + index + "-fragment"}
@@ -158,5 +156,4 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                 </TableContainer>
             </Container>
         );
-    }
 };
