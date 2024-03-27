@@ -84,11 +84,8 @@ export const AssetSummary = () => {
         return (
             <Container sx={{
                 marginTop: 5,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
                 minHeight: '100vh',
+                display: 'ruby-text'
             }}>
                 <Box sx={{
                     minWidth: "90%",
@@ -100,6 +97,7 @@ export const AssetSummary = () => {
                     padding: 4,
                     position: "relative",
                     overflow : "auto",
+                    justifyContent: "center"
                 }}>
                     <AssetSummaryGoalPieChart
                         assetData={assetData}

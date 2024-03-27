@@ -87,6 +87,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
 
         return (
             <Container>
+
                 <div>
                     <Typography
                         variant="h5"
@@ -102,7 +103,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        สรุปการลงทุนทั้งหมด
+                        สรุปการลงทุนในกองทุนทั้งหมด
                     </Typography>
                 </div>
 
@@ -158,7 +159,27 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TableContainer component={Paper} sx={{ marginTop: "5%" }}>
+
+                <div>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            width: "100%",
+                            paddingBottom: "8px",
+                            userSelect: "none",
+                            marginBottom: "15px",
+                            fontWeight: "bold",
+                            marginTop: "5%"
+                        }}
+                    >
+                        สรุปการลงทุนในกองทุนทั้งหมด
+                    </Typography>
+                </div>
+                <TableContainer component={Paper} >
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
                             <StyledTableRow>
