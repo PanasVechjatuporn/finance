@@ -40,7 +40,39 @@ export const GoalBased = () => {
     const [needAllocate, setNeedAllocate] = React.useState(false)
 
     const [isItNormal, setIsitNormal] = React.useState();
-
+    const [riskProfile, setRiskProfile] = React.useState();
+    React.useEffect(() => {
+        async function fetchData() {
+            if (uid != null) {
+                let riskProfileTemp;
+                await axios
+                    .get(`http://localhost:8000/db/userdata=${uid}`)
+                    .then((response) => {
+                        setData(response.data);
+                    });
+                await axios
+                    .get(`http://localhost:8000/db/usergoal=${uid}`)
+                    .then((res) => {
+                        setGoal(res.data);
+                    });
+                await axios
+                    .get(`http://localhost:8000/db/user_risk_profile=${uid}`)
+                    .then((response) => {
+                        console.log(response.data)
+                        riskProfileTemp = response.data
+                    });
+                setIsloading(false);
+                if (riskProfileTemp.length > 0) {
+                    //true = has risk_profile
+                    // do nothing
+                    setRiskProfile(riskProfileTemp[0].riskProfile)
+                } else {
+                    navigate("./risk-evaluation-normal");
+                }
+            }
+        }
+        fetchData();
+    }, [uid]);
     React.useEffect(() => {
         async function fetchData() {
             if (uid != null) {
@@ -124,12 +156,16 @@ export const GoalBased = () => {
         function handleSubmit(event) {
             if (isItNormal == true) {
                 handleCloseNewGoal();
-                navigate("./normal-goal", { state: { Percentage: goalPercent, goal: oldGoal } });
+                console.log("Percentage::  ", goalPercent)
+                console.log("riskProfile::  ", riskProfile)
+                navigate("./normal-goal", {
+                    state: { Percentage: goalPercent, goal: oldGoal, riskProfile: riskProfile },
+                });
                 event.preventDefault();
             } else if (isItNormal == false) {
                 handleCloseNewGoal();
                 navigate("./reduce-tax-goal", {
-                    state: { Percentage: goalPercent, data: data, oldGoal: oldGoal },
+                    state: { Percentage: goalPercent, data: data, goal: oldGoal },
                 });
                 event.preventDefault();
             }
@@ -706,7 +742,7 @@ export const GoalBased = () => {
                     </Tooltip>
                     <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
                 </Container> : null}
-                <AssetSummary></AssetSummary>
+            <AssetSummary></AssetSummary>
         </React.Fragment>
     );
 };
