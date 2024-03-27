@@ -706,6 +706,7 @@ export const GoalBased = () => {
                     </Tooltip>
                     <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
                 </Container> : null}
+                <AssetSummary></AssetSummary>
         </React.Fragment>
     );
 };
