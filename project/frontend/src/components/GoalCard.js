@@ -199,8 +199,8 @@ function EachCard({ data }) {
             <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
                 <CardMedia
                     component="img"
-                    sx={{ height:140}}
-                    image={require('./goalPlaceholder.jpg').default}
+                    height="100"
+                    image=""
                     alt="icon/image"
                 />
                 <CardContent>
@@ -246,8 +246,8 @@ function EachCard({ data }) {
             <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
                 <CardMedia
                     component="img"
-                    sx={{ height:140}}
-                    image={require('./goalPlaceholder.jpg').default}
+                    height="100"
+                    image=""
                     alt="icon/image"
                 />
                 <CardContent>

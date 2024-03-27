@@ -35,10 +35,4 @@ router.post('/stop_goal', mongoController.stopGoal);
 
 router.post('/delete_goal', mongoController.deleteGoal);
 
-router.get("/user_risk_profile=:uid", mongoController.getUserRiskProfile)
-
-router.post("/upsert_risk_profile=:uid", mongoController.upsertRiskProfile)
-
-router.post('/post_asset_from_goal', mongoController.postAssetFromGoal)
-
 module.exports = router;

@@ -8,14 +8,10 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import { RiskLevel } from "./RiskLevel_RiskEvalNormal";
 import questions from "./question";
 import "./RiskEvalForm_RiskEvalNormal.css";
-import { useNavigate } from "react-router-dom";
 
-export const EvaluationForm = () => {
-  const navigate = useNavigate();
-  const [showRiskLevel, setShowRiskLevel] = useState(false);
+export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(
@@ -45,7 +41,6 @@ export const EvaluationForm = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setIsOptionSelected(selectedOptions[currentQuestionIndex - 1] != null); // Check if the previous question had a selection
-      setShowRiskLevel(false)
     }
   };
 
@@ -55,9 +50,10 @@ export const EvaluationForm = () => {
       0
     );
     setScore(totalScore);
-    setShowRiskLevel(true)
-    setIsOptionSelected(false)
-    // navigate("../Goal-based/normal-goal", { state: { score: score } });
+    setshowRiskLevel(true);
+    setEvaluationResult(totalScore);
+
+    // navigate("../Goal-based/normal-goal", { state: { score: totalScore } });
   };
 
   const { question, options } = questions[currentQuestionIndex];
@@ -113,17 +109,15 @@ export const EvaluationForm = () => {
               ) : (
                 <Button
                   variant="contained"
-                  onClick={(e)=>{
-                    calculateScore()
-                  }}
+                  onClick={calculateScore}
                   disabled={!isOptionSelected}
                 >
-                  Calculate
+                  Finish
                 </Button>
               )}
             </Stack>
           </div>
-          {showRiskLevel && <RiskLevel evaluationResult={score} />}
+          <div>Score: {score}</div>
         </div>
       </Container>
     </React.Fragment>

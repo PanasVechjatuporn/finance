@@ -2,48 +2,37 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useSelector } from "react-redux";
-import axios from "axios";
+
 import "./RiskLevel_RiskEvalNormal.css";
 
 export const RiskLevel = ({
   evaluationResult,
+  setshowRiskLevel,
+  setAllowedToAccessNormalGoal,
 }) => {
-  const userStore = useSelector((state) => state.userStore);
   const navigate = useNavigate();
 
   const score = evaluationResult;
-  var riskProfile;
+  var risk_profile;
   if (score < 15) {
-    riskProfile = "low";
+    risk_profile = "low";
   } else if (score >= 15 && score <= 21) {
-    riskProfile = "medium low";
+    risk_profile = "medium low";
   } else if (score >= 22 && score <= 29) {
-    riskProfile = "medium high";
+    risk_profile = "medium high";
   } else if (score >= 30 && score <= 36) {
-    riskProfile = "high";
+    risk_profile = "high";
   } else if (score >= 37) {
-    riskProfile = "very high";
+    risk_profile = "very high";
   }
 
+  const handleBackButton = () => {
+    setshowRiskLevel(false);
+  };
 
-  const handleCreateGoal = (e) => {
-    // console.log(userStore);
-    // console.log("risk profile", riskProfile);
-    // console.log(userStore.userId)
-    // const params = { userId: userStore.userId, riskProfile: riskProfile };
-    // console.log(params);
-    axios.post(
-      `http://localhost:8000/db/upsert_risk_profile=${userStore.userId}`,
-      { userId: userStore.userId, riskProfile: riskProfile },
-      {
-        headers: {
-          Authorization: userStore.userToken,
-          UserId: userStore.userId,
-        },
-      }
-    );
-    navigate("../Goal-based/normal-goal", { state: { riskProfile: riskProfile, Percentage: 100 } });
+  const handleCreateGoal = () => {
+    setAllowedToAccessNormalGoal(true);
+    navigate("../Goal-based/normal-goal", { state: { profile: risk_profile } });
   };
 
   return (
@@ -52,10 +41,13 @@ export const RiskLevel = ({
         <p>คะแนนของคุณคือ: {score}</p>
       </div>
       <div className="EvaluationResult">
-        <p>ความเสี่ยงที่รับได้คือ: {riskProfile}</p>
+        <p>คะแนนของคุณคือ: {risk_profile}</p>
       </div>
       <div className="BackAndCreateGoalButton">
         <Stack spacing={2} direction="row">
+          <Button variant="outlined" onClick={handleBackButton}>
+            Back
+          </Button>
           <Button variant="contained" onClick={handleCreateGoal}>
             Create Goal
           </Button>

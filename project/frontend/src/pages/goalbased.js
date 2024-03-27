@@ -32,44 +32,49 @@ const warnTooltip = styled(({ className, ...props }) => (
 export const GoalBased = () => {
     const navigate = useNavigate();
 
-  const uid = useSelector((state) => state.userStore.userId);
-  const [data, setData] = React.useState([]);
-  const [goal, setGoal] = React.useState([]);
-  const [isloading, setIsloading] = React.useState(true);
-  const [riskProfile, setRiskProfile] = React.useState('');
-  const [isItNormal, setIsitNormal] = React.useState();
+    const uid = useSelector((state) => state.userStore.userId);
+    const token = useSelector((state) => state.userStore.userToken);
+    const [data, setData] = React.useState([]);
+    const [goal, setGoal] = React.useState([]);
+    const [isloading, setIsloading] = React.useState(true);
+    const [needAllocate, setNeedAllocate] = React.useState(false)
 
-  React.useEffect(() => {
-    async function fetchData() {
-      if (uid != null) {
-        let riskProfileTemp;
-        await axios
-          .get(`http://localhost:8000/db/userdata=${uid}`)
-          .then((response) => {
-            setData(response.data);
-          });
-        await axios
-          .get(`http://localhost:8000/db/usergoal=${uid}`)
-          .then((res) => {
-            setGoal(res.data);
-          });
-        await axios
-          .get(`http://localhost:8000/db/user_risk_profile=${uid}`)
-          .then((response) => {
-            riskProfileTemp = response.data
-          });
-        setIsloading(false);
-        if (riskProfileTemp.length > 0) {
-          //true = has risk_profile
-          // do nothing
-          setRiskProfile(riskProfileTemp[0].riskProfile)
-        } else {
-          navigate("./risk-evaluation-normal");
+    const [isItNormal, setIsitNormal] = React.useState();
+
+    React.useEffect(() => {
+        async function fetchData() {
+            if (uid != null) {
+                await axios
+                    .get(`http://localhost:8000/db/userdata=${uid}`)
+                    .then((response) => {
+                        setData(response.data);
+                    });
+                await axios
+                    .get(`http://localhost:8000/db/usergoal=${uid}`)
+                    .then((res) => {
+                        setGoal(res.data);
+                        if (res.data.length > 0) {
+                            const sumPercent =
+                                res.data.reduce(
+                                    (acc, current) => acc + Number(current.Percentage || 0),
+                                    0
+                                );
+                            if (sumPercent != 100) {
+                                setNeedAllocate(true)
+                            } else {
+                                setNeedAllocate(false)
+                            }
+                        }
+                    });
+                setIsloading(false);
+                console.log(needAllocate)
+                if (needAllocate == true) { handleOpenEditGoal() }
+            }
         }
-      }
-    }
-    fetchData();
-  }, [uid]);
+        fetchData();
+    }, [uid, needAllocate]);
+
+
 
     function handleGoalTypeClick(type) {
         if (type == "normal") {
@@ -78,18 +83,18 @@ export const GoalBased = () => {
             setIsitNormal(false);
         }
 
-    if (goal.length > 0) {
-      handleOpenNewGoal();
-    } else {
-      if (type == "normal") {
-        navigate("./normal-goal", { state: { Percentage: 100, riskProfile: riskProfile  } });
-      } else if (type == "tax") {
-        navigate("./reduce-tax-goal", {
-          state: { Percentage: 100, data: data },
-        });
-      }
+        if (goal.length > 0) {
+            handleOpenNewGoal();
+        } else {
+            if (type == "normal") {
+                navigate("./normal-goal", { state: { Percentage: 100 } });
+            } else if (type == "tax") {
+                navigate("./reduce-tax-goal", {
+                    state: { Percentage: 100, data: data },
+                });
+            }
+        }
     }
-  }
 
     function handleCreateGoal() {
         if (goal.length > 0) {
@@ -116,23 +121,19 @@ export const GoalBased = () => {
             JSON.parse(JSON.stringify(goal))
         );
 
-    function handleSubmit(event) {
-      if (isItNormal == true) {
-        handleCloseNewGoal();
-        console.log("Percentage::  ", goalPercent)
-        console.log("riskProfile::  ", riskProfile)
-        navigate("./normal-goal", {
-          state: { Percentage: goalPercent, goal: oldGoal, riskProfile: riskProfile[0].riskProfile  },
-        });
-        event.preventDefault();
-      } else if (isItNormal == false) {
-        handleCloseNewGoal();
-        navigate("./reduce-tax-goal", {
-          state: { Percentage: goalPercent, data: data, goal: oldGoal },
-        });
-        event.preventDefault();
-      }
-    }
+        function handleSubmit(event) {
+            if (isItNormal == true) {
+                handleCloseNewGoal();
+                navigate("./normal-goal", { state: { Percentage: goalPercent, goal: oldGoal } });
+                event.preventDefault();
+            } else if (isItNormal == false) {
+                handleCloseNewGoal();
+                navigate("./reduce-tax-goal", {
+                    state: { Percentage: goalPercent, data: data, oldGoal: oldGoal },
+                });
+                event.preventDefault();
+            }
+        }
 
         let Exceed = false;
         const sumPercent =
