@@ -8,10 +8,14 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
+import { RiskLevel } from "./RiskLevel_RiskEvalNormal";
 import questions from "./question";
 import "./RiskEvalForm_RiskEvalNormal.css";
+import { useNavigate } from "react-router-dom";
 
-export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
+export const EvaluationForm = () => {
+  const navigate = useNavigate();
+  const [showRiskLevel, setShowRiskLevel] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(
@@ -41,6 +45,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setIsOptionSelected(selectedOptions[currentQuestionIndex - 1] != null); // Check if the previous question had a selection
+      setShowRiskLevel(false)
     }
   };
 
@@ -50,10 +55,9 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
       0
     );
     setScore(totalScore);
-    setshowRiskLevel(true);
-    setEvaluationResult(totalScore);
-
-    // navigate("../Goal-based/normal-goal", { state: { score: totalScore } });
+    setShowRiskLevel(true)
+    setIsOptionSelected(false)
+    // navigate("../Goal-based/normal-goal", { state: { score: score } });
   };
 
   const { question, options } = questions[currentQuestionIndex];
@@ -109,15 +113,17 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
               ) : (
                 <Button
                   variant="contained"
-                  onClick={calculateScore}
+                  onClick={(e)=>{
+                    calculateScore()
+                  }}
                   disabled={!isOptionSelected}
                 >
-                  Finish
+                  Calculate
                 </Button>
               )}
             </Stack>
           </div>
-          <div>Score: {score}</div>
+          {showRiskLevel && <RiskLevel evaluationResult={score} />}
         </div>
       </Container>
     </React.Fragment>
