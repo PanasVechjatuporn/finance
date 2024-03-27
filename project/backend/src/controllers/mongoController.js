@@ -302,35 +302,32 @@ exports.getUserAsset = async (req, res) => {
     }
 };
 
-exports.insertNewGoal = async (req, res) => {
-  const db = client.db(dbName);
-  const collection = db.collection("goal");
-  const currentDate = new Date();
-  currentDate.setFullYear(currentDate.getFullYear() + parseInt(req.body.year));
-  const period = currentDate.toLocaleDateString("en-GB");
-  //
-  try {
-    const newDocument = {
-      userId: req.body.userId,
-      Name: req.body.Name,
-      Period: period,
-      Funds: req.body.Funds,
-      Goal: req.body.Goal,
-      Percentage: req.body.Percentage,
-      CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-      isActive: true,
-    };
-
-    const insertResult = await collection.insertOne(newDocument);
-
-    const objectId = insertResult.insertedId;
-
-    this.postAssetFromGoal(req, res, objectId);
-
-    res.status(200).json({ message: "upsert new goal successfully" });
-  } catch (err) {
-    console.log("Error occured in mongoController.upsertNewGoal: ", err);
-  }
+exports.upsertNewGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const currentDate = new Date();
+    currentDate.setFullYear(currentDate.getFullYear() + parseInt(req.body.year));
+    const period = currentDate.toLocaleDateString("en-GB");
+    //
+    try {
+        const query = { userId: req.body.userId, Name: req.body.Name };
+        const update = {
+            $set: {
+                userId: req.body.userId,
+                Name: req.body.Name,
+                Period: period,
+                Funds: req.body.Funds,
+                Goal: req.body.Goal,
+                Percentage: req.body.Percentage,
+                CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+            },
+        };
+        const options = { upsert: true };
+        const upsertResult = await collection.updateOne(query, update, options);
+        res.status(200).json({ message: "upsert new goal successfully" });
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertNewGoal: ", err);
+    }
 };
 
 exports.changeMultipleGoalPercentage = async (req, res) => {
@@ -361,6 +358,91 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
     } catch (err) {
         console.log("Error occured in mongoController.changeGoalPercentage: ", err);
     }
+};
+
+exports.getUserGoal = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("goal");
+
+  try {
+    query = { userId: req.params.uid };
+    var findResult = await collection.find(query).toArray();
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.getUserGoal: ", error);
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.getUserRiskProfile = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("risk_profile");
+  try {
+    query = { uid: req.params.uid };
+
+    var findResult = await collection.find(query).toArray();
+    console.log(findResult);
+    res.json(findResult);
+  } catch (error) {
+    console.log("Error occured in exports.testUser: ", error);
+    res.status(401).json({ message: error });
+  }
+};
+
+exports.upsertRiskProfile = async (req, res) => {
+  const db = client.db(dbName);
+  const collection = db.collection("risk_profile");
+  const userToken = req.header("Authorization");
+  const userId = req.header("UserId");
+  try {
+    const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+    if (isVerify) {
+      // console.log("params: ",req.body)
+      // console.log(req.params.riskProfile);
+      const query = { uid: req.body.userId };
+      const update = {
+        $set: {
+          riskProfile: req.body.riskProfile,
+        },
+      };
+      const option = { upsert: true };
+      updateResult = await collection.updateOne(query, update, option);
+      console.log(updateResult);
+      if (updateResult.upsertedCount > 0) {
+        console.log(`A new document was inserted with the uid: ${query.uid}`);
+      } else if (updateResult.modifiedCount > 0) {
+        console.log(`The document with the uid: ${query.uid} was updated`);
+      } else {
+        console.log(
+          `No changes were made for the document with the uid: ${query.uid}`
+        );
+      }
+      res.status(200);
+    }
+  } catch (err) {
+    console.log("Error occured in mongoController.changeGoalPercentage: ", err);
+  }
+};
+
+exports.postAssetFromGoal = async (req, res, objectId) => {
+  const db = client.db(dbName);
+  const collection = db.collection("assets");
+  try {
+    const newDocument = {
+      CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
+      userId: req.body.userId,
+      Funds: req.body.Funds,
+      goalObjId: objectId.toString(),
+      day: new Date().getDate(),
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
+    };
+
+    const insertResult = collection.insertOne(newDocument)
+    console.log('Insert data to asset successfully')
+  } catch (error) {
+    console.log("Error occured in mongoController.postAssetFromGoal: ", error);
+  }
 };
 
 exports.getUserGoal = async (req, res) => {
