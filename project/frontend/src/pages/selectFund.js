@@ -17,6 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/joy";
 
 export const SelectFund = () => {
     const location = useLocation();
@@ -66,20 +67,16 @@ export const SelectFund = () => {
                 setIsloading(true);
                 let avgIn = 0;
                 const fundsResponse = await axios.get('http://localhost:8000/db/funds');
-                setFunds(fundsResponse.data);
+                const displayData = fundsResponse.data.filter((fund) => { if (fund.spec_code) { return (fund.spec_code.includes("SSF") || fund.spec_code.includes("RMF")) } })
+                setFunds(displayData);
                 const userData = await axios.get(`http://localhost:8000/db/userdata=${uid}`);
                 let sumOfInvest = 0;
                 userData.data.forEach(item => {
                     console.log(item.investmentData)
                     sumOfInvest += parseInt(item.investmentData);
                 });
-                if (userData.data.length % 12 == 0) {
-                    avgIn = sumOfInvest;
-                    setAvgInvest(avgIn);
-                } else {
-                    avgIn = (sumOfInvest / userData.data.length);
-                    setAvgInvest(avgIn);
-                }
+                avgIn = (sumOfInvest / userData.data.length);
+                setAvgInvest(avgIn);
                 const invest = Math.round((investPercent / 100) * avgIn);
                 setInvestAmount(invest);
                 setTax(calTax(netIncome));
@@ -178,7 +175,7 @@ export const SelectFund = () => {
     return (
         <React.Fragment>
             <Navigate />
-            {isLoading == false && (
+            {isLoading == false ? (
                 <form onSubmit={e => { saveTaxGoal(e) }}>
                     <Container style={{ display: 'flex', marginTop: 30, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
                         {/*<Typography fontWeight={'bold'} marginBottom={1}>
@@ -247,26 +244,28 @@ export const SelectFund = () => {
                                 arrow
                                 open={cantSave}
                             >
-                                <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
-                                    <IconButton type='submit' >
-                                        <SaveIcon color='action' />
-                                    </IconButton>
-                                </Tooltip>
+                                <div>
+                                    <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
+                                        <IconButton type='submit' >
+                                            <SaveIcon color='action' />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
                             </Tooltip>
                         </Container>
 
                         <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    ภาษีที่ต้องจ่าย : {tax.toLocaleString("en-GB")} บาท
+                                    สรุปภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    เงินลงทุน : {investAmount.toLocaleString("en-GB")} บาท/เดือน
+                                    เงินลงทุนของคุณ : {investAmount.toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
-                                    ลดภาษีได้ : {Math.round(tax - newTax).toLocaleString("en-GB")} บาท
+                                    ซึ่งจะลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </div>
                         </div>
@@ -275,7 +274,7 @@ export const SelectFund = () => {
                         <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {(Math.round((netIncome - 150000) / 12)).toLocaleString("en-GB")} บาท/เดือน
+                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography>
                                     คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
@@ -286,7 +285,7 @@ export const SelectFund = () => {
                             </div>
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เงินลงทุนรายเดือน : {Math.round(avgInvest).toLocaleString("en-GB")} บาท
+                                    เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'}>
                                     ลงทุนในสัดส่วน : {Percentage.toLocaleString("en-GB")} %
@@ -302,7 +301,7 @@ export const SelectFund = () => {
                                         }} />
                                     % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
                                 </Typography>
-                                <Typography> คิดเป็นเงิน {investAmount.toLocaleString("en-GB")} บาท</Typography>
+                                <Typography> คิดเป็นเงินประมาณ {investAmount.toLocaleString("en-GB")} บาท/เดือน</Typography>
                             </div>
                         </Container>
 
@@ -338,9 +337,15 @@ export const SelectFund = () => {
                                 ))}
                             </div>
                         </div>
-
                     </Container>
-                </form>)}
+                </form>) :
+                <Container style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40 }}>
+                    <CircularProgress
+                        color="neutral"
+                        value={35}
+                        variant="plain"
+                    />
+                </Container>}
         </React.Fragment >
     )
 }
