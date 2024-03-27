@@ -248,10 +248,10 @@ export function NewTaxGoal() {
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>
-                                <TableRow>
+                                <TableRow style={{ backgroundColor: "#0d5415" }}>
                                     <TableCell />
                                     <TableCell />
-                                    <TableCell align="center" style={{ fontWeight: "bold" }}>จำนวนเงิน (บาท)</TableCell>
+                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>จำนวนเงิน (บาท)</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

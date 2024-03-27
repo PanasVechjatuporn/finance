@@ -651,6 +651,9 @@ export const GoalBased = () => {
                     maxHeight: 400,
                     overflow: "auto",
                     backgroundColor: "#F0F0F0",
+                    borderStyle: 'solid',
+                    borderWidth: 1,
+                    borderColor: 'gray',
                 }}
             >
                 <GoalCard Goal={goal} />

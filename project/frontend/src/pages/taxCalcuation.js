@@ -293,10 +293,10 @@ export function TaxCal() {
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>
-                                <TableRow>
+                                <TableRow style={{ backgroundColor: '#0d5415' }}>
                                     <TableCell />
                                     <TableCell />
-                                    <TableCell align="center" style={{ fontWeight: "bold" }}>จำนวนเงิน (บาท)</TableCell>
+                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>จำนวนเงิน (บาท)</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -894,7 +894,7 @@ export function TaxCal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
                         <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                            <Button onClick={handleClick} color={"success"} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                            <Button onClick={handleClick} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
                         </Tooltip>
                     </Container>
 

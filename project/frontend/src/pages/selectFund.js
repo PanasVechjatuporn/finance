@@ -244,11 +244,13 @@ export const SelectFund = () => {
                                 arrow
                                 open={cantSave}
                             >
-                                <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
-                                    <IconButton type='submit' >
-                                        <SaveIcon color='action' />
-                                    </IconButton>
-                                </Tooltip>
+                                <div>
+                                    <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
+                                        <IconButton type='submit' >
+                                            <SaveIcon color='action' />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
                             </Tooltip>
                         </Container>
 
