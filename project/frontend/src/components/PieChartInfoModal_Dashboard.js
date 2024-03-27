@@ -12,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-
+import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
 const style = {
     position: "absolute",
     top: "50%",
@@ -51,7 +51,6 @@ export default function PieChartInfoModal({
             fontSize: 14,
         },
     }));
-
     if (modalParams) {
         return (
             <>
@@ -87,15 +86,15 @@ export default function PieChartInfoModal({
                                         fontWeight: "bold"
                                     }}
                                 >
-                                    สรุป {modalParams.label}
+                                    สรุป{modalType==='income' ? ("รายรับ") : ("รายจ่าย")} {modalParams.label}
                                 </Typography>
                             </div>
                             <TableContainer component={Paper}>
                                 <Table sx={{ minWidth: "50%" }} aria-label="customized table">
                                     <TableHead>
                                         <StyledTableRow>
-                                            <StyledTableCell align="center"><b>Date</b></StyledTableCell>
-                                            <StyledTableCell align="center"><b>Amount</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>ปี-เดือน</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>จำนวน&nbsp;(บาท)</b></StyledTableCell>
                                         </StyledTableRow>
                                     </TableHead>
                                     <TableBody>
@@ -105,15 +104,15 @@ export default function PieChartInfoModal({
                                                     {data.date}
                                                 </StyledTableCell>
                                                 <StyledTableCell align="center">
-                                                    {data.amount}
+                                                    {formatNumberWithCommas(data.amount)}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                         ))}
                                         <StyledTableRow>
-                                            <StyledTableCell align="center"><b>Total</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>ทั้งหมด</b></StyledTableCell>
                                             <StyledTableCell align="center">
                                                 <b>
-                                                    {modalParams.value}
+                                                    {formatNumberWithCommas(modalParams.value)}
                                                 </b>
                                             </StyledTableCell>
                                         </StyledTableRow>

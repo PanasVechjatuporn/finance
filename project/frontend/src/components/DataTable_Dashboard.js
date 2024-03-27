@@ -202,11 +202,11 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <TableCell style={{ width: "1vh" }}></TableCell>
                   <TableCell style={{ width: "1vh" }}></TableCell>
                   <TableCell align="center" style={{ width: "10vh" }}>
-                    Month
+                    เดือน
                   </TableCell>
-                  <TableCell align="center">Income</TableCell>
-                  <TableCell align="center">Expense</TableCell>
-                  <TableCell align="center">Investment</TableCell>
+                  <TableCell align="center">รายรับ</TableCell>
+                  <TableCell align="center">รายจ่าย</TableCell>
+                  <TableCell align="center">เงินลงทุน</TableCell>
                   <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>

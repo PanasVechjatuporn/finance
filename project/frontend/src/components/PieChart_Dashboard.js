@@ -441,7 +441,9 @@ export default function PieChartComponent({ userData }) {
                     </Container>
 
                 ) : (
-                    <>No Income Data</>
+                    <Container style={{marginLeft: "10%", minHeight: "30vh"}}>
+                        <Typography>ไม่พบข้อมูล</Typography>
+                    </Container>
                 )}
                 <Container>
                     <Typography
@@ -495,7 +497,9 @@ export default function PieChartComponent({ userData }) {
                     </Container>
 
                 ) : (
-                    <>No Expense and Investment Data</>
+                    <Container style={{marginLeft: "10%", minHeight: "30vh"}}>
+                        <Typography>ไม่พบข้อมูล</Typography>
+                    </Container>
                 )}
                 <PieChartInfoModal open={showPieChartModal} setOpen={setShowPieChartModal} modalParams={modalParams} modalType={modalType}></PieChartInfoModal>
             </Box>
