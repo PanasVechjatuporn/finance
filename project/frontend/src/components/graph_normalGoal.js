@@ -105,20 +105,449 @@ export const Graph = (data) => {
         }
       });
     } else if (type == "amount") {
-      console.log("passedindex :: ", passedIndex);
-      console.log("newval :: ", newVal);
-      console.log("type :: ", type);
+      // console.log("passedindex :: ", passedIndex);
+      // console.log("newval :: ", newVal);
+      // console.log("type :: ", type);
       const updatedDropdowns = dropdownsCompareFund.map((dropdown, index) =>
         index === passedIndex ? { ...dropdown, amount: newVal } : dropdown
       );
       setDropdownsCompareFund(updatedDropdowns);
-      setUserInvestAmount(parseInt(newVal));
+      setUserInvestAmount(parseFloat(newVal));
     }
-    console.log(dropdownsCompareFund);
+    // console.log(dropdownsCompareFund);
   };
 
-  const handleDepositTextField = (e) =>{
-    console.log(e.target.value)
+  const handleDepositTextField = (e) => {
+    console.log(e.target.value);
+    console.log(memoizedData.data.percentage);
+    setDepositTextField(parseFloat(e.target.value));
+  };
+
+  function filterFunds(funds) {
+    return funds.filter((item) => {
+      // Check if spec_code exists and then convert it to lowercase; use an empty string as fallback
+      const specCodeLower = item.spec_code ? item.spec_code.toLowerCase() : "";
+      // Check if spec_code does not include 'rmf' or 'ssf'
+      return !specCodeLower.includes("rmf") && !specCodeLower.includes("ssf");
+    });
+  }
+
+  function filterByRiskProfile(funds, riskProfile) {
+    const riskToleranceMapping = {
+      low: 1,
+      "medium low": 4,
+      "medium high": 5,
+      high: 7,
+      "very high": 9,
+    };
+
+    const maxRisk = riskToleranceMapping[riskProfile];
+
+    return funds.filter(
+      (fund) => fund.risk_spectrum >= 1 && fund.risk_spectrum <= maxRisk
+    );
+  }
+
+  function createRecommend(riskProfile) {
+    switch (riskProfile) {
+      case "low":
+        return (
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginBottom: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#757575",
+                  textDecoration: "underline",
+                  textDecorationColor: "transparent",
+                  borderBottom: "2px solid #757575",
+                  display: "inline-block",
+                  width: "100%",
+                  paddingBottom: "8px",
+                  userSelect: "none",
+                  marginBottom: "12px",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+                sx={{ textAlign: "center" }}
+              >
+                คำแนะนำการลงทุน
+              </Typography>
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก 60% | กองทุนรวม 40%
+              </div>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginTop: "2%",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก {parseFloat(UserInvestAmount) * 0.6} บาท | กองทุนรวม{" "}
+                {parseFloat(UserInvestAmount) * 0.4} บาท
+              </div>
+            </Box>
+          </ContainerMui>
+        );
+        break;
+      case "medium low":
+        return (
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginBottom: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#757575",
+                  textDecoration: "underline",
+                  textDecorationColor: "transparent",
+                  borderBottom: "2px solid #757575",
+                  display: "inline-block",
+                  width: "100%",
+                  paddingBottom: "8px",
+                  userSelect: "none",
+                  marginBottom: "12px",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+                sx={{ textAlign: "center" }}
+              >
+                คำแนะนำการลงทุน
+              </Typography>
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก 40% | กองทุนรวม 60%
+              </div>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginTop: "2%",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก {parseFloat(UserInvestAmount) * 0.4} บาท | กองทุนรวม{" "}
+                {parseFloat(UserInvestAmount) * 0.6} บาท
+              </div>
+            </Box>
+          </ContainerMui>
+        );
+        break;
+      case "medium high":
+        return (
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginBottom: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#757575",
+                  textDecoration: "underline",
+                  textDecorationColor: "transparent",
+                  borderBottom: "2px solid #757575",
+                  display: "inline-block",
+                  width: "100%",
+                  paddingBottom: "8px",
+                  userSelect: "none",
+                  marginBottom: "12px",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+                sx={{ textAlign: "center" }}
+              >
+                คำแนะนำการลงทุน
+              </Typography>
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก 20% | กองทุนรวม 80%
+              </div>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginTop: "2%",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก {parseFloat(UserInvestAmount) * 0.2} บาท | กองทุนรวม{" "}
+                {parseFloat(UserInvestAmount) * 0.8} บาท
+              </div>
+            </Box>
+          </ContainerMui>
+        );
+        break;
+      case "high":
+        return (
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginBottom: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#757575",
+                  textDecoration: "underline",
+                  textDecorationColor: "transparent",
+                  borderBottom: "2px solid #757575",
+                  display: "inline-block",
+                  width: "100%",
+                  paddingBottom: "8px",
+                  userSelect: "none",
+                  marginBottom: "12px",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+                sx={{ textAlign: "center" }}
+              >
+                คำแนะนำการลงทุน
+              </Typography>
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก 10% | กองทุนรวม 90%
+              </div>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginTop: "2%",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก {parseFloat(UserInvestAmount) * 0.1} บาท | กองทุนรวม{" "}
+                {parseFloat(UserInvestAmount) * 0.9} บาท
+              </div>
+            </Box>
+          </ContainerMui>
+        );
+        break;
+      case "very high":
+        return (
+          <ContainerMui maxWidth="md">
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginBottom: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#757575",
+                  textDecoration: "underline",
+                  textDecorationColor: "transparent",
+                  borderBottom: "2px solid #757575",
+                  display: "inline-block",
+                  width: "100%",
+                  paddingBottom: "8px",
+                  userSelect: "none",
+                  marginBottom: "12px",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+                sx={{ textAlign: "center" }}
+              >
+                คำแนะนำการลงทุน
+              </Typography>
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก 5% | กองทุนรวม 95%
+              </div>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "true",
+                minHeight: "48%",
+                maxHeight: "48%",
+                marginTop: "2%",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", // Make div take the full width of its parent
+                  display: "flex", // Apply display flex
+                  justifyContent: "center", // Center horizontally
+                  alignItems: "center", // Center vertically (if there are multiple lines or elements)
+                  textAlign: "center", // Ensure text within the div is centered if not behaving as expected
+                }}
+              >
+                เงินฝาก {parseFloat(UserInvestAmount) * 0.05} บาท | กองทุนรวม{" "}
+                {parseFloat(UserInvestAmount) * 0.95} บาท
+              </div>
+            </Box>
+          </ContainerMui>
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   async function fetchGrowthRate(userStore) {
@@ -138,8 +567,14 @@ export const Graph = (data) => {
   async function fetchData(userStore) {
     try {
       const fundsResponse = await axios.get("http://localhost:8000/db/funds");
-      console.log(fundsResponse.data)
-      setFunds(fundsResponse.data);
+      // const newFundsObject = filterFunds(fundsResponse.data);
+      // console.log(newFundsObject)
+      const suitableFunds = filterByRiskProfile(fundsResponse.data, memoizedData.data.riskProfile);
+
+      console.log(suitableFunds)
+      // setFunds(newFundsObject);
+      // setFunds(fundsResponse.data);
+      setFunds(suitableFunds);
       const userData = await axios.get(
         `http://localhost:8000/db/userdata=${userStore.userId}`
       );
@@ -153,7 +588,6 @@ export const Graph = (data) => {
       });
       const avgInvest_temp = sumOfInvest / 12;
       setAvgInvest(avgInvest_temp);
-      // console.log(memoizedData.data.data.percentage, avgInvest_temp)
       const invest = Math.round(
         (memoizedData.data.percentage / 100) * avgInvest_temp
       );
@@ -186,7 +620,7 @@ export const Graph = (data) => {
     const annualGrowthRate = Math.abs(sum / data_list.length / 100);
     const n = parseInt(obj.year) * 12;
     const r = annualGrowthRate / 12;
-    const monthlyInvest = (parseInt(obj.amount) * r) / ((1 + r) ** n - 1);
+    const monthlyInvest = (parseFloat(obj.amount) * r) / ((1 + r) ** n - 1);
     // AxisX calculation remains the same
     let listAxisX = [];
     for (let i = 0; i <= parseInt(obj.year); i++) {
@@ -286,6 +720,7 @@ export const Graph = (data) => {
   }
 
   useEffect(() => {
+    console.log(memoizedData.data.percentage);
     Promise.all([fetchGrowthRate(userStore), fetchData(userStore)]).then(
       (res) => {
         minInvestGraph(res);
@@ -297,74 +732,104 @@ export const Graph = (data) => {
   // compareFundGrowth
 
   function saveTaxGoal(e) {
+    e.preventDefault();
+    // const Funds = dropdowns.map((item) => {
+    // return { fundName: item.name.split(" (")[0], amount: item.amount };
+    // });
+
+    console.log(memoizedData.data);
     const Funds = dropdowns.map((item) => {
       return { fundName: item.name.split(" (")[0], amount: item.amount };
     });
 
-    const totalFundAmount = Funds.reduce(
-      (acc, item) => acc + parseInt(item.amount),
-      0
+    let totalFundAmount = Funds.reduce(
+      (acc, item) => acc + parseFloat(item.amount),
+      0.0
     );
 
-    
-    // const obj = {
-    //         userId: userStore.userId,
-    //         Name: memoizedData.data.alphabetFields,
-    //         year: memoizedData.data.year,
-    //         Goal: memoizedData.data.amount,
-    //         Funds: { ...Funds },
-    //         Percentage: memoizedData.data.percentage,
-    //       }
+    console.log(depositTextField);
+    console.log(totalFundAmount);
+    if (depositTextField !== 0) {
+      totalFundAmount += parseFloat(depositTextField);
+    }
+    console.log(totalFundAmount);
+    const obj = Funds.map((item) => {
+      // Find a matching item in 'funds'
+      const match = funds.find(
+        (item_fund) => item.fundName === item_fund.proj_name_th
+      );
 
-    // const sth = dropdowns.map((item) => {
-      // console.log(item)
-    // })
-
-    console.log(funds)
-
-      const obj_asset ={
-        "fundName": "กองทุนเปิดไทยพาณิชย์หุ้นระยะยาว",
-        "amount": "2000",
-        "proj_id": "M0464_2548",
-        "buyPrice": 10,
-        "unit": 200,
-        "spec_code": "LTF,SSF",
-        "assetType": "ssf",
-        "buyDay": "1",
-        "buyMonth": "1",
-        "buyYear": "2024"
+      // If a match is found, return the matching item from 'funds' (or merge data as needed)
+      if (match) {
+        return {
+          amount: parseFloat(item.amount),
+          fundName: item.fundName,
+          unit: parseFloat(item.amount) / parseFloat(match.last_val),
+          assetType: "fund",
+          spec_code: match.spec_code,
+          buyDay: new Date().getDate(),
+          buyMonth: new Date().getMonth(),
+          buyYear: new Date().getFullYear(),
+          buyPrice: match.last_val,
+        }; // This merges 'item' from 'Funds' with the matching 'item_fund' from 'funds'
       }
 
-    // if (Funds.includes("")) {
-    //   alert("กรุณาใส่ข้อมูลให้ครบ");
-    // } else if (totalFundAmount > UserInvestAmount) {
-    //   alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
-    // } else if (totalFundAmount < UserInvestAmount) {
-    //   alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน");
-    // } else {
-    //   axios
-    //     .post(`${baseURL}/db/upsert_new_goal`, {
-    //       userId: userStore.userId,
-    //       Name: memoizedData.data.alphabetFields,
-    //       year: memoizedData.data.year,
-    //       Goal: memoizedData.data.amount,
-    //       Funds: { ...Funds },
-    //       Percentage: memoizedData.data.percentage,
-    //     })
-    //     .then(navigate("/Goal-Based"));
+      // If no match is found, just return the original item from 'Funds'
+      return item;
+    });
 
-    //   axios.post(
-    //     `${baseURL}/db/change_goal_percentage`,
-    //     { userId: userStore.userId, goal: memoizedData.data.goal },
-    //     {
-    //       headers: {
-    //         Authorization: userStore.userToken,
-    //         UserId: userStore.userId,
-    //       },
-    //     }
-    //   );
-    // }
-    e.preventDefault();
+    // depositTextField = 121
+
+    console.log(obj);
+
+    if (depositTextField !== 0) {
+      obj.push({
+        fundName: "เงินฝากประจำ",
+        amount: parseFloat(depositTextField),
+        unit: null,
+        assetType: "deposit",
+        spec_code: null,
+        buyDay: new Date().getDate(),
+        buyMonth: new Date().getMonth(),
+        buyYear: new Date().getFullYear(),
+        buyPrice: null,
+      });
+      console.log("deposit has been pushed");
+    } else {
+      console.log("No push");
+    }
+
+    console.log(obj);
+
+    if (Funds.includes("")) {
+      alert("กรุณาใส่ข้อมูลให้ครบ");
+    } else if (totalFundAmount > UserInvestAmount) {
+      alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
+    } else if (totalFundAmount < UserInvestAmount) {
+      alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน");
+    } else {
+      axios.post(`${baseURL}/db/upsert_new_goal`, {
+        userId: userStore.userId,
+        Name: memoizedData.data.alphabetFields,
+        year: memoizedData.data.year,
+        Goal: memoizedData.data.amount,
+        Funds: obj,
+        Percentage: memoizedData.data.percentage,
+      });
+
+      axios
+        .post(
+          `${baseURL}/db/change_goal_percentage`,
+          { userId: userStore.userId, goal: memoizedData.data.goal },
+          {
+            headers: {
+              Authorization: userStore.userToken,
+              UserId: userStore.userId,
+            },
+          }
+        )
+        .then(navigate("/Goal-Based"));
+    }
   }
 
   return (
@@ -420,6 +885,9 @@ export const Graph = (data) => {
                     "& .MuiLineElement-series-Predict": {
                       strokeDasharray: "10 5",
                       strokeWidth: 4,
+                    },
+                    "& .MuiLineElement-series-Recommend": {
+                      stroke: "#fc8a00",
                     },
                     // border: "1px solid #757575",
                     position: "absolute",
@@ -530,7 +998,7 @@ export const Graph = (data) => {
                             e.target.value,
                             "amount"
                           );
-                          console.log(e.target.innerHTML);
+                          // console.log(e.target.innerHTML);
                         }}
                       />
                     </div>
@@ -552,8 +1020,9 @@ export const Graph = (data) => {
                 flexDirection: "column",
                 position: "relative",
                 overflowY: "true",
-                minHeight: "34vh",
-                maxHeight: "34vh",
+                minHeight: "33vh",
+                maxHeight: "33vh",
+                marginBottom: "1vh",
               }}
             >
               <Box
@@ -657,6 +1126,7 @@ export const Graph = (data) => {
                 overflowY: "hidden",
                 minHeight: "34vh",
                 maxHeight: "34vh",
+                marginTop: "1vh",
               }}
             >
               <Grid container spacing={1} sx={{ height: "100%" }}>
@@ -704,7 +1174,7 @@ export const Graph = (data) => {
                           shrink: true,
                         }}
                         onChange={(e) => {
-                          handleDepositTextField(e)
+                          handleDepositTextField(e);
                         }}
                       />
                     </div>
@@ -719,17 +1189,16 @@ export const Graph = (data) => {
             <Box
               sx={{
                 boxSizing: "border-box",
-                width: "100%",
-                height: "100%",
                 borderRadius: 6,
                 boxShadow: 6,
                 padding: 2,
                 display: "flex",
                 flexDirection: "column",
                 position: "relative",
-                overflowY: "hidden",
-                minHeight: "68vh",
-                maxHeight: "68vh",
+                overflowY: "true",
+                minHeight: "33vh",
+                maxHeight: "33vh",
+                marginBottom: "1vh",
               }}
             >
               <form
@@ -751,6 +1220,23 @@ export const Graph = (data) => {
                   </IconButton>
                 </Container>
               </form>
+            </Box>
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                borderRadius: 6,
+                boxShadow: 6,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflowY: "hidden",
+                minHeight: "34vh",
+                maxHeight: "34vh",
+                marginTop: "1vh",
+              }}
+            >
+              {createRecommend(memoizedData.data.riskProfile)}
             </Box>
           </ContainerMui>
         </Grid>

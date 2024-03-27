@@ -10,7 +10,7 @@ import "./normalGoal.css";
 export const NormalGoal = () => {
   const [showFormGoal, setShowFormGoal] = useState(true);
   const [dataBetweenComponents, setDataBetweenComponents] = useState({});
-
+  console.log('re render')
   const handleNextToShowGraph = (data) => {
     setDataBetweenComponents(data);
     setShowFormGoal(false)

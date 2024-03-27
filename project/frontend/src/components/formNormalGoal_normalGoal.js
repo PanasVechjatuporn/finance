@@ -9,9 +9,20 @@ import "./formNormalGoal_normalGoal.css";
 export const FormGoal = ({ sendData }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const percentage = location.state.Percentage;
-  const riskProfile = location.state.riskProfile;
-  const goal = location.state.goal;
+
+  // let percentage;
+  // let riskProfile;
+  // let goal;
+  let percentage = location.state.Percentage;
+  let riskProfile = location.state.riskProfile;
+  let goal = location.state.goal;
+
+  if (location.state !== null) {
+    percentage = location.state.Percentage;
+    riskProfile = location.state.riskProfile;
+    goal = location.state.goal;
+  }
+  
   const [alphabetFields, setAlphabetFields] = useState("");
   const [numbersFields, setNumbersFields] = useState({
     year: "",
@@ -50,7 +61,7 @@ export const FormGoal = ({ sendData }) => {
       ...numbersFields,
       riskProfile,
       percentage,
-      goal
+      goal,
     };
     console.log(combinedData);
     sendData(combinedData);
