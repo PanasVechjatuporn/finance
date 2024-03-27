@@ -399,7 +399,7 @@ export default function PieChartComponent({ userData }) {
                             userSelect: "none",
                             fontWeight: "bold",
                             paddingBottom: "2%",
-                            
+
                         }}
                         sx={{
                             paddingTop: 1,
@@ -410,39 +410,54 @@ export default function PieChartComponent({ userData }) {
                 </Container>
 
                 {pieIncomeParams ? (
-                    <Container style={{marginLeft: "10%"}}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                        <div style={{ flex: 1 }}>
-                            <PieChart
-                                {...pieIncomeParams}
-                                series={pieIncomeParams.series.map((series) => ({
-                                    ...series,
-                                    highlightScope: {
-                                        highlighted,
-                                    },
-                                    cornerRadius: 5,
-                                }))}
-                                slotProps={{ legend: { hidden: true } }}
-                                onClick={(data, index) => {
-                                    handleOnClickIncomePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
-                                }}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fill: 'white',
-                                        fontWeight: 'bold',
-                                    }
-                                }}
-                            />
+                    <Container style={{ marginLeft: "10%" }}>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div style={{ flex: 1 }}>
+                                <PieChart
+                                    {...pieIncomeParams}
+                                    series={pieIncomeParams.series.map((series) => ({
+                                        ...series,
+                                        highlightScope: {
+                                            highlighted,
+                                        },
+                                        cornerRadius: 5,
+                                    }))}
+                                    slotProps={{ legend: { hidden: true } }}
+                                    onClick={(data, index) => {
+                                        handleOnClickIncomePieChart(pieIncomeParams.series[0].data[index.dataIndex]);
+                                    }}
+                                    sx={{
+                                        [`& .${pieArcLabelClasses.root}`]: {
+                                            fill: 'white',
+                                            fontWeight: 'bold',
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
+                                <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
+                            </div>
                         </div>
-                        <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
-                            <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
-                        </div>
-                    </div>
                     </Container>
 
                 ) : (
-                    <Container style={{marginLeft: "10%", minHeight: "30vh"}}>
-                        <Typography>ไม่พบข้อมูล</Typography>
+                    <Container
+                        sx={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: '18%',
+                            marginBottom: '20%'
+                        }}
+                    >
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            ไม่พบข้อมูล
+                        </Typography>
                     </Container>
                 )}
                 <Container>
@@ -466,39 +481,54 @@ export default function PieChartComponent({ userData }) {
                     </Typography>
                 </Container>
                 {pieExpenseParams ? (
-                    <Container style={{marginLeft: "10%"}}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                        <div style={{ flex: 1 }}>
-                            <PieChart
-                                {...pieExpenseParams}
-                                series={pieExpenseParams.series.map((series) => ({
-                                    ...series,
-                                    highlightScope: {
-                                        highlighted,
-                                    },
-                                    cornerRadius: 5,
-                                }))}
-                                slotProps={{ legend: { hidden: true } }}
-                                onClick={(data, index) => {
-                                    handleOnClickExpensePieChart(pieExpenseParams.series[0].data[index.dataIndex]);
-                                }}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fill: 'white',
-                                        fontWeight: 'bold',
-                                    },
-                                }}
-                            />
+                    <Container style={{ marginLeft: "10%" }}>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div style={{ flex: 1 }}>
+                                <PieChart
+                                    {...pieExpenseParams}
+                                    series={pieExpenseParams.series.map((series) => ({
+                                        ...series,
+                                        highlightScope: {
+                                            highlighted,
+                                        },
+                                        cornerRadius: 5,
+                                    }))}
+                                    slotProps={{ legend: { hidden: true } }}
+                                    onClick={(data, index) => {
+                                        handleOnClickExpensePieChart(pieExpenseParams.series[0].data[index.dataIndex]);
+                                    }}
+                                    sx={{
+                                        [`& .${pieArcLabelClasses.root}`]: {
+                                            fill: 'white',
+                                            fontWeight: 'bold',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div style={{ flex: 1, marginTop: 80 }}>
+                                <CustomChartLegend data={expensePieData} expenseType={expenseType} />
+                            </div>
                         </div>
-                        <div style={{ flex: 1, marginTop: 80 }}>
-                            <CustomChartLegend data={expensePieData} expenseType={expenseType} />
-                        </div>
-                    </div>
                     </Container>
 
                 ) : (
-                    <Container style={{marginLeft: "10%", minHeight: "30vh"}}>
-                        <Typography>ไม่พบข้อมูล</Typography>
+                    <Container
+                        sx={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: '20%',
+                            marginBottom: '20%'
+                        }}
+                    >
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            ไม่พบข้อมูล
+                        </Typography>
                     </Container>
                 )}
                 <PieChartInfoModal open={showPieChartModal} setOpen={setShowPieChartModal} modalParams={modalParams} modalType={modalType}></PieChartInfoModal>
