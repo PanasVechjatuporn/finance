@@ -336,6 +336,7 @@ exports.upsertNewGoal = async (req, res) => {
         res.status(200).json({ message: "upsert new goal successfully" });
     } catch (err) {
         console.log("Error occured in mongoController.upsertNewGoal: ", err);
+        res.status(401).json({ message: err });
     }
 };
 
@@ -366,6 +367,7 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
         }
     } catch (err) {
         console.log("Error occured in mongoController.changeGoalPercentage: ", err);
+        res.status(401).json({ message: err });
     }
 };
 
@@ -434,10 +436,42 @@ exports.stopGoal = async (req, res) => {
         }
     } catch (err) {
         console.log("Error occured in mongoController.stopGoal: ", err);
+        res.status(401).json({ message: err });
     }
 };
 
 exports.deleteGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collectionAsset = db.collection("assets");
+    const collectionGoal = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const queryAsset = {
+                userId: userId,
+                goalObjId: req.body.goalId
+            };
+            // await collection.find(query).toArray().then(x => console.log(x))
+            await collectionAsset.updateMany(queryAsset, { $unset: { goalObjId: '' } })
+
+            const queryGoal = {
+                userId: userId,
+                Name: req.body.Name
+            };
+            await collectionGoal.deleteOne(queryGoal)
+
+
+            res.status(200);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.deleteGoal: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.getUserRiskProfile = async (req, res) => {
     const db = client.db(dbName);
     const collectionAsset = db.collection("assets");
     const collectionGoal = db.collection("goal");
