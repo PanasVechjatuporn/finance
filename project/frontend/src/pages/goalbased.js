@@ -55,20 +55,7 @@ export const GoalBased = () => {
                     .then((res) => {
                         setGoal(res.data);
                     });
-                await axios
-                    .get(`http://localhost:8000/db/user_risk_profile=${uid}`)
-                    .then((response) => {
-                        console.log(response.data)
-                        riskProfileTemp = response.data
-                    });
                 setIsloading(false);
-                if (riskProfileTemp.length > 0) {
-                    //true = has risk_profile
-                    // do nothing
-                    setRiskProfile(riskProfileTemp[0].riskProfile)
-                } else {
-                    navigate("./risk-evaluation-normal");
-                }
             }
         }
         fetchData();
@@ -91,7 +78,7 @@ export const GoalBased = () => {
                                     (acc, current) => acc + Number(current.Percentage || 0),
                                     0
                                 );
-                            if (sumPercent != 100) {
+                            if (sumPercent !== 100) {
                                 setNeedAllocate(true)
                             } else {
                                 setNeedAllocate(false)
@@ -100,7 +87,7 @@ export const GoalBased = () => {
                     });
                 setIsloading(false);
                 console.log(needAllocate)
-                if (needAllocate == true) { handleOpenEditGoal() }
+                if (needAllocate === true) { handleOpenEditGoal() }
             }
         }
         fetchData();
@@ -109,18 +96,18 @@ export const GoalBased = () => {
 
 
     function handleGoalTypeClick(type) {
-        if (type == "normal") {
+        if (type === "normal") {
             setIsitNormal(true);
-        } else if (type == "tax") {
+        } else if (type === "tax") {
             setIsitNormal(false);
         }
 
         if (goal.length > 0) {
             handleOpenNewGoal();
         } else {
-            if (type == "normal") {
+            if (type === "normal") {
                 navigate("./normal-goal", { state: { Percentage: 100 } });
-            } else if (type == "tax") {
+            } else if (type === "tax") {
                 navigate("./reduce-tax-goal", {
                     state: { Percentage: 100, data: data },
                 });
@@ -128,7 +115,8 @@ export const GoalBased = () => {
         }
     }
 
-    function handleCreateGoal() {
+    async function handleCreateGoal() {
+        
         if (goal.length > 0) {
             const found = goal.some((obj) => obj.Name === "ลดหย่อนภาษี");
             if (found) {
@@ -154,15 +142,13 @@ export const GoalBased = () => {
         );
 
         function handleSubmit(event) {
-            if (isItNormal == true) {
+            if (isItNormal === true) {
                 handleCloseNewGoal();
-                console.log("Percentage::  ", goalPercent)
-                console.log("riskProfile::  ", riskProfile)
                 navigate("./normal-goal", {
                     state: { Percentage: goalPercent, goal: oldGoal, riskProfile: riskProfile },
                 });
                 event.preventDefault();
-            } else if (isItNormal == false) {
+            } else if (isItNormal === false) {
                 handleCloseNewGoal();
                 navigate("./reduce-tax-goal", {
                     state: { Percentage: goalPercent, data: data, goal: oldGoal },
@@ -177,7 +163,7 @@ export const GoalBased = () => {
                 (acc, current) => acc + Number(current.Percentage || 0),
                 0
             ) + goalPercent;
-        if (sumPercent != 100) {
+        if (sumPercent !== 100) {
             Exceed = true;
         } else {
             Exceed = false;
@@ -710,7 +696,7 @@ export const GoalBased = () => {
                             alignItems: "center",
                         }}
                     >
-                        {isloading == false ? <Button
+                        {isloading === false ? <Button
                             onClick={handleCreateGoal}
                             sx={{ backgroundColor: "black" }}
                             size="large"
