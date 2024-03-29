@@ -109,7 +109,7 @@ exports.upsertUserMonthlyData = async (req, res) => {
     }
 };
 
-exports.get_user_data_income_expense = async (req, res) => {
+exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
 
@@ -126,7 +126,7 @@ exports.get_user_data_income_expense = async (req, res) => {
     }
 };
 
-exports.get_funds = async (req, res) => {
+exports.getFunds = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("funds");
 
@@ -151,7 +151,7 @@ exports.get_funds = async (req, res) => {
     }
 };
 
-exports.save_tax_goal = async (req, res) => {
+exports.saveTaxGoal = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("goal");
 
@@ -176,27 +176,7 @@ exports.save_tax_goal = async (req, res) => {
     }
 };
 
-// exports.mockTaxGoalAsset = async (req, res)=>{
-//     const collectionAsset = db.collection("assets");
-//     for(i in [1,2,3]){
-//     const obj = {
-//         Funds: req.body.Funds,
-//         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-//         userId: req.body.userId,
-//         goalObjId: req.body.goalId,
-
-//     };
-//     //const options = { upsert: true };
-
-//     try {
-//         await collectionAsset.insertOne(obj);
-//     } catch (error) {
-//         console.log("Error occured in exports.mockTaxGoalAsset: ", error);
-//         res.status(401).json({ message: error });
-//     }}
-// ;}
-
-exports.get_growthrate = async (req, res) => {
+exports.getGrowthRate = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("funds");
 
