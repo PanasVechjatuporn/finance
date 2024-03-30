@@ -119,7 +119,7 @@ exports.getUserDataIncomeExpense = async (req, res) => {
         res.json(findResult);
     } catch (error) {
         console.log(
-            "Error occured in exports.get_user_data_income_expense: ",
+            "Error occured in exports.getUserDataIncomeExpense: ",
             error
         );
         res.status(401).json({ message: error });
@@ -146,7 +146,7 @@ exports.getFunds = async (req, res) => {
             .toArray();
         res.json(findResult);
     } catch (error) {
-        console.log("Error occured in exports.get_funds: ", error);
+        console.log("Error occured in exports.getFunds: ", error);
         res.status(401).json({ message: error });
     }
 };
@@ -171,7 +171,7 @@ exports.saveTaxGoal = async (req, res) => {
     try {
         await collection.insertOne(updateDoc);
     } catch (error) {
-        console.log("Error occured in exports.save_tax_goal: ", error);
+        console.log("Error occured in exports.saveTaxGoal: ", error);
         res.status(401).json({ message: error });
     }
 };
@@ -189,7 +189,7 @@ exports.getGrowthRate = async (req, res) => {
         var findResult = await collection.find(query).project(options).toArray();
         res.status(200).json({ findResult });
     } catch (error) {
-        console.log("Error occured in exports.get_growthrate: ", error);
+        console.log("Error occured in exports.getGrowthRate: ", error);
         res.status(401).json({ message: error });
     }
 };
@@ -229,7 +229,7 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
         }
     } catch (error) {
         console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
+            "Error occured in mongoController.upsertUserMultipleMonthlyData: ",
             error
         );
         res.status(401).json({ message: error });
@@ -276,7 +276,7 @@ exports.deleteUserMonthData = async (req, res) => {
         }
     } catch (error) {
         console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
+            "Error occured in mongoController.deleteUserMonthData: ",
             error
         );
         res.status(401).json({ message: error });
@@ -366,7 +366,7 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
             res.status(200);
         }
     } catch (err) {
-        console.log("Error occured in mongoController.changeGoalPercentage: ", err);
+        console.log("Error occured in mongoController.changeMultipleGoalPercentage: ", err);
         res.status(401).json({ message: err });
     }
 };
@@ -386,7 +386,7 @@ exports.getUserGoalGoalBased = async (req, res) => {
         res.status(200).json({ queryResult });
     } catch (error) {
         console.log(
-            "Error occured in mongoController.getUserDataDashboard: ",
+            "Error occured in mongoController.getUserGoalGoalBased: ",
             error
         );
         res.status(401).json({ message: error });
@@ -408,7 +408,7 @@ exports.getUserAssetGoalBased = async (req, res) => {
         res.status(200).json({ queryResult });
     } catch (error) {
         console.log(
-            "Error occured in mongoController.getUserDataDashboard: ",
+            "Error occured in mongoController.getUserAssetGoalBased: ",
             error
         );
         res.status(401).json({ message: error });
@@ -473,31 +473,47 @@ exports.deleteGoal = async (req, res) => {
 
 exports.getUserRiskProfile = async (req, res) => {
     const db = client.db(dbName);
-    const collectionAsset = db.collection("assets");
-    const collectionGoal = db.collection("goal");
+    const collection = db.collection("risk_profile");
     const userToken = req.header("Authorization");
     const userId = req.header("UserId");
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) { 
+            query = { uid: userId };
+            var findResult = await collection.findOne(query);
+            res.status(200).json({findResult});
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserRiskProfile: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.createUserRiskProfile = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("risk_profile");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const userRiskProfile = req.body.risk_profile;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            const queryAsset = {
-                userId: userId,
-                goalObjId: req.body.goalId
-            };
-            // await collection.find(query).toArray().then(x => console.log(x))
-            await collectionAsset.updateMany(queryAsset, { $unset: { goalObjId: '' } })
-
-            const queryGoal = {
-                userId: userId,
-                Name: req.body.Name
-            };
-            await collectionGoal.deleteOne(queryGoal)
-
-
+            query = { uid: userId };
+            await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        uid: userId,
+                        riskProfile: userRiskProfile
+                    },
+                },
+                { upsert: true }
+            );
             res.status(200);
         }
     } catch (err) {
-        console.log("Error occured in mongoController.deleteGoal: ", err);
+        console.log("Error occured in mongoController.createUserRiskProfile: ", err);
+        res.status(401).json({ message: err });
     }
 }
 

@@ -37,4 +37,6 @@ router.post('/stop_goal', mongoController.stopGoal);
 router.post('/delete_goal', mongoController.deleteGoal);
 
 router.get("/get_user_risk_profile", mongoController.getUserRiskProfile);
+
+router.post('/create_user_risk_profile', mongoController.createUserRiskProfile);
 module.exports = router;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
@@ -17,7 +17,8 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { AssetSummary } from "components/AssetSummary_GoalBased";
 import CircularProgress from '@mui/joy/CircularProgress';
-
+import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
+const baseURL = "http://localhost:8000";
 const warnTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -41,6 +42,8 @@ export const GoalBased = () => {
 
     const [isItNormal, setIsitNormal] = React.useState();
     const [riskProfile, setRiskProfile] = React.useState();
+
+    const [isOpenRiskProfilePrompModal, setIsOpenRiskProfilePrompModal] = useState(false);
     React.useEffect(() => {
         async function fetchData() {
             if (uid != null) {
@@ -86,7 +89,7 @@ export const GoalBased = () => {
                         }
                     });
                 setIsloading(false);
-                console.log(needAllocate)
+                // console.log(needAllocate)
                 if (needAllocate === true) { handleOpenEditGoal() }
             }
         }
@@ -116,19 +119,33 @@ export const GoalBased = () => {
     }
 
     async function handleCreateGoal() {
-        
-        if (goal.length > 0) {
-            const found = goal.some((obj) => obj.Name === "ลดหย่อนภาษี");
-            if (found) {
-                handleOpenNewGoal();
-                setIsitNormal(true);
-            } else {
-                handleOpenCreate();
+        const getResult = await axios.get(`${baseURL}/db/get_user_risk_profile`, {
+            headers: {
+                Authorization: token,
+                userId: uid,
+            },
+        });
+        try{
+            if(getResult.data.findResult !== null){
+                if (goal.length > 0) {
+                    const found = goal.some((obj) => obj.Name === "ลดหย่อนภาษี");
+                    if (found) {
+                        handleOpenNewGoal();
+                        setIsitNormal(true);
+                    } else {
+                        handleOpenCreate();
+                    }
+                } else {
+                    handleOpenCreate();
+                }
+            }else{
+                setIsOpenRiskProfilePrompModal(true);
             }
-        } else {
-            handleOpenCreate();
+        }catch(err){
+            console.log('err :: ',err)
         }
     }
+
     const [openNewGoal, setOpenNewGoal] = React.useState(false);
     const handleOpenNewGoal = () => {
         setOpenNewGoal(true);
@@ -716,6 +733,7 @@ export const GoalBased = () => {
                             handleCloseCreate={handleCloseCreate}
                         />
                         <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} />
+                        <RiskProfilePromptModal isOpen={isOpenRiskProfilePrompModal} setIsOpen={setIsOpenRiskProfilePrompModal}></RiskProfilePromptModal>
                     </CardActions>
                 </Card>
             </Container>
