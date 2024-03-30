@@ -1,13 +1,11 @@
 import React from "react";
-import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
-import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActions } from '@mui/material';
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -34,7 +32,7 @@ function EachCard({ data }) {
             handleCloseStop();
             window.location.reload(false);
         }
-        if (data.isActive == true || data.isActive == undefined) return (
+        if (data.isActive === true || data.isActive === undefined) return (
             <Modal
                 open={openStop}
                 onClose={handleCloseStop}
@@ -79,7 +77,7 @@ function EachCard({ data }) {
                     </Container>
                 </Container>
             </Modal>)
-        else if (data.isActive == false) return (
+        else if (data.isActive === false) return (
             <Modal
                 open={openStop}
                 onClose={handleCloseStop}
@@ -194,7 +192,7 @@ function EachCard({ data }) {
             </Modal>)
     }
 
-    if (data.Name != 'ลดหย่อนภาษี') {
+    if (data.Name !== 'ลดหย่อนภาษี') {
         return (
             <Card sx={{ minHeight: 300, minWidth: 300, paddingTop: 1, paddingBottom: 1, margin: 1 }}>
                 <CardMedia
@@ -218,7 +216,7 @@ function EachCard({ data }) {
                     </Typography>
                 </CardContent>
                 <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
-                    {data.isActive == false ?
+                    {data.isActive === false ?
                         <Button onClick={handleOpenStop} sx={{ backgroundColor: '#4042cf' }} size="small" >
                             <Typography color='white' variant="subtitile1">
                                 ลงทุนต่อ
@@ -265,7 +263,7 @@ function EachCard({ data }) {
                     </Typography>
                 </CardContent>
                 <CardActions style={{ width: '100%', justifyContent: 'center', gap: '10%' }}>
-                    {data.isActive == false ?
+                    {data.isActive === false ?
                         <Button onClick={handleOpenStop} sx={{ backgroundColor: '#4042cf' }} size="small" >
                             <Typography color='white' variant="subtitile1">
                                 ลงทุนต่อ

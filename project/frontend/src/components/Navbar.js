@@ -92,13 +92,6 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href="/">Features</Navbar.Brand>
-          </Typography>
-          <Typography
-            variant="h8"
-            component="div"
-            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
-          >
             <Navbar.Brand
               href={"/Dashboard"}
               onClick={(e) => {
@@ -159,13 +152,6 @@ function Navigate() {
               setShow={setShowNotLoggedIn}
               mode="notloggedin"
             />
-          </Typography>
-          <Typography
-            variant="h8"
-            component="div"
-            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
-          >
-            <Navbar.Brand href="/">About Us</Navbar.Brand>
           </Typography>
           <Typography
             variant="h8"

@@ -379,7 +379,7 @@ export const GoalBased = () => {
                                 disabled={Exceed}
                                 type="submit"
                                 sx={{
-                                    backgroundColor: Exceed == true ? "gray" : "black",
+                                    backgroundColor: Exceed === true ? "gray" : "black",
                                     paddingLeft: 2,
                                     paddingRight: 2,
                                 }}
@@ -428,7 +428,7 @@ export const GoalBased = () => {
                     }}
                 >
                     <Typography gutterBottom id="modal-modal-title" variant="subtitile1">
-                        สร้างเป้าหมายเพื่อลดภาษี
+                        สร้างเป้าหมาย
                     </Typography>
                     <Container
                         style={{
@@ -444,7 +444,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                ไม่
+                                เพื่อเก็บออมเงิน
                             </Typography>
                         </Button>
                         <Button
@@ -453,7 +453,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                ใช่
+                                เพื่อลดหย่อนภาษี
                             </Typography>
                         </Button>
                     </Container>
@@ -497,7 +497,7 @@ export const GoalBased = () => {
                 (acc, current) => acc + Number(current.Percentage || 0),
                 0
             );
-        if (sumPercent != 100) {
+        if (sumPercent !== 100) {
             Exceed = true;
         } else {
             Exceed = false;
@@ -556,7 +556,7 @@ export const GoalBased = () => {
                             variant="subtitile1"
                             fontWeight={"bold"}
                         >
-                            {needAllocate == true ? "จัดสรรสัดส่วนการลงทุนใหม่ :" : "เงินลงทุนในเป้าหมายทั้งหมด :"}
+                            {needAllocate === true ? "จัดสรรสัดส่วนการลงทุนใหม่ :" : "เงินลงทุนในเป้าหมายทั้งหมด :"}
                         </Typography>
                         {editGoalPercent.length > 0
                             ? editGoalPercent.map((eachGoal, index) => (
@@ -629,7 +629,7 @@ export const GoalBased = () => {
                                 sx={{
                                     paddingLeft: 2,
                                     paddingRight: 2,
-                                    backgroundColor: needAllocate == true ? "gray" : "black",
+                                    backgroundColor: needAllocate === true ? "gray" : "black",
                                     marginRight: 2,
                                 }}
                                 size="medium"
@@ -639,7 +639,7 @@ export const GoalBased = () => {
                                     ยกเลิก
                                 </Typography>
                             </Button>
-                            {Exceed == true ? (
+                            {Exceed === true ? (
                                 <Button
                                     disabled="true"
                                     type="submit"

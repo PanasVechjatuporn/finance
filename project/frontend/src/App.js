@@ -78,10 +78,6 @@ function App() {
           }
         />
         <Route
-          path="/Goal-Based/normal-goal-first"
-          element={<RequireAuth redirectTo="/">{<NormalGoal />}</RequireAuth>}
-        />
-        <Route
           path="/Goal-Based/reduce-tax-goal/select-fund"
           element={<SelectFund />}
         />

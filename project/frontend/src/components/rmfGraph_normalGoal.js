@@ -7,7 +7,6 @@ import { Container } from "react-bootstrap";
 
 import { TextField } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
-import SaveIcon from "@mui/icons-material/Save";
 import Autocomplete from "@mui/material/Autocomplete";
 import Tooltip from "@mui/material/Tooltip";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -16,7 +15,6 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
-
 import { useSelector } from "react-redux";
 import axios from "axios";
 import "./rmfGraph_normalGoal.css";
@@ -65,12 +63,12 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
   };
 
   const handleDropdownChange = (passedIndex, newVal, type) => {
-    if (type == "name") {
+    if (type === "name") {
       const updatedDropdowns = dropdowns.map((dropdown, index) =>
         index === passedIndex ? { ...dropdown, name: newVal } : dropdown
       );
       setDropdowns(updatedDropdowns);
-    } else if (type == "amount") {
+    } else if (type === "amount") {
       const updatedDropdowns = dropdowns.map((dropdown, index) =>
         index === passedIndex ? { ...dropdown, amount: newVal } : dropdown
       );
@@ -457,7 +455,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
                   console.log(e.target.innerHTML);
                 }}
               />
-              {index == dropdowns.length - 1 ? (
+              {index === dropdowns.length - 1 ? (
                 <IconButton onClick={addDropdown}>
                   <AddIcon color="success" />
                 </IconButton>

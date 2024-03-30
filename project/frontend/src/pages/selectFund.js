@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { Button, CardActionArea, CardActions, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "pages/SelectFund.css";
@@ -109,13 +108,13 @@ export const SelectFund = () => {
 
 
     const handleDropdownChange = (passedIndex, newVal, type) => {
-        if (type == 'name') {
+        if (type === 'name') {
             const updatedDropdowns = dropdowns.map((dropdown, index) =>
                 index === passedIndex ? { ...dropdown, name: newVal } : dropdown
             );
             setDropdowns(updatedDropdowns);
         }
-        else if (type == 'amount') {
+        else if (type === 'amount') {
             let val = '';
             if (newVal.match(/^[1-9,][0-9,]{0,7}$/)) {
                 val = Number(newVal.replace(/,/g, '')).toLocaleString("en-GB");
@@ -139,7 +138,7 @@ export const SelectFund = () => {
 
     function saveTaxGoal(e) {
         const sumMoney = dropdowns.reduce((acc, current) => acc + Number(current.amount.replace(/,/g, '') || 0), 0);
-        if (sumMoney != investAmount) {
+        if (sumMoney !== investAmount) {
             setCantSave(true);
         } else {
             setCantSave(false);
@@ -175,7 +174,7 @@ export const SelectFund = () => {
     return (
         <React.Fragment>
             <Navigate />
-            {isLoading == false ? (
+            {isLoading === false ? (
                 <form onSubmit={e => { saveTaxGoal(e) }}>
                     <Container style={{ display: 'flex', marginTop: 30, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
                         {/*<Typography fontWeight={'bold'} marginBottom={1}>
@@ -213,7 +212,7 @@ export const SelectFund = () => {
                                     value={dropdown.amount}
                                     onChange={e => { handleDropdownChange(index, e.target.value, "amount"); console.log(e.target.innerHTML) }}
                                 />
-                                {index == dropdowns.length - 1 ?
+                                {index === dropdowns.length - 1 ?
                                     <IconButton onClick={addDropdown}>
                                         <AddIcon color='success' />
                                     </IconButton>
