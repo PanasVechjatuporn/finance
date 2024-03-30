@@ -21,7 +21,6 @@ export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
         <RiskLevel
           evaluationResult={evaluationResult}
           setshowRiskLevel={setshowRiskLevel}
-          setAllowedToAccessNormalGoal={setAllowedToAccessNormalGoal}
         />
       )}
     </React.Fragment>

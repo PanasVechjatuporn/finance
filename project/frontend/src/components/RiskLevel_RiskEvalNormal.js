@@ -9,7 +9,6 @@ const baseURL = "http://localhost:8000";
 export const RiskLevel = ({
   evaluationResult,
   setshowRiskLevel,
-  setAllowedToAccessNormalGoal,
 }) => {
   const navigate = useNavigate();
   const userStore = useSelector((state) => state.userStore);
@@ -31,10 +30,6 @@ export const RiskLevel = ({
     setshowRiskLevel(false);
   };
 
-  // const handleCreateGoal = () => {
-  //   setAllowedToAccessNormalGoal(true);
-  //   navigate("../Goal-based/normal-goal", { state: { profile: risk_profile } });
-  // };
 
    const saveUserRiskProfile = async () => {
     await axios.post(`${baseURL}/db/create_user_risk_profile`,

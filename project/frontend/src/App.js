@@ -10,7 +10,6 @@ import { SelectFund } from "pages/SelectFund";
 import axios from "axios";
 import { NormalGoal } from "pages/NormalGoal";
 import { RiskEvalNormalPage } from "pages/RiskEvalNormal";
-import { useState } from "react";
 import { TaxCal } from "pages/TaxCalcuation";
 
 const baseURL = "http://localhost:8000";
@@ -25,9 +24,6 @@ function RequireAuth({ children, redirectTo }) {
 function App() {
   const userStore = useSelector((state) => state.userStore);
   const dispatch = useDispatch();
-
-  const [allowedToAccessNormalGoal, setAllowedToAccessNormalGoal] =
-    useState(false);
 
   try {
     if (userStore.userId === null) {
@@ -68,7 +64,6 @@ function App() {
             <RequireAuth redirectTo="/">
               {
                 <RiskEvalNormalPage
-                  setAllowedToAccessNormalGoal={setAllowedToAccessNormalGoal}
                 />
               }
             </RequireAuth>
