@@ -73,9 +73,10 @@ export const CurrentUserRiskProfile = () => {
                             ความเสี่ยงปัจจุบันของคุณคือ : {riskProfileMasterData[0].labelTH}
                         </Typography>
                         <Typography>แนะนำให้ซื้อกองทุนภายในระดับความเสี่ยง : {riskProfileMasterData[0].recommendBuy.map((data,index) => (
-                        <>
-                            {data+" "}
-                        </>))}</Typography>
+                       <React.Fragment key={index}>
+                       {(data).toLocaleString()}
+                       {index !== riskProfileMasterData[0].recommendBuy.length - 1 && ", "}
+                   </React.Fragment>))}</Typography>
                     </>
                 )}
                 <Button
