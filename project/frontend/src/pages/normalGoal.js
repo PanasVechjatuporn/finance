@@ -1,65 +1,30 @@
 import React, { useState } from "react";
-
 import Navigate from "components/Navbar";
-
-import { ChooseAsset } from "components/ChooseAsset_normalGoal";
-import { FormGoal } from "components/formNormalGoal_normalGoal";
-import { RmfFactsheet } from "components/rmfGraph_normalGoal";
-import { DepositFactsheet } from "components/depositGraph_normalGoal";
-
 import "./NormalGoal.css";
-import { useLocation } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { NormalGoalCreateNew } from "components/NormalGoalCreateNew";
+import { NormalGoalOverview } from "components/NormalGoalOverview";
 export const NormalGoal = () => {
-  const percentage = useLocation();
-  const [showFormGoal, setShowFormGoal] = useState(true);
-  const [showChooseAsset, setShowChooseAsset] = useState(false);
-  const [showGraph, setShowGraph] = useState("");
-  const [dataBetweenComponents, setDataBetweenComponents] = useState({});
-  const [showRmfFactsheet, setShowRmfFactsheet] = useState(true);
-  const [showChooseFund, setShowChooseFund] = useState(false);
-
-  const handleNextToChooseAsset = (data) => {
-    setDataBetweenComponents(data);
-    setShowFormGoal(false);
-    setShowChooseAsset(true);
-  };
-
-  const handleNextToShowGraph = (data) => {
-    setDataBetweenComponents(data);
-    setShowChooseAsset(false);
-  };
-
-  const handleNextToShowChooseFund = (data) => {
-    // setShowChooseFund;
-  };
-
-  const returnShowGraph = (data) => {
-    if (data.selectedValue === "rmf") {
-      return (
-        <RmfFactsheet
-          data={dataBetweenComponents}
-          chooseFund={setShowChooseFund}
-        />
-      );
-    } else if (data.selectedValue === "deposit") {
-      return <DepositFactsheet data={dataBetweenComponents} />;
-    }
-  };
-
+  const userStore = useSelector((state) => state.userStore);
+  console.log('userStore :: ',userStore)
+  const [currentStep, setCurrentStep] = useState(1);
+  const [goalData, setGoalData] = useState({
+  });
+  let currentComponent;
+  switch (currentStep) {
+    case 1:
+      currentComponent = <NormalGoalCreateNew currentStep={currentStep} setCurrentStep={setCurrentStep} goalData={goalData} setGoalData={setGoalData} />;
+      break;
+    case 2:
+      currentComponent = <NormalGoalOverview currentStep={currentStep} setCurrentStep={setCurrentStep} goalData={goalData} setGoalData={setGoalData} />;
+      break;
+    default:
+      break;
+  }
   return (
     <React.Fragment>
       <Navigate />
-      {showFormGoal && <FormGoal sendData={handleNextToChooseAsset} />}
-      {showChooseAsset && (
-        <ChooseAsset
-          sendData={handleNextToShowGraph}
-          data={dataBetweenComponents}
-        />
-      )}
-      {!showFormGoal &&
-        !showChooseAsset &&
-        returnShowGraph(dataBetweenComponents)}
+      {currentComponent}
     </React.Fragment>
   );
 };
