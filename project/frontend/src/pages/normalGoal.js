@@ -7,7 +7,7 @@ import { FormGoal } from "components/formNormalGoal_normalGoal";
 import { RmfFactsheet } from "components/rmfGraph_normalGoal";
 import { DepositFactsheet } from "components/depositGraph_normalGoal";
 
-import "./normalGoal.css";
+import "./NormalGoal.css";
 import { useLocation } from "react-router-dom";
 
 export const NormalGoal = () => {

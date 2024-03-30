@@ -1,19 +1,17 @@
 import "App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Dashboard } from "pages/dashboard";
-import { Home } from "pages/homepage";
-import { GoalBased } from "pages/goalbased";
-import { NewTaxGoal } from "pages/newtaxgoal";
+import { Dashboard } from "pages/Dashboard";
+import { Home } from "pages/HomePage";
+import { GoalBased } from "pages/GoalBased";
+import { NewTaxGoal } from "pages/NewTaxGoal";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from "./store/UserSlice";
-import { SelectFund } from "pages/selectFund";
+import { SelectFund } from "pages/SelectFund";
 import axios from "axios";
-import { Login } from "./store/UserSlice";
-import { NormalGoal } from "pages/normalGoal";
-import { GoalFirst } from "pages/normalGoalFirst";
-import { RiskEvalNormalPage } from "pages/riskEvalNormal";
+import { NormalGoal } from "pages/NormalGoal";
+import { RiskEvalNormalPage } from "pages/RiskEvalNormal";
 import { useState } from "react";
-import { TaxCal } from "pages/taxCalcuation";
+import { TaxCal } from "pages/TaxCalcuation";
 
 const baseURL = "http://localhost:8000";
 function RequireAuth({ children, redirectTo }) {

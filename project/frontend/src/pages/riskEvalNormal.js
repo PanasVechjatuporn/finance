@@ -3,7 +3,7 @@ import Navigate from "components/Navbar";
 
 import { RiskLevel } from "components/RiskLevel_RiskEvalNormal";
 import { EvaluationForm } from "components/RiskEvalForm_RiskEvalNormal";
-import "./normalGoal.css";
+import "./NormalGoal.css";
 
 export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
   const [showRiskLevel, setshowRiskLevel] = useState(false);

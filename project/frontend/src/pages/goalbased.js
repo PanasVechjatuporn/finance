@@ -676,12 +676,11 @@ export const GoalBased = () => {
         );
     };
 
-
     return (
         <React.Fragment>
             <Navigate />
-            <CurrentUserRiskProfile></CurrentUserRiskProfile>
             <Typography marginBottom={5} marginTop={5} variant="h5" textAlign={"center"} fontWeight={'bold'}>Goal-Based Investment</Typography>
+            <CurrentUserRiskProfile></CurrentUserRiskProfile>
             <Container
                 style={{
                     display: "flex",

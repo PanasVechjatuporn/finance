@@ -7,7 +7,7 @@ import Modal from "@mui/material/Modal";
 import { Button, CardActionArea, CardActions, TextField } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import "pages/selectFund.css";
+import "pages/SelectFund.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
