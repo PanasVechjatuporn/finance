@@ -6,10 +6,13 @@ import { Button } from "@mui/material";
 
 export const RiskProfilePromptModal = ({ isOpen, setIsOpen }) => {
     const navigate = useNavigate();
+    const onCloseRiskProfilePromptModal = () => {
+        setIsOpen(false)
+    }
     return (
         <Modal
             open={isOpen}
-            onClose={setIsOpen}
+            onClose={onCloseRiskProfilePromptModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >

@@ -517,4 +517,19 @@ exports.createUserRiskProfile = async (req, res) => {
     }
 }
 
+exports.getMasterDataByName = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("master_data");
+    const name = req.header("Name");
+    try {
+            query = { name : name };
+            const queryResult = await collection.findOne(
+                query
+            );
+            res.status(200).json({queryResult});
+    } catch (err) {
+        console.log("Error occured in mongoController.createUserRiskProfile: ", err);
+        res.status(401).json({ message: err });
+    }
+}
 

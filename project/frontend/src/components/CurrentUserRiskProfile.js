@@ -6,11 +6,13 @@ import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getMasterDataByName } from "utils/masterDataUtil";
 const baseURL = "http://localhost:8000";
 
 export const CurrentUserRiskProfile = () => {
     const userStore = useSelector((state) => state.userStore);
     const [userRiskProfile, setUserRiskProfile] = useState(null);
+    const [riskProfileMasterData, setRiskProfileMasterData] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
         async function fetchRiskProfile() {
@@ -26,6 +28,9 @@ export const CurrentUserRiskProfile = () => {
                         }
                     );
                     if (riskProfile.data.findResult) {
+                        const masterData = await getMasterDataByName('riskProfileMasterData');
+                        const riskMasterData = masterData.risk.filter(data => (data.level === riskProfile.data.findResult.riskProfile))
+                        setRiskProfileMasterData(riskMasterData)
                         setUserRiskProfile(riskProfile.data.findResult.riskProfile);
                     }
                 } catch (err) {
@@ -60,17 +65,19 @@ export const CurrentUserRiskProfile = () => {
                     justifyContent: "center",
                 }}
             >
-                {userRiskProfile === null ? (
+                {(userRiskProfile === null ) ? (
                     <Typography>คุณยังไม่ได้ทำแบบประเมินความเสี่ยง</Typography>
                 ) : (
                     <>
                         <Typography>
-                            ความเสี่ยงปัจจุบันของคุณคือ : {userRiskProfile}
+                            ความเสี่ยงปัจจุบันของคุณคือ : {riskProfileMasterData[0].labelTH}
                         </Typography>
-                        <Typography>เราแนะนำให้ซื้อกองทุนภายในระดับความเสี่ยง :</Typography>
+                        <Typography>แนะนำให้ซื้อกองทุนภายในระดับความเสี่ยง : {riskProfileMasterData[0].recommendBuy.map((data,index) => (
+                        <>
+                            {data+" "}
+                        </>))}</Typography>
                     </>
                 )}
-
                 <Button
                     onClick={handleClickEvalRiskProfile}
                     sx={{
