@@ -18,6 +18,7 @@ import { styled } from "@mui/material/styles";
 import { AssetSummary } from "components/AssetSummary_GoalBased";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
+import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 const baseURL = "http://localhost:8000";
 const warnTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -679,6 +680,7 @@ export const GoalBased = () => {
     return (
         <React.Fragment>
             <Navigate />
+            <CurrentUserRiskProfile></CurrentUserRiskProfile>
             <Typography marginBottom={5} marginTop={5} variant="h5" textAlign={"center"} fontWeight={'bold'}>Goal-Based Investment</Typography>
             <Container
                 style={{

@@ -18,15 +18,15 @@ export const RiskLevel = ({
   if (score < 15) {
     risk_profile = "low";
   } else if (score >= 15 && score <= 21) {
-    risk_profile = "medium low";
+    risk_profile = "mediumLow";
   } else if (score >= 22 && score <= 29) {
-    risk_profile = "medium high";
+    risk_profile = "mediumHigh";
   } else if (score >= 30 && score <= 36) {
     risk_profile = "high";
   } else if (score >= 37) {
-    risk_profile = "very high";
+    risk_profile = "veryHigh";
   }
-
+  //
   const handleBackButton = () => {
     setshowRiskLevel(false);
   };
@@ -37,9 +37,7 @@ export const RiskLevel = ({
   // };
 
    const saveUserRiskProfile = async () => {
-    console.log("profile: ", risk_profile);
-    console.log("userStore :: ",userStore);
-    const returnData = await axios.post(`${baseURL}/db/create_user_risk_profile`,
+    await axios.post(`${baseURL}/db/create_user_risk_profile`,
     {
         risk_profile
     },
@@ -49,7 +47,9 @@ export const RiskLevel = ({
             UserId: userStore.userId,
         },
     })
-    console.log('returnData :: ',returnData)
+    // console.log('returnData :: ', returnData)
+    navigate("/Goal-based/");
+    // console.log('returnData :: ',returnData)
   };
 
   return (
@@ -65,8 +65,10 @@ export const RiskLevel = ({
           <Button variant="outlined" onClick={handleBackButton}>
             Back
           </Button>
-          <Button variant="contained" onClick={saveUserRiskProfile}>
-            Create Goal
+          <Button variant="contained" onClick= {async (e) => {
+            await saveUserRiskProfile()
+          }}>
+            Save และกลับไปสร้างเป้าหมาย
           </Button>
         </Stack>
       </div>

@@ -499,7 +499,7 @@ exports.createUserRiskProfile = async (req, res) => {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
             query = { uid: userId };
-            await collection.updateOne(
+            const updateResult = await collection.updateOne(
                 query,
                 {
                     $set: {
@@ -509,7 +509,7 @@ exports.createUserRiskProfile = async (req, res) => {
                 },
                 { upsert: true }
             );
-            res.status(200);
+            res.status(200).json({updateResult});
         }
     } catch (err) {
         console.log("Error occured in mongoController.createUserRiskProfile: ", err);

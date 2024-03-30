@@ -117,7 +117,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
               )}
             </Stack>
           </div>
-          <div>Score: {score}</div>
+          {/* <div>Score: {score}</div> */}
         </div>
       </Container>
     </React.Fragment>
