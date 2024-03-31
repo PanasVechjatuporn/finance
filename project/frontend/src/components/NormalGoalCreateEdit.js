@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const baseURL = "http://localhost:8000";
 
@@ -31,7 +31,10 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
     const [nameError, setNameError] = useState(false);
     const [goalError, setGoalError] = useState(false);
     const [timeError, setTimeError] = useState(false);
-
+    const [tempGoalName, setTempGoalName] = useState(goalData.Name);
+    useEffect(()=> {
+        setTempGoalName(goalData.Name)
+    },[mode])
     const onSaveNewGoal = async (goalData) => {
         if (!goalData.Name) {
             setNameError(true);
@@ -61,7 +64,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
         <Container
             sx={{
                 marginTop: 5,
-                minHeight: "100vh",
+                minHeight: "50vh",
                 display: "ruby-text",
             }}
         >
@@ -94,7 +97,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        สร้างเป้าหมายของคุณ
+                        {mode === "new" ? "สร้างเป้าหมายของคุณ" : "แก้ไขเป้าหมาย "+tempGoalName}
                     </Typography>
                 </div>
                 <Container>
