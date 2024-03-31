@@ -112,7 +112,6 @@ exports.upsertUserMonthlyData = async (req, res) => {
 exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
-
     try {
         query = { userId: req.params.uid, year: "2024" };
         var findResult = await collection.find(query).toArray();
@@ -304,39 +303,9 @@ exports.getUserAsset = async (req, res) => {
         query = { userId: req.params.uid };
         var findResult = await collection.find(query).project({ Funds: 1 }).toArray();
         res.json(findResult);
-        console.log(findResult)
     } catch (error) {
         console.log("Error occured in exports.getUserAsset: ", error);
         res.status(401).json({ message: error });
-    }
-};
-
-exports.upsertNewGoal = async (req, res) => {
-    const db = client.db(dbName);
-    const collection = db.collection("goal");
-    const currentDate = new Date();
-    currentDate.setFullYear(currentDate.getFullYear() + parseInt(req.body.year));
-    const period = currentDate.toLocaleDateString("en-GB");
-    //
-    try {
-        const query = { userId: req.body.userId, Name: req.body.Name };
-        const update = {
-            $set: {
-                userId: req.body.userId,
-                Name: req.body.Name,
-                Period: period,
-                Funds: req.body.Funds,
-                Goal: req.body.Goal,
-                Percentage: req.body.Percentage,
-                CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-            },
-        };
-        const options = { upsert: true };
-        const upsertResult = await collection.updateOne(query, update, options);
-        res.status(200).json({ message: "upsert new goal successfully" });
-    } catch (err) {
-        console.log("Error occured in mongoController.upsertNewGoal: ", err);
-        res.status(401).json({ message: err });
     }
 };
 
@@ -348,7 +317,6 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            console.log(req.body.goal)
             await Promise.all(
                 req.body.goal.map(async (data) => {
                     const query = { userId: data.userId, Name: data.Name };
@@ -419,7 +387,6 @@ exports.stopGoal = async (req, res) => {
     const collectionGoal = db.collection("goal");
     const userToken = req.header("Authorization");
     const userId = req.header("UserId");
-    console.log(req.body.Name)
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
@@ -529,6 +496,41 @@ exports.getMasterDataByName = async (req, res) => {
             res.status(200).json({queryResult});
     } catch (err) {
         console.log("Error occured in mongoController.createUserRiskProfile: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.upsertGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const goalData = req.body.goalData;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const goalObjId = req.body.goalObjId;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            console.log('goalData :: ',goalData)
+            console.log('goalObjId :: ',goalObjId)
+            if(goalObjId){
+                //code to edit existing goal
+                let query = {}
+            }else{
+                let query = { userId: userId, Name: goalData.Name };
+                await collection.updateOne(
+                query,
+                {
+                    $set: 
+                        goalData
+                    ,
+                },
+                { upsert: true }
+            );
+            }
+            res.status(200).json({ message: "SUCCESS" });
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertGoal: ", err);
         res.status(401).json({ message: err });
     }
 }

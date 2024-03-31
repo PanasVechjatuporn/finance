@@ -26,7 +26,7 @@ async function saveNewNormalGoal(goalData, userStore) {
     );
 }
 
-export const NormalGoalCreateEdit = ({ currentStep, setCurrentStep, goalData, setGoalData }) => {
+export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
     const userStore = useSelector((state) => state.userStore);
     const [nameError, setNameError] = useState(false);
     const [goalError, setGoalError] = useState(false);
@@ -51,7 +51,7 @@ export const NormalGoalCreateEdit = ({ currentStep, setCurrentStep, goalData, se
             setTimeError(false);
         }
 
-        if (!nameError && !goalError && !timeError) {
+        if (goalData.Name && goalData.Goal && parseInt(new Date(goalData.GoalTime).getFullYear()) - parseInt(new Date(goalData.CreatedDate).getFullYear()) !== 0) {
             await saveNewNormalGoal(goalData, userStore);
             console.log('goalSaved')
         }

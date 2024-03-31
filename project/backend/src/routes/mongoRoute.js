@@ -24,8 +24,6 @@ router.get('/usergoal=:uid', mongoController.getUserGoal);
 
 router.get('/userassets=:uid', mongoController.getUserAsset);
 
-router.post("/upsert_new_goal", mongoController.upsertNewGoal);
-
 router.post("/change_goal_percentage", mongoController.changeMultipleGoalPercentage);
 
 router.get("/get_user_asset", mongoController.getUserAssetGoalBased);
@@ -42,5 +40,6 @@ router.post('/create_user_risk_profile', mongoController.createUserRiskProfile);
 
 router.get("/get_master_data", mongoController.getMasterDataByName);
 
+router.post("/create_new_normal_goal", mongoController.upsertGoal);
 
 module.exports = router;
