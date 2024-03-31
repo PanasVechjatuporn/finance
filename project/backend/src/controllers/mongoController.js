@@ -446,10 +446,10 @@ exports.getUserRiskProfile = async (req, res) => {
     const userId = req.header("UserId");
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
-        if (isVerify) { 
+        if (isVerify) {
             query = { uid: userId };
             var findResult = await collection.findOne(query);
-            res.status(200).json({findResult});
+            res.status(200).json({ findResult });
         }
     } catch (err) {
         console.log("Error occured in mongoController.getUserRiskProfile: ", err);
@@ -477,7 +477,7 @@ exports.createUserRiskProfile = async (req, res) => {
                 },
                 { upsert: true }
             );
-            res.status(200).json({updateResult});
+            res.status(200).json({ updateResult });
         }
     } catch (err) {
         console.log("Error occured in mongoController.createUserRiskProfile: ", err);
@@ -490,11 +490,11 @@ exports.getMasterDataByName = async (req, res) => {
     const collection = db.collection("master_data");
     const name = req.header("Name");
     try {
-            query = { name : name };
-            const queryResult = await collection.findOne(
-                query
-            );
-            res.status(200).json({queryResult});
+        query = { name: name };
+        const queryResult = await collection.findOne(
+            query
+        );
+        res.status(200).json({ queryResult });
     } catch (err) {
         console.log("Error occured in mongoController.createUserRiskProfile: ", err);
         res.status(401).json({ message: err });
@@ -511,22 +511,31 @@ exports.upsertGoal = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            console.log('goalData :: ',goalData)
-            console.log('goalObjId :: ',goalObjId)
-            if(goalObjId){
+            if (goalObjId || goalData._id) {
                 //code to edit existing goal
-                let query = {}
-            }else{
+                let id = goalObjId ? new ObjectId(goalObjId) : new ObjectId(goalData._id)
+                let query = { _id: id }
+                delete goalData._id
+                await collection.updateOne(
+                    query,
+                    {
+                        $set:
+                            goalData
+                        ,
+                    },
+                    { upsert: true }
+                );
+            } else {
                 let query = { userId: userId, Name: goalData.Name };
                 await collection.updateOne(
-                query,
-                {
-                    $set: 
-                        goalData
-                    ,
-                },
-                { upsert: true }
-            );
+                    query,
+                    {
+                        $set:
+                            goalData
+                        ,
+                    },
+                    { upsert: true }
+                );
             }
             res.status(200).json({ message: "SUCCESS" });
         }
@@ -544,9 +553,9 @@ exports.getUserGoalByObjId = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-                let query = { _id: new ObjectId(req.header("GoalObjId")) };
-                const findResult = await collection.findOne(query);
-                res.status(200).json(findResult);
+            let query = { _id: new ObjectId(req.header("GoalObjId")) };
+            const findResult = await collection.findOne(query);
+            res.status(200).json(findResult);
         }
     } catch (err) {
         console.log("Error occured in mongoController.getUserGoalByObjId: ", err);

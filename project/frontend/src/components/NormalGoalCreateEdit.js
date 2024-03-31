@@ -7,11 +7,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const baseURL = "http://localhost:8000";
 
 async function saveNewNormalGoal(goalData, userStore) {
-    console.log('goalData :: ',goalData)
-    console.log('userStore :: ',userStore)
     await axios.post(
         `${baseURL}/db/create_new_normal_goal`,
         {
@@ -27,6 +26,7 @@ async function saveNewNormalGoal(goalData, userStore) {
 }
 
 export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
+    const navigate = useNavigate();
     const userStore = useSelector((state) => state.userStore);
     const [nameError, setNameError] = useState(false);
     const [goalError, setGoalError] = useState(false);
@@ -53,7 +53,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
 
         if (goalData.Name && goalData.Goal && parseInt(new Date(goalData.GoalTime).getFullYear()) - parseInt(new Date(goalData.CreatedDate).getFullYear()) !== 0) {
             await saveNewNormalGoal(goalData, userStore);
-            console.log('goalSaved')
+            navigate("/Goal-Based")
         }
     }
 
