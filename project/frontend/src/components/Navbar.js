@@ -182,7 +182,7 @@ function Navigate() {
             </>
           ) : (
             <Nav>
-              <Nav.Link href="#sign_up">
+              <Nav.Link>
                 <>
                   <Button variant="primary" onClick={handleShowSignUp}>
                     Sign Up

@@ -85,6 +85,7 @@ function App() {
           path="/tax-calculation"
           element={<RequireAuth redirectTo="/">{<TaxCal />}</RequireAuth>}
         />
+        <Route path="/Goal-Based/edit-normal-goal/:goalObjId" element={<NormalGoal />} />
       </Routes>
     </BrowserRouter>
   );

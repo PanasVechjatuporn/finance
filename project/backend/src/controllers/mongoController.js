@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "../.env" });
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
+const { ObjectId } = require("mongodb");
 // Database Name
 const dbName = "dev";
 
@@ -531,6 +532,24 @@ exports.upsertGoal = async (req, res) => {
         }
     } catch (err) {
         console.log("Error occured in mongoController.upsertGoal: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.getUserGoalByObjId = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+                let query = { _id: new ObjectId(req.header("GoalObjId")) };
+                const findResult = await collection.findOne(query);
+                res.status(200).json(findResult);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
         res.status(401).json({ message: err });
     }
 }

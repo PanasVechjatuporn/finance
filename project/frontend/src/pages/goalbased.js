@@ -1,35 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Button, CardActionArea, CardActions, TextField } from "@mui/material";
+import { Button, CardActions, TextField } from "@mui/material";
 import GoalCard from "components/GoalCard";
 //import mockGoal from "mockupData/mockGoal.json"
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 import { AssetSummary } from "components/AssetSummary_GoalBased";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
 import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 const baseURL = "http://localhost:8000";
-const warnTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: "rgba(0, 0, 0, 0.87)",
-        boxShadow: theme.shadows[1],
-        fontSize: 11,
-    },
-}));
 
 export const GoalBased = () => {
     const navigate = useNavigate();
@@ -100,14 +86,18 @@ export const GoalBased = () => {
 
 
     function handleGoalTypeClick(type) {
+        console.log('handleGoalTypeClick')
         if (type === "normal") {
             setIsitNormal(true);
         } else if (type === "tax") {
             setIsitNormal(false);
         }
-
         if (goal.length > 0) {
-            handleOpenNewGoal();
+            if (type === "normal") {
+                navigate("./normal-goal", { state: { Percentage: 100 } });
+            }else{
+                handleOpenNewGoal();
+            }
         } else {
             if (type === "normal") {
                 navigate("./normal-goal", { state: { Percentage: 100 } });
@@ -733,7 +723,7 @@ export const GoalBased = () => {
                             openCreate={openCreate}
                             handleCloseCreate={handleCloseCreate}
                         />
-                        <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} />
+                        {/* <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} /> */}
                         <RiskProfilePromptModal isOpen={isOpenRiskProfilePrompModal} setIsOpen={setIsOpenRiskProfilePrompModal}></RiskProfilePromptModal>
                     </CardActions>
                 </Card>
@@ -745,7 +735,7 @@ export const GoalBased = () => {
                             แก้ไข
                         </Button>
                     </Tooltip>
-                    <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
+                    {/* <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} /> */}
                 </Container> : null}
             <AssetSummary></AssetSummary>
         </React.Fragment>
