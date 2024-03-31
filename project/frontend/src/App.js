@@ -10,7 +10,7 @@ import { SelectFund } from "pages/SelectFund";
 import axios from "axios";
 import { NormalGoal } from "pages/NormalGoal";
 import { RiskEvalNormalPage } from "pages/RiskEvalNormal";
-import { TaxCal } from "pages/TaxCalcuation";
+import { TaxCal } from "pages/TaxCalculation";
 
 const baseURL = "http://localhost:8000";
 function RequireAuth({ children, redirectTo }) {
