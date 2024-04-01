@@ -233,7 +233,9 @@ export const DataTableRow = ({
     };
     return (
         <React.Fragment>
-            <TableRow sx={{ "& > *": { borderBottom: "none" } }}>
+            <TableRow 
+            // sx={{ "& > *": { borderBottom: "none" } }}
+            >
                 <TableCell >
                     <IconButton
                         aria-label="expand row"
@@ -268,10 +270,11 @@ export const DataTableRow = ({
                         tmp
                     ))}
                 </TableCell>
-                <TableCell align="center">{formatNumberWithCommas(dataMonth.investmentData)}</TableCell>
+                {/* <TableCell align="center">{formatNumberWithCommas(dataMonth.investmentData)}</TableCell> */}
 
                 {/* delete button */}
-                <TableCell align="center" sx={{ borderBottom: "inherit"}}>
+                <TableCell align="center" 
+                >
                     <>
                         {isDeleteActive ? (
                             <IconButton
@@ -356,9 +359,7 @@ export const DataTableRow = ({
                                     </TableBody>
                                 </Table>
                                 <Table className="sub-table">
-                                    <TableHead
-                                       
-                                    >
+                                    <TableHead>
                                         <TableRow>
                                             <TableCell
                                                 align="center"

@@ -553,7 +553,7 @@ const EditMonthDataModal = ({
                                 ></IconButton>
                             </Row>
 
-                            <Typography
+                            {/* <Typography
                                 variant="h4"
                                 style={{
                                     color: "#757575",
@@ -593,7 +593,7 @@ const EditMonthDataModal = ({
                                         />
                                     </FormControl>
                                 </Grid>
-                            </Container>
+                            </Container> */}
                         </Col>
 
                         {/* Expense */}

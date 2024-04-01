@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from "../store/UserSlice";
 import { Grid } from "@mui/joy";
 import axios from "axios";
+import { Container } from "react-bootstrap";
+import { UserNetSummary } from "components/UserNetSummary";
 const baseURL = "http://localhost:8000";
 
 function fetchUserData(userStore) {
@@ -49,13 +51,15 @@ export const Dashboard = () => {
     const dispatch = useDispatch();
     const [userData, setUserData] = useState(null);
     useEffect(() => {
-        Promise.all([fetchUserData(userStore)]).then(res => {
+        Promise.all([fetchUserData(userStore)]).then((res) => {
             const data = res[0];
             if (data.length > 0) {
                 const groupedData = groupDataByYear(data);
                 const yearInData = groupedData.map((data) => data.year);
                 if (yearInData.length > 0) {
-                    let dataYear = groupedData.find((entry) => entry.year === yearInData[0]);
+                    let dataYear = groupedData.find(
+                        (entry) => entry.year === yearInData[0]
+                    );
                     let tmpMonthArray = dataYear.data;
                     tmpMonthArray.sort((a, b) => {
                         if (a.date < b.date) {
@@ -77,8 +81,8 @@ export const Dashboard = () => {
                 };
                 setUserData([currentYearObj]);
             }
-        })
-    }, [userStore])
+        });
+    }, [userStore]);
 
     try {
         if (userStore.userId === null) {
@@ -103,19 +107,11 @@ export const Dashboard = () => {
     return (
         <React.Fragment>
             <Navigate />
-            <Grid container marginTop={2} justifyContent={"center"}>
-                <Grid>
-                    <PieChartComponent
-                        userData={userData}
-                    />
-                </Grid>
-                <Grid>
-                    <MonthDataTable
-                        userData={userData}
-                        setUserData={setUserData}
-                    />
-                </Grid>
-            </Grid>
+            <Container>
+                    <PieChartComponent userData={userData} />
+                    <MonthDataTable userData={userData} setUserData={setUserData} />
+                    <UserNetSummary />
+            </Container>
         </React.Fragment>
     );
 };

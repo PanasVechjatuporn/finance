@@ -345,23 +345,14 @@ export default function PieChartComponent({ userData }) {
     }
 
     return (
-        <Container maxWidth="md">
             <Box
                 sx={{
-                    minWidth: "90vh",
-                    minHeight: "90vh",
-                    maxWidth: "90vh",
-                    maxHeight: "90vh",
-                    borderRadius: 6,
-                    boxShadow: 6,
-                    position: "relative",
+                    marginTop: "2%",
                 }}
             >
                 <Container>
                     <FormControl
                         sx={{
-                            position: "absolute",
-                            right: "5%",
                             width: "15%",
                             height: "10%"
                         }}
@@ -399,7 +390,6 @@ export default function PieChartComponent({ userData }) {
                             userSelect: "none",
                             fontWeight: "bold",
                             paddingBottom: "2%",
-
                         }}
                         sx={{
                             paddingTop: 1,
@@ -410,9 +400,15 @@ export default function PieChartComponent({ userData }) {
                 </Container>
 
                 {pieIncomeParams ? (
-                    <Container style={{ marginLeft: "10%" }}>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <div style={{ flex: 1 }}>
+                    <Container 
+                    // style={{ marginLeft: "10%" }}
+                    >
+                        <div 
+                        style={{ display: "flex", flexDirection: "row" }}
+                        >
+                            <div 
+                            style={{ flex: 1 }}
+                            >
                                 <PieChart
                                     {...pieIncomeParams}
                                     series={pieIncomeParams.series.map((series) => ({
@@ -481,7 +477,9 @@ export default function PieChartComponent({ userData }) {
                     </Typography>
                 </Container>
                 {pieExpenseParams ? (
-                    <Container style={{ marginLeft: "10%" }}>
+                    <Container 
+                    // style={{ marginLeft: "10%" }}
+                    >
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             <div style={{ flex: 1 }}>
                                 <PieChart
@@ -533,6 +531,5 @@ export default function PieChartComponent({ userData }) {
                 )}
                 <PieChartInfoModal open={showPieChartModal} setOpen={setShowPieChartModal} modalParams={modalParams} modalType={modalType}></PieChartInfoModal>
             </Box>
-        </Container>
     );
 }
