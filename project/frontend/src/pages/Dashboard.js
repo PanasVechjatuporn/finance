@@ -108,9 +108,9 @@ export const Dashboard = () => {
         <React.Fragment>
             <Navigate />
             <Container>
-                    <PieChartComponent userData={userData} />
+                    <UserNetSummary userData={userData} />
                     <MonthDataTable userData={userData} setUserData={setUserData} />
-                    <UserNetSummary />
+                    <PieChartComponent userData={userData} />
             </Container>
         </React.Fragment>
     );

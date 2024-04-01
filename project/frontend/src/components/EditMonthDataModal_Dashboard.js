@@ -239,6 +239,7 @@ async function onSaveMonthData(
                 {
                     headers: {
                         Authorization: userStore.userToken,
+                        UserId : userStore.userId
                     },
                 }
             );
@@ -271,8 +272,7 @@ function validateMonthData(incomeData, expenseData, investmentData) {
     return new Promise((resolve, reject) => {
         if (
             incomeData.length === 0 ||
-            expenseData.length === 0 ||
-            investmentData === ""
+            expenseData.length === 0
         ) {
             reject("Please fill in all the required fields");
         } else {
@@ -721,7 +721,6 @@ const EditMonthDataModal = ({
                                 <Checkbox
                                     checked={isUseSameData}
                                     onChange={(e) => {
-                                        console.log('e.target.checked :: ', e.target.checked)
                                         setIsUseSameData(e.target.checked)
                                     }
                                     }

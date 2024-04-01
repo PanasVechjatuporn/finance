@@ -431,7 +431,7 @@ export default function PieChartComponent({ userData }) {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
+                            <div style={{ flex: 1, padding: 10, marginTop: "6%" }}>
                                 <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
                             </div>
                         </div>
@@ -504,7 +504,7 @@ export default function PieChartComponent({ userData }) {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1, marginTop: 80 }}>
+                            <div style={{ flex: 1, marginTop: "6%" }}>
                                 <CustomChartLegend data={expensePieData} expenseType={expenseType} />
                             </div>
                         </div>

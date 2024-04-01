@@ -273,7 +273,7 @@ export const DataTableRow = ({
                 {/* <TableCell align="center">{formatNumberWithCommas(dataMonth.investmentData)}</TableCell> */}
 
                 {/* delete button */}
-                <TableCell align="center" 
+                <TableCell align="center" style={{ width: "2%" }}
                 >
                     <>
                         {isDeleteActive ? (

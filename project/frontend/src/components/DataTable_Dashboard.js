@@ -189,7 +189,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 <TableCell align="center">รายรับ</TableCell>
                 <TableCell align="center">รายจ่าย</TableCell>
                 {/* <TableCell align="center">เงินลงทุน</TableCell> */}
-                <TableCell align="center"></TableCell>
+                <TableCell align="center" style={{ width: "2%" }}></TableCell>
               </TableRow>
             </TableHead>
             {currentYearData.data.length > 0 ? (
