@@ -169,6 +169,10 @@ function EachCard({ data }) {
         navigate("/Goal-Based/edit-normal-goal/"+data._id)
     }
 
+    const handleClickInvest = (data) => {
+        navigate("/Goal-Based/invest-normal-goal/"+data._id)
+    }
+
     const ModalDelete = ({ openDelete, handleCloseDelete }) => {
         function handleDeleteGoal() {
             axios.post(
@@ -313,6 +317,17 @@ function EachCard({ data }) {
                     >
                         <Typography color="white" variant="subtitile1">
                             แก้ไข
+                        </Typography>
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            handleClickInvest(data)
+                        }}
+                        sx={{ backgroundColor: "#ffc200" }}
+                        size="small"
+                    >
+                        <Typography color="white" variant="subtitile1">
+                            ลงทุน
                         </Typography>
                     </Button>
                     <Button
