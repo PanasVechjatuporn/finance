@@ -151,7 +151,7 @@ const expenseType = [
     {
         name: "อื่นๆ",
         category: 8,
-        color: "#b7f1a5",
+        color: "#818181",
         index: 8
     },
 ];
@@ -350,11 +350,34 @@ export default function PieChartComponent({ userData }) {
                     marginTop: "2%",
                 }}
             >
+                
+                <Container>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            userSelect: "none",
+                            fontWeight: "bold",
+                            paddingBottom: "2%",
+                        }}
+                        sx={{
+                            paddingTop: 1,
+                        }}
+                    >
+                        สรุปรายรับ ปี {currentYear}
+                    </Typography>
+                </Container>
                 <Container>
                     <FormControl
                         sx={{
                             width: "15%",
-                            height: "10%"
+                            height: "10%",
+                            marginTop : "2%"
                         }}
                     >
                         <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
@@ -377,28 +400,6 @@ export default function PieChartComponent({ userData }) {
                         </Select>
                     </FormControl>
                 </Container>
-                <Container>
-                    <Typography
-                        variant="h5"
-                        style={{
-                            color: "#757575",
-                            textDecoration: "underline",
-                            textDecorationColor: "transparent",
-                            borderBottom: "2px solid #757575",
-                            display: "inline-block",
-                            width: "100%",
-                            userSelect: "none",
-                            fontWeight: "bold",
-                            paddingBottom: "2%",
-                        }}
-                        sx={{
-                            paddingTop: 1,
-                        }}
-                    >
-                        สรุปรายรับ ปี {currentYear}
-                    </Typography>
-                </Container>
-
                 {pieIncomeParams ? (
                     <Container 
                     // style={{ marginLeft: "10%" }}
