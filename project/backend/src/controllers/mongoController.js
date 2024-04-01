@@ -71,46 +71,7 @@ exports.createNewUserWithProvider = async (req, res) => {
     }
 };
 
-exports.upsertUserMonthlyData = async (req, res) => {
-    const upsertData = req.body.upsertData;
-    const userToken = req.header("Authorization");
-    const db = client.db(dbName);
-    const collection = db.collection("income_expense");
-    try {
-        const isVerify = await firebaseAuth.verifyIdToken(
-            userToken,
-            upsertData.user.userId
-        );
-        if (isVerify) {
-            console.log("upsertData :: ", upsertData);
-            query = { userId: upsertData.user.userId, date: upsertData.currentDate };
-            await collection.updateOne(
-                query,
-                {
-                    $set: {
-                        userId: upsertData.user.userId,
-                        date: upsertData.currentDate,
-                        incomeData: upsertData.incomeData,
-                        expenseData: upsertData.expenseData,
-                        investmentData: upsertData.investmentData,
-                        year: upsertData.currentDate.split("-")[0],
-                        month: parseInt(upsertData.currentDate.split("-")[1]).toString(),
-                    },
-                },
-                { upsert: true }
-            );
-            res.status(200).json({ upsertData });
-        } else {
-            throw new Error("unauthorized access");
-        }
-    } catch (error) {
-        console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
-            error
-        );
-        res.status(401).json({ message: error });
-    }
-};
+
 
 exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
@@ -196,6 +157,49 @@ exports.getGrowthRate = async (req, res) => {
     }
 };
 
+exports.upsertUserMonthlyData = async (req, res) => {
+    const upsertData = req.body.upsertData;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const db = client.db(dbName);
+    const collection = db.collection("income_expense");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(
+            userToken,
+            userId
+        );
+        if (isVerify) {
+            console.log("upsertData :: ", upsertData);
+            query = { userId: userId, date: upsertData.currentDate };
+            await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        userId: userId,
+                        date: upsertData.currentDate,
+                        incomeData: upsertData.incomeData,
+                        expenseData: upsertData.expenseData,
+                        investmentData: upsertData.investmentData,
+                        year: upsertData.currentDate.split("-")[0],
+                        month: parseInt(upsertData.currentDate.split("-")[1]).toString(),
+                    },
+                },
+                { upsert: true }
+            );
+            await updateUserDiffIncomeExpense(userId)
+            res.status(200).json({ upsertData });
+        } else {
+            throw new Error("unauthorized access");
+        }
+    } catch (error) {
+        console.log(
+            "Error occured in mongoController.upsertUserMonthlyData: ",
+            error
+        );
+        res.status(401).json({ message: error });
+    }
+};
+
 exports.upsertUserMultipleMonthlyData = async (req, res) => {
     const upsertData = req.body.upsertData;
     const userToken = req.header("Authorization");
@@ -225,6 +229,7 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
                     );
                 })
             );
+            await updateUserDiffIncomeExpense(userId)
             res.status(200).json({ upsertData });
         } else {
             throw new Error("unauthorized access");
@@ -237,6 +242,31 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
         res.status(401).json({ message: error });
     }
 };
+
+async function updateUserDiffIncomeExpense (uid) {
+    const db = client.db(dbName);
+    const collectionIncomeExpense = db.collection("income_expense");
+    const collectionUserNetSummary = db.collection("usernetsummary");
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({userId : uid});
+    if(netSummaryFindResult){
+        const totalIncomeExpense = await collectionIncomeExpense.find({userId : uid}).toArray();
+        let tmpTotalIncome = 0;
+        let tmpTotalExpense = 0;
+        totalIncomeExpense.forEach((data) => {
+            data.expenseData.forEach(expense => {
+                tmpTotalExpense += parseFloat(expense.amount);
+            })
+            data.incomeData.forEach(income => {
+                tmpTotalIncome += parseFloat(income.amount);
+            })
+        })
+        netSummaryFindResult.netIncomeExpense = (tmpTotalIncome - tmpTotalExpense);
+        await collectionUserNetSummary.updateOne({userId : uid},  {
+            $set: netSummaryFindResult,
+        },
+        { upsert: true });
+    }
+}
 
 exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header("userId");
@@ -272,6 +302,7 @@ exports.deleteUserMonthData = async (req, res) => {
         if (isVerify) {
             let query = { year: year, month: month, userId: userId };
             const queryResult = await collection.deleteOne(query);
+            await updateUserDiffIncomeExpense(userId)
             res.status(200).json({ message: "delete success" });
         } else {
             throw new Error("unauthorized access");
