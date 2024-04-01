@@ -253,7 +253,7 @@ export const DataTableRow = ({
                         }}
                     ></IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                     {new Date(dataMonth.date).toLocaleString("th-TH", {
                         month: "long",
                     })}

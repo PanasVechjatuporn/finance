@@ -148,7 +148,7 @@ export default function MonthDataTable({ userData, setUserData }) {
 
   return (
     <Container>
-      <Box>
+      <Box style={{position : "relative"}}>
         <Typography
           variant="h5"
           style={{
@@ -175,7 +175,9 @@ export default function MonthDataTable({ userData, setUserData }) {
               sx={{
                 "& th": {
                   color: "white",
-                  backgroundColor: "orange",
+                  backgroundColor: "#fc9f00",
+                  fontWeight : "bold",
+                  fontSize : 18
                 },
               }}
               key={"table-header"}
@@ -235,13 +237,16 @@ export default function MonthDataTable({ userData, setUserData }) {
             ) : (
               <></>
             )}
+
           </Table>
         </TableContainer>
         <Box
           style={{
-            backgroundColor: "orange",
+            backgroundColor: "#fc9f00",
             display: "flex",
             justifyContent: "flex-end",
+            position : "relative",
+            width : "100%"
           }}
         >
           <FormControl

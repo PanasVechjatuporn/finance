@@ -99,7 +99,7 @@ export default function PieChartInfoModal({
                                     </TableHead>
                                     <TableBody>
                                         {modalParams.monthEntries.map((data, index) => (
-                                            <StyledTableRow>
+                                            <StyledTableRow key={"styled-table-row-"+index}>
                                                 <StyledTableCell align="center">
                                                     {data.date}
                                                 </StyledTableCell>
