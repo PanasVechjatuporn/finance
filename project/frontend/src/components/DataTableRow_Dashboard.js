@@ -232,7 +232,7 @@ export const DataTableRow = ({
         setOpenDeleteModal(false);
     };
     return (
-        <React.Fragment>
+        <React.Fragment key={"fragment-parent-table-row-"+dataMonth.date}>
             <TableRow 
             // sx={{ "& > *": { borderBottom: "none" } }}
             >
@@ -295,10 +295,9 @@ export const DataTableRow = ({
                         <Box sx={{ margin: 1 }}>
                             <div style={{ display: "flex" }}>
                                 {/* Sub Table Income, Investment, Expense */}
-                                <Table className="sub-table">
-                                    <TableHead
-                                    >
-                                        <TableRow>
+                                <Table className="sub-table" key={"sub-table-"+dataMonth.date}>
+                                    <TableHead key={"table-head-sub-table-"+dataMonth.date}>
+                                        <TableRow key={"sub-table-header-row-"+dataMonth.date}>
                                             <TableCell
                                                 align="center"
                                                 colSpan={3}
@@ -333,7 +332,7 @@ export const DataTableRow = ({
                                     </TableHead>
                                     <TableBody>
                                         {dataMonth.incomeData.map((item, index) => (
-                                            <TableRow>
+                                            <TableRow key={item.type + index + "-row-"+selectedYear}>
                                                 <TableCell
                                                     key={item.amount + index + "-income-" + selectedYear}
                                                     align="center"
@@ -360,7 +359,7 @@ export const DataTableRow = ({
                                 </Table>
                                 <Table className="sub-table">
                                     <TableHead>
-                                        <TableRow>
+                                        <TableRow key={"sub-table-head-row-expense-"+dataMonth.date}>
                                             <TableCell
                                                 align="center"
                                                 colSpan={2}
@@ -372,14 +371,14 @@ export const DataTableRow = ({
                                                 รายจ่ายเดือนนี้
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow>
+                                        <TableRow key={"sub-table-head-row-expense-amount-type-"+dataMonth.date}>
                                             <TableCell align="center">จำนวน&nbsp;(บาท)</TableCell>
                                             <TableCell align="center">ประเภท</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dataMonth.expenseData.map((item, index) => (
-                                            <TableRow>
+                                            <TableRow key={"sub-table-cell-"+item.amount+"-"+index+"-"+dataMonth.date}>
                                                 <TableCell
                                                     key={item.amount + index + dataMonth.date}
                                                     align="center"
