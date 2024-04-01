@@ -93,6 +93,8 @@ exports.upsertUserMonthlyData = async (req, res) => {
                         incomeData: upsertData.incomeData,
                         expenseData: upsertData.expenseData,
                         investmentData: upsertData.investmentData,
+                        year: upsertData.currentDate.split("-")[0],
+                        month: parseInt(upsertData.currentDate.split("-")[1]).toString(),
                     },
                 },
                 { upsert: true }
