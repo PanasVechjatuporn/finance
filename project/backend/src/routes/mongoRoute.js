@@ -42,6 +42,8 @@ router.get("/get_master_data", mongoController.getMasterDataByName);
 
 router.post("/create_new_normal_goal", mongoController.upsertGoal);
 
-router.get("/get_goal_by_obj_id", mongoController.getUserGoalByObjId)
+router.get("/get_goal_by_obj_id", mongoController.getUserGoalByObjId);
+
+router.get("/get_user_net_summary",mongoController.getUserNetSummary);
 
 module.exports = router;

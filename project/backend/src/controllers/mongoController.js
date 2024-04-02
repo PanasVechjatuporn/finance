@@ -596,3 +596,20 @@ exports.getUserGoalByObjId = async (req, res) => {
     }
 }
 
+exports.getUserNetSummary = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("usernetsummary");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            let query = { userId: userId };
+            const findResult = await collection.findOne(query);
+            res.status(200).json(findResult);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
+        res.status(401).json({ message: err });
+    }
+}
