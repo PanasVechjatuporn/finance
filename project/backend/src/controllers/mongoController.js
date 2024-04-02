@@ -23,6 +23,7 @@ exports.createNewUser = async (user) => {
             var insertResult = await collection.insertOne(obj);
             console.log(insertResult);
         }
+        await createUserNetSummary(user.uid)
     } catch (error) {
         console.log("Error occured in mongoController.createNewUser: ", error);
     }
@@ -58,6 +59,7 @@ exports.createNewUserWithProvider = async (req, res) => {
                 default:
                     throw new Error("Unknown Provider");
             }
+            await createUserNetSummary(userData.uid);
             res.status(200).json({ userData });
         } else {
             throw new Error("unauthorized access");
@@ -71,7 +73,19 @@ exports.createNewUserWithProvider = async (req, res) => {
     }
 };
 
-
+async function createUserNetSummary(userId){
+    const collection = db.collection("usernetsummary");
+    const netSummaryFindResult = await collection.findOne({userId : userId});
+    if(!netSummaryFindResult){
+        await collection.insertOne({
+            userId : userId,
+            netIncomeExpense : 0,
+            netBoughtAsset : 0,
+            netSoldAsset : 0,
+            netWealth : 0
+        });
+    }
+}
 
 exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
