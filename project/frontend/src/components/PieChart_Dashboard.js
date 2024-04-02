@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CustomChartLegend from "./CustomChartLegend_Dashboard";
 import PieChartInfoModal from "./PieChartInfoModal_Dashboard";
+import { formatNumberWithCommas } from "utils/numberUtil";
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -167,7 +168,9 @@ export default function PieChartComponent({ userData }) {
     const [expensePieData, setExpensePieData] = useState(null);
     const [modalParams, setModalParams] = useState(null);
     const [showPieChartModal, setShowPieChartModal] = useState(false);
-    const [modalType, setModalType] = useState(null)
+    const [modalType, setModalType] = useState(null);
+    const [totalIncome, setTotalIncome] = useState(null);
+    const [totalExpense,  setTotalExpense] = useState(null);
 
     useEffect(() => {
         if (userData && !currentYear) {
@@ -247,11 +250,12 @@ export default function PieChartComponent({ userData }) {
                             }
                             yearlyExpense += parseFloat(expenseSource.amount);
                         });
-                        //investmentData
                     }
                 );
                 const incomeEntries = {};
+                let tmpIncomeSum = 0;
                 incomeSourceEntries.forEach((entry) => {
+                    tmpIncomeSum += parseFloat(entry.amount)
                     if (!incomeEntries[entry.type]) {
                         incomeEntries[entry.type] = [];
                     }
@@ -259,7 +263,9 @@ export default function PieChartComponent({ userData }) {
                 });
 
                 const expenseEntries = {};
+                let tmpExpenseSum = 0;
                 expenseSourceEntries.forEach((entry) => {
+                    tmpExpenseSum += parseFloat(entry.amount)
                     if (!expenseEntries[entry.type]) {
                         expenseEntries[entry.type] = [];
                     }
@@ -278,6 +284,9 @@ export default function PieChartComponent({ userData }) {
 
                 setIncomePieData(incomePieData);
                 setExpensePieData(expensePieData);
+
+                setTotalIncome(tmpIncomeSum);
+                setTotalExpense(tmpExpenseSum);
                 setPieIncomeParams({
                     series: [
                         {
@@ -435,6 +444,15 @@ export default function PieChartComponent({ userData }) {
                                 <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
                             </div>
                         </div>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            รายรับสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalIncome)} บาท
+                        </Typography>
                     </Container>
 
                 ) : (
@@ -508,6 +526,15 @@ export default function PieChartComponent({ userData }) {
                                 <CustomChartLegend data={expensePieData} expenseType={expenseType} />
                             </div>
                         </div>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            รายจ่ายสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalExpense)} บาท
+                        </Typography>
                     </Container>
 
                 ) : (
