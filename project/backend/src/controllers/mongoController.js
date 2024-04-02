@@ -74,6 +74,7 @@ exports.createNewUserWithProvider = async (req, res) => {
 };
 
 async function createUserNetSummary(userId){
+    const db = client.db(dbName);
     const collection = db.collection("usernetsummary");
     const netSummaryFindResult = await collection.findOne({userId : userId});
     if(!netSummaryFindResult){
