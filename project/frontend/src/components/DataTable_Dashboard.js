@@ -20,6 +20,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import OverlayLoading from "./OverlayLoading";
 import axios from "axios";
 import { Typography } from "@mui/material";
+import Paper from "@mui/material/Paper";
 
 const baseURL = "http://localhost:8000";
 
@@ -148,7 +149,7 @@ export default function MonthDataTable({ userData, setUserData }) {
 
   return (
     <Container>
-      <Box style={{position : "relative"}}>
+      <Box style={{ position: "relative" }}>
         <Typography
           variant="h5"
           style={{
@@ -169,121 +170,133 @@ export default function MonthDataTable({ userData, setUserData }) {
         >
           เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
         </Typography>
-        <TableContainer style={{ height: "70vh" }}>
-          <Table stickyHeader>
-            <TableHead
-              sx={{
-                "& th": {
-                  color: "white",
-                  backgroundColor: "#fc9f00",
-                  fontWeight : "bold",
-                  fontSize : 18
-                },
-              }}
-              key={"table-header"}
-            >
-              <TableRow key={"table-row-header"}>
-                <TableCell style={{ width: "1vh" }}></TableCell>
-                <TableCell style={{ width: "1vh" }}></TableCell>
-                <TableCell align="center" style={{ width: "10vh" }}>
-                  เดือน
-                </TableCell>
-                <TableCell align="center">รายรับ</TableCell>
-                <TableCell align="center">รายจ่าย</TableCell>
-                {/* <TableCell align="center">เงินลงทุน</TableCell> */}
-                <TableCell align="center" style={{ width: "2%" }}></TableCell>
-              </TableRow>
-            </TableHead>
-            {currentYearData.data.length > 0 ? (
-              <TableBody>
-                {currentYearData.data.map((monthData, index) => (
-                  <DataTableRow
-                    key={`data-table-row-${index}-${selectedYear}`}
-                    dataMonth={monthData}
-                    currentYearData={currentYearData}
-                    userData={userData}
-                    setUserData={setUserData}
-                    selectedYear={selectedYear}
-                    isDeleteActive={
-                      parseInt(currentYearData.data.length) ===
-                        parseInt(index + 1) && currentYearData.data.length !== 1
-                        ? true
-                        : false
-                    }
-                  ></DataTableRow>
-                ))}
-              </TableBody>
-            ) : (
-              <></>
-            )}
-            {currentYearData.data.length !== 12 ? (
-              <TableBody>
-                <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-                  <TableCell
-                    colSpan={7}
-                    align="center"
-                    onClick={(e) => {
-                      handleNewMonthClick();
-                    }}
-                    style={{ cursor: "pointer" }}
-                    key={"add-new-month-data"}
-                  >
-                    <IconButton
-                      children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
-                    ></IconButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            ) : (
-              <></>
-            )}
-
-          </Table>
-        </TableContainer>
-        <Box
-          style={{
-            backgroundColor: "#fc9f00",
-            display: "flex",
-            justifyContent: "flex-end",
-            position : "relative",
-            width : "100%"
-          }}
-        >
-          <FormControl
-            variant="standard"
-            style={{ marginLeft: "10px", marginRight: "30px" }}
+        <Paper style={{ 
+          height: 600, 
+          width: "100%" }}
           >
-            <InputLabel id="year-selection-input-label">Year</InputLabel>
-            <Select
-              labelId="year-selection"
-              id="year-selection"
-              value={selectedYear}
-              onChange={(e) => {
-                if (e.target.value) {
-                  setSelectedYear(e.target.value.toString());
-                }
-              }}
+          <TableContainer
+            style={{
+              height: 600,
+              // maxHeight: "30%"
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead
+                sx={{
+                  "& th": {
+                    color: "white",
+                    backgroundColor: "#fc9f00",
+                    fontWeight: "bold",
+                    fontSize: 18,
+                  },
+                }}
+                key={"table-header"}
+              >
+                <TableRow key={"table-row-header"}>
+                  <TableCell style={{ width: "1vh" }}></TableCell>
+                  <TableCell style={{ width: "1vh" }}></TableCell>
+                  <TableCell align="center" style={{ width: "10vh" }}>
+                    เดือน
+                  </TableCell>
+                  <TableCell align="center">รายรับ</TableCell>
+                  <TableCell align="center">รายจ่าย</TableCell>
+                  {/* <TableCell align="center">เงินลงทุน</TableCell> */}
+                  <TableCell align="center" style={{ width: "2%" }}></TableCell>
+                </TableRow>
+              </TableHead>
+              {currentYearData.data.length > 0 ? (
+                <TableBody>
+                  {currentYearData.data.map((monthData, index) => (
+                    <DataTableRow
+                      key={`data-table-row-${index}-${selectedYear}`}
+                      dataMonth={monthData}
+                      currentYearData={currentYearData}
+                      userData={userData}
+                      setUserData={setUserData}
+                      selectedYear={selectedYear}
+                      isDeleteActive={
+                        parseInt(currentYearData.data.length) ===
+                          parseInt(index + 1) &&
+                          currentYearData.data.length !== 1
+                          ? true
+                          : false
+                      }
+                    ></DataTableRow>
+                  ))}
+                </TableBody>
+              ) : (
+                <></>
+              )}
+              {currentYearData.data.length !== 12 ? (
+                <TableBody>
+                  <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+                    <TableCell
+                      colSpan={7}
+                      align="center"
+                      onClick={(e) => {
+                        handleNewMonthClick();
+                      }}
+                      style={{ cursor: "pointer" }}
+                      key={"add-new-month-data"}
+                    >
+                      <IconButton
+                        children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
+                      ></IconButton>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ) : (
+                <></>
+              )}
+            </Table>
+          </TableContainer>
+          <Box
+            style={{
+              backgroundColor: "#fc9f00",
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "relative",
+              width: "100%",
+            }}
+          >
+            <FormControl
+              variant="standard"
+              style={{ marginLeft: "10px", marginRight: "30px" }}
             >
-              {allYear.map((item, index) => (
-                <MenuItem
-                  key={index + "-menuitem-" + item + selectedYear}
-                  value={item}
-                >
-                  {item}
-                </MenuItem>
-              ))}
-              <MenuItem
-                style={{ display: "flex", justifyContent: "center" }}
-                onClick={(e) => {
-                  handleAddNewYear();
+              <InputLabel id="year-selection-input-label">Year</InputLabel>
+              <Select
+                labelId="year-selection"
+                id="year-selection"
+                value={selectedYear}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setSelectedYear(e.target.value.toString());
+                  }
                 }}
               >
-                <AddCircleOutlineIcon></AddCircleOutlineIcon>
-              </MenuItem>
-            </Select>
-            <FormHelperText>Select year to create or edit data</FormHelperText>
-          </FormControl>
-        </Box>
+                {allYear.map((item, index) => (
+                  <MenuItem
+                    key={index + "-menuitem-" + item + selectedYear}
+                    value={item}
+                  >
+                    {item}
+                  </MenuItem>
+                ))}
+                <MenuItem
+                  style={{ display: "flex", justifyContent: "center" }}
+                  onClick={(e) => {
+                    handleAddNewYear();
+                  }}
+                >
+                  <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                </MenuItem>
+              </Select>
+              <FormHelperText>
+                Select year to create or edit data
+              </FormHelperText>
+            </FormControl>
+          </Box>
+        </Paper>
       </Box>
       <EditMonthDataModal
         show={openNewMonthModal}
