@@ -356,7 +356,7 @@ export default function PieChartComponent({ userData }) {
     return (
             <Box
                 sx={{
-                    marginTop: "2%",
+                    marginTop: "8%",
                 }}
             >
                 
