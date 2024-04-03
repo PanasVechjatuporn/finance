@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import TableFooter from "@mui/material/TableFooter";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -65,6 +66,8 @@ export default function MonthDataTable({ userData, setUserData }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [allYear, setAllYear] = useState(null);
   const [currentYearData, setCurrentYearData] = useState(null);
+  const [sumIncome, setSumIncome] = useState(null);
+  const [sumExpense, setSumExpense] = useState(null);
   const [openNewMonthModal, setOpenNewMonthModal] = useState(false);
 
   const handleNewMonthClick = () => {
@@ -143,6 +146,25 @@ export default function MonthDataTable({ userData, setUserData }) {
     }
   }, [selectedYear, userData]);
 
+  useEffect(() => {
+    if(currentYearData){
+      if(currentYearData.data.length > 0){
+        let tmpSumIncome = 0;
+        let tmpSumExpense = 0;
+        currentYearData.data.forEach(data => {
+          data.expenseData.forEach(expData => {
+            tmpSumExpense += parseFloat(expData.amount)
+          })
+          data.incomeData.forEach(incData => {
+            tmpSumIncome += parseFloat(incData.amount)
+          })
+        })
+        setSumIncome(tmpSumIncome);
+        setSumExpense(tmpSumExpense)
+      }
+    }
+  },[currentYearData])
+
   if (!userData || !currentYearData) {
     return <OverlayLoading isLoading={true} />;
   }
@@ -170,10 +192,12 @@ export default function MonthDataTable({ userData, setUserData }) {
         >
           เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
         </Typography>
-        <Paper style={{ 
-          height: 600, 
-          width: "100%" }}
-          >
+        <Paper
+          style={{
+            height: 600,
+            width: "100%",
+          }}
+        >
           <TableContainer
             style={{
               height: 600,
@@ -193,9 +217,9 @@ export default function MonthDataTable({ userData, setUserData }) {
                 key={"table-header"}
               >
                 <TableRow key={"table-row-header"}>
-                  <TableCell style={{ width: "1vh" }}></TableCell>
-                  <TableCell style={{ width: "1vh" }}></TableCell>
-                  <TableCell align="center" style={{ width: "10vh" }}>
+                  <TableCell style={{ width: "1%" }}></TableCell>
+                  <TableCell style={{ width: "1%" }}></TableCell>
+                  <TableCell align="center" style={{ width: "10%" }}>
                     เดือน
                   </TableCell>
                   <TableCell align="center">รายรับ</TableCell>
@@ -204,31 +228,31 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <TableCell align="center" style={{ width: "2%" }}></TableCell>
                 </TableRow>
               </TableHead>
-              {currentYearData.data.length > 0 ? (
-                <TableBody>
-                  {currentYearData.data.map((monthData, index) => (
-                    <DataTableRow
-                      key={`data-table-row-${index}-${selectedYear}`}
-                      dataMonth={monthData}
-                      currentYearData={currentYearData}
-                      userData={userData}
-                      setUserData={setUserData}
-                      selectedYear={selectedYear}
-                      isDeleteActive={
-                        parseInt(currentYearData.data.length) ===
-                          parseInt(index + 1) &&
-                          currentYearData.data.length !== 1
-                          ? true
-                          : false
-                      }
-                    ></DataTableRow>
-                  ))}
-                </TableBody>
-              ) : (
-                <></>
-              )}
-              {currentYearData.data.length !== 12 ? (
-                <TableBody>
+              <TableBody>
+                {currentYearData.data.length > 0 ? (
+                  <>
+                    {currentYearData.data.map((monthData, index) => (
+                      <DataTableRow
+                        key={`data-table-row-${index}-${selectedYear}`}
+                        dataMonth={monthData}
+                        currentYearData={currentYearData}
+                        userData={userData}
+                        setUserData={setUserData}
+                        selectedYear={selectedYear}
+                        isDeleteActive={
+                          parseInt(currentYearData.data.length) ===
+                            parseInt(index + 1) &&
+                            currentYearData.data.length !== 1
+                            ? true
+                            : false
+                        }
+                      ></DataTableRow>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )}
+                {currentYearData.data.length !== 12 ? (
                   <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
                     <TableCell
                       colSpan={7}
@@ -244,10 +268,49 @@ export default function MonthDataTable({ userData, setUserData }) {
                       ></IconButton>
                     </TableCell>
                   </TableRow>
-                </TableBody>
-              ) : (
-                <></>
-              )}
+                ) : (
+                  <></>
+                )}
+              </TableBody>
+
+              <TableFooter>
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    align="center"
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#009e00",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    รวม
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "black",
+                      backgroundColor: "#cdf5c3",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    {sumIncome}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "black",
+                      backgroundColor: "#ffcfd5",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    {sumExpense}
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
             </Table>
           </TableContainer>
           <Box
