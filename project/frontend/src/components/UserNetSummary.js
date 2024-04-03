@@ -15,7 +15,6 @@ async function fetchUserNetSummary(userStore){
             userId: userStore.userId,
         },
     });
-    console.log('getResult ::',getResult)
     return getResult.data;
 }
 
@@ -23,11 +22,12 @@ export const UserNetSummary = ({userData}) => {
     const userStore = useSelector((state) => state.userStore);
     const [userNetSummary, setUserNetSummary] = useState(null);
     useEffect(()=> {
-        console.log('userData change')
         const fetchData = async () => {
             try {
-                const userNetSummary = await fetchUserNetSummary(userStore);
-                setUserNetSummary(userNetSummary);
+                if(userStore.userId){
+                    const userNetSummary = await fetchUserNetSummary(userStore);
+                    setUserNetSummary(userNetSummary);
+                }
             } catch (error) {
                 console.error("Error fetching user assets:", error);
             }
@@ -53,9 +53,16 @@ export const UserNetSummary = ({userData}) => {
                     sx={{
                         padding: 1,
                     }}
-                >ยอดเงินสะสมของคุณ</Typography>
+                >ยอดสรุปเงินของคุณ</Typography>
                 <>
-                {userNetSummary && userNetSummary.netIncomeExpense}
+                รายรับทั้งหมดของคุณ = {userNetSummary && userNetSummary.netIncome} ,
+                <br/>
+                รายจ่ายทั้งหมดของคุณ = {userNetSummary && userNetSummary.netExpense} ,
+                <br/>
+                รายรับทั้งหมด - รายจ่ายทั้งหมด = {userNetSummary && userNetSummary.netIncomeExpense} ,
+                <br/>
+                ความมั่งคั่งของคุณ = {userNetSummary && userNetSummary.netWealth}
+                <br/>
                 </>
             </Container>
         </Box>
