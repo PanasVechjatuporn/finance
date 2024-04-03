@@ -80,10 +80,12 @@ async function createUserNetSummary(userId){
     if(!netSummaryFindResult){
         await collection.insertOne({
             userId : userId,
+            netIncome : 0,
+            netExpense : 0,
             netIncomeExpense : 0,
             netBoughtAsset : 0,
             netSoldAsset : 0,
-            netWealth : 0
+            netWealth : 0,
         });
     }
 }
@@ -275,7 +277,10 @@ async function updateUserDiffIncomeExpense (uid) {
                 tmpTotalIncome += parseFloat(income.amount);
             })
         })
-        netSummaryFindResult.netIncomeExpense = (tmpTotalIncome - tmpTotalExpense);
+        netSummaryFindResult.netIncome = tmpTotalIncome;
+        netSummaryFindResult.netExpense = tmpTotalExpense;
+        netSummaryFindResult.netIncomeExpense = (netSummaryFindResult.netIncome - netSummaryFindResult.netExpense);
+        netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset
         await collectionUserNetSummary.updateOne({userId : uid},  {
             $set: netSummaryFindResult,
         },
