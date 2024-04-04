@@ -62,7 +62,7 @@ export const GoalInvestment = () => {
             <Navigate />
             {JSON.stringify(goalData)}
             <CurrentUserRiskProfile/>
-            <InvestmentFundsTable fundsData={fundsData}/>
+            <InvestmentFundsTable fundsData={fundsData} goalData={goalData}/>
             
         </React.Fragment>
     );

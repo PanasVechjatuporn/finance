@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,63 +12,39 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import axios from "axios";
-const baseURL = "http://localhost:8000";
-const secAPIFundDailyInfoHeader = {
-    "Ocp-Apim-Subscription-Key": process.env.REACT_APP_FUND_DAILY_INFO_API_KEY,
-};
+import ArticleIcon from '@mui/icons-material/Article';
+import IconButton from '@mui/material/IconButton';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { BuyAssetModal } from "./BuyAssetModal";
 
-async function getFundsLastestNav(proj_id) {
-    try {
-        const res = await axios.get(
-            `${baseURL}/secapiutils/get_lastest_nav`,
-            {
-                headers: {
-                    'proj_id': proj_id
-                },
-            }
-        );
-        console.log('res :: ', res.data[0])
-        return res.data[0];
-    } catch (err) {
-        console.log("err :: ", err);
-    }
-}
-
-function createData(id, name, calories, fat, carbs, protein) {
+function createData(
+    proj_id,
+    proj_name_th,
+    proj_name_en,
+    proj_abbr_name,
+    risk_spectrum,
+    spec_code,
+    growth_rate,
+    fact_sheet,
+    last_val,
+    last_update,
+    buy_asset
+) {
     return {
-        id,
-        name,
-        calories,
-        fat,
-        carbs,
-        protein,
+        proj_id,
+        proj_name_th,
+        proj_name_en,
+        proj_abbr_name,
+        risk_spectrum,
+        spec_code,
+        growth_rate,
+        fact_sheet,
+        last_val,
+        last_update,
+        buy_asset,
     };
 }
-
-const rows = [
-    createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-    createData(2, "Donut", 452, 25.0, 51, 4.9),
-    createData(3, "Eclair", 262, 16.0, 24, 6.0),
-    createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-    createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-    createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-    createData(9, "KitKat", 518, 26.0, 65, 7.0),
-    createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-    createData(11, "Marshmallow", 318, 0, 81, 2.0),
-    createData(12, "Nougat", 360, 19.0, 9, 37.0),
-    createData(13, "Oreo", 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -87,10 +62,6 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -105,34 +76,64 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: "name",
+        id: "proj_name_th",
+        numeric: false,
+        disablePadding: false,
+        label: "ชื่อกองทุน (ไทย)",
+    },
+    {
+        id: "proj_name_en",
         numeric: false,
         disablePadding: true,
-        label: "Dessert (100g serving)",
+        label: "ชื่อกองทุน (อังกฤษ)",
     },
     {
-        id: "calories",
-        numeric: true,
-        disablePadding: false,
-        label: "Calories",
+        id: "proj_abbr_name",
+        numeric: false,
+        disablePadding: true,
+        label: "ชื่อย่อกองทุน",
     },
     {
-        id: "fat",
+        id: "risk_spectrum",
         numeric: true,
         disablePadding: false,
-        label: "Fat (g)",
+        label: "ระดับความเสี่ยง",
     },
     {
-        id: "carbs",
-        numeric: true,
+        id: "spec_code",
+        numeric: false,
         disablePadding: false,
-        label: "Carbs (g)",
+        label: "รหัสลักษณะพิเศษ",
     },
     {
-        id: "protein",
+        id: "growth_rate",
         numeric: true,
         disablePadding: false,
-        label: "Protein (g)",
+        label: "อัตราการเติบโต ตั้งแต่ตั้งกองทุน",
+    },
+    {
+        id: "fact_sheet",
+        numeric: false,
+        disablePadding: false,
+        label: "หนังสือชี้ชวน",
+    },
+    {
+        id: "last_val",
+        numeric: true,
+        disablePadding: false,
+        label: "ราคาต่อหน่วย",
+    },
+    {
+        id: "last_update",
+        numeric: false,
+        disablePadding: false,
+        label: "วันที่อัพเดทล่าสุด",
+    },
+    {
+        id: "buy_asset",
+        numeric: false,
+        disablePadding: false,
+        label: "ซื้อ",
     },
 ];
 
@@ -148,8 +149,8 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? "right" : "left"}
-                        padding={headCell.disablePadding ? "none" : "normal"}
+                        // align={headCell.numeric ? "right" : "left"}
+                        // padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         <TableSortLabel
@@ -172,122 +173,75 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(["asc", "desc"]).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
-
+function EnhancedTableToolbar() {
     return (
         <Toolbar
             sx={{
                 pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(numSelected > 0 && {
-                    bgcolor: (theme) =>
-                        alpha(
-                            theme.palette.primary.main,
-                            theme.palette.action.activatedOpacity
-                        ),
-                }),
+                pr: { xs: 1, sm: 1 }
             }}
         >
-            {numSelected > 0 ? (
-                <Typography
-                    sx={{ flex: "1 1 100%" }}
-                    color="inherit"
-                    variant="subtitle1"
-                    component="div"
-                >
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography
-                    sx={{ flex: "1 1 100%" }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    Nutrition
-                </Typography>
-            )}
+            <Typography
+                sx={{ flex: "1 1 100%" }}
+                variant="h6"
+                id="tableTitle"
+                component="div"
+            >
+                กองทุนที่สามารถซื้อได้
+            </Typography>
 
-            {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton>
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
-            )}
         </Toolbar>
     );
 }
 
-EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-};
-
-export const InvestmentFundsTable = ({ fundsData }) => {
+export const InvestmentFundsTable = ({ fundsData, goalData }) => {
     const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("calories");
-    const [selected, setSelected] = useState([]);
+    const [orderBy, setOrderBy] = useState("proj_name_th");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [tmp, setTmp] = useState(null);
+    const [rows, setRows] = useState(null);
+    const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
 
     useEffect(() => {
-        async function test() {
-            const result = await getFundsLastestNav("M0004_2564");
-            return result
+        if (fundsData) {
+            let tmpRows = [];
+            fundsData.forEach((fund) => {
+                tmpRows.push(
+                    createData(
+                        fund.proj_id,
+                        fund.proj_name_th,
+                        fund.proj_name_en,
+                        fund.proj_abbr_name,
+                        fund.risk_spectrum,
+                        fund.spec_code,
+                        "growth_rate",
+                        fund.url_factsheet,
+                        "last_val",
+                        "last_update",
+                        "buy_asset"
+                    )
+                );
+            });
+            setRows(tmpRows);
         }
-        test().then(res => {
-            setTmp(res)
-        });
-    }, [fundsData])
+    }, [fundsData]);
+
+    const openInNewTab = (url) => {
+        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+        if (newWindow) newWindow.opener = null
+    }
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
         setOrder(isAsc ? "desc" : "asc");
         setOrderBy(property);
-    };
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelected = rows.map((n) => n.id);
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-        setSelected(newSelected);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -299,25 +253,21 @@ export const InvestmentFundsTable = ({ fundsData }) => {
         setPage(0);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-    const visibleRows = React.useMemo(
-        () =>
-            stableSort(rows, getComparator(order, orderBy)).slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-            ),
-        [order, orderBy, page, rowsPerPage]
-    );
-
+    const visibleRows = useMemo(
+        () => {
+            if (rows) {
+                return stableSort(rows, getComparator(order, orderBy)).slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                )
+            }
+        }, [order, orderBy, page, rowsPerPage, rows]);
     return (
         <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -325,44 +275,58 @@ export const InvestmentFundsTable = ({ fundsData }) => {
                         size={"medium"}
                     >
                         <EnhancedTableHead
-                            numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={rows ? rows.length : 0}
                         />
                         <TableBody>
-                            {visibleRows.map((row, index) => {
-                                const isItemSelected = isSelected(row.id);
-                                const labelId = `enhanced-table-checkbox-${index}`;
-
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={(event) => handleClick(event, row.id)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        key={row.id}
-                                        selected={isItemSelected}
-                                        sx={{ cursor: "pointer" }}
-                                    >
-                                        <TableCell
-                                            component="th"
-                                            id={labelId}
-                                            scope="row"
-                                            padding="none"
+                            {visibleRows &&
+                                (visibleRows.map((row, index) => {
+                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    return (
+                                        <TableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            sx={{ cursor: "pointer" }}
                                         >
-                                            {row.name}
-                                        </TableCell>
-                                        <TableCell align="right">{row.calories}</TableCell>
-                                        <TableCell align="right">{row.fat}</TableCell>
-                                        <TableCell align="right">{row.carbs}</TableCell>
-                                        <TableCell align="right">{row.protein}</TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                            <TableCell
+                                                component="th"
+                                                id={labelId}
+                                                scope="row"
+                                                padding="none"
+                                            >
+                                                {row.proj_name_th}
+                                            </TableCell>
+                                            <TableCell align="right">{row.proj_name_en}</TableCell>
+                                            <TableCell align="right">{row.proj_abbr_name}</TableCell>
+                                            <TableCell align="right">{row.risk_spectrum}</TableCell>
+                                            <TableCell align="right">{row.spec_code}</TableCell>
+                                            <TableCell align="right">{"growth_rate"}</TableCell>
+                                            <TableCell align="right">
+                                                <IconButton
+                                                    children={<ArticleIcon />}
+                                                    onClick={(e) => {
+                                                        openInNewTab(row.fact_sheet)
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="right">{"last_val"}</TableCell>
+                                            <TableCell align="right">{"last_update"}</TableCell>
+                                            <TableCell align="right">
+                                                <IconButton
+                                                    children={<AddShoppingCartIcon />}
+                                                    onClick={(e) => {
+                                                        setModalData(row)
+                                                        setIsModalAssetOpen(true)
+                                                    }}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }))}
                             {emptyRows > 0 && (
                                 <TableRow>
                                     <TableCell colSpan={6} />
@@ -374,17 +338,14 @@ export const InvestmentFundsTable = ({ fundsData }) => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={rows ? rows.length : 0}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <>{JSON.stringify(fundsData)}</>
-            <>processENV :: {JSON.stringify(secAPIFundDailyInfoHeader)}</>
-            <br />
-            <>{JSON.stringify(tmp)}</>
+            <BuyAssetModal fundData={modalData} open={isModalAssetOpen} setOpen={setIsModalAssetOpen} goalData={goalData}/>
         </Box>
     );
 };
