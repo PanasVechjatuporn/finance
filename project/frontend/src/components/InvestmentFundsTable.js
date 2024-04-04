@@ -17,8 +17,11 @@ import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { BuyAssetModal } from "./BuyAssetModal";
+import { Container } from "react-bootstrap";
+import { roundNumber } from "utils/numberUtil";
 
 function createData(
+    id,
     proj_id,
     proj_name_th,
     proj_name_en,
@@ -32,6 +35,7 @@ function createData(
     buy_asset
 ) {
     return {
+        id,
         proj_id,
         proj_name_th,
         proj_name_en,
@@ -82,12 +86,6 @@ const headCells = [
         label: "ชื่อกองทุน (ไทย)",
     },
     {
-        id: "proj_name_en",
-        numeric: false,
-        disablePadding: true,
-        label: "ชื่อกองทุน (อังกฤษ)",
-    },
-    {
         id: "proj_abbr_name",
         numeric: false,
         disablePadding: true,
@@ -107,9 +105,9 @@ const headCells = [
     },
     {
         id: "growth_rate",
-        numeric: true,
+        numeric: false,
         disablePadding: false,
-        label: "อัตราการเติบโต ตั้งแต่ตั้งกองทุน",
+        label: "ผลตอบแทนตั้งแต่จัดตั้ง",
     },
     {
         id: "fact_sheet",
@@ -149,9 +147,10 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        // align={headCell.numeric ? "right" : "left"}
+                        align={headCell.numeric ? "right" : "center"}
                         // padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        width={headCell.id==="proj_name_th" ? "15%" : "9.4%"}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
@@ -215,16 +214,17 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
             fundsData.forEach((fund) => {
                 tmpRows.push(
                     createData(
+                        fund._id,
                         fund.proj_id,
                         fund.proj_name_th,
                         fund.proj_name_en,
                         fund.proj_abbr_name,
                         fund.risk_spectrum,
                         fund.spec_code,
-                        "growth_rate",
+                        fund.growth_rate,
                         fund.url_factsheet,
-                        "last_val",
-                        "last_update",
+                        fund.last_val,
+                        fund.last_update,
                         "buy_asset"
                     )
                 );
@@ -265,6 +265,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
             }
         }, [order, orderBy, page, rowsPerPage, rows]);
     return (
+        <Container sx={{maxWidth : "90%"}}>
         <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
                 <EnhancedTableToolbar />
@@ -273,6 +274,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                         sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={"medium"}
+                        stickyHeader
                     >
                         <EnhancedTableHead
                             order={order}
@@ -300,11 +302,10 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                             >
                                                 {row.proj_name_th}
                                             </TableCell>
-                                            <TableCell align="right">{row.proj_name_en}</TableCell>
                                             <TableCell align="right">{row.proj_abbr_name}</TableCell>
                                             <TableCell align="right">{row.risk_spectrum}</TableCell>
                                             <TableCell align="right">{row.spec_code}</TableCell>
-                                            <TableCell align="right">{"growth_rate"}</TableCell>
+                                            <TableCell align="right" >{roundNumber(row.growth_rate,2)} %</TableCell>
                                             <TableCell align="right">
                                                 <IconButton
                                                     children={<ArticleIcon />}
@@ -313,8 +314,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell align="right">{"last_val"}</TableCell>
-                                            <TableCell align="right">{"last_update"}</TableCell>
+                                            <TableCell align="right">{row.last_val}</TableCell>
+                                            <TableCell align="right">{row.last_update}</TableCell>
                                             <TableCell align="right">
                                                 <IconButton
                                                     children={<AddShoppingCartIcon />}
@@ -347,5 +348,6 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
             </Paper>
             <BuyAssetModal fundData={modalData} open={isModalAssetOpen} setOpen={setIsModalAssetOpen} goalData={goalData}/>
         </Box>
+        </Container>
     );
 };

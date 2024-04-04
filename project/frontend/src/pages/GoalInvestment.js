@@ -23,7 +23,7 @@ async function fetchGoalData(userStore, goalObjId) {
 }
 
 async function fetchFundsData(userStore) {
-    const result = await  axios.get(
+    const result = await axios.get(
         `${baseURL}/db/funds`,
         {
             headers: {
@@ -35,6 +35,28 @@ async function fetchFundsData(userStore) {
     return result.data
 }
 
+async function digestFundsData(userStore, fundsData) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await axios.post(
+                `${baseURL}/db/get_and_calculate_fund_growth`,
+                {
+                    fundsData: fundsData
+                }, {
+                headers: {
+                    Authorization: userStore.userToken,
+                    UserId: userStore.userId,
+                }
+            }
+            )
+            resolve(result.data)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
 export const GoalInvestment = () => {
     const userStore = useSelector((state) => state.userStore);
     const { goalObjId } = useParams();
@@ -43,15 +65,18 @@ export const GoalInvestment = () => {
     useEffect(() => {
         if (goalObjId && userStore.userId !== null) {
             const fetchGoal = async () => {
-                return  Promise.all([fetchGoalData(userStore, goalObjId), fetchFundsData(userStore)])
+                return Promise.all([fetchGoalData(userStore, goalObjId), fetchFundsData(userStore)])
             }
             fetchGoal().then(res => {
                 const fetchGoalData = res[0]
                 const fetchFundsData = res[1]
-                let RMFSSFFunds = fetchFundsData.filter(fund => fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"));
-                let NotRMFSSFFunds = fetchFundsData.filter(fund => !(fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")));
-                setFundData(fetchGoalData.type === "normal" ? NotRMFSSFFunds : RMFSSFFunds)
-                setGoalData(fetchGoalData)
+                digestFundsData(userStore, fetchFundsData).then(resDigest => {
+                    const digestedFundsData = resDigest.fundsData;
+                    let RMFSSFFunds = digestedFundsData.filter(fund => fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"));
+                    let NotRMFSSFFunds = digestedFundsData.filter(fund => !(fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")));
+                    setFundData(fetchGoalData.type === "normal" ? NotRMFSSFFunds : RMFSSFFunds)
+                    setGoalData(fetchGoalData)
+                })
             })
         }
     }, [goalObjId, userStore]);
@@ -60,10 +85,9 @@ export const GoalInvestment = () => {
     return (
         <React.Fragment>
             <Navigate />
-            {JSON.stringify(goalData)}
-            <CurrentUserRiskProfile/>
-            <InvestmentFundsTable fundsData={fundsData} goalData={goalData}/>
-            
+            <CurrentUserRiskProfile />
+            <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
+
         </React.Fragment>
     );
 }

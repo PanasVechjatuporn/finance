@@ -73,19 +73,19 @@ exports.createNewUserWithProvider = async (req, res) => {
     }
 };
 
-async function createUserNetSummary(userId){
+async function createUserNetSummary(userId) {
     const db = client.db(dbName);
     const collection = db.collection("usernetsummary");
-    const netSummaryFindResult = await collection.findOne({userId : userId});
-    if(!netSummaryFindResult){
+    const netSummaryFindResult = await collection.findOne({ userId: userId });
+    if (!netSummaryFindResult) {
         await collection.insertOne({
-            userId : userId,
-            netIncome : 0,
-            netExpense : 0,
-            netIncomeExpense : 0,
-            netBoughtAsset : 0,
-            netSoldAsset : 0,
-            netWealth : 0,
+            userId: userId,
+            netIncome: 0,
+            netExpense: 0,
+            netIncomeExpense: 0,
+            netBoughtAsset: 0,
+            netSoldAsset: 0,
+            netWealth: 0,
         });
     }
 }
@@ -250,13 +250,13 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
     }
 };
 
-async function updateUserDiffIncomeExpense (uid) {
+async function updateUserDiffIncomeExpense(uid) {
     const db = client.db(dbName);
     const collectionIncomeExpense = db.collection("income_expense");
     const collectionUserNetSummary = db.collection("usernetsummary");
-    const netSummaryFindResult = await collectionUserNetSummary.findOne({userId : uid});
-    if(netSummaryFindResult){
-        const totalIncomeExpense = await collectionIncomeExpense.find({userId : uid}).toArray();
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({ userId: uid });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense.find({ userId: uid }).toArray();
         let tmpTotalIncome = 0;
         let tmpTotalExpense = 0;
         totalIncomeExpense.forEach((data) => {
@@ -271,10 +271,10 @@ async function updateUserDiffIncomeExpense (uid) {
         netSummaryFindResult.netExpense = tmpTotalExpense;
         netSummaryFindResult.netIncomeExpense = (netSummaryFindResult.netIncome - netSummaryFindResult.netExpense);
         netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset
-        await collectionUserNetSummary.updateOne({userId : uid},  {
+        await collectionUserNetSummary.updateOne({ userId: uid }, {
             $set: netSummaryFindResult,
         },
-        { upsert: true });
+            { upsert: true });
     }
 }
 
@@ -622,6 +622,39 @@ exports.getUserNetSummary = async (req, res) => {
         }
     } catch (err) {
         console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.getAndCalculateFundGrowth = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("nav");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    let fundsData = req.body.fundsData;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            await Promise.all(fundsData.map(async (fund, index) => {
+                let query = { fundsObjectID: fund._id }
+                const findResult = await collection.find(query).sort({
+                    navDate: 1,
+                }).toArray();
+                if(findResult[0] && findResult[findResult.length-1]){
+                    const startPrice = findResult[0].lastVal;
+                    const lastPrice = findResult[findResult.length-1].lastVal;
+                    const lastDate = findResult[findResult.length-1].navDate;
+                    const growthRate = ((((lastPrice - startPrice) + Number.EPSILON)/(startPrice)) + Number.EPSILON)*100;
+                    fundsData[index].growth_rate = growthRate;
+                    fundsData[index].last_val = lastPrice;
+                    fundsData[index].last_update = lastDate;
+                    
+                }
+            }));
+            res.status(200).json({fundsData});
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getAndCalculateFundGrowth: ", err);
         res.status(401).json({ message: err });
     }
 }
