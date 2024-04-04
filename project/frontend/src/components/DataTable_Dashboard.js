@@ -18,7 +18,7 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import OverlayLoading from "./OverlayLoading";
+import {OverlayLoading} from "./OverlayLoading";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import { formatNumberWithCommas } from "utils/numberUtil";
@@ -275,7 +275,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 )}
               </TableBody>
 
-              <TableFooter>
+              <TableFooter stickyFooter>
                 <TableRow>
                   <TableCell
                     colSpan={3}

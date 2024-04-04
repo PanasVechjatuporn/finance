@@ -1,10 +1,10 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function OverlayLoading({ isLoading }) {
-    const [open, setOpen] = React.useState(false);
-    React.useEffect(() => {
+export function OverlayLoading({ isLoading }) {
+    const [open, setOpen] = useState(false);
+    useEffect(() => {
         setOpen(isLoading);
     }, [isLoading]);
 
@@ -20,4 +20,19 @@ function OverlayLoading({ isLoading }) {
     );
 }
 
-export default OverlayLoading;
+export function ComponentLoading({isLoading}) {
+    const [open,setOpen] = useState(false);
+    useEffect(() => {
+        setOpen(isLoading);
+    },[isLoading])
+    return (
+        <div>
+            <Backdrop
+                sx={{ color: "#fff"}}
+                open={open}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </div>
+    );
+}

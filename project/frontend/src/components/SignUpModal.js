@@ -10,7 +10,7 @@ import { signInWithGooglePopup } from "../utils/firebase.utils";
 import { useDispatch } from "react-redux";
 import axios from 'axios';
 import { Login, LoginEmailPassword } from '../store/UserSlice';
-import OverlayLoading from "./OverlayLoading";
+import {OverlayLoading} from "./OverlayLoading";
 const baseURL = "http://localhost:8000";
 
 function SignUpModal({ show, setShow, mode }) {
