@@ -1,75 +1,100 @@
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Backdrop from "@mui/material/Backdrop";
+import Modal from "react-bootstrap/Modal";
+import Container from "@mui/material/Container";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { ComponentLoading } from "./OverlayLoading";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import Button from "react-bootstrap/Button";
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { LineChart } from '@mui/x-charts/LineChart';
+
+const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const xLabels = [
+    'Page A',
+    'Page B',
+    'Page C',
+    'Page D',
+    'Page E',
+    'Page F',
+    'Page G',
+];
+
 const baseURL = "http://localhost:8000";
 
-async function getFundsLastestNav(proj_id) {
+async function getFundsLastestNav(proj_id, userStore) {
     try {
+        console.log(userStore)
         const res = await axios.get(`${baseURL}/secapiutils/get_lastest_nav`, {
             headers: {
-                proj_id: proj_id
+                proj_id: proj_id,
+                userId : userStore.userId,
+                userToken : userStore.userToken 
             },
         });
-        console.log("res :: ", res.data[0]);
         return res.data[0];
     } catch (err) {
         console.log("err :: ", err);
     }
 }
 
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "80%",
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
-    borderRadius: 3,
-};
+async function getNavYearToDate(proj_id,userStore) {
+    try {
+        const res = await axios.get(`${baseURL}/db/get_nav`, {
+            headers: {
+                ProjectId: proj_id,
+                Authorization : userStore.userToken,
+                UserId : userStore.userId,
+                GetYearToDate : true
+            },
+        });
+        return res.data.navYearToDate;
+    } catch (err) {
+        console.log("err :: ", err);
+    }
+}
 
-export const BuyAssetModal = ({fundData, open, setOpen, goalData}) => {
-    const [isLoading,setIsLoading] = useState(false)
-    const handleClose = () => setOpen(false);
+export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
     const userStore = useSelector((state) => state.userStore);
+    const [isLoading, setIsLoading] = useState(false)
+    const handleClose = () => {
+        setOpen(false)
+    };
     const [fetchedNav, setFetchedNav] = useState(null);
     useEffect(() => {
-        if(fundData && goalData && userStore){
-            console.log('fetching Data')
+        if (fundData && goalData && userStore) {
             setIsLoading(true)
-            getFundsLastestNav(fundData.proj_id).then(res => {
-                setFetchedNav(res)
+            Promise.all([getFundsLastestNav(fundData.proj_id, userStore), getNavYearToDate(fundData.proj_id, userStore)]).then(res => {
+                console.log('res[1] :: ',res[1])
+                setFetchedNav(res[0])
                 setIsLoading(false)
-            });
+            }).catch(err => {
+                console.log('err :: ', err)
+            })
+
         }
-        
     }, [fundData, goalData, userStore])
 
     return (
         <>
-        <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition={true}
-            slots={{ backdrop: Backdrop }}
-            slotProps={{
-                backdrop: {
-                    timeout: 500,
-                },
-            }}
-            disableAutoFocus
-        >
-            <Fade in={open}>
-                <Box sx={style}>
+            <Modal
+                show={open}
+                onHide={() => {
+                    handleClose();
+                }}
+                backdrop="static"
+                className="edit-modal"
+                style={{
+                    top: '60%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                }}
+            >
+                <Modal.Header closeButton>
                     <div>
                         <Typography
                             variant="h5"
@@ -77,27 +102,93 @@ export const BuyAssetModal = ({fundData, open, setOpen, goalData}) => {
                                 color: "#757575",
                                 textDecoration: "underline",
                                 textDecorationColor: "transparent",
-                                borderBottom: "2px solid #757575",
                                 display: "inline-block",
                                 width: "100%",
-                                paddingBottom: "8px",
                                 userSelect: "none",
-                                marginBottom: "12px",
                                 fontWeight: "bold"
                             }}
                         >
                             {fundData && fundData.proj_name_th}
                         </Typography>
                     </div>
+                </Modal.Header>
+                <Modal.Body>
                     <>
-                    {fetchedNav && JSON.stringify(fetchedNav)}
+                        {!isLoading && fetchedNav && JSON.stringify(fetchedNav)}
                     </>
-                    <div>
-                        <ComponentLoading isLoading={isLoading}/>
-                    </div>
-                </Box>
-            </Fade>
-        </Modal>
-    </>
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Grid container
+                            spacing={0}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Grid item xs={6} md={6}>
+                                <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <LineChart
+                                        width={500}
+                                        height={300}
+                                        series={[
+                                            { data: pData, label: 'pv' },
+                                            { data: uData, label: 'uv' },
+                                        ]}
+                                        xAxis={[{ scaleType: 'point', data: xLabels }]}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6} md={6}>
+                                <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <LineChart
+                                        width={500}
+                                        height={300}
+                                        series={[
+                                            { data: pData, label: 'pv' },
+                                            { data: uData, label: 'uv' },
+                                        ]}
+                                        xAxis={[{ scaleType: 'point', data: xLabels }]}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Box>
+
+                    <Container>
+                        <ComponentLoading isLoading={isLoading} />
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            handleClose();
+                        }}
+                    >
+                        ปิด
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={async () => {
+                            try {
+                                handleClose();
+                            } catch (err) {
+                                alert(err);
+                            }
+                        }}
+                    >
+                        <div>
+                            <AddShoppingCartIcon />{" "}ซื้อ
+                        </div>
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     )
 }

@@ -47,4 +47,6 @@ router.get("/get_goal_by_obj_id", mongoController.getUserGoalByObjId);
 router.get("/get_user_net_summary",mongoController.getUserNetSummary);
 
 router.post("/get_and_calculate_fund_growth", mongoController.getAndCalculateFundGrowth);
+
+router.get("/get_nav", mongoController.getFundsDailyNav);
 module.exports = router;

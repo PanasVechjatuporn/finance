@@ -640,21 +640,47 @@ exports.getAndCalculateFundGrowth = async (req, res) => {
                 const findResult = await collection.find(query).sort({
                     navDate: 1,
                 }).toArray();
-                if(findResult[0] && findResult[findResult.length-1]){
+                if (findResult[0] && findResult[findResult.length - 1]) {
                     const startPrice = findResult[0].lastVal;
-                    const lastPrice = findResult[findResult.length-1].lastVal;
-                    const lastDate = findResult[findResult.length-1].navDate;
-                    const growthRate = ((((lastPrice - startPrice) + Number.EPSILON)/(startPrice)) + Number.EPSILON)*100;
+                    const lastPrice = findResult[findResult.length - 1].lastVal;
+                    const lastDate = findResult[findResult.length - 1].navDate;
+                    const growthRate = ((((lastPrice - startPrice) + Number.EPSILON) / (startPrice)) + Number.EPSILON) * 100;
                     fundsData[index].growth_rate = growthRate;
                     fundsData[index].last_val = lastPrice;
                     fundsData[index].last_update = lastDate;
-                    
+
                 }
             }));
-            res.status(200).json({fundsData});
+            res.status(200).json({ fundsData });
         }
     } catch (err) {
         console.log("Error occured in mongoController.getAndCalculateFundGrowth: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.getFundsDailyNav = async (req, res) => {
+    const db = client.db(dbName);
+    const collectionNav = db.collection("nav");
+    const collectionFunds = db.collection("funds");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const isGetYearToDate = req.header("GetYearToDate");
+    const proj_id = req.header("ProjectId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            if (isGetYearToDate) {
+                const fundsObj = await collectionFunds.findOne({ proj_id: proj_id })
+                const fundsObjectId = fundsObj._id.toString();
+                const navYearToDate = await collectionNav.find({ fundsObjectID: fundsObjectId }).toArray();
+                res.status(200).json({ navYearToDate })
+            }
+        } else {
+            throw new Error("unauthorized access");
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getFundsDailyNav: ", err);
         res.status(401).json({ message: err });
     }
 }
