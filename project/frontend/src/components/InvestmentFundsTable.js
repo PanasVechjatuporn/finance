@@ -13,11 +13,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
-import ArticleIcon from '@mui/icons-material/Article';
-import IconButton from '@mui/material/IconButton';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ArticleIcon from "@mui/icons-material/Article";
+import IconButton from "@mui/material/IconButton";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { BuyAssetModal } from "./BuyAssetModal";
 import { Container } from "react-bootstrap";
+import { ComponentLoading } from "./OverlayLoading";
 import { roundNumber } from "utils/numberUtil";
 
 function createData(
@@ -150,7 +151,7 @@ function EnhancedTableHead(props) {
                         align={headCell.numeric ? "right" : "center"}
                         // padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.id ? order : false}
-                        width={headCell.id==="proj_name_th" ? "15%" : "9.4%"}
+                        width={headCell.id === "proj_name_th" ? "15%" : "9.4%"}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
@@ -183,7 +184,7 @@ function EnhancedTableToolbar() {
         <Toolbar
             sx={{
                 pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 }
+                pr: { xs: 1, sm: 1 },
             }}
         >
             <Typography
@@ -194,7 +195,6 @@ function EnhancedTableToolbar() {
             >
                 กองทุนที่สามารถซื้อได้
             </Typography>
-
         </Toolbar>
     );
 }
@@ -234,9 +234,9 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
     }, [fundsData]);
 
     const openInNewTab = (url) => {
-        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-        if (newWindow) newWindow.opener = null
-    }
+        const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+        if (newWindow) newWindow.opener = null;
+    };
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -253,101 +253,110 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
         setPage(0);
     };
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    const emptyRows =
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    const visibleRows = useMemo(
-        () => {
-            if (rows) {
-                return stableSort(rows, getComparator(order, orderBy)).slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                )
-            }
-        }, [order, orderBy, page, rowsPerPage, rows]);
+    const visibleRows = useMemo(() => {
+        if (rows) {
+            return stableSort(rows, getComparator(order, orderBy)).slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+            );
+        }
+    }, [order, orderBy, page, rowsPerPage, rows]);
     return (
-        <Container sx={{maxWidth : "90%"}}>
-        <Box sx={{ width: "100%" }}>
-            <Paper sx={{ width: "100%", mb: 2 }}>
-                <EnhancedTableToolbar />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={"medium"}
-                        stickyHeader
-                    >
-                        <EnhancedTableHead
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows ? rows.length : 0}
-                        />
-                        <TableBody>
-                            {visibleRows &&
-                                (visibleRows.map((row, index) => {
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            sx={{ cursor: "pointer" }}
-                                        >
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
+        <Container sx={{ maxWidth: "90%" }}>
+            <Box sx={{ width: "100%" }}>
+                <Paper sx={{ width: "100%", mb: 2 }}>
+                    <EnhancedTableToolbar />
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={"medium"}
+                            stickyHeader
+                        >
+                            <EnhancedTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                rowCount={rows ? rows.length : 0}
+                            />
+                            <TableBody>
+                                {visibleRows ? (
+                                    visibleRows.map((row, index) => {
+                                        const labelId = `enhanced-table-checkbox-${index}`;
+                                        return (
+                                            <TableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={row.id}
+                                                sx={{ cursor: "pointer" }}
                                             >
-                                                {row.proj_name_th}
-                                            </TableCell>
-                                            <TableCell align="right">{row.proj_abbr_name}</TableCell>
-                                            <TableCell align="right">{row.risk_spectrum}</TableCell>
-                                            <TableCell align="right">{row.spec_code}</TableCell>
-                                            <TableCell align="right" >{roundNumber(row.growth_rate,2)} %</TableCell>
-                                            <TableCell align="right">
-                                                <IconButton
-                                                    children={<ArticleIcon />}
-                                                    onClick={(e) => {
-                                                        openInNewTab(row.fact_sheet)
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell align="right">{row.last_val}</TableCell>
-                                            <TableCell align="right">{row.last_update}</TableCell>
-                                            <TableCell align="right">
-                                                <IconButton
-                                                    children={<AddShoppingCartIcon />}
-                                                    onClick={(e) => {
-                                                        setModalData(row)
-                                                        setIsModalAssetOpen(true)
-                                                    }}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                }))}
-                            {emptyRows > 0 && (
-                                <TableRow>
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={rows ? rows.length : 0}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                                <TableCell
+                                                    component="th"
+                                                    id={labelId}
+                                                    scope="row"
+                                                    padding="none"
+                                                >
+                                                    {row.proj_name_th}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {row.proj_abbr_name}
+                                                </TableCell>
+                                                <TableCell align="right">{row.risk_spectrum}</TableCell>
+                                                <TableCell align="right">{row.spec_code}</TableCell>
+                                                <TableCell align="right">
+                                                    {roundNumber(row.growth_rate, 2)} %
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    <IconButton
+                                                        children={<ArticleIcon />}
+                                                        onClick={(e) => {
+                                                            openInNewTab(row.fact_sheet);
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell align="right">{row.last_val}</TableCell>
+                                                <TableCell align="right">{row.last_update}</TableCell>
+                                                <TableCell align="right">
+                                                    <IconButton
+                                                        children={<AddShoppingCartIcon />}
+                                                        onClick={(e) => {
+                                                            setModalData(row);
+                                                            setIsModalAssetOpen(true);
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })
+                                ) : (
+                                    <Container>
+                                        <ComponentLoading isLoading={true} />
+                                    </Container>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={rows ? rows.length : 0}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
+                <BuyAssetModal
+                    fundData={modalData}
+                    open={isModalAssetOpen}
+                    setOpen={setIsModalAssetOpen}
+                    goalData={goalData}
                 />
-            </Paper>
-            <BuyAssetModal fundData={modalData} open={isModalAssetOpen} setOpen={setIsModalAssetOpen} goalData={goalData}/>
-        </Box>
+            </Box>
         </Container>
     );
 };
