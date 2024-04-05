@@ -33,7 +33,8 @@ function createData(
     fact_sheet,
     last_val,
     last_update,
-    buy_asset
+    buy_asset,
+    growth_rate_predict
 ) {
     return {
         id,
@@ -48,6 +49,7 @@ function createData(
         last_val,
         last_update,
         buy_asset,
+        growth_rate_predict
     };
 }
 
@@ -225,7 +227,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                         fund.url_factsheet,
                         fund.last_val,
                         fund.last_update,
-                        "buy_asset"
+                        "buy_asset",
+                        fund.growthrat_avg
                     )
                 );
             });
