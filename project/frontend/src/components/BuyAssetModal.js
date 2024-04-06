@@ -134,7 +134,7 @@ function formatDate(date) {
 export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const [fetchedNav, setFetchedNav] = useState(null);
     const [yearToDateGraphData, setYearToDateGraphData] = useState(null);
     const [graphWithPredictionData, setGraphWithPredictionData] = useState(null);
@@ -144,6 +144,8 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
 
     const handleClose = () => {
         setOpen(false);
+        setUserInputBuyAmount(0);
+        setCalculatedUnitBuy(0);
     };
 
     const handleUserInputChange = (amount, price) => {
@@ -152,28 +154,23 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
     };
 
     useEffect(() => {
-        if (fundData && goalData && userStore) {
-            setFetchedNav(null);
-            setYearToDateGraphData(null);
-            setIsLoading(true);
-            setUserInputBuyAmount(0);
-            setCalculatedUnitBuy(0);
-            Promise.all([
-                getFundsLastestNav(fundData.proj_id, userStore),
-                getNavYearToDate(fundData.proj_id, userStore),
-            ])
-                .then((res) => {
-                    setFetchedNav(res[0]);
-                    setYearToDateGraphData(digestYearToDateData(res[1]));
-                    setGraphWithPredictionData(
-                        digestDataWithPrediction(res[1], fundData)
-                    );
-                    setIsLoading(false);
-                })
-                .catch((err) => {
-                    console.log("err :: ", err);
-                });
-        }
+        if (!fundData || !goalData || !userStore) return;
+
+        setIsLoading(true);
+        Promise.all([
+            getFundsLastestNav(fundData.proj_id, userStore),
+            getNavYearToDate(fundData.proj_id, userStore),
+        ])
+            .then((res) => {
+                setFetchedNav(res[0]);
+                setYearToDateGraphData(digestYearToDateData(res[1]));
+                setGraphWithPredictionData(digestDataWithPrediction(res[1], fundData));
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log("err :: ", err);
+                setIsLoading(false);
+            });
     }, [fundData, goalData, userStore]);
 
     return (
@@ -319,6 +316,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                             size="small"
                                             margin="normal"
                                             helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
+                                            type="number"
                                             onChange={(e) => {
                                                 handleUserInputChange(
                                                     e.target.value,
