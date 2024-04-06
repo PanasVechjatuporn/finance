@@ -59,12 +59,14 @@ function digestYearToDateData(data) {
 }
 
 function digestDataWithPrediction(data, fundData) {
+    //digestDataWithPrediction fundData will gives us growth rate that model predict
     let tmpNav = [];
     let tmpDate = [];
     let tmpPredNav = [];
     let tmpPredDate = [];
     let tmpWholeData = [];
     let lastPushedMonth;
+    //create real data from data year to that params of this function
     for (let i = data.length - 1; i > 0; i--) {
         if (tmpNav.length === 12) {
             break;
@@ -82,7 +84,7 @@ function digestDataWithPrediction(data, fundData) {
     tmpPredDate.push(tmpDate[tmpDate.length - 1])
     for (let i = 12; i < 24; i++) {
         if ((tmpPredNav[i] + (i * fundData.growth_rate_predict) + Number.EPSILON) > 0) {
-            tmpPredNav.push((tmpPredNav[i] + ((i - 11) * fundData.growth_rate_predict) + Number.EPSILON));
+            tmpPredNav.push((tmpPredNav[i] + (tmpPredNav[i] * 0.013937163240255906) + Number.EPSILON));
             tmpPredDate.push(formatDate(new Date(new Date(tmpPredDate[i - 12]).getFullYear(), new Date(tmpPredDate[i - 12]).getMonth() + 1, new Date(tmpPredDate[i - 12]).getDate())));
         } else {
             tmpPredNav.push(0);
@@ -184,8 +186,8 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                 <Box display="flex" justifyContent="center" alignItems="center">
                                     {yearToDateGraphData && (
                                         <LineChart
-                                            width={500}
-                                            height={300}
+                                            width={600}
+                                            height={400}
                                             series={[
                                                 {
                                                     data: yearToDateGraphData[0],
@@ -217,8 +219,15 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                 <Box display="flex" justifyContent="center" alignItems="center">
                                     {graphWithPredictionData && (
                                         <LineChart
-                                            width={500}
-                                            height={300}
+                                        sx={{
+                                            '& .MuiLineElement-series-Predict': {
+                                              strokeDasharray: '5 2',
+                                              strokeWidth: 2,
+                                              color: "red"
+                                            }
+                                          }}
+                                            width={600}
+                                            height={400}
                                             series={[
                                                 {
                                                     data: graphWithPredictionData[0],
@@ -226,6 +235,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                                     showMark: false,
                                                 },
                                                 {
+                                                    id: "Predict",
                                                     data: graphWithPredictionData[2],
                                                     label: "ราคาต่อหน่วย (ทำนาย)",
                                                     showMark: false,
@@ -239,6 +249,28 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                             ]}
                                         />
                                     )}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            spacing={0}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Grid item xs={6} md={6}>
+                                <Box display="flex" justifyContent="center" alignItems="center">
+                                    <Typography>
+                                        เทส
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6} md={6}>
+                                <Box display="flex" justifyContent="center" alignItems="center">
+                                   <Typography>
+                                   เทส
+                                   </Typography>
                                 </Box>
                             </Grid>
                         </Grid>
