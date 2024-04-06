@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Typography from "@mui/material/Typography";
 import Modal from "react-bootstrap/Modal";
 import Container from "@mui/material/Container";
@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { LineChart } from "@mui/x-charts/LineChart";
+import { roundNumber } from "utils/numberUtil";
 
 const baseURL = "http://localhost:8000";
 
@@ -82,11 +83,17 @@ function digestDataWithPrediction(data, fundData) {
     }
     tmpPredNav.push(tmpNav[tmpNav.length - 1]);
     tmpPredDate.push(tmpDate[tmpDate.length - 1]);
-    console.log(fundData.growth_rate_predict)
     for (let i = tmpNav.length; i < tmpNav.length * 2; i++) {
-        if (tmpPredNav[i] + tmpPredNav[i] * fundData.growth_rate_predict + Number.EPSILON > 0) {
+        if (
+            tmpPredNav[i] +
+            tmpPredNav[i] * fundData.growth_rate_predict +
+            Number.EPSILON >
+            0
+        ) {
             tmpPredNav.push(
-                tmpPredNav[i] + tmpPredNav[i] * fundData.growth_rate_predict + Number.EPSILON
+                tmpPredNav[i] +
+                tmpPredNav[i] * fundData.growth_rate_predict +
+                Number.EPSILON
             );
             tmpPredDate.push(
                 formatDate(
@@ -127,12 +134,21 @@ function formatDate(date) {
 export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [isLoading, setIsLoading] = useState(false);
+    
     const [fetchedNav, setFetchedNav] = useState(null);
     const [yearToDateGraphData, setYearToDateGraphData] = useState(null);
     const [graphWithPredictionData, setGraphWithPredictionData] = useState(null);
 
+    const [userInputBuyAmount, setUserInputBuyAmount] = useState(0);
+    const [calculatedUnitBuy, setCalculatedUnitBuy] = useState(0);
+
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleUserInputChange = (amount, price) => {
+        setUserInputBuyAmount(amount);
+        setCalculatedUnitBuy(roundNumber(amount / price + Number.EPSILON, 6));
     };
 
     useEffect(() => {
@@ -140,6 +156,8 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
             setFetchedNav(null);
             setYearToDateGraphData(null);
             setIsLoading(true);
+            setUserInputBuyAmount(0);
+            setCalculatedUnitBuy(0);
             Promise.all([
                 getFundsLastestNav(fundData.proj_id, userStore),
                 getNavYearToDate(fundData.proj_id, userStore),
@@ -210,13 +228,13 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                         {yearToDateGraphData && (
                                             <LineChart
                                                 sx={{
-                                                    '& .MuiChartsAxis-tickContainer': {
-                                                        '&:not(:has(>.MuiChartsAxis-tickLabel))': {
-                                                            '& .MuiChartsAxis-tick': {
+                                                    "& .MuiChartsAxis-tickContainer": {
+                                                        "&:not(:has(>.MuiChartsAxis-tickLabel))": {
+                                                            "& .MuiChartsAxis-tick": {
                                                                 strokeWidth: 0,
-                                                              },
+                                                            },
                                                         },
-                                                      }
+                                                    },
                                                 }}
                                                 width={600}
                                                 height={400}
@@ -250,7 +268,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                                         strokeDasharray: "5 2",
                                                         strokeWidth: 2,
                                                         color: "red",
-                                                    }
+                                                    },
                                                 }}
                                                 width={600}
                                                 height={400}
@@ -265,7 +283,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                                         data: graphWithPredictionData[2],
                                                         label: "ราคาต่อหน่วย (ทำนาย)",
                                                         showMark: false,
-                                                        color: "orange"
+                                                        color: "orange",
                                                     },
                                                 ]}
                                                 xAxis={[
@@ -288,7 +306,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Grid item xs={6} md={6}>
+                                <Grid item xs={6} md={4}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
@@ -296,23 +314,22 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                     >
                                         <TextField
                                             required
-                                            id={"goal-name"}
+                                            id={"asset-buy"}
                                             label="เงินลงทุน"
                                             size="small"
                                             margin="normal"
-                                            // error={nameError}
                                             helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
                                             onChange={(e) => {
-                                                let tmp = JSON.parse(JSON.stringify(goalData))
-                                                tmp.Name = e.target.value
+                                                handleUserInputChange(
+                                                    e.target.value,
+                                                    fetchedNav.last_val
+                                                );
                                             }}
-                                        // value={
-                                        //     goalData.Name
-                                        // }
+                                            value={userInputBuyAmount}
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={6} md={6}>
+                                <Grid item xs={6} md={4}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
@@ -320,19 +337,37 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                     >
                                         <TextField
                                             required
-                                            id={"goal-name"}
-                                            label="เงินลงทุน"
+                                            id={"asset-buy"}
+                                            label="หน่วยลงทุนที่ได้รับ"
+                                            disabled={true}
                                             size="small"
                                             margin="normal"
-                                            // error={nameError}
-                                            helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
-                                            onChange={(e) => {
-                                                let tmp = JSON.parse(JSON.stringify(goalData))
-                                                tmp.Name = e.target.value
-                                            }}
-                                        // value={
-                                        //     goalData.Name
-                                        // }
+                                            helperText={"หน่วยลงทุนที่ซื้อได้จากจำนวนเงินที่ได้กรอก"}
+                                            value={calculatedUnitBuy}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={6} md={4}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            required
+                                            id={"asset-price"}
+                                            label="ราคาปัจจุบัน"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                fetchedNav &&
+                                                "อัพเดทล่าสุดเมื่อ " +
+                                                new Date(
+                                                    fetchedNav.last_upd_date
+                                                ).toLocaleDateString()
+                                            }
+                                            value={fetchedNav && fetchedNav.last_val}
                                         />
                                     </Box>
                                 </Grid>
