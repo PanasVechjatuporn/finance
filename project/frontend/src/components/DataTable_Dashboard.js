@@ -210,7 +210,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 sx={{
                   "& th": {
                     color: "white",
-                    backgroundColor: "#fc9f00",
+                    backgroundColor: "#3e5074",
                     fontWeight: "bold",
                     fontSize: 18,
                   },
@@ -317,7 +317,7 @@ export default function MonthDataTable({ userData, setUserData }) {
           </TableContainer>
           <Box
             style={{
-              backgroundColor: "#fc9f00",
+              backgroundColor: "#3e5074",
               display: "flex",
               justifyContent: "flex-end",
               position: "relative",
@@ -326,9 +326,9 @@ export default function MonthDataTable({ userData, setUserData }) {
           >
             <FormControl
               variant="standard"
-              style={{ marginLeft: "10px", marginRight: "30px" }}
+              style={{ marginLeft: "10px", marginRight: "30px" ,color : "white"}}
             >
-              <InputLabel id="year-selection-input-label">Year</InputLabel>
+              <InputLabel id="year-selection-input-label" sx={{color : "white"}}>Year</InputLabel>
               <Select
                 labelId="year-selection"
                 id="year-selection"
@@ -338,6 +338,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                     setSelectedYear(e.target.value.toString());
                   }
                 }}
+                sx={{color : "white"}}
               >
                 {allYear.map((item, index) => (
                   <MenuItem
@@ -356,7 +357,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <AddCircleOutlineIcon></AddCircleOutlineIcon>
                 </MenuItem>
               </Select>
-              <FormHelperText>
+              <FormHelperText sx={{color : "white"}}>
                 Select year to create or edit data
               </FormHelperText>
             </FormControl>
