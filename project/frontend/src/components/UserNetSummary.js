@@ -55,11 +55,11 @@ export const UserNetSummary = ({userData}) => {
                     }}
                 >ยอดสรุปเงินของคุณ</Typography>
                 <>
-                รายรับทั้งหมดของคุณ = {userNetSummary && userNetSummary.netIncome} ,
+                รายรับทั้งหมดของคุณ = {userNetSummary && userNetSummary.netIncome} 
                 <br/>
-                รายจ่ายทั้งหมดของคุณ = {userNetSummary && userNetSummary.netExpense} ,
+                รายจ่ายทั้งหมดของคุณ = {userNetSummary && userNetSummary.netExpense} 
                 <br/>
-                รายรับทั้งหมด - รายจ่ายทั้งหมด = {userNetSummary && userNetSummary.netIncomeExpense} ,
+                รายรับทั้งหมด - รายจ่ายทั้งหมด = {userNetSummary && userNetSummary.netIncomeExpense} 
                 <br/>
                 ความมั่งคั่งของคุณ = {userNetSummary && userNetSummary.netWealth}
                 <br/>

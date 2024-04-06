@@ -15,6 +15,7 @@ import { AssetSummary } from "components/AssetSummary_GoalBased";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
 import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
+import  { UserNetSummary }  from "components/UserNetSummary";
 const baseURL = "http://localhost:8000";
 
 export const GoalBased = () => {
@@ -671,6 +672,7 @@ export const GoalBased = () => {
             <Navigate />
             <Typography marginBottom={5} marginTop={5} variant="h5" textAlign={"center"} fontWeight={'bold'}>Goal-Based Investment</Typography>
             <CurrentUserRiskProfile></CurrentUserRiskProfile>
+            <UserNetSummary/>
             <Container
                 style={{
                     display: "flex",
