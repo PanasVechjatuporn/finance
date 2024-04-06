@@ -9,6 +9,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "react-bootstrap/Button";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import { LineChart } from "@mui/x-charts/LineChart";
 
 const baseURL = "http://localhost:8000";
@@ -44,7 +45,6 @@ async function getNavYearToDate(proj_id, userStore) {
     }
 }
 
-
 function digestYearToDateData(data) {
     let graphWholeData = [];
     let graphDayData = [];
@@ -78,17 +78,36 @@ function digestDataWithPrediction(data, fundData) {
         }
     }
     for (let i = 0; i < tmpNav.length; i++) {
-        tmpPredNav.push(null)
+        tmpPredNav.push(null);
     }
-    tmpPredNav.push(tmpNav[tmpNav.length - 1])
-    tmpPredDate.push(tmpDate[tmpDate.length - 1])
-    for (let i = 12; i < 24; i++) {
-        if ((tmpPredNav[i] + (i * fundData.growth_rate_predict) + Number.EPSILON) > 0) {
-            tmpPredNav.push((tmpPredNav[i] + (tmpPredNav[i] * 0.013937163240255906) + Number.EPSILON));
-            tmpPredDate.push(formatDate(new Date(new Date(tmpPredDate[i - 12]).getFullYear(), new Date(tmpPredDate[i - 12]).getMonth() + 1, new Date(tmpPredDate[i - 12]).getDate())));
+    tmpPredNav.push(tmpNav[tmpNav.length - 1]);
+    tmpPredDate.push(tmpDate[tmpDate.length - 1]);
+    console.log(fundData.growth_rate_predict)
+    for (let i = tmpNav.length; i < tmpNav.length * 2; i++) {
+        if (tmpPredNav[i] + tmpPredNav[i] * fundData.growth_rate_predict + Number.EPSILON > 0) {
+            tmpPredNav.push(
+                tmpPredNav[i] + tmpPredNav[i] * fundData.growth_rate_predict + Number.EPSILON
+            );
+            tmpPredDate.push(
+                formatDate(
+                    new Date(
+                        new Date(tmpPredDate[i - tmpNav.length]).getFullYear(),
+                        new Date(tmpPredDate[i - tmpNav.length]).getMonth() + 1,
+                        new Date(tmpPredDate[i - tmpNav.length]).getDate()
+                    )
+                )
+            );
         } else {
             tmpPredNav.push(0);
-            tmpPredDate.push(formatDate(new Date(new Date(tmpPredDate[i - 12]).getFullYear(), new Date(tmpPredDate[i - 12]).getMonth() + 1, new Date(tmpPredDate[i - 12]).getDate())));
+            tmpPredDate.push(
+                formatDate(
+                    new Date(
+                        new Date(tmpPredDate[i - tmpNav.length]).getFullYear(),
+                        new Date(tmpPredDate[i - tmpNav.length]).getMonth() + 1,
+                        new Date(tmpPredDate[i - tmpNav.length]).getDate()
+                    )
+                )
+            );
         }
     }
     tmpWholeData.push(tmpNav);
@@ -100,8 +119,8 @@ function digestDataWithPrediction(data, fundData) {
 
 function formatDate(date) {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
 }
 
@@ -173,108 +192,153 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* <>{!isLoading && fetchedNav && JSON.stringify(fetchedNav)}</> */}
-                    {!isLoading && <Box sx={{ flexGrow: 1 }}>
-                        <Grid
-                            container
-                            spacing={0}
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                        >
-                            <Grid item xs={6} md={6}>
-                                <Box display="flex" justifyContent="center" alignItems="center">
-                                    {yearToDateGraphData && (
-                                        <LineChart
-                                            width={600}
-                                            height={400}
-                                            series={[
-                                                {
-                                                    data: yearToDateGraphData[0],
-                                                    label: "ราคาต่อหน่วย",
-                                                    showMark: false,
-                                                    area: true,
-                                                },
-                                            ]}
-                                            yAxis={[
-                                                {
-                                                    tickNumber: 5,
-                                                    valueFormatter: (element) => `${element} บาท`,
-                                                },
-                                            ]}
-                                            xAxis={[
-                                                {
-                                                    scaleType: "point",
-                                                    data: yearToDateGraphData[1],
-                                                    tickMinStep: 2,
-                                                    min: new Date(new Date(yearToDateGraphData[1][0]).getFullYear(), new Date(yearToDateGraphData[1][0]).getMonth(), new Date(yearToDateGraphData[1][0]).getDay()),
-                                                    max: new Date(new Date(yearToDateGraphData[1][yearToDateGraphData.length - 1]).getFullYear(), new Date(yearToDateGraphData[1][yearToDateGraphData.length - 1]).getMonth(), new Date(yearToDateGraphData[1][yearToDateGraphData.length - 1]).getDay())
-                                                },
-                                            ]}
+                    {!isLoading && (
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Grid item xs={6} md={6}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        {yearToDateGraphData && (
+                                            <LineChart
+                                                sx={{
+                                                    '& .MuiChartsAxis-tickContainer': {
+                                                        '&:not(:has(>.MuiChartsAxis-tickLabel))': {
+                                                            '& .MuiChartsAxis-tick': {
+                                                                strokeWidth: 0,
+                                                              },
+                                                        },
+                                                      }
+                                                }}
+                                                width={600}
+                                                height={400}
+                                                series={[
+                                                    {
+                                                        data: yearToDateGraphData[0],
+                                                        label: "ราคาต่อหน่วย",
+                                                        showMark: false,
+                                                    },
+                                                ]}
+                                                xAxis={[
+                                                    {
+                                                        scaleType: "point",
+                                                        data: yearToDateGraphData[1],
+                                                    },
+                                                ]}
+                                            />
+                                        )}
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={6} md={6}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        {graphWithPredictionData && (
+                                            <LineChart
+                                                sx={{
+                                                    "& .MuiLineElement-series-Predict": {
+                                                        strokeDasharray: "5 2",
+                                                        strokeWidth: 2,
+                                                        color: "red",
+                                                    }
+                                                }}
+                                                width={600}
+                                                height={400}
+                                                series={[
+                                                    {
+                                                        data: graphWithPredictionData[0],
+                                                        label: "ราคาต่อหน่วย (จริง)",
+                                                        showMark: false,
+                                                    },
+                                                    {
+                                                        id: "Predict",
+                                                        data: graphWithPredictionData[2],
+                                                        label: "ราคาต่อหน่วย (ทำนาย)",
+                                                        showMark: false,
+                                                        color: "orange"
+                                                    },
+                                                ]}
+                                                xAxis={[
+                                                    {
+                                                        scaleType: "point",
+                                                        data: graphWithPredictionData[1].concat(
+                                                            graphWithPredictionData[3]
+                                                        ),
+                                                    },
+                                                ]}
+                                            />
+                                        )}
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Grid item xs={6} md={6}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            required
+                                            id={"goal-name"}
+                                            label="เงินลงทุน"
+                                            size="small"
+                                            margin="normal"
+                                            // error={nameError}
+                                            helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
+                                            onChange={(e) => {
+                                                let tmp = JSON.parse(JSON.stringify(goalData))
+                                                tmp.Name = e.target.value
+                                            }}
+                                        // value={
+                                        //     goalData.Name
+                                        // }
                                         />
-                                    )}
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6} md={6}>
-                                <Box display="flex" justifyContent="center" alignItems="center">
-                                    {graphWithPredictionData && (
-                                        <LineChart
-                                        sx={{
-                                            '& .MuiLineElement-series-Predict': {
-                                              strokeDasharray: '5 2',
-                                              strokeWidth: 2,
-                                              color: "red"
-                                            }
-                                          }}
-                                            width={600}
-                                            height={400}
-                                            series={[
-                                                {
-                                                    data: graphWithPredictionData[0],
-                                                    label: "ราคาต่อหน่วย (จริง)",
-                                                    showMark: false,
-                                                },
-                                                {
-                                                    id: "Predict",
-                                                    data: graphWithPredictionData[2],
-                                                    label: "ราคาต่อหน่วย (ทำนาย)",
-                                                    showMark: false,
-                                                }
-                                            ]}
-                                            xAxis={[
-                                                {
-                                                    scaleType: "point",
-                                                    data: graphWithPredictionData[1].concat(graphWithPredictionData[3]),
-                                                }
-                                            ]}
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={6} md={6}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            required
+                                            id={"goal-name"}
+                                            label="เงินลงทุน"
+                                            size="small"
+                                            margin="normal"
+                                            // error={nameError}
+                                            helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
+                                            onChange={(e) => {
+                                                let tmp = JSON.parse(JSON.stringify(goalData))
+                                                tmp.Name = e.target.value
+                                            }}
+                                        // value={
+                                        //     goalData.Name
+                                        // }
                                         />
-                                    )}
-                                </Box>
+                                    </Box>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            spacing={0}
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                        >
-                            <Grid item xs={6} md={6}>
-                                <Box display="flex" justifyContent="center" alignItems="center">
-                                    <Typography>
-                                        เทส
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6} md={6}>
-                                <Box display="flex" justifyContent="center" alignItems="center">
-                                   <Typography>
-                                   เทส
-                                   </Typography>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Box>}
+                        </Box>
+                    )}
                     <Container>
                         <ComponentLoading isLoading={isLoading} />
                     </Container>

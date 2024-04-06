@@ -145,8 +145,8 @@ function EnhancedTableHead(props) {
     };
 
     return (
-        <TableHead>
-            <TableRow>
+        <TableHead >
+            <TableRow >
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -154,6 +154,7 @@ function EnhancedTableHead(props) {
                         // padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.id ? order : false}
                         width={headCell.id === "proj_name_th" ? "15%" : "9.4%"}
+                        sx={{backgroundColor : "#7a8fb8", color : "white" , fontWeight : "bold", fontSize : 14}}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
@@ -187,6 +188,8 @@ function EnhancedTableToolbar() {
             sx={{
                 pl: { sm: 2 },
                 pr: { xs: 1, sm: 1 },
+                backgroundColor : "#3e5074",
+                color : "white"
             }}
         >
             <Typography
@@ -302,18 +305,21 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     id={labelId}
                                                     scope="row"
                                                     padding="none"
+                                                    style={{ padding : "10px"}}
                                                 >
                                                     {row.proj_name_th}
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="left">
                                                     {row.proj_abbr_name}
                                                 </TableCell>
                                                 <TableCell align="right">{row.risk_spectrum}</TableCell>
-                                                <TableCell align="right">{row.spec_code}</TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="center">{row.spec_code}</TableCell>
+                                                <TableCell align="center"
+                                                    style={{color: row.growth_rate > 0 ? "green" : "red"}}
+                                                >
                                                     {roundNumber(row.growth_rate, 2)} %
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="center">
                                                     <IconButton
                                                         children={<ArticleIcon />}
                                                         onClick={(e) => {
