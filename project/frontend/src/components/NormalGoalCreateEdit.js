@@ -32,9 +32,9 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
     const [goalError, setGoalError] = useState(false);
     const [timeError, setTimeError] = useState(false);
     const [tempGoalName, setTempGoalName] = useState(goalData.Name);
-    useEffect(()=> {
+    useEffect(() => {
         setTempGoalName(goalData.Name)
-    },[mode])
+    }, [mode])
     const onSaveNewGoal = async (goalData) => {
         if (!goalData.Name) {
             setNameError(true);
@@ -97,7 +97,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        {mode === "new" ? "สร้างเป้าหมายของคุณ" : "แก้ไขเป้าหมาย "+tempGoalName}
+                        {mode === "new" ? "สร้างเป้าหมายของคุณ" : "แก้ไขเป้าหมาย " + tempGoalName}
                     </Typography>
                 </div>
                 <Container>

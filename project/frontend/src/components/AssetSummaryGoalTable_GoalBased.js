@@ -98,7 +98,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                                             key={asset.CreatedDate + "-" + index + "-header"}
                                         >
                                             <StyledTableCell rowSpan={asset.Funds.length + 1}>
-                                                {asset.CreatedDate}
+                                                {new Date(asset.timeStamp).toLocaleDateString("en-GB")}
                                             </StyledTableCell>
                                         </StyledTableRow>
                                         {asset.Funds.map((subAsset, indexSubAsset) => (

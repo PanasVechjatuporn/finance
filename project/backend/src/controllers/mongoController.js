@@ -684,3 +684,21 @@ exports.getFundsDailyNav = async (req, res) => {
         res.status(401).json({ message: err });
     }
 }
+
+exports.insertUserBoughtAsset = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("assets");
+    const insertAssetObj = req.body.insertAssetObj;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            await collection.insertOne(insertAssetObj);
+            res.status(200).json({ message: "SUCCESS" });
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertGoal: ", err);
+        res.status(401).json({ message: err });
+    }
+}

@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "@mui/material/Container";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { ComponentLoading } from "./OverlayLoading";
+import { ComponentLoading, OverlayLoading } from "./OverlayLoading";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "react-bootstrap/Button";
 import Box from "@mui/material/Box";
@@ -134,23 +134,90 @@ function formatDate(date) {
 export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [isLoading, setIsLoading] = useState(false);
+    const [isOverlayLoading, setIsOverlayLoading] = useState(false);
 
     const [fetchedNav, setFetchedNav] = useState(null);
     const [yearToDateGraphData, setYearToDateGraphData] = useState(null);
     const [graphWithPredictionData, setGraphWithPredictionData] = useState(null);
 
     const [userInputBuyAmount, setUserInputBuyAmount] = useState(0);
+    const [inputBuyError, setInputBuyError] = useState(false);
+    const [inputErrorText, setInputErrorText] = useState(null);
     const [calculatedUnitBuy, setCalculatedUnitBuy] = useState(0);
 
     const handleClose = () => {
         setOpen(false);
         setUserInputBuyAmount(0);
         setCalculatedUnitBuy(0);
+        setInputBuyError(false);
     };
 
     const handleUserInputChange = (amount, price) => {
         setUserInputBuyAmount(amount);
         setCalculatedUnitBuy(roundNumber(amount / price + Number.EPSILON, 6));
+    };
+
+    const handleOnSave = async (buy, amount, fetchedNav, goalData, userStore) => {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!buy || buy === 0) {
+                    setInputBuyError(true);
+                    setInputErrorText("กรุณากรอกข้อมูลให้ครบ");
+                    reject(false);
+                } else {
+                    setInputBuyError(false);
+                    const navDate = new Date(
+                        new Date(fetchedNav.nav_date).getFullYear(),
+                        new Date(fetchedNav.nav_date).getMonth(),
+                        new Date(fetchedNav.nav_date).getDay()
+                    );
+                    const insertAssetObj = {
+                        timeStamp: new Date(),
+                        day: new Date().getDate(),
+                        month: new Date().getMonth(),
+                        year: new Date().getFullYear(),
+                        userId: userStore.userId,
+                        Funds: [
+                            {
+                                amount: buy,
+                                fundName: fundData.proj_name_th,
+                                unit: amount,
+                                assetType: "fund",
+                                spec_code: fundData.spec_code,
+                                buyDate: navDate,
+                                buyDay: navDate.getDate(),
+                                buyMonth: navDate.getMonth(),
+                                year: navDate.getFullYear(),
+                                buyPrice: fetchedNav.last_val,
+                            },
+                        ],
+                        goalObjId : goalData._id
+                    };
+                    axios
+                        .post(
+                            `${baseURL}/db/insert_asset`,
+                            {
+                                insertAssetObj,
+                            },
+                            {
+                                headers: {
+                                    Authorization: userStore.userToken,
+                                    UserId: userStore.userId,
+                                },
+                            }
+                        )
+                        .then((res) => {
+                            resolve(true);
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                }
+            } catch (err) {
+                console.log("err :: ", err);
+                reject(err);
+            }
+        });
     };
 
     useEffect(() => {
@@ -303,7 +370,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Grid item xs={6} md={4}>
+                                <Grid item xs={4} md={4}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
@@ -315,8 +382,13 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                             label="เงินลงทุน"
                                             size="small"
                                             margin="normal"
-                                            helperText={"เงินที่ต้องการลงทุนในกองทุนนี้"}
+                                            helperText={
+                                                inputBuyError
+                                                    ? "เงินที่ต้องการลงทุนในกองทุนนี้"
+                                                    : inputErrorText
+                                            }
                                             type="number"
+                                            error={inputBuyError}
                                             onChange={(e) => {
                                                 handleUserInputChange(
                                                     e.target.value,
@@ -327,14 +399,13 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={6} md={4}>
+                                <Grid item xs={4} md={4}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
                                         alignItems="center"
                                     >
                                         <TextField
-                                            required
                                             id={"asset-buy"}
                                             label="หน่วยลงทุนที่ได้รับ"
                                             disabled={true}
@@ -345,14 +416,13 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={6} md={4}>
+                                <Grid item xs={4} md={4}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
                                         alignItems="center"
                                     >
                                         <TextField
-                                            required
                                             id={"asset-price"}
                                             label="ราคาปัจจุบัน"
                                             disabled={true}
@@ -389,8 +459,26 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                         variant="primary"
                         onClick={async () => {
                             try {
-                                handleClose();
+                                setIsOverlayLoading(true);
+                                handleOnSave(
+                                    userInputBuyAmount,
+                                    calculatedUnitBuy,
+                                    fetchedNav,
+                                    goalData,
+                                    userStore,
+                                    fundData
+                                )
+                                    .then((res) => {
+                                        setIsOverlayLoading(false);
+                                        handleClose();
+                                    })
+                                    .catch((err) => {
+                                        setIsOverlayLoading(false);
+                                        console.log("err :: ", err);
+                                    });
                             } catch (err) {
+                                setIsOverlayLoading(false);
+                                console.log("err :: ", err);
                                 alert(err);
                             }
                         }}
@@ -400,6 +488,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                         </div>
                     </Button>
                 </Modal.Footer>
+                <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
             </Modal>
         </>
     );

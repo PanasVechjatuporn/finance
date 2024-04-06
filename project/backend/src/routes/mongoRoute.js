@@ -49,4 +49,6 @@ router.get("/get_user_net_summary",mongoController.getUserNetSummary);
 router.post("/get_and_calculate_fund_growth", mongoController.getAndCalculateFundGrowth);
 
 router.get("/get_nav", mongoController.getFundsDailyNav);
+
+router.post("/insert_asset", mongoController.insertUserBoughtAsset);
 module.exports = router;
