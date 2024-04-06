@@ -9,30 +9,24 @@ import axios from "axios";
 const baseURL = "http://localhost:8000";
 
 async function fetchGoalData(userStore, goalObjId) {
-    const result = await axios.get(
-        `${baseURL}/db/get_goal_by_obj_id`,
-        {
-            headers: {
-                Authorization: userStore.userToken,
-                UserId: userStore.userId,
-                GoalObjId: goalObjId
-            },
-        }
-    )
-    return result.data
+    const result = await axios.get(`${baseURL}/db/get_goal_by_obj_id`, {
+        headers: {
+            Authorization: userStore.userToken,
+            UserId: userStore.userId,
+            GoalObjId: goalObjId,
+        },
+    });
+    return result.data;
 }
 
 async function fetchFundsData(userStore) {
-    const result = await axios.get(
-        `${baseURL}/db/funds`,
-        {
-            headers: {
-                Authorization: userStore.userToken,
-                UserId: userStore.userId,
-            },
-        }
-    )
-    return result.data
+    const result = await axios.get(`${baseURL}/db/funds`, {
+        headers: {
+            Authorization: userStore.userToken,
+            UserId: userStore.userId,
+        },
+    });
+    return result.data;
 }
 
 async function digestFundsData(userStore, fundsData) {
@@ -41,20 +35,20 @@ async function digestFundsData(userStore, fundsData) {
             const result = await axios.post(
                 `${baseURL}/db/get_and_calculate_fund_growth`,
                 {
-                    fundsData: fundsData
-                }, {
-                headers: {
-                    Authorization: userStore.userToken,
-                    UserId: userStore.userId,
+                    fundsData: fundsData,
+                },
+                {
+                    headers: {
+                        Authorization: userStore.userToken,
+                        UserId: userStore.userId,
+                    },
                 }
-            }
-            )
-            resolve(result.data)
+            );
+            resolve(result.data);
+        } catch (err) {
+            reject(err);
         }
-        catch (err) {
-            reject(err)
-        }
-    })
+    });
 }
 
 export const GoalInvestment = () => {
@@ -65,29 +59,40 @@ export const GoalInvestment = () => {
     useEffect(() => {
         if (goalObjId && userStore.userId !== null) {
             const fetchGoal = async () => {
-                return Promise.all([fetchGoalData(userStore, goalObjId), fetchFundsData(userStore)])
-            }
-            fetchGoal().then(res => {
-                const fetchGoalData = res[0]
-                const fetchFundsData = res[1]
-                digestFundsData(userStore, fetchFundsData).then(resDigest => {
+                return Promise.all([
+                    fetchGoalData(userStore, goalObjId),
+                    fetchFundsData(userStore),
+                ]);
+            };
+            fetchGoal().then((res) => {
+                const fetchGoalData = res[0];
+                const fetchFundsData = res[1];
+                digestFundsData(userStore, fetchFundsData).then((resDigest) => {
                     const digestedFundsData = resDigest.fundsData;
-                    let RMFSSFFunds = digestedFundsData.filter(fund => fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"));
-                    let NotRMFSSFFunds = digestedFundsData.filter(fund => !(fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")));
-                    setFundData(fetchGoalData.type === "normal" ? NotRMFSSFFunds : RMFSSFFunds)
-                    setGoalData(fetchGoalData)
-                })
-            })
+                    let RMFSSFFunds = digestedFundsData.filter(
+                        (fund) =>
+                            fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")
+                    );
+                    let NotRMFSSFFunds = digestedFundsData.filter(
+                        (fund) =>
+                            !(
+                                fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")
+                            )
+                    );
+                    setFundData(
+                        fetchGoalData.type === "normal" ? NotRMFSSFFunds : RMFSSFFunds
+                    );
+                    setGoalData(fetchGoalData);
+                });
+            });
         }
     }, [goalObjId, userStore]);
-
 
     return (
         <React.Fragment>
             <Navigate />
             <CurrentUserRiskProfile />
             <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
-
         </React.Fragment>
     );
-}
+};

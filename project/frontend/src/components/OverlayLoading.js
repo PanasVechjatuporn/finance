@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
@@ -21,16 +21,14 @@ export function OverlayLoading({ isLoading }) {
     );
 }
 
-export function ComponentLoading({isLoading}) {
-    const [open,setOpen] = useState(false);
+export function ComponentLoading({ isLoading }) {
+    const [open, setOpen] = useState(false);
     useEffect(() => {
         setOpen(!isLoading);
-    },[isLoading])
+    }, [isLoading]);
     return (
-            <Container
-                style={{ display: open ? 'none' : 'block' }}
-            >
-                <CircularProgress color="inherit" />
-            </Container>
+        <Container style={{ display: open ? "none" : "block" }}>
+            <CircularProgress color="inherit" />
+        </Container>
     );
 }

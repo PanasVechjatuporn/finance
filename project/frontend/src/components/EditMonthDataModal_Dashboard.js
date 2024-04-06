@@ -16,7 +16,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import {OverlayLoading} from "./OverlayLoading";
+import { OverlayLoading } from "./OverlayLoading";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -179,18 +179,18 @@ async function onSaveMonthData(
 ) {
     try {
         setisLoading(true);
-        await validateMonthData(incomeData, 
-            expenseData, 
+        await validateMonthData(incomeData,
+            expenseData,
             // investmentData
-            );
+        );
         if (isUseSameData === true) {
             let upsertData = [];
-            for(let i=0;i< 12 - currentYearData.data.length; i++){
+            for (let i = 0; i < 12 - currentYearData.data.length; i++) {
                 upsertData.push({
                     user: {
                         userId: userStore.userId
                     },
-                    currentDate: currentDate.split("-")[0]+"-"+String(parseInt(currentDate.split("-")[1]) + i).padStart(2,'0'),
+                    currentDate: currentDate.split("-")[0] + "-" + String(parseInt(currentDate.split("-")[1]) + i).padStart(2, '0'),
                     incomeData,
                     expenseData,
                     // investmentData,
@@ -239,7 +239,7 @@ async function onSaveMonthData(
                 {
                     headers: {
                         Authorization: userStore.userToken,
-                        UserId : userStore.userId
+                        UserId: userStore.userId
                     },
                 }
             );
@@ -311,7 +311,7 @@ const EditMonthDataModal = ({
     // const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
     const [isLoading, setisLoading] = useState(false);
     const [currentDate, setCurrentDate] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.date : null);
-    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("th-TH",{month: "long"}) : "");
+    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("th-TH", { month: "long" }) : "");
     const [newYearString, setNewYearString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).getFullYear() : "");
     const [isUseSameData, setIsUseSameData] = useState(false);
 
@@ -323,7 +323,7 @@ const EditMonthDataModal = ({
             // setInvestmentData(null);
             setIsUseSameData(false);
         }
-        else{
+        else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);
             setExpenseData(dataMonthCopy.expenseData);
@@ -356,7 +356,7 @@ const EditMonthDataModal = ({
                     month: "long",
                 })
             );
-        } 
+        }
         else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);

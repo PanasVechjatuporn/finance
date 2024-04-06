@@ -36,13 +36,13 @@ function combineGoalAndAsset(assetData, goalData) {
     assetData.forEach((asset, index) => {
         const depositAssets = asset.Funds.filter(
             (deposit) => deposit.assetType === "deposit"
-        )
+        );
         const newAssets = asset.Funds.filter(
             (deposit) => deposit.assetType !== "deposit"
-        )
-        const sortedAssets = newAssets.concat(depositAssets)
-        assetData[index].Funds = sortedAssets
-    })
+        );
+        const sortedAssets = newAssets.concat(depositAssets);
+        assetData[index].Funds = sortedAssets;
+    });
     goalData.forEach((goal, index) => {
         const thisGoalAssets = assetData.filter(
             (asset) => asset.goalObjId === goal._id
@@ -57,7 +57,7 @@ export const AssetSummary = () => {
     const [userData, setUserData] = useState(null);
     const [selectGoalValue, setSelectGoalValue] = useState("");
     const [selectedData, setSelectedData] = useState(null);
-    const [assetData,setAssetData] = useState(null);
+    const [assetData, setAssetData] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -67,7 +67,7 @@ export const AssetSummary = () => {
                 if (userData.length > 0) {
                     setSelectGoalValue(userData[0].Name);
                 }
-                setAssetData(assetData)
+                setAssetData(assetData);
                 setUserData(userData);
             } catch (error) {
                 console.error("Error fetching user assets:", error);
@@ -81,13 +81,16 @@ export const AssetSummary = () => {
             setSelectedData(userData.find((data) => data.Name === selectGoalValue));
         }
     }, [selectGoalValue, userData]);
-        return (
-            <Container sx={{
+    return (
+        <Container
+            sx={{
                 marginTop: 5,
-                minHeight: '100vh',
-                display: 'ruby-text'
-            }}>
-                <Box sx={{
+                minHeight: "100vh",
+                display: "ruby-text",
+            }}
+        >
+            <Box
+                sx={{
                     minWidth: "90%",
                     minHeight: "90%",
                     maxWidth: "90%",
@@ -96,15 +99,16 @@ export const AssetSummary = () => {
                     boxShadow: 6,
                     padding: 4,
                     position: "relative",
-                    overflow : "auto",
-                    justifyContent: "center"
-                }}>
-                    <AssetSummaryGoalPieChart
-                        assetData={assetData}
-                    >
-                    </AssetSummaryGoalPieChart>
-                </Box>
-                <Box sx={{
+                    overflow: "auto",
+                    justifyContent: "center",
+                }}
+            >
+                <AssetSummaryGoalPieChart
+                    assetData={assetData}
+                ></AssetSummaryGoalPieChart>
+            </Box>
+            <Box
+                sx={{
                     marginTop: "5vh",
                     minWidth: "90%",
                     minHeight: "90%",
@@ -114,11 +118,19 @@ export const AssetSummary = () => {
                     boxShadow: 6,
                     padding: 4,
                     position: "relative",
-                    overflow : "auto",
-                    marginBottom: "5vh"
-                }}>
-                    {userData && (<FormControl sx={{ width: "10%", position: "absolute",
-                            right: "5.5%",top: "3%"}}>
+                    overflow: "auto",
+                    marginBottom: "5vh",
+                }}
+            >
+                {userData && (
+                    <FormControl
+                        sx={{
+                            width: "10%",
+                            position: "absolute",
+                            right: "5.5%",
+                            top: "3%",
+                        }}
+                    >
                         <InputLabel id="select-goal-label">Goals</InputLabel>
                         <Select
                             labelId="select-goal"
@@ -128,20 +140,23 @@ export const AssetSummary = () => {
                             onChange={(e) => {
                                 setSelectGoalValue(e.target.value);
                             }}
-                            disabled={userData.length > 0 ? (false) : (true)}
+                            disabled={userData.length > 0 ? false : true}
                         >
                             {userData.map((data, index) => (
-                                <MenuItem key={data._id + "-select-item-" + index} value={data.Name}>
+                                <MenuItem
+                                    key={data._id + "-select-item-" + index}
+                                    value={data.Name}
+                                >
                                     {data.Name}
                                 </MenuItem>
                             ))}
                         </Select>
-                    </FormControl>)}
-                    <AssetSummaryGoalTable
-                        selectedData={selectedData}
-                    ></AssetSummaryGoalTable>
-                </Box>
-                
-            </Container>
-        );
+                    </FormControl>
+                )}
+                <AssetSummaryGoalTable
+                    selectedData={selectedData}
+                ></AssetSummaryGoalTable>
+            </Box>
+        </Container>
+    );
 };

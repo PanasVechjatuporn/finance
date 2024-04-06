@@ -23,7 +23,7 @@ exports.createNewUser = async (user) => {
             var insertResult = await collection.insertOne(obj);
             console.log(insertResult);
         }
-        await createUserNetSummary(user.uid)
+        await createUserNetSummary(user.uid);
     } catch (error) {
         console.log("Error occured in mongoController.createNewUser: ", error);
     }
@@ -98,10 +98,7 @@ exports.getUserDataIncomeExpense = async (req, res) => {
         var findResult = await collection.find(query).toArray();
         res.json(findResult);
     } catch (error) {
-        console.log(
-            "Error occured in exports.getUserDataIncomeExpense: ",
-            error
-        );
+        console.log("Error occured in exports.getUserDataIncomeExpense: ", error);
         res.status(401).json({ message: error });
     }
 };
@@ -111,9 +108,7 @@ exports.getFunds = async (req, res) => {
     const collection = db.collection("funds");
 
     try {
-        var findResult = await collection
-            .find()
-            .toArray();
+        var findResult = await collection.find().toArray();
         res.json(findResult);
     } catch (error) {
         console.log("Error occured in exports.getFunds: ", error);
@@ -134,7 +129,7 @@ exports.saveTaxGoal = async (req, res) => {
         Funds: req.body.Funds,
         Percentage: req.body.Percentage,
         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-        isActive: true
+        isActive: true,
     };
     //const options = { upsert: true };
 
@@ -171,10 +166,7 @@ exports.upsertUserMonthlyData = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
     try {
-        const isVerify = await firebaseAuth.verifyIdToken(
-            userToken,
-            userId
-        );
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
             console.log("upsertData :: ", upsertData);
             query = { userId: userId, date: upsertData.currentDate };
@@ -193,7 +185,7 @@ exports.upsertUserMonthlyData = async (req, res) => {
                 },
                 { upsert: true }
             );
-            await updateUserDiffIncomeExpense(userId)
+            await updateUserDiffIncomeExpense(userId);
             res.status(200).json({ upsertData });
         } else {
             throw new Error("unauthorized access");
@@ -236,7 +228,7 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
                     );
                 })
             );
-            await updateUserDiffIncomeExpense(userId)
+            await updateUserDiffIncomeExpense(userId);
             res.status(200).json({ upsertData });
         } else {
             throw new Error("unauthorized access");
@@ -254,27 +246,38 @@ async function updateUserDiffIncomeExpense(uid) {
     const db = client.db(dbName);
     const collectionIncomeExpense = db.collection("income_expense");
     const collectionUserNetSummary = db.collection("usernetsummary");
-    const netSummaryFindResult = await collectionUserNetSummary.findOne({ userId: uid });
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({
+        userId: uid,
+    });
     if (netSummaryFindResult) {
-        const totalIncomeExpense = await collectionIncomeExpense.find({ userId: uid }).toArray();
+        const totalIncomeExpense = await collectionIncomeExpense
+            .find({ userId: uid })
+            .toArray();
         let tmpTotalIncome = 0;
         let tmpTotalExpense = 0;
         totalIncomeExpense.forEach((data) => {
-            data.expenseData.forEach(expense => {
+            data.expenseData.forEach((expense) => {
                 tmpTotalExpense += parseFloat(expense.amount);
-            })
-            data.incomeData.forEach(income => {
+            });
+            data.incomeData.forEach((income) => {
                 tmpTotalIncome += parseFloat(income.amount);
-            })
-        })
+            });
+        });
         netSummaryFindResult.netIncome = tmpTotalIncome;
         netSummaryFindResult.netExpense = tmpTotalExpense;
-        netSummaryFindResult.netIncomeExpense = (netSummaryFindResult.netIncome - netSummaryFindResult.netExpense);
-        netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset
-        await collectionUserNetSummary.updateOne({ userId: uid }, {
-            $set: netSummaryFindResult,
-        },
-            { upsert: true });
+        netSummaryFindResult.netIncomeExpense =
+            netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
+        netSummaryFindResult.netWealth =
+            netSummaryFindResult.netIncomeExpense -
+            netSummaryFindResult.netBoughtAsset +
+            netSummaryFindResult.netSoldAsset;
+        await collectionUserNetSummary.updateOne(
+            { userId: uid },
+            {
+                $set: netSummaryFindResult,
+            },
+            { upsert: true }
+        );
     }
 }
 
@@ -312,7 +315,7 @@ exports.deleteUserMonthData = async (req, res) => {
         if (isVerify) {
             let query = { year: year, month: month, userId: userId };
             const queryResult = await collection.deleteOne(query);
-            await updateUserDiffIncomeExpense(userId)
+            await updateUserDiffIncomeExpense(userId);
             res.status(200).json({ message: "delete success" });
         } else {
             throw new Error("unauthorized access");
@@ -345,7 +348,10 @@ exports.getUserAsset = async (req, res) => {
 
     try {
         query = { userId: req.params.uid };
-        var findResult = await collection.find(query).project({ Funds: 1 }).toArray();
+        var findResult = await collection
+            .find(query)
+            .project({ Funds: 1 })
+            .toArray();
         res.json(findResult);
     } catch (error) {
         console.log("Error occured in exports.getUserAsset: ", error);
@@ -378,7 +384,10 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
             res.status(200);
         }
     } catch (err) {
-        console.log("Error occured in mongoController.changeMultipleGoalPercentage: ", err);
+        console.log(
+            "Error occured in mongoController.changeMultipleGoalPercentage: ",
+            err
+        );
         res.status(401).json({ message: err });
     }
 };
@@ -403,7 +412,7 @@ exports.getUserGoalGoalBased = async (req, res) => {
         );
         res.status(401).json({ message: error });
     }
-}
+};
 
 exports.getUserAssetGoalBased = async (req, res) => {
     const userId = req.header("userId");
@@ -425,7 +434,7 @@ exports.getUserAssetGoalBased = async (req, res) => {
         );
         res.status(401).json({ message: error });
     }
-}
+};
 exports.stopGoal = async (req, res) => {
     const db = client.db(dbName);
     const collectionGoal = db.collection("goal");
@@ -436,12 +445,20 @@ exports.stopGoal = async (req, res) => {
         if (isVerify) {
             const queryGoal = {
                 userId: userId,
-                Name: req.body.Name
+                Name: req.body.Name,
             };
-            const isActive = await collectionGoal.find(queryGoal).project({ isActive: 1, Name: 1 }).toArray()
+            const isActive = await collectionGoal
+                .find(queryGoal)
+                .project({ isActive: 1, Name: 1 })
+                .toArray();
             //console.log(isActive[0].isActive)
-            if (isActive[0].isActive == true || isActive[0].isActive == undefined) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } }) }
-            else if (isActive[0].isActive == false) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } }) };
+            if (isActive[0].isActive == true || isActive[0].isActive == undefined) {
+                await collectionGoal.updateOne(queryGoal, {
+                    $set: { isActive: false },
+                });
+            } else if (isActive[0].isActive == false) {
+                await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } });
+            }
             //await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } })
             res.status(200);
         }
@@ -462,17 +479,18 @@ exports.deleteGoal = async (req, res) => {
         if (isVerify) {
             const queryAsset = {
                 userId: userId,
-                goalObjId: req.body.goalId
+                goalObjId: req.body.goalId,
             };
             // await collection.find(query).toArray().then(x => console.log(x))
-            await collectionAsset.updateMany(queryAsset, { $unset: { goalObjId: '' } })
+            await collectionAsset.updateMany(queryAsset, {
+                $unset: { goalObjId: "" },
+            });
 
             const queryGoal = {
                 userId: userId,
-                Name: req.body.Name
+                Name: req.body.Name,
             };
-            await collectionGoal.deleteOne(queryGoal)
-
+            await collectionGoal.deleteOne(queryGoal);
 
             res.status(200);
         }
@@ -480,7 +498,7 @@ exports.deleteGoal = async (req, res) => {
         console.log("Error occured in mongoController.deleteGoal: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getUserRiskProfile = async (req, res) => {
     const db = client.db(dbName);
@@ -498,7 +516,7 @@ exports.getUserRiskProfile = async (req, res) => {
         console.log("Error occured in mongoController.getUserRiskProfile: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.createUserRiskProfile = async (req, res) => {
     const db = client.db(dbName);
@@ -515,7 +533,7 @@ exports.createUserRiskProfile = async (req, res) => {
                 {
                     $set: {
                         uid: userId,
-                        riskProfile: userRiskProfile
+                        riskProfile: userRiskProfile,
                     },
                 },
                 { upsert: true }
@@ -523,10 +541,13 @@ exports.createUserRiskProfile = async (req, res) => {
             res.status(200).json({ updateResult });
         }
     } catch (err) {
-        console.log("Error occured in mongoController.createUserRiskProfile: ", err);
+        console.log(
+            "Error occured in mongoController.createUserRiskProfile: ",
+            err
+        );
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getMasterDataByName = async (req, res) => {
     const db = client.db(dbName);
@@ -534,15 +555,16 @@ exports.getMasterDataByName = async (req, res) => {
     const name = req.header("Name");
     try {
         query = { name: name };
-        const queryResult = await collection.findOne(
-            query
-        );
+        const queryResult = await collection.findOne(query);
         res.status(200).json({ queryResult });
     } catch (err) {
-        console.log("Error occured in mongoController.createUserRiskProfile: ", err);
+        console.log(
+            "Error occured in mongoController.createUserRiskProfile: ",
+            err
+        );
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.upsertGoal = async (req, res) => {
     const db = client.db(dbName);
@@ -556,28 +578,26 @@ exports.upsertGoal = async (req, res) => {
         if (isVerify) {
             if (goalObjId || goalData._id) {
                 //code to edit existing goal
-                goalData.type = "normal"
-                let id = goalObjId ? new ObjectId(goalObjId) : new ObjectId(goalData._id)
-                let query = { _id: id }
-                delete goalData._id
+                goalData.type = "normal";
+                let id = goalObjId
+                    ? new ObjectId(goalObjId)
+                    : new ObjectId(goalData._id);
+                let query = { _id: id };
+                delete goalData._id;
                 await collection.updateOne(
                     query,
                     {
-                        $set:
-                            goalData
-                        ,
+                        $set: goalData,
                     },
                     { upsert: true }
                 );
             } else {
-                goalData.type = "normal"
+                goalData.type = "normal";
                 let query = { userId: userId, Name: goalData.Name };
                 await collection.updateOne(
                     query,
                     {
-                        $set:
-                            goalData
-                        ,
+                        $set: goalData,
                     },
                     { upsert: true }
                 );
@@ -588,7 +608,7 @@ exports.upsertGoal = async (req, res) => {
         console.log("Error occured in mongoController.upsertGoal: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getUserGoalByObjId = async (req, res) => {
     const db = client.db(dbName);
@@ -606,7 +626,7 @@ exports.getUserGoalByObjId = async (req, res) => {
         console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getUserNetSummary = async (req, res) => {
     const db = client.db(dbName);
@@ -624,7 +644,7 @@ exports.getUserNetSummary = async (req, res) => {
         console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getAndCalculateFundGrowth = async (req, res) => {
     const db = client.db(dbName);
@@ -635,29 +655,39 @@ exports.getAndCalculateFundGrowth = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            await Promise.all(fundsData.map(async (fund, index) => {
-                let query = { fundsObjectID: fund._id }
-                const findResult = await collection.find(query).sort({
-                    navDate: 1,
-                }).toArray();
-                if (findResult[0] && findResult[findResult.length - 1]) {
-                    const startPrice = findResult[0].lastVal;
-                    const lastPrice = findResult[findResult.length - 1].lastVal;
-                    const lastDate = findResult[findResult.length - 1].navDate;
-                    const growthRate = ((((lastPrice - startPrice) + Number.EPSILON) / (startPrice)) + Number.EPSILON) * 100;
-                    fundsData[index].growth_rate = growthRate;
-                    fundsData[index].last_val = lastPrice;
-                    fundsData[index].last_update = lastDate;
-
-                }
-            }));
+            await Promise.all(
+                fundsData.map(async (fund, index) => {
+                    let query = { fundsObjectID: fund._id };
+                    const findResult = await collection
+                        .find(query)
+                        .sort({
+                            navDate: 1,
+                        })
+                        .toArray();
+                    if (findResult[0] && findResult[findResult.length - 1]) {
+                        const startPrice = findResult[0].lastVal;
+                        const lastPrice = findResult[findResult.length - 1].lastVal;
+                        const lastDate = findResult[findResult.length - 1].navDate;
+                        const growthRate =
+                            ((lastPrice - startPrice + Number.EPSILON) / startPrice +
+                                Number.EPSILON) *
+                            100;
+                        fundsData[index].growth_rate = growthRate;
+                        fundsData[index].last_val = lastPrice;
+                        fundsData[index].last_update = lastDate;
+                    }
+                })
+            );
             res.status(200).json({ fundsData });
         }
     } catch (err) {
-        console.log("Error occured in mongoController.getAndCalculateFundGrowth: ", err);
+        console.log(
+            "Error occured in mongoController.getAndCalculateFundGrowth: ",
+            err
+        );
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.getFundsDailyNav = async (req, res) => {
     const db = client.db(dbName);
@@ -671,10 +701,12 @@ exports.getFundsDailyNav = async (req, res) => {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
             if (isGetYearToDate) {
-                const fundsObj = await collectionFunds.findOne({ proj_id: proj_id })
+                const fundsObj = await collectionFunds.findOne({ proj_id: proj_id });
                 const fundsObjectId = fundsObj._id.toString();
-                const navYearToDate = await collectionNav.find({ fundsObjectID: fundsObjectId }).toArray();
-                res.status(200).json({ navYearToDate })
+                const navYearToDate = await collectionNav
+                    .find({ fundsObjectID: fundsObjectId })
+                    .toArray();
+                res.status(200).json({ navYearToDate });
             }
         } else {
             throw new Error("unauthorized access");
@@ -683,7 +715,7 @@ exports.getFundsDailyNav = async (req, res) => {
         console.log("Error occured in mongoController.getFundsDailyNav: ", err);
         res.status(401).json({ message: err });
     }
-}
+};
 
 exports.insertUserBoughtAsset = async (req, res) => {
     const db = client.db(dbName);
@@ -701,4 +733,4 @@ exports.insertUserBoughtAsset = async (req, res) => {
         console.log("Error occured in mongoController.upsertGoal: ", err);
         res.status(401).json({ message: err });
     }
-}
+};

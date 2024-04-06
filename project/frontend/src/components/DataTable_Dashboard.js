@@ -18,7 +18,7 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import {OverlayLoading} from "./OverlayLoading";
+import { OverlayLoading } from "./OverlayLoading";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import { formatNumberWithCommas } from "utils/numberUtil";
@@ -148,23 +148,23 @@ export default function MonthDataTable({ userData, setUserData }) {
   }, [selectedYear, userData]);
 
   useEffect(() => {
-    if(currentYearData){
-      if(currentYearData.data.length > 0){
+    if (currentYearData) {
+      if (currentYearData.data.length > 0) {
         let tmpSumIncome = 0;
         let tmpSumExpense = 0;
-        currentYearData.data.forEach(data => {
-          data.expenseData.forEach(expData => {
-            tmpSumExpense += parseFloat(expData.amount)
-          })
-          data.incomeData.forEach(incData => {
-            tmpSumIncome += parseFloat(incData.amount)
-          })
-        })
+        currentYearData.data.forEach((data) => {
+          data.expenseData.forEach((expData) => {
+            tmpSumExpense += parseFloat(expData.amount);
+          });
+          data.incomeData.forEach((incData) => {
+            tmpSumIncome += parseFloat(incData.amount);
+          });
+        });
         setSumIncome(tmpSumIncome);
-        setSumExpense(tmpSumExpense)
+        setSumExpense(tmpSumExpense);
       }
     }
-  },[currentYearData])
+  }, [currentYearData]);
 
   if (!userData || !currentYearData) {
     return <OverlayLoading isLoading={true} />;
@@ -326,9 +326,18 @@ export default function MonthDataTable({ userData, setUserData }) {
           >
             <FormControl
               variant="standard"
-              style={{ marginLeft: "10px", marginRight: "30px" ,color : "white"}}
+              style={{
+                marginLeft: "10px",
+                marginRight: "30px",
+                color: "white",
+              }}
             >
-              <InputLabel id="year-selection-input-label" sx={{color : "white"}}>Year</InputLabel>
+              <InputLabel
+                id="year-selection-input-label"
+                sx={{ color: "white" }}
+              >
+                Year
+              </InputLabel>
               <Select
                 labelId="year-selection"
                 id="year-selection"
@@ -338,7 +347,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                     setSelectedYear(e.target.value.toString());
                   }
                 }}
-                sx={{color : "white"}}
+                sx={{ color: "white" }}
               >
                 {allYear.map((item, index) => (
                   <MenuItem
@@ -357,7 +366,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <AddCircleOutlineIcon></AddCircleOutlineIcon>
                 </MenuItem>
               </Select>
-              <FormHelperText sx={{color : "white"}}>
+              <FormHelperText sx={{ color: "white" }}>
                 Select year to create or edit data
               </FormHelperText>
             </FormControl>

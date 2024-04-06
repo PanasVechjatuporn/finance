@@ -1,136 +1,163 @@
 import Button from "react-bootstrap/Button";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
-import Input from '@mui/joy/Input';
+import Input from "@mui/joy/Input";
 import GoogleButton from "react-google-button";
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
 import "components/SignUpModal.css";
 import { signInWithGooglePopup } from "../utils/firebase.utils";
 import { useDispatch } from "react-redux";
-import axios from 'axios';
-import { Login, LoginEmailPassword } from '../store/UserSlice';
-import {OverlayLoading} from "./OverlayLoading";
+import axios from "axios";
+import { Login, LoginEmailPassword } from "../store/UserSlice";
+import { OverlayLoading } from "./OverlayLoading";
 const baseURL = "http://localhost:8000";
 
 function SignUpModal({ show, setShow, mode }) {
   const handleClose = () => setShow(false);
   const dispatch = useDispatch();
-  const [email, setEmail] = React.useState('');
-  const [userName, setUserName] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState("");
+  const [userName, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [isLoading, setisLoading] = React.useState(false);
   const SignInWithGoogle = async () => {
-    setisLoading(true)
-    await signInWithGooglePopup().then(response => {
-      axios.post(`${baseURL}/db/createuser_provider=google`, {
-        userData: response
-      }).then(response => {
-        const userData = response.data.userData;
-        dispatch(Login(userData))
-        const storeObj = {
-          'userName': userData.email,
-          'userId': userData.uid,
-          'isLogIn': true,
-          'userToken': userData.stsTokenManager.accessToken
-        }
-        localStorage.setItem('userData', JSON.stringify(storeObj))
-        setisLoading(false)
-        handleClose()
-      }).catch(error => {
-        console.log(error)
-        setisLoading(false)
+    setisLoading(true);
+    await signInWithGooglePopup()
+      .then((response) => {
+        axios
+          .post(`${baseURL}/db/createuser_provider=google`, {
+            userData: response,
+          })
+          .then((response) => {
+            const userData = response.data.userData;
+            dispatch(Login(userData));
+            const storeObj = {
+              userName: userData.email,
+              userId: userData.uid,
+              isLogIn: true,
+              userToken: userData.stsTokenManager.accessToken,
+            };
+            localStorage.setItem("userData", JSON.stringify(storeObj));
+            setisLoading(false);
+            handleClose();
+          })
+          .catch((error) => {
+            console.log(error);
+            setisLoading(false);
+          });
       })
-    }).catch(error => {
-      setisLoading(false)
-      console.log(error)
-    });
-  }
+      .catch((error) => {
+        setisLoading(false);
+        console.log(error);
+      });
+  };
   function register() {
-    setisLoading(true)
-    axios.post(`${baseURL}/auth/signup`, {
-      email: email,
-      password: password,
-      displayName: userName
-    })
+    setisLoading(true);
+    axios
+      .post(`${baseURL}/auth/signup`, {
+        email: email,
+        password: password,
+        displayName: userName,
+      })
       .then((response) => {
         //Prompt popup modal to alert user register successfully
-        setisLoading(false)
-        handleClose()
+        setisLoading(false);
+        handleClose();
       })
-      .catch(error => {
-        setisLoading(false)
-        console.log('An Error Occured', error);
+      .catch((error) => {
+        setisLoading(false);
+        console.log("An Error Occured", error);
       });
   }
   function signin() {
-    setisLoading(true)
-    axios.post(`${baseURL}/auth/signin`, {
-      email: email,
-      password: password
-    })
-      .then((response) => {
-        const userData = response.data.signInData
-        dispatch(LoginEmailPassword(userData))
-        const storeObj = {
-          'userName': userData.email,
-          'userId': userData.localId,
-          'isLogIn': true,
-          'userToken': userData.idToken
-        }
-        localStorage.setItem('userData', JSON.stringify(storeObj))
-        setisLoading(false)
-        handleClose()
+    setisLoading(true);
+    axios
+      .post(`${baseURL}/auth/signin`, {
+        email: email,
+        password: password,
       })
-      .catch(error => {
-        setisLoading(false)
-        console.log('An Error Occured', error);
+      .then((response) => {
+        const userData = response.data.signInData;
+        dispatch(LoginEmailPassword(userData));
+        const storeObj = {
+          userName: userData.email,
+          userId: userData.localId,
+          isLogIn: true,
+          userToken: userData.idToken,
+        };
+        localStorage.setItem("userData", JSON.stringify(storeObj));
+        setisLoading(false);
+        handleClose();
+      })
+      .catch((error) => {
+        setisLoading(false);
+        console.log("An Error Occured", error);
       });
   }
   return (
     <Modal show={show} backdrop="static">
       <OverlayLoading isLoading={isLoading} />
       <Modal.Header closeButton onHide={handleClose}>
-        <Modal.Title>{mode === 'signup' ? 'Sign Up' : mode === 'signin' ? 'Sign In' : 'Please Sign-in before using our service'}</Modal.Title>
+        <Modal.Title>
+          {mode === "signup"
+            ? "Sign Up"
+            : mode === "signin"
+              ? "Sign In"
+              : "Please Sign-in before using our service"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <FormControl>
           <FormLabel>Email</FormLabel>
-          <Input autoFocus required onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            autoFocus
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </FormControl>
-        {
-          mode === 'signup' ? (<>
+        {mode === "signup" ? (
+          <>
             <FormControl>
               <FormLabel>Username</FormLabel>
               <Input required onChange={(e) => setUserName(e.target.value)} />
             </FormControl>
-          </>) : (<></>)
-        }
+          </>
+        ) : (
+          <></>
+        )}
         <FormControl>
           <FormLabel>Password</FormLabel>
-          <Input required onChange={(e) => setPassword(e.target.value)} type="password" />
+          <Input
+            required
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          />
         </FormControl>
-
       </Modal.Body>
       <br></br>
       <div className="btn-wrapper">
-        <GoogleButton onClick={(e) => {
-          SignInWithGoogle()
-        }} />
+        <GoogleButton
+          onClick={(e) => {
+            SignInWithGoogle();
+          }}
+        />
       </div>
       <br></br>
       <Modal.Footer>
-        <Button variant="primary" onClick={(e) => {
-          try {
-            if (mode === 'signup') {
-              register()
-            } else {
-              signin()
+        <Button
+          variant="primary"
+          onClick={(e) => {
+            try {
+              if (mode === "signup") {
+                register();
+              } else {
+                signin();
+              }
+            } catch (e) {
+              console.log(e);
             }
-          } catch (e) {
-            console.log(e)
-          }
-        }}>
+          }}
+        >
           Submit
         </Button>
       </Modal.Footer>
