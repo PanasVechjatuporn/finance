@@ -63,8 +63,8 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
     return (
         <Container
             sx={{
-                marginTop: 5,
-                minHeight: "50vh",
+                marginTop: "10%",
+                minHeight: "55vh",
                 display: "ruby-text",
             }}
         >
