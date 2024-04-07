@@ -42,7 +42,6 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
     const [allFundsObj, setAllFundsObj] = useState([]);
     useEffect(() => {
         let tmpObjArray = [];
-        console.log('assetData :: ',assetData)
         if(assetData){
             assetData.forEach((asset) => {
                 asset.Funds.forEach((eachFunds) => {
@@ -81,7 +80,6 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                 });
             });
         }
-        console.log('tmpObjArray :: ',tmpObjArray)
         setAllFundsObj(tmpObjArray);
     }, [assetData]);
 

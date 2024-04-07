@@ -14,7 +14,7 @@ export default function ExpenseBenefitTable({ obj, open }) {
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Table>
                                 <TableBody>
-                                    {Type == 0 ? (
+                                    {Type === 0 ? (
                                         <TableRow >
                                             <TableCell style={{ width: "10%" }} />
                                             <TableCell align="left" style={{ width: "70%" }}>

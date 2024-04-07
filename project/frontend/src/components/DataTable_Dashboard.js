@@ -4,11 +4,11 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import TableFooter from "@mui/material/TableFooter";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -18,9 +18,11 @@ import { DataTableRow } from "components/DataTableRow_Dashboard";
 import EditMonthDataModal from "./EditMonthDataModal_Dashboard";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import OverlayLoading from "./OverlayLoading";
+import { OverlayLoading } from "./OverlayLoading";
 import axios from "axios";
 import { Typography } from "@mui/material";
+import { formatNumberWithCommas } from "utils/numberUtil";
+import Paper from "@mui/material/Paper";
 
 const baseURL = "http://localhost:8000";
 
@@ -65,6 +67,8 @@ export default function MonthDataTable({ userData, setUserData }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [allYear, setAllYear] = useState(null);
   const [currentYearData, setCurrentYearData] = useState(null);
+  const [sumIncome, setSumIncome] = useState(null);
+  const [sumExpense, setSumExpense] = useState(null);
   const [openNewMonthModal, setOpenNewMonthModal] = useState(false);
 
   const handleNewMonthClick = () => {
@@ -143,98 +147,114 @@ export default function MonthDataTable({ userData, setUserData }) {
     }
   }, [selectedYear, userData]);
 
+  useEffect(() => {
+    if (currentYearData) {
+      if (currentYearData.data.length > 0) {
+        let tmpSumIncome = 0;
+        let tmpSumExpense = 0;
+        currentYearData.data.forEach((data) => {
+          data.expenseData.forEach((expData) => {
+            tmpSumExpense += parseFloat(expData.amount);
+          });
+          data.incomeData.forEach((incData) => {
+            tmpSumIncome += parseFloat(incData.amount);
+          });
+        });
+        setSumIncome(tmpSumIncome);
+        setSumExpense(tmpSumExpense);
+      }
+    }
+  }, [currentYearData]);
+
   if (!userData || !currentYearData) {
     return <OverlayLoading isLoading={true} />;
   }
 
   return (
-    <Container maxWidth="md" >
-      <Box
-        sx={{
-          minWidth: "90vh",
-          minHeight: "90vh",
-          maxWidth: "90vh",
-          maxHeight: "90vh",
-          borderRadius: 6,
-          boxShadow: 6,
-          padding: 2,
-        }}
-      >
-        <Box
-          style={{ position: "relative", paddingBottom: "70px"}}
+    <Container>
+      <Box style={{ position: "relative" }}>
+        <Typography
+          variant="h5"
+          style={{
+            color: "#757575",
+            textDecoration: "underline",
+            textDecorationColor: "transparent",
+            borderBottom: "2px solid #757575",
+            display: "inline-block",
+            width: "100%",
+            paddingBottom: "8px",
+            userSelect: "none",
+            marginBottom: "15px",
+            fontWeight: "bold",
+          }}
           sx={{
-            padding: 2
+            padding: 1,
           }}
         >
-          <Typography
-                        variant="h5"
-                        style={{
-                            color: "#757575",
-                            textDecoration: "underline",
-                            textDecorationColor: "transparent",
-                            borderBottom: "2px solid #757575",
-                            display: "inline-block",
-                            width: "100%",
-                            paddingBottom: "8px",
-                            userSelect: "none",
-                            marginBottom: "15px",
-                            fontWeight: "bold"
-                        }}
-                        sx={{
-                          padding: 1
-                        }}
-                    >
-                        เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
-                    </Typography>
-          <TableContainer style={{ height: "70vh" }}>
+          เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
+        </Typography>
+        <Paper
+          style={{
+            height: 600,
+            width: "100%",
+          }}
+        >
+          <TableContainer
+            style={{
+              height: 600,
+              // maxHeight: "30%"
+            }}
+          >
             <Table stickyHeader>
               <TableHead
                 sx={{
                   "& th": {
                     color: "white",
-                    backgroundColor: "orange",
-                    borderStyle: "hidden !important"
+                    backgroundColor: "#3e5074",
+                    fontWeight: "bold",
+                    fontSize: 18,
                   },
                 }}
                 key={"table-header"}
               >
                 <TableRow key={"table-row-header"}>
-                  <TableCell style={{ width: "1vh" }}></TableCell>
-                  <TableCell style={{ width: "1vh" }}></TableCell>
-                  <TableCell align="center" style={{ width: "10vh" }}>
+                  <TableCell style={{ width: "1%" }}></TableCell>
+                  <TableCell style={{ width: "1%" }}></TableCell>
+                  <TableCell align="center" style={{ width: "10%" }}>
                     เดือน
                   </TableCell>
-                  <TableCell align="center">รายรับ</TableCell>
-                  <TableCell align="center">รายจ่าย</TableCell>
-                  <TableCell align="center">เงินลงทุน</TableCell>
-                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">รายรับ&nbsp;(บาท)</TableCell>
+                  <TableCell align="center">รายจ่าย&nbsp;(บาท)</TableCell>
+                  {/* <TableCell align="center">เงินลงทุน</TableCell> */}
+                  <TableCell align="center" style={{ width: "2%" }}></TableCell>
                 </TableRow>
               </TableHead>
-              {currentYearData.data.length > 0 ? (
-                <TableBody>
-                  {currentYearData.data.map((monthData, index) => (
-                    <DataTableRow
-                      key={`data-table-row-${index}-${selectedYear}`}
-                      dataMonth={monthData}
-                      currentYearData={currentYearData}
-                      userData={userData}
-                      setUserData={setUserData}
-                      selectedYear={selectedYear}
-                      isDeleteActive={
-                        parseInt(currentYearData.data.length) ===
-                          parseInt(index + 1) &&
-                          currentYearData.data.length !== 1
-                          ? true
-                          : false
-                      }
-                    ></DataTableRow>
-                  ))}
-                </TableBody>
-              ) : (
-                <></>
-              )}
-              {currentYearData.data.length !== 12 ? (
-                <TableBody>
+              <TableBody>
+                {currentYearData.data.length > 0 ? (
+                  <>
+                    {currentYearData.data.map((monthData, index) => (
+                      <DataTableRow
+                        key={`data-table-row-${index}-${selectedYear}`}
+                        dataMonth={monthData}
+                        currentYearData={currentYearData}
+                        userData={userData}
+                        setUserData={setUserData}
+                        selectedYear={selectedYear}
+                        isDeleteActive={
+                          parseInt(currentYearData.data.length) ===
+                            parseInt(index + 1) &&
+                            currentYearData.data.length !== 1
+                            ? true
+                            : false
+                        }
+                        index={index}
+                      ></DataTableRow>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )}
+                {currentYearData.data.length !== 12 ? (
                   <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
                     <TableCell
                       colSpan={7}
@@ -250,27 +270,74 @@ export default function MonthDataTable({ userData, setUserData }) {
                       ></IconButton>
                     </TableCell>
                   </TableRow>
-                </TableBody>
-              ) : (
-                <></>
-              )}
+                ) : (
+                  <></>
+                )}
+              </TableBody>
+
+              <TableFooter stickyFooter>
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    align="center"
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#009e00",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    รวม&nbsp;(บาท)
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "black",
+                      backgroundColor: "#cdf5c3",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    {formatNumberWithCommas(sumIncome)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "black",
+                      backgroundColor: "#ffcfd5",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    {formatNumberWithCommas(sumExpense)}
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
             </Table>
           </TableContainer>
           <Box
             style={{
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: "orange",
+              backgroundColor: "#3e5074",
               display: "flex",
               justifyContent: "flex-end",
+              position: "relative",
+              width: "100%",
             }}
           >
             <FormControl
               variant="standard"
-              style={{ marginLeft: "10px", marginRight: "30px" }}
+              style={{
+                marginLeft: "10px",
+                marginRight: "30px",
+                color: "white",
+              }}
             >
-              <InputLabel id="year-selection-input-label">Year</InputLabel>
+              <InputLabel
+                id="year-selection-input-label"
+                sx={{ color: "white" }}
+              >
+                Year
+              </InputLabel>
               <Select
                 labelId="year-selection"
                 id="year-selection"
@@ -280,9 +347,13 @@ export default function MonthDataTable({ userData, setUserData }) {
                     setSelectedYear(e.target.value.toString());
                   }
                 }}
+                sx={{ color: "white" }}
               >
                 {allYear.map((item, index) => (
-                  <MenuItem key={index + "-menuitem-" + item + selectedYear} value={item}>
+                  <MenuItem
+                    key={index + "-menuitem-" + item + selectedYear}
+                    value={item}
+                  >
                     {item}
                   </MenuItem>
                 ))}
@@ -295,12 +366,12 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <AddCircleOutlineIcon></AddCircleOutlineIcon>
                 </MenuItem>
               </Select>
-              <FormHelperText>
+              <FormHelperText sx={{ color: "white" }}>
                 Select year to create or edit data
               </FormHelperText>
             </FormControl>
           </Box>
-        </Box>
+        </Paper>
       </Box>
       <EditMonthDataModal
         show={openNewMonthModal}

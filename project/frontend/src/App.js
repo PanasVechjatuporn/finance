@@ -1,19 +1,17 @@
 import "App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Dashboard } from "pages/dashboard";
-import { Home } from "pages/homepage";
-import { GoalBased } from "pages/goalbased";
-import { NewTaxGoal } from "pages/newtaxgoal";
+import { Dashboard } from "pages/Dashboard";
+import { Home } from "pages/HomePage";
+import { GoalBased } from "pages/GoalBased";
+import { NewTaxGoal } from "pages/NewTaxGoal";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginWithLocalData } from "./store/UserSlice";
-import { SelectFund } from "pages/selectFund";
+import { SelectFund } from "pages/SelectFund";
 import axios from "axios";
-import { Login } from "./store/UserSlice";
-import { NormalGoal } from "pages/normalGoal";
-import { GoalFirst } from "pages/normalGoalFirst";
-import { RiskEvalNormalPage } from "pages/riskEvalNormal";
-import { useState } from "react";
-import { TaxCal } from "pages/taxCalcuation";
+import { NormalGoal } from "pages/NormalGoal";
+import { RiskEvalNormalPage } from "pages/RiskEvalNormal";
+import { TaxCal } from "pages/TaxCalculation";
+import { GoalInvestment } from "pages/GoalInvestment";
 
 const baseURL = "http://localhost:8000";
 function RequireAuth({ children, redirectTo }) {
@@ -27,9 +25,6 @@ function RequireAuth({ children, redirectTo }) {
 function App() {
   const userStore = useSelector((state) => state.userStore);
   const dispatch = useDispatch();
-
-  const [allowedToAccessNormalGoal, setAllowedToAccessNormalGoal] =
-    useState(false);
 
   try {
     if (userStore.userId === null) {
@@ -70,7 +65,6 @@ function App() {
             <RequireAuth redirectTo="/">
               {
                 <RiskEvalNormalPage
-                  setAllowedToAccessNormalGoal={setAllowedToAccessNormalGoal}
                 />
               }
             </RequireAuth>
@@ -85,10 +79,6 @@ function App() {
           }
         />
         <Route
-          path="/Goal-Based/normal-goal-first"
-          element={<RequireAuth redirectTo="/">{<NormalGoal />}</RequireAuth>}
-        />
-        <Route
           path="/Goal-Based/reduce-tax-goal/select-fund"
           element={<SelectFund />}
         />
@@ -96,6 +86,9 @@ function App() {
           path="/tax-calculation"
           element={<RequireAuth redirectTo="/">{<TaxCal />}</RequireAuth>}
         />
+        <Route path="/Goal-Based/edit-normal-goal/:goalObjId" element={<NormalGoal />} />
+
+        <Route path="/Goal-Based/invest-normal-goal/:goalObjId" element={<GoalInvestment />} />
       </Routes>
     </BrowserRouter>
   );

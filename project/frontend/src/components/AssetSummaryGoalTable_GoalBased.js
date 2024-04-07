@@ -15,7 +15,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: "#3e5074",
         color: "white",
-        borderStyle: "hidden !important"
+        borderStyle: "hidden !important",
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
@@ -34,62 +34,65 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     //     backgroundColor: theme.palette.action.hover,
     // },
     "&:last-child td, &:last-child th": {
-        borderStyle: "hidden !important"
+        borderStyle: "hidden !important",
     },
 }));
 
 export const AssetSummaryGoalTable = ({ selectedData }) => {
-        return (
-            <Container>
-                <Typography
-                        variant="h5"
-                        style={{
-                            color: "#757575",
-                            textDecoration: "underline",
-                            textDecorationColor: "transparent",
-                            borderBottom: "2px solid #757575",
-                            display: "inline-block",
-                            width: "100%",
-                            paddingBottom: "8px",
-                            userSelect: "none",
-                            marginBottom: "15px",
-                            fontWeight: "bold"
-                        }}
-                    >
-                        ตารางแสดงการลงทุนภายในเป้าหมาย {(selectedData && (selectedData.Name))}
-                    </Typography>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: "100%" }} aria-label="customized table">
-                        <TableHead>
-                            <StyledTableRow>
-                                <StyledTableCell rowSpan={2}>วันที่ซื้อ&nbsp;(วว/ดด/ปป)</StyledTableCell>
-                                <StyledTableCell align="center" colSpan={6}>
-                                    สินทรัพย์ที่ลงทุน
-                                </StyledTableCell>
-                            </StyledTableRow>
-                            <StyledTableRow>
-                                <StyledTableCell className="subHeader">
-                                    ประเภทของสินทรัพย์ที่ลงทุน
-                                </StyledTableCell>
-                                <StyledTableCell className="subHeader">
-                                    ชื่อกองทุน
-                                </StyledTableCell>
-                                <StyledTableCell className="subHeader">
-                                    จำนวนเงินที่ซื้อ&nbsp;(บาท)
-                                </StyledTableCell>
-                                <StyledTableCell className="subHeader">
-                                    ราคาที่ซื้อ&nbsp;(บาท)
-                                </StyledTableCell>
-                                <StyledTableCell className="subHeader">
-                                    จำนวนหน่วยลงทุน
-                                </StyledTableCell>
-                                <StyledTableCell className="subHeader">
-                                    ประเภทของกองทุน
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        </TableHead>
-                        <TableBody>
-                            {selectedData ? (<>
+    return (
+        <Container>
+            <Typography
+                variant="h5"
+                style={{
+                    color: "#757575",
+                    textDecoration: "underline",
+                    textDecorationColor: "transparent",
+                    borderBottom: "2px solid #757575",
+                    display: "inline-block",
+                    width: "100%",
+                    paddingBottom: "8px",
+                    userSelect: "none",
+                    marginBottom: "15px",
+                    fontWeight: "bold",
+                }}
+            >
+                ตารางแสดงการลงทุนภายในเป้าหมาย {selectedData && selectedData.Name}
+            </Typography>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                    <TableHead>
+                        <StyledTableRow>
+                            <StyledTableCell rowSpan={2}>
+                                วันที่ซื้อ&nbsp;(วว/ดด/ปป)
+                            </StyledTableCell>
+                            <StyledTableCell align="center" colSpan={6}>
+                                สินทรัพย์ที่ลงทุน
+                            </StyledTableCell>
+                        </StyledTableRow>
+                        <StyledTableRow>
+                            <StyledTableCell className="subHeader">
+                                ประเภทของสินทรัพย์ที่ลงทุน
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ชื่อกองทุน
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                จำนวนเงินที่ซื้อ&nbsp;(บาท)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ราคาที่ซื้อ&nbsp;(บาท)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                จำนวนหน่วยลงทุน
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ประเภทของกองทุน
+                            </StyledTableCell>
+                        </StyledTableRow>
+                    </TableHead>
+                    <TableBody>
+                        {selectedData ? (
+                            <>
                                 {selectedData.assets.map((asset, index) => (
                                     <React.Fragment
                                         key={asset.CreatedDate + "-" + index + "-fragment"}
@@ -98,7 +101,7 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                                             key={asset.CreatedDate + "-" + index + "-header"}
                                         >
                                             <StyledTableCell rowSpan={asset.Funds.length + 1}>
-                                                {asset.CreatedDate}
+                                                {new Date(asset.timeStamp).toLocaleDateString("en-GB")}
                                             </StyledTableCell>
                                         </StyledTableRow>
                                         {asset.Funds.map((subAsset, indexSubAsset) => (
@@ -147,13 +150,17 @@ export const AssetSummaryGoalTable = ({ selectedData }) => {
                                         ))}
                                     </React.Fragment>
                                 ))}
-                            </>) : (<TableRow>
-                                <TableCell colSpan={7} align="center">ไม่พบข้อมูล</TableCell>
-                            </TableRow>)}
-                            
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Container>
-        );
+                            </>
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">
+                                    ไม่พบข้อมูล
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Container>
+    );
 };

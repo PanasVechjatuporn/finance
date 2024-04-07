@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CustomChartLegend from "./CustomChartLegend_Dashboard";
 import PieChartInfoModal from "./PieChartInfoModal_Dashboard";
+import { formatNumberWithCommas } from "utils/numberUtil";
 const taxableIncome = [
     {
         name: "เงินได้ประเภทที่ 1",
@@ -151,7 +152,7 @@ const expenseType = [
     {
         name: "อื่นๆ",
         category: 8,
-        color: "#b7f1a5",
+        color: "#818181",
         index: 8
     },
 ];
@@ -167,7 +168,9 @@ export default function PieChartComponent({ userData }) {
     const [expensePieData, setExpensePieData] = useState(null);
     const [modalParams, setModalParams] = useState(null);
     const [showPieChartModal, setShowPieChartModal] = useState(false);
-    const [modalType, setModalType] = useState(null)
+    const [modalType, setModalType] = useState(null);
+    const [totalIncome, setTotalIncome] = useState(null);
+    const [totalExpense,  setTotalExpense] = useState(null);
 
     useEffect(() => {
         if (userData && !currentYear) {
@@ -247,11 +250,12 @@ export default function PieChartComponent({ userData }) {
                             }
                             yearlyExpense += parseFloat(expenseSource.amount);
                         });
-                        //investmentData
                     }
                 );
                 const incomeEntries = {};
+                let tmpIncomeSum = 0;
                 incomeSourceEntries.forEach((entry) => {
+                    tmpIncomeSum += parseFloat(entry.amount)
                     if (!incomeEntries[entry.type]) {
                         incomeEntries[entry.type] = [];
                     }
@@ -259,7 +263,9 @@ export default function PieChartComponent({ userData }) {
                 });
 
                 const expenseEntries = {};
+                let tmpExpenseSum = 0;
                 expenseSourceEntries.forEach((entry) => {
+                    tmpExpenseSum += parseFloat(entry.amount)
                     if (!expenseEntries[entry.type]) {
                         expenseEntries[entry.type] = [];
                     }
@@ -278,6 +284,9 @@ export default function PieChartComponent({ userData }) {
 
                 setIncomePieData(incomePieData);
                 setExpensePieData(expensePieData);
+
+                setTotalIncome(tmpIncomeSum);
+                setTotalExpense(tmpExpenseSum);
                 setPieIncomeParams({
                     series: [
                         {
@@ -345,25 +354,39 @@ export default function PieChartComponent({ userData }) {
     }
 
     return (
-        <Container maxWidth="md">
             <Box
                 sx={{
-                    minWidth: "90vh",
-                    minHeight: "90vh",
-                    maxWidth: "90vh",
-                    maxHeight: "90vh",
-                    borderRadius: 6,
-                    boxShadow: 6,
-                    position: "relative",
+                    marginTop: "8%",
                 }}
             >
+                
+                <Container>
+                    <Typography
+                        variant="h5"
+                        style={{
+                            color: "#757575",
+                            textDecoration: "underline",
+                            textDecorationColor: "transparent",
+                            borderBottom: "2px solid #757575",
+                            display: "inline-block",
+                            width: "100%",
+                            userSelect: "none",
+                            fontWeight: "bold",
+                            paddingBottom: "2%",
+                        }}
+                        sx={{
+                            paddingTop: 1,
+                        }}
+                    >
+                        สรุปรายรับ ปี {currentYear}
+                    </Typography>
+                </Container>
                 <Container>
                     <FormControl
                         sx={{
-                            position: "absolute",
-                            right: "5%",
                             width: "15%",
-                            height: "10%"
+                            height: "10%",
+                            marginTop : "2%"
                         }}
                     >
                         <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
@@ -386,33 +409,16 @@ export default function PieChartComponent({ userData }) {
                         </Select>
                     </FormControl>
                 </Container>
-                <Container>
-                    <Typography
-                        variant="h5"
-                        style={{
-                            color: "#757575",
-                            textDecoration: "underline",
-                            textDecorationColor: "transparent",
-                            borderBottom: "2px solid #757575",
-                            display: "inline-block",
-                            width: "100%",
-                            userSelect: "none",
-                            fontWeight: "bold",
-                            paddingBottom: "2%",
-
-                        }}
-                        sx={{
-                            paddingTop: 1,
-                        }}
-                    >
-                        สรุปรายรับ ปี {currentYear}
-                    </Typography>
-                </Container>
-
                 {pieIncomeParams ? (
-                    <Container style={{ marginLeft: "10%" }}>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <div style={{ flex: 1 }}>
+                    <Container 
+                    // style={{ marginLeft: "10%" }}
+                    >
+                        <div 
+                        style={{ display: "flex", flexDirection: "row" }}
+                        >
+                            <div 
+                            style={{ flex: 1 }}
+                            >
                                 <PieChart
                                     {...pieIncomeParams}
                                     series={pieIncomeParams.series.map((series) => ({
@@ -434,10 +440,19 @@ export default function PieChartComponent({ userData }) {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1, padding: 10, marginTop: 80 }}>
+                            <div style={{ flex: 1, padding: 10, marginTop: "6%" }}>
                                 <CustomChartLegend data={incomePieData} taxableIncome={taxableIncome} />
                             </div>
                         </div>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            รายรับสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalIncome)} บาท
+                        </Typography>
                     </Container>
 
                 ) : (
@@ -481,7 +496,9 @@ export default function PieChartComponent({ userData }) {
                     </Typography>
                 </Container>
                 {pieExpenseParams ? (
-                    <Container style={{ marginLeft: "10%" }}>
+                    <Container 
+                    // style={{ marginLeft: "10%" }}
+                    >
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             <div style={{ flex: 1 }}>
                                 <PieChart
@@ -505,10 +522,19 @@ export default function PieChartComponent({ userData }) {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1, marginTop: 80 }}>
+                            <div style={{ flex: 1, marginTop: "6%" }}>
                                 <CustomChartLegend data={expensePieData} expenseType={expenseType} />
                             </div>
                         </div>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            รายจ่ายสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalExpense)} บาท
+                        </Typography>
                     </Container>
 
                 ) : (
@@ -533,6 +559,5 @@ export default function PieChartComponent({ userData }) {
                 )}
                 <PieChartInfoModal open={showPieChartModal} setOpen={setShowPieChartModal} modalParams={modalParams} modalType={modalType}></PieChartInfoModal>
             </Box>
-        </Container>
     );
 }

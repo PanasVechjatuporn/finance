@@ -86,6 +86,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
                       selectedOptions[currentQuestionIndex]?.index === index
                     }
                     sx={{ margin: 1 }}
+                    key={"each-option-index-"+index}
                   />
                 ))}
               </RadioGroup>
@@ -117,7 +118,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
               )}
             </Stack>
           </div>
-          <div>Score: {score}</div>
+          {/* <div>Score: {score}</div> */}
         </div>
       </Container>
     </React.Fragment>

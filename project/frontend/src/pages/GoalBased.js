@@ -1,33 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import Navigate from "components/Navbar";
 import { Container } from "react-bootstrap";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Button, CardActionArea, CardActions, TextField } from "@mui/material";
+import { Button, CardActions, TextField } from "@mui/material";
 import GoalCard from "components/GoalCard";
 //import mockGoal from "mockupData/mockGoal.json"
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 import { AssetSummary } from "components/AssetSummary_GoalBased";
 import CircularProgress from '@mui/joy/CircularProgress';
-
-const warnTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: "rgba(0, 0, 0, 0.87)",
-        boxShadow: theme.shadows[1],
-        fontSize: 11,
-    },
-}));
+import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
+import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
+import { UserNetSummary } from "components/UserNetSummary";
+const baseURL = "http://localhost:8000";
 
 export const GoalBased = () => {
     const navigate = useNavigate();
@@ -40,7 +29,28 @@ export const GoalBased = () => {
     const [needAllocate, setNeedAllocate] = React.useState(false)
 
     const [isItNormal, setIsitNormal] = React.useState();
+    const [riskProfile, setRiskProfile] = React.useState();
 
+    const [isOpenRiskProfilePrompModal, setIsOpenRiskProfilePrompModal] = useState(false);
+    React.useEffect(() => {
+        async function fetchData() {
+            if (uid != null) {
+                let riskProfileTemp;
+                await axios
+                    .get(`http://localhost:8000/db/userdata=${uid}`)
+                    .then((response) => {
+                        setData(response.data);
+                    });
+                await axios
+                    .get(`http://localhost:8000/db/usergoal=${uid}`)
+                    .then((res) => {
+                        setGoal(res.data);
+                    });
+                setIsloading(false);
+            }
+        }
+        fetchData();
+    }, [uid]);
     React.useEffect(() => {
         async function fetchData() {
             if (uid != null) {
@@ -59,7 +69,7 @@ export const GoalBased = () => {
                                     (acc, current) => acc + Number(current.Percentage || 0),
                                     0
                                 );
-                            if (sumPercent != 100) {
+                            if (sumPercent !== 100) {
                                 setNeedAllocate(true)
                             } else {
                                 setNeedAllocate(false)
@@ -67,8 +77,8 @@ export const GoalBased = () => {
                         }
                     });
                 setIsloading(false);
-                console.log(needAllocate)
-                if (needAllocate == true) { handleOpenEditGoal() }
+                // console.log(needAllocate)
+                if (needAllocate === true) { handleOpenEditGoal() }
             }
         }
         fetchData();
@@ -77,18 +87,22 @@ export const GoalBased = () => {
 
 
     function handleGoalTypeClick(type) {
-        if (type == "normal") {
+        console.log('handleGoalTypeClick')
+        if (type === "normal") {
             setIsitNormal(true);
-        } else if (type == "tax") {
+        } else if (type === "tax") {
             setIsitNormal(false);
         }
-
         if (goal.length > 0) {
-            handleOpenNewGoal();
-        } else {
-            if (type == "normal") {
+            if (type === "normal") {
                 navigate("./normal-goal", { state: { Percentage: 100 } });
-            } else if (type == "tax") {
+            } else {
+                handleOpenNewGoal();
+            }
+        } else {
+            if (type === "normal") {
+                navigate("./normal-goal", { state: { Percentage: 100 } });
+            } else if (type === "tax") {
                 navigate("./reduce-tax-goal", {
                     state: { Percentage: 100, data: data },
                 });
@@ -96,19 +110,34 @@ export const GoalBased = () => {
         }
     }
 
-    function handleCreateGoal() {
-        if (goal.length > 0) {
-            const found = goal.some((obj) => obj.Name === "ลดหย่อนภาษี");
-            if (found) {
-                handleOpenNewGoal();
-                setIsitNormal(true);
+    async function handleCreateGoal() {
+        const getResult = await axios.get(`${baseURL}/db/get_user_risk_profile`, {
+            headers: {
+                Authorization: token,
+                userId: uid,
+            },
+        });
+        try {
+            if (getResult.data.findResult !== null) {
+                if (goal.length > 0) {
+                    const found = goal.some((obj) => obj.Name === "ลดหย่อนภาษี");
+                    if (found) {
+                        handleOpenNewGoal();
+                        setIsitNormal(true);
+                    } else {
+                        handleOpenCreate();
+                    }
+                } else {
+                    handleOpenCreate();
+                }
             } else {
-                handleOpenCreate();
+                setIsOpenRiskProfilePrompModal(true);
             }
-        } else {
-            handleOpenCreate();
+        } catch (err) {
+            console.log('err :: ', err)
         }
     }
+
     const [openNewGoal, setOpenNewGoal] = React.useState(false);
     const handleOpenNewGoal = () => {
         setOpenNewGoal(true);
@@ -122,14 +151,16 @@ export const GoalBased = () => {
         );
 
         function handleSubmit(event) {
-            if (isItNormal == true) {
+            if (isItNormal === true) {
                 handleCloseNewGoal();
-                navigate("./normal-goal", { state: { Percentage: goalPercent, goal: oldGoal } });
+                navigate("./normal-goal", {
+                    state: { Percentage: goalPercent, goal: oldGoal, riskProfile: riskProfile },
+                });
                 event.preventDefault();
-            } else if (isItNormal == false) {
+            } else if (isItNormal === false) {
                 handleCloseNewGoal();
                 navigate("./reduce-tax-goal", {
-                    state: { Percentage: goalPercent, data: data, oldGoal: oldGoal },
+                    state: { Percentage: goalPercent, data: data, goal: oldGoal },
                 });
                 event.preventDefault();
             }
@@ -141,7 +172,7 @@ export const GoalBased = () => {
                 (acc, current) => acc + Number(current.Percentage || 0),
                 0
             ) + goalPercent;
-        if (sumPercent != 100) {
+        if (sumPercent !== 100) {
             Exceed = true;
         } else {
             Exceed = false;
@@ -339,7 +370,7 @@ export const GoalBased = () => {
                                 disabled={Exceed}
                                 type="submit"
                                 sx={{
-                                    backgroundColor: Exceed == true ? "gray" : "black",
+                                    backgroundColor: Exceed === true ? "gray" : "black",
                                     paddingLeft: 2,
                                     paddingRight: 2,
                                 }}
@@ -388,7 +419,7 @@ export const GoalBased = () => {
                     }}
                 >
                     <Typography gutterBottom id="modal-modal-title" variant="subtitile1">
-                        สร้างเป้าหมายเพื่อลดภาษี
+                        สร้างเป้าหมาย
                     </Typography>
                     <Container
                         style={{
@@ -404,7 +435,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                ไม่
+                                เพื่อเก็บออมเงิน
                             </Typography>
                         </Button>
                         <Button
@@ -413,7 +444,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                ใช่
+                                เพื่อลดหย่อนภาษี
                             </Typography>
                         </Button>
                     </Container>
@@ -457,7 +488,7 @@ export const GoalBased = () => {
                 (acc, current) => acc + Number(current.Percentage || 0),
                 0
             );
-        if (sumPercent != 100) {
+        if (sumPercent !== 100) {
             Exceed = true;
         } else {
             Exceed = false;
@@ -516,7 +547,7 @@ export const GoalBased = () => {
                             variant="subtitile1"
                             fontWeight={"bold"}
                         >
-                            {needAllocate == true ? "จัดสรรสัดส่วนการลงทุนใหม่ :" : "เงินลงทุนในเป้าหมายทั้งหมด :"}
+                            {needAllocate === true ? "จัดสรรสัดส่วนการลงทุนใหม่ :" : "เงินลงทุนในเป้าหมายทั้งหมด :"}
                         </Typography>
                         {editGoalPercent.length > 0
                             ? editGoalPercent.map((eachGoal, index) => (
@@ -589,7 +620,7 @@ export const GoalBased = () => {
                                 sx={{
                                     paddingLeft: 2,
                                     paddingRight: 2,
-                                    backgroundColor: needAllocate == true ? "gray" : "black",
+                                    backgroundColor: needAllocate === true ? "gray" : "black",
                                     marginRight: 2,
                                 }}
                                 size="medium"
@@ -599,7 +630,7 @@ export const GoalBased = () => {
                                     ยกเลิก
                                 </Typography>
                             </Button>
-                            {Exceed == true ? (
+                            {Exceed === true ? (
                                 <Button
                                     disabled="true"
                                     type="submit"
@@ -636,11 +667,12 @@ export const GoalBased = () => {
         );
     };
 
-
     return (
         <React.Fragment>
             <Navigate />
             <Typography marginBottom={5} marginTop={5} variant="h5" textAlign={"center"} fontWeight={'bold'}>Goal-Based Investment</Typography>
+            <CurrentUserRiskProfile></CurrentUserRiskProfile>
+            <UserNetSummary />
             <Container
                 style={{
                     display: "flex",
@@ -674,7 +706,7 @@ export const GoalBased = () => {
                             alignItems: "center",
                         }}
                     >
-                        {isloading == false ? <Button
+                        {isloading === false ? <Button
                             onClick={handleCreateGoal}
                             sx={{ backgroundColor: "black" }}
                             size="large"
@@ -693,7 +725,8 @@ export const GoalBased = () => {
                             openCreate={openCreate}
                             handleCloseCreate={handleCloseCreate}
                         />
-                        <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} />
+                        {/* <ModalNewGoal open={openNewGoal} close={handleCloseNewGoal} /> */}
+                        <RiskProfilePromptModal isOpen={isOpenRiskProfilePrompModal} setIsOpen={setIsOpenRiskProfilePrompModal}></RiskProfilePromptModal>
                     </CardActions>
                 </Card>
             </Container>
@@ -704,8 +737,9 @@ export const GoalBased = () => {
                             แก้ไข
                         </Button>
                     </Tooltip>
-                    <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} />
+                    {/* <ModalEditGoal open={openEditGoal} close={handleCloseEditGoal} /> */}
                 </Container> : null}
+            <AssetSummary></AssetSummary>
         </React.Fragment>
     );
 };

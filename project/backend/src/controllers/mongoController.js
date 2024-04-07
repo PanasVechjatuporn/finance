@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "../.env" });
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
+const { ObjectId } = require("mongodb");
 // Database Name
 const dbName = "dev";
 
@@ -22,6 +23,7 @@ exports.createNewUser = async (user) => {
             var insertResult = await collection.insertOne(obj);
             console.log(insertResult);
         }
+        await createUserNetSummary(user.uid);
     } catch (error) {
         console.log("Error occured in mongoController.createNewUser: ", error);
     }
@@ -57,6 +59,7 @@ exports.createNewUserWithProvider = async (req, res) => {
                 default:
                     throw new Error("Unknown Provider");
             }
+            await createUserNetSummary(userData.uid);
             res.status(200).json({ userData });
         } else {
             throw new Error("unauthorized access");
@@ -70,88 +73,50 @@ exports.createNewUserWithProvider = async (req, res) => {
     }
 };
 
-exports.upsertUserMonthlyData = async (req, res) => {
-    const upsertData = req.body.upsertData;
-    const userToken = req.header("Authorization");
+async function createUserNetSummary(userId) {
     const db = client.db(dbName);
-    const collection = db.collection("income_expense");
-    try {
-        const isVerify = await firebaseAuth.verifyIdToken(
-            userToken,
-            upsertData.user.userId
-        );
-        if (isVerify) {
-            console.log("upsertData :: ", upsertData);
-            query = { userId: upsertData.user.userId, date: upsertData.currentDate };
-            await collection.updateOne(
-                query,
-                {
-                    $set: {
-                        userId: upsertData.user.userId,
-                        date: upsertData.currentDate,
-                        incomeData: upsertData.incomeData,
-                        expenseData: upsertData.expenseData,
-                        investmentData: upsertData.investmentData,
-                    },
-                },
-                { upsert: true }
-            );
-            res.status(200).json({ upsertData });
-        } else {
-            throw new Error("unauthorized access");
-        }
-    } catch (error) {
-        console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
-            error
-        );
-        res.status(401).json({ message: error });
+    const collection = db.collection("usernetsummary");
+    const netSummaryFindResult = await collection.findOne({ userId: userId });
+    if (!netSummaryFindResult) {
+        await collection.insertOne({
+            userId: userId,
+            netIncome: 0,
+            netExpense: 0,
+            netIncomeExpense: 0,
+            netBoughtAsset: 0,
+            netSoldAsset: 0,
+            netWealth: 0,
+        });
     }
-};
+}
 
-exports.get_user_data_income_expense = async (req, res) => {
+exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
-
     try {
         query = { userId: req.params.uid, year: "2024" };
         var findResult = await collection.find(query).toArray();
         res.json(findResult);
     } catch (error) {
-        console.log(
-            "Error occured in exports.get_user_data_income_expense: ",
-            error
-        );
+        console.log("Error occured in exports.getUserDataIncomeExpense: ", error);
         res.status(401).json({ message: error });
     }
 };
 
-exports.get_funds = async (req, res) => {
+exports.getFunds = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("funds");
 
     try {
-        query = {};
-        var findResult = await collection
-            .find(query)
-            .project({
-                _id: 1,
-                proj_name_th: 1,
-                proj_name_en: 1,
-                growthrat_lastmonth: 1,
-                url_factsheet: 1,
-                spec_code: 1
-            })
-            .sort({ growthrat_lastmonth: -1 })
-            .toArray();
+        var findResult = await collection.find().toArray();
         res.json(findResult);
     } catch (error) {
-        console.log("Error occured in exports.get_funds: ", error);
+        console.log("Error occured in exports.getFunds: ", error);
         res.status(401).json({ message: error });
     }
 };
 
-exports.save_tax_goal = async (req, res) => {
+exports.saveTaxGoal = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("goal");
 
@@ -164,39 +129,19 @@ exports.save_tax_goal = async (req, res) => {
         Funds: req.body.Funds,
         Percentage: req.body.Percentage,
         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-        isActive: true
+        isActive: true,
     };
     //const options = { upsert: true };
 
     try {
         await collection.insertOne(updateDoc);
     } catch (error) {
-        console.log("Error occured in exports.save_tax_goal: ", error);
+        console.log("Error occured in exports.saveTaxGoal: ", error);
         res.status(401).json({ message: error });
     }
 };
 
-// exports.mockTaxGoalAsset = async (req, res)=>{
-//     const collectionAsset = db.collection("assets");
-//     for(i in [1,2,3]){
-//     const obj = {
-//         Funds: req.body.Funds,
-//         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-//         userId: req.body.userId,
-//         goalObjId: req.body.goalId,
-
-//     };
-//     //const options = { upsert: true };
-
-//     try {
-//         await collectionAsset.insertOne(obj);
-//     } catch (error) {
-//         console.log("Error occured in exports.mockTaxGoalAsset: ", error);
-//         res.status(401).json({ message: error });
-//     }}
-// ;}
-
-exports.get_growthrate = async (req, res) => {
+exports.getGrowthRate = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("funds");
 
@@ -209,7 +154,47 @@ exports.get_growthrate = async (req, res) => {
         var findResult = await collection.find(query).project(options).toArray();
         res.status(200).json({ findResult });
     } catch (error) {
-        console.log("Error occured in exports.get_growthrate: ", error);
+        console.log("Error occured in exports.getGrowthRate: ", error);
+        res.status(401).json({ message: error });
+    }
+};
+
+exports.upsertUserMonthlyData = async (req, res) => {
+    const upsertData = req.body.upsertData;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const db = client.db(dbName);
+    const collection = db.collection("income_expense");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            console.log("upsertData :: ", upsertData);
+            query = { userId: userId, date: upsertData.currentDate };
+            await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        userId: userId,
+                        date: upsertData.currentDate,
+                        incomeData: upsertData.incomeData,
+                        expenseData: upsertData.expenseData,
+                        investmentData: upsertData.investmentData,
+                        year: upsertData.currentDate.split("-")[0],
+                        month: parseInt(upsertData.currentDate.split("-")[1]).toString(),
+                    },
+                },
+                { upsert: true }
+            );
+            await updateUserDiffIncomeExpense(userId);
+            res.status(200).json({ upsertData });
+        } else {
+            throw new Error("unauthorized access");
+        }
+    } catch (error) {
+        console.log(
+            "Error occured in mongoController.upsertUserMonthlyData: ",
+            error
+        );
         res.status(401).json({ message: error });
     }
 };
@@ -243,18 +228,58 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
                     );
                 })
             );
+            await updateUserDiffIncomeExpense(userId);
             res.status(200).json({ upsertData });
         } else {
             throw new Error("unauthorized access");
         }
     } catch (error) {
         console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
+            "Error occured in mongoController.upsertUserMultipleMonthlyData: ",
             error
         );
         res.status(401).json({ message: error });
     }
 };
+
+async function updateUserDiffIncomeExpense(uid) {
+    const db = client.db(dbName);
+    const collectionIncomeExpense = db.collection("income_expense");
+    const collectionUserNetSummary = db.collection("usernetsummary");
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({
+        userId: uid,
+    });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense
+            .find({ userId: uid })
+            .toArray();
+        let tmpTotalIncome = 0;
+        let tmpTotalExpense = 0;
+        totalIncomeExpense.forEach((data) => {
+            data.expenseData.forEach((expense) => {
+                tmpTotalExpense += parseFloat(expense.amount);
+            });
+            data.incomeData.forEach((income) => {
+                tmpTotalIncome += parseFloat(income.amount);
+            });
+        });
+        netSummaryFindResult.netIncome = tmpTotalIncome;
+        netSummaryFindResult.netExpense = tmpTotalExpense;
+        netSummaryFindResult.netIncomeExpense =
+            netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
+        netSummaryFindResult.netWealth =
+            netSummaryFindResult.netIncomeExpense -
+            netSummaryFindResult.netBoughtAsset +
+            netSummaryFindResult.netSoldAsset;
+        await collectionUserNetSummary.updateOne(
+            { userId: uid },
+            {
+                $set: netSummaryFindResult,
+            },
+            { upsert: true }
+        );
+    }
+}
 
 exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header("userId");
@@ -290,13 +315,14 @@ exports.deleteUserMonthData = async (req, res) => {
         if (isVerify) {
             let query = { year: year, month: month, userId: userId };
             const queryResult = await collection.deleteOne(query);
+            await updateUserDiffIncomeExpense(userId);
             res.status(200).json({ message: "delete success" });
         } else {
             throw new Error("unauthorized access");
         }
     } catch (error) {
         console.log(
-            "Error occured in mongoController.upsertUserMonthlyData: ",
+            "Error occured in mongoController.deleteUserMonthData: ",
             error
         );
         res.status(401).json({ message: error });
@@ -322,40 +348,14 @@ exports.getUserAsset = async (req, res) => {
 
     try {
         query = { userId: req.params.uid };
-        var findResult = await collection.find(query).project({ Funds: 1 }).toArray();
+        var findResult = await collection
+            .find(query)
+            .project({ Funds: 1 })
+            .toArray();
         res.json(findResult);
-        console.log(findResult)
     } catch (error) {
         console.log("Error occured in exports.getUserAsset: ", error);
         res.status(401).json({ message: error });
-    }
-};
-
-exports.upsertNewGoal = async (req, res) => {
-    const db = client.db(dbName);
-    const collection = db.collection("goal");
-    const currentDate = new Date();
-    currentDate.setFullYear(currentDate.getFullYear() + parseInt(req.body.year));
-    const period = currentDate.toLocaleDateString("en-GB");
-    //
-    try {
-        const query = { userId: req.body.userId, Name: req.body.Name };
-        const update = {
-            $set: {
-                userId: req.body.userId,
-                Name: req.body.Name,
-                Period: period,
-                Funds: req.body.Funds,
-                Goal: req.body.Goal,
-                Percentage: req.body.Percentage,
-                CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-            },
-        };
-        const options = { upsert: true };
-        const upsertResult = await collection.updateOne(query, update, options);
-        res.status(200).json({ message: "upsert new goal successfully" });
-    } catch (err) {
-        console.log("Error occured in mongoController.upsertNewGoal: ", err);
     }
 };
 
@@ -367,7 +367,6 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            console.log(req.body.goal)
             await Promise.all(
                 req.body.goal.map(async (data) => {
                     const query = { userId: data.userId, Name: data.Name };
@@ -385,7 +384,11 @@ exports.changeMultipleGoalPercentage = async (req, res) => {
             res.status(200);
         }
     } catch (err) {
-        console.log("Error occured in mongoController.changeGoalPercentage: ", err);
+        console.log(
+            "Error occured in mongoController.changeMultipleGoalPercentage: ",
+            err
+        );
+        res.status(401).json({ message: err });
     }
 };
 
@@ -404,12 +407,12 @@ exports.getUserGoalGoalBased = async (req, res) => {
         res.status(200).json({ queryResult });
     } catch (error) {
         console.log(
-            "Error occured in mongoController.getUserDataDashboard: ",
+            "Error occured in mongoController.getUserGoalGoalBased: ",
             error
         );
         res.status(401).json({ message: error });
     }
-}
+};
 
 exports.getUserAssetGoalBased = async (req, res) => {
     const userId = req.header("userId");
@@ -426,34 +429,42 @@ exports.getUserAssetGoalBased = async (req, res) => {
         res.status(200).json({ queryResult });
     } catch (error) {
         console.log(
-            "Error occured in mongoController.getUserDataDashboard: ",
+            "Error occured in mongoController.getUserAssetGoalBased: ",
             error
         );
         res.status(401).json({ message: error });
     }
-}
+};
 exports.stopGoal = async (req, res) => {
     const db = client.db(dbName);
     const collectionGoal = db.collection("goal");
     const userToken = req.header("Authorization");
     const userId = req.header("UserId");
-    console.log(req.body.Name)
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
             const queryGoal = {
                 userId: userId,
-                Name: req.body.Name
+                Name: req.body.Name,
             };
-            const isActive = await collectionGoal.find(queryGoal).project({ isActive: 1, Name: 1 }).toArray()
+            const isActive = await collectionGoal
+                .find(queryGoal)
+                .project({ isActive: 1, Name: 1 })
+                .toArray();
             //console.log(isActive[0].isActive)
-            if (isActive[0].isActive == true || isActive[0].isActive == undefined) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } }) }
-            else if (isActive[0].isActive == false) { await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } }) };
+            if (isActive[0].isActive == true || isActive[0].isActive == undefined) {
+                await collectionGoal.updateOne(queryGoal, {
+                    $set: { isActive: false },
+                });
+            } else if (isActive[0].isActive == false) {
+                await collectionGoal.updateOne(queryGoal, { $set: { isActive: true } });
+            }
             //await collectionGoal.updateOne(queryGoal, { $set: { isActive: false } })
             res.status(200);
         }
     } catch (err) {
         console.log("Error occured in mongoController.stopGoal: ", err);
+        res.status(401).json({ message: err });
     }
 };
 
@@ -468,23 +479,258 @@ exports.deleteGoal = async (req, res) => {
         if (isVerify) {
             const queryAsset = {
                 userId: userId,
-                goalObjId: req.body.goalId
+                goalObjId: req.body.goalId,
             };
             // await collection.find(query).toArray().then(x => console.log(x))
-            await collectionAsset.updateMany(queryAsset, { $unset: { goalObjId: '' } })
+            await collectionAsset.updateMany(queryAsset, {
+                $unset: { goalObjId: "" },
+            });
 
             const queryGoal = {
                 userId: userId,
-                Name: req.body.Name
+                Name: req.body.Name,
             };
-            await collectionGoal.deleteOne(queryGoal)
-
+            await collectionGoal.deleteOne(queryGoal);
 
             res.status(200);
         }
     } catch (err) {
         console.log("Error occured in mongoController.deleteGoal: ", err);
+        res.status(401).json({ message: err });
     }
-}
+};
 
+exports.getUserRiskProfile = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("risk_profile");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            query = { uid: userId };
+            var findResult = await collection.findOne(query);
+            res.status(200).json({ findResult });
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserRiskProfile: ", err);
+        res.status(401).json({ message: err });
+    }
+};
 
+exports.createUserRiskProfile = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("risk_profile");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const userRiskProfile = req.body.risk_profile;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            query = { uid: userId };
+            const updateResult = await collection.updateOne(
+                query,
+                {
+                    $set: {
+                        uid: userId,
+                        riskProfile: userRiskProfile,
+                    },
+                },
+                { upsert: true }
+            );
+            res.status(200).json({ updateResult });
+        }
+    } catch (err) {
+        console.log(
+            "Error occured in mongoController.createUserRiskProfile: ",
+            err
+        );
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.getMasterDataByName = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("master_data");
+    const name = req.header("Name");
+    try {
+        query = { name: name };
+        const queryResult = await collection.findOne(query);
+        res.status(200).json({ queryResult });
+    } catch (err) {
+        console.log(
+            "Error occured in mongoController.createUserRiskProfile: ",
+            err
+        );
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.upsertGoal = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const goalData = req.body.goalData;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const goalObjId = req.body.goalObjId;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            if (goalObjId || goalData._id) {
+                //code to edit existing goal
+                goalData.type = "normal";
+                let id = goalObjId
+                    ? new ObjectId(goalObjId)
+                    : new ObjectId(goalData._id);
+                let query = { _id: id };
+                delete goalData._id;
+                await collection.updateOne(
+                    query,
+                    {
+                        $set: goalData,
+                    },
+                    { upsert: true }
+                );
+            } else {
+                goalData.type = "normal";
+                let query = { userId: userId, Name: goalData.Name };
+                await collection.updateOne(
+                    query,
+                    {
+                        $set: goalData,
+                    },
+                    { upsert: true }
+                );
+            }
+            res.status(200).json({ message: "SUCCESS" });
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertGoal: ", err);
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.getUserGoalByObjId = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            let query = { _id: new ObjectId(req.header("GoalObjId")) };
+            const findResult = await collection.findOne(query);
+            res.status(200).json(findResult);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.getUserNetSummary = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("usernetsummary");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            let query = { userId: userId };
+            const findResult = await collection.findOne(query);
+            res.status(200).json(findResult);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserGoalByObjId: ", err);
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.getAndCalculateFundGrowth = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("nav");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    let fundsData = req.body.fundsData;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            await Promise.all(
+                fundsData.map(async (fund, index) => {
+                    let query = { fundsObjectID: fund._id };
+                    const findResult = await collection
+                        .find(query)
+                        .sort({
+                            navDate: 1,
+                        })
+                        .toArray();
+                    if (findResult[0] && findResult[findResult.length - 1]) {
+                        const startPrice = findResult[0].lastVal;
+                        const lastPrice = findResult[findResult.length - 1].lastVal;
+                        const lastDate = findResult[findResult.length - 1].navDate;
+                        const growthRate =
+                            ((lastPrice - startPrice + Number.EPSILON) / startPrice +
+                                Number.EPSILON) *
+                            100;
+                        fundsData[index].growth_rate = growthRate;
+                        fundsData[index].last_val = lastPrice;
+                        fundsData[index].last_update = lastDate;
+                    }
+                })
+            );
+            res.status(200).json({ fundsData });
+        }
+    } catch (err) {
+        console.log(
+            "Error occured in mongoController.getAndCalculateFundGrowth: ",
+            err
+        );
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.getFundsDailyNav = async (req, res) => {
+    const db = client.db(dbName);
+    const collectionNav = db.collection("nav");
+    const collectionFunds = db.collection("funds");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const isGetYearToDate = req.header("GetYearToDate");
+    const proj_id = req.header("ProjectId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            if (isGetYearToDate) {
+                const fundsObj = await collectionFunds.findOne({ proj_id: proj_id });
+                const fundsObjectId = fundsObj._id.toString();
+                const navYearToDate = await collectionNav
+                    .find({ fundsObjectID: fundsObjectId })
+                    .toArray();
+                res.status(200).json({ navYearToDate });
+            }
+        } else {
+            throw new Error("unauthorized access");
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getFundsDailyNav: ", err);
+        res.status(401).json({ message: err });
+    }
+};
+
+exports.insertUserBoughtAsset = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("assets");
+    const insertAssetObj = req.body.insertAssetObj;
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            await collection.insertOne(insertAssetObj);
+            res.status(200).json({ message: "SUCCESS" });
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.upsertGoal: ", err);
+        res.status(401).json({ message: err });
+    }
+};

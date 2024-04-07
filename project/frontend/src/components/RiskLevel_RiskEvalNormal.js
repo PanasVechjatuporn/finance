@@ -1,55 +1,83 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-
+import { useSelector } from "react-redux";
+import axios from "axios";
 import "./RiskLevel_RiskEvalNormal.css";
+import { getMasterDataByName } from "utils/masterDataUtil";
+const baseURL = "http://localhost:8000";
 
-export const RiskLevel = ({
-  evaluationResult,
-  setshowRiskLevel,
-  setAllowedToAccessNormalGoal,
-}) => {
+export const RiskLevel = ({ evaluationResult, setshowRiskLevel }) => {
   const navigate = useNavigate();
-
+  const userStore = useSelector((state) => state.userStore);
   const score = evaluationResult;
-  var risk_profile;
+  const [riskProfileMasterData,setRiskProfileMasterData] = useState(null)
+  useEffect(() => {
+    const fetchRiskProfileMasterData = async () => {
+      try {
+        const tmpFetchData = await getMasterDataByName("riskProfileMasterData");
+        console.log('tmpFetchData :: ',tmpFetchData.risk)
+        console.log(tmpFetchData.risk.find(data => data.level === "low").labelTH)
+        setRiskProfileMasterData(tmpFetchData.risk)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchRiskProfileMasterData();
+  }, []); 
+  let risk_profile;
   if (score < 15) {
     risk_profile = "low";
   } else if (score >= 15 && score <= 21) {
-    risk_profile = "medium low";
+    risk_profile = "mediumLow";
   } else if (score >= 22 && score <= 29) {
-    risk_profile = "medium high";
+    risk_profile = "mediumHigh";
   } else if (score >= 30 && score <= 36) {
     risk_profile = "high";
   } else if (score >= 37) {
-    risk_profile = "very high";
+    risk_profile = "veryHigh";
   }
-
+  //
   const handleBackButton = () => {
     setshowRiskLevel(false);
   };
 
-  const handleCreateGoal = () => {
-    setAllowedToAccessNormalGoal(true);
-    navigate("../Goal-based/normal-goal", { state: { profile: risk_profile } });
+  const saveUserRiskProfile = async () => {
+    await axios.post(
+      `${baseURL}/db/create_user_risk_profile`,
+      {
+        risk_profile,
+      },
+      {
+        headers: {
+          Authorization: userStore.userToken,
+          UserId: userStore.userId,
+        },
+      }
+    );
+    navigate("/Goal-based/");
   };
-
   return (
     <React.Fragment>
       <div className="EvaluationResult">
-        <p>คะแนนของคุณคือ: {score}</p>
+        <p>คะแนนของคุณคือ : {score}</p>
       </div>
       <div className="EvaluationResult">
-        <p>คะแนนของคุณคือ: {risk_profile}</p>
+        <p>ระดับความเสี่ยงของคุณคือ : {riskProfileMasterData !== null && (riskProfileMasterData.find(data => data.level === risk_profile).labelTH)}</p>
       </div>
       <div className="BackAndCreateGoalButton">
         <Stack spacing={2} direction="row">
           <Button variant="outlined" onClick={handleBackButton}>
-            Back
+            ประเมินความเสี่ยงใหม่
           </Button>
-          <Button variant="contained" onClick={handleCreateGoal}>
-            Create Goal
+          <Button
+            variant="contained"
+            onClick={async (e) => {
+              await saveUserRiskProfile();
+            }}
+          >
+            บันทึกและกลับไปสร้างเป้าหมาย
           </Button>
         </Stack>
       </div>

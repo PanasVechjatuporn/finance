@@ -92,13 +92,6 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href="/">Features</Navbar.Brand>
-          </Typography>
-          <Typography
-            variant="h8"
-            component="div"
-            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
-          >
             <Navbar.Brand
               href={"/Dashboard"}
               onClick={(e) => {
@@ -163,13 +156,6 @@ function Navigate() {
           <Typography
             variant="h8"
             component="div"
-            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
-          >
-            <Navbar.Brand href="/">About Us</Navbar.Brand>
-          </Typography>
-          <Typography
-            variant="h8"
-            component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           ></Typography>
           <Search>
@@ -196,7 +182,7 @@ function Navigate() {
             </>
           ) : (
             <Nav>
-              <Nav.Link href="#sign_up">
+              <Nav.Link>
                 <>
                   <Button variant="primary" onClick={handleShowSignUp}>
                     Sign Up

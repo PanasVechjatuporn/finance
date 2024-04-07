@@ -16,7 +16,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import OverlayLoading from "./OverlayLoading";
+import { OverlayLoading } from "./OverlayLoading";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -168,7 +168,7 @@ async function onSaveMonthData(
     userStore,
     incomeData,
     expenseData,
-    investmentData,
+    // investmentData,
     currentDate,
     setisLoading,
     currentYearData,
@@ -179,18 +179,21 @@ async function onSaveMonthData(
 ) {
     try {
         setisLoading(true);
-        await validateMonthData(incomeData, expenseData, investmentData);
+        await validateMonthData(incomeData,
+            expenseData,
+            // investmentData
+        );
         if (isUseSameData === true) {
             let upsertData = [];
-            for(let i=0;i< 12 - currentYearData.data.length; i++){
+            for (let i = 0; i < 12 - currentYearData.data.length; i++) {
                 upsertData.push({
                     user: {
                         userId: userStore.userId
                     },
-                    currentDate: currentDate.split("-")[0]+"-"+String(parseInt(currentDate.split("-")[1]) + i).padStart(2,'0'),
+                    currentDate: currentDate.split("-")[0] + "-" + String(parseInt(currentDate.split("-")[1]) + i).padStart(2, '0'),
                     incomeData,
                     expenseData,
-                    investmentData,
+                    // investmentData,
                 })
             }
             const resUpsert = await axios.post(
@@ -228,7 +231,7 @@ async function onSaveMonthData(
                 currentDate: currentDate,
                 incomeData,
                 expenseData,
-                investmentData,
+                // investmentData,
             };
             const resUpsert = await axios.post(
                 `${baseURL}/db/upsert_monthly`,
@@ -236,6 +239,7 @@ async function onSaveMonthData(
                 {
                     headers: {
                         Authorization: userStore.userToken,
+                        UserId: userStore.userId
                     },
                 }
             );
@@ -268,8 +272,7 @@ function validateMonthData(incomeData, expenseData, investmentData) {
     return new Promise((resolve, reject) => {
         if (
             incomeData.length === 0 ||
-            expenseData.length === 0 ||
-            investmentData === ""
+            expenseData.length === 0
         ) {
             reject("Please fill in all the required fields");
         } else {
@@ -305,10 +308,10 @@ const EditMonthDataModal = ({
     const dataMonthCopy = dataMonth ? JSON.parse(JSON.stringify(dataMonth)) : dataMonth;
     const [incomeData, setIncomeData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.incomeData : [{}]);
     const [expenseData, setExpenseData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.expenseData : [{}]);
-    const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
+    // const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
     const [isLoading, setisLoading] = useState(false);
     const [currentDate, setCurrentDate] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.date : null);
-    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("th-TH",{month: "long"}) : "");
+    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("th-TH", { month: "long" }) : "");
     const [newYearString, setNewYearString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).getFullYear() : "");
     const [isUseSameData, setIsUseSameData] = useState(false);
 
@@ -317,14 +320,14 @@ const EditMonthDataModal = ({
         if (mode === "newmonth") {
             setIncomeData([{}]);
             setExpenseData([{}]);
-            setInvestmentData(null);
+            // setInvestmentData(null);
             setIsUseSameData(false);
         }
-        else{
+        else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);
             setExpenseData(dataMonthCopy.expenseData);
-            setInvestmentData(dataMonthCopy.investmentData);
+            // setInvestmentData(dataMonthCopy.investmentData);
             setNewYearString(new Date(dataMonthCopy.date).getFullYear());
             setNewMonthString(
                 new Date(dataMonthCopy.date).toLocaleString("th-TH", {
@@ -353,12 +356,12 @@ const EditMonthDataModal = ({
                     month: "long",
                 })
             );
-        } 
+        }
         else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);
             setExpenseData(dataMonthCopy.expenseData);
-            setInvestmentData(dataMonthCopy.investmentData);
+            // setInvestmentData(dataMonthCopy.investmentData);
             setNewYearString(new Date(dataMonthCopy.date).getFullYear());
             setNewMonthString(
                 new Date(dataMonthCopy.date).toLocaleString("th-TH", {
@@ -412,9 +415,9 @@ const EditMonthDataModal = ({
         setExpenseData(tmpExpenseData);
     };
 
-    const handleInvestmentAmountChange = (e) => {
-        setInvestmentData(e.target.value);
-    };
+    // const handleInvestmentAmountChange = (e) => {
+    //     setInvestmentData(e.target.value);
+    // };
 
     return (
         <Modal
@@ -553,7 +556,7 @@ const EditMonthDataModal = ({
                                 ></IconButton>
                             </Row>
 
-                            <Typography
+                            {/* <Typography
                                 variant="h4"
                                 style={{
                                     color: "#757575",
@@ -593,9 +596,8 @@ const EditMonthDataModal = ({
                                         />
                                     </FormControl>
                                 </Grid>
-                            </Container>
+                            </Container> */}
                         </Col>
-
                         {/* Expense */}
                         <Col md={6}>
                             <div>
@@ -719,7 +721,6 @@ const EditMonthDataModal = ({
                                 <Checkbox
                                     checked={isUseSameData}
                                     onChange={(e) => {
-                                        console.log('e.target.checked :: ', e.target.checked)
                                         setIsUseSameData(e.target.checked)
                                     }
                                     }
@@ -745,7 +746,7 @@ const EditMonthDataModal = ({
                                 userStore,
                                 incomeData,
                                 expenseData,
-                                investmentData,
+                                // investmentData,
                                 currentDate,
                                 setisLoading,
                                 currentYearData,
