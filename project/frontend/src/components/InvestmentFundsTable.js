@@ -16,10 +16,11 @@ import { visuallyHidden } from "@mui/utils";
 import ArticleIcon from "@mui/icons-material/Article";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { BuyAssetModal } from "./BuyAssetModal";
+// import { BuyAssetModal } from "./BuyAssetModal";
 import { Container } from "react-bootstrap";
 import { ComponentLoading } from "./OverlayLoading";
 import { roundNumber } from "utils/numberUtil";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function createData(
     id,
@@ -213,6 +214,9 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
     const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
 
+    const navigate = useNavigate();
+    const location = useLocation()
+
     useEffect(() => {
         if (fundsData) {
             let tmpRows = [];
@@ -330,8 +334,14 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     <IconButton
                                                         children={<AddShoppingCartIcon />}
                                                         onClick={(e) => {
-                                                            setModalData(row);
-                                                            setIsModalAssetOpen(true);
+                                                            // setModalData(row);
+                                                            // setIsModalAssetOpen(true);
+
+                                                            navigate(`${location.pathname}/buy/${row.proj_id}`,{ 
+                                                               state :{
+                                                                row,
+                                                                goalData
+                                                            }})
                                                         }}
                                                     />
                                                 </TableCell>
@@ -356,12 +366,12 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </Paper>
-                <BuyAssetModal
+                {/* <BuyAssetModal
                     fundData={modalData}
                     open={isModalAssetOpen}
                     setOpen={setIsModalAssetOpen}
                     goalData={goalData}
-                />
+                /> */}
             </Box>
         </Container>
     );

@@ -12,6 +12,7 @@ import { NormalGoal } from "pages/NormalGoal";
 import { RiskEvalNormalPage } from "pages/RiskEvalNormal";
 import { TaxCal } from "pages/TaxCalculation";
 import { GoalInvestment } from "pages/GoalInvestment";
+import { BuyAssetPage } from "pages/BuyAssetPage";
 
 const baseURL = "http://localhost:8000";
 function RequireAuth({ children, redirectTo }) {
@@ -87,8 +88,10 @@ function App() {
           element={<RequireAuth redirectTo="/">{<TaxCal />}</RequireAuth>}
         />
         <Route path="/Goal-Based/edit-normal-goal/:goalObjId" element={<NormalGoal />} />
-
+        
         <Route path="/Goal-Based/invest-normal-goal/:goalObjId" element={<GoalInvestment />} />
+
+        <Route path="/Goal-Based/invest-normal-goal/:goalObjId/buy/:proj_id" element={<BuyAssetPage />} />
       </Routes>
     </BrowserRouter>
   );
