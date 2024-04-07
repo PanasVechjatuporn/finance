@@ -94,7 +94,7 @@ exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
     try {
-        query = { userId: req.params.uid, year: "2024" };
+        query = { userId: req.params.uid, year: new Date().getFullYear().toString() };
         var findResult = await collection.find(query).toArray();
         res.json(findResult);
     } catch (error) {
@@ -127,7 +127,7 @@ exports.saveTaxGoal = async (req, res) => {
         userId: req.body.userId,
         Name: req.body.Name,
         Funds: req.body.Funds,
-        Percentage: req.body.Percentage,
+        //Percentage: req.body.Percentage,
         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
         isActive: true,
     };
