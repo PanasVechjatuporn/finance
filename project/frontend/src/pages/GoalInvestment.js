@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 import { InvestmentFundsTable } from "components/InvestmentFundsTable";
 import { useParams } from "react-router-dom";
+import { AssetSummaryGoalTable } from "../components/AssetSummaryGoalTable_GoalBased";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
 
@@ -93,6 +94,7 @@ export const GoalInvestment = () => {
             <Navigate />
             <CurrentUserRiskProfile />
             <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
+            <AssetSummaryGoalTable goalData={goalData}/>
         </React.Fragment>
     );
 };

@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import Modal from "react-bootstrap/Modal";
 import Container from "@mui/material/Container";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -13,7 +12,8 @@ import TextField from "@mui/material/TextField";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { roundNumber } from "utils/numberUtil";
 import Navigate from "components/Navbar";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const baseURL = "http://localhost:8000";
 
@@ -136,6 +136,7 @@ function formatDate(date) {
 export const BuyAssetPage = () => {
     const userStore = useSelector((state) => state.userStore);
     const location = useLocation();
+    const navigate = useNavigate();
     const fundData = location.state.row;
     const goalData = location.state.goalData
 
@@ -238,27 +239,213 @@ export const BuyAssetPage = () => {
     return (
         <>
             <Navigate />
-            <Container>
-                <Container>
-                    <div>
-                        <Typography
-                            variant="h5"
-                            style={{
-                                color: "#757575",
-                                textDecoration: "underline",
-                                textDecorationColor: "transparent",
-                                display: "inline-block",
-                                width: "100%",
-                                userSelect: "none",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            {fundData && fundData.proj_name_th}
-                        </Typography>
-                    </div>
-                </Container>
-                <Container>
-                    {!isLoading && (
+            <Container
+                sx={{
+                    marginTop: 5,
+                    display: "ruby-text",
+                }}
+            >
+                <Box
+                    sx={{
+                        position: "relative",
+                        overflow: "auto",
+                        justifyContent: "center",
+                    }}
+                >
+                        <div>
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    color: "#757575",
+                                    textDecoration: "underline",
+                                    textDecorationColor: "transparent",
+                                    display: "inline-block",
+                                    width: "100%",
+                                    userSelect: "none",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {fundData && fundData.proj_name_th}
+                            </Typography>
+                        </div>
+                        {!isLoading && (
+                            <Box sx={{ flexGrow: 1 }}>
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+
+                                    <Grid item xs={6} md={6}>
+                                        <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            {yearToDateGraphData && (
+                                                <LineChart
+                                                    sx={{
+                                                        "& .MuiChartsAxis-tickContainer": {
+                                                            "&:not(:has(>.MuiChartsAxis-tickLabel))": {
+                                                                "& .MuiChartsAxis-tick": {
+                                                                    strokeWidth: 0,
+                                                                },
+                                                            },
+                                                        },
+                                                    }}
+                                                    width={800}
+                                                    height={600}
+                                                    series={[
+                                                        {
+                                                            data: yearToDateGraphData[0],
+                                                            label: "ราคาต่อหน่วย",
+                                                            showMark: false,
+                                                        },
+                                                    ]}
+                                                    xAxis={[
+                                                        {
+                                                            scaleType: "point",
+                                                            data: yearToDateGraphData[1],
+                                                        },
+                                                    ]}
+                                                />
+                                            )}
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={6} md={6}>
+                                        <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            {graphWithPredictionData && (
+                                                <LineChart
+                                                    sx={{
+                                                        "& .MuiLineElement-series-Predict": {
+                                                            strokeDasharray: "5 2",
+                                                            strokeWidth: 2,
+                                                            color: "red",
+                                                        },
+                                                    }}
+                                                    width={800}
+                                                    height={600}
+                                                    series={[
+                                                        {
+                                                            data: graphWithPredictionData[0],
+                                                            label: "ราคาต่อหน่วย (จริง)",
+                                                            showMark: false,
+                                                        },
+                                                        {
+                                                            id: "Predict",
+                                                            data: graphWithPredictionData[2],
+                                                            label: "ราคาต่อหน่วย (ทำนาย)",
+                                                            showMark: false,
+                                                            color: "orange",
+                                                        },
+                                                    ]}
+                                                    xAxis={[
+                                                        {
+                                                            scaleType: "point",
+                                                            data: graphWithPredictionData[1].concat(
+                                                                graphWithPredictionData[3]
+                                                            ),
+                                                        },
+                                                    ]}
+                                                />
+                                            )}
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={4} md={4}>
+                                        <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            <TextField
+                                                required
+                                                id={"asset-buy"}
+                                                label="เงินลงทุน"
+                                                size="small"
+                                                margin="normal"
+                                                helperText={
+                                                    !inputBuyError
+                                                        ? "เงินที่ต้องการลงทุนในกองทุนนี้"
+                                                        : inputErrorText
+                                                }
+                                                type="number"
+                                                error={inputBuyError}
+                                                onChange={(e) => {
+                                                    setUserInputBuyAmount(e.target.value);
+                                                    setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
+                                                }}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={4} md={4}>
+                                        <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            <TextField
+                                                id={"asset-buy"}
+                                                label="หน่วยลงทุนที่ได้รับ"
+                                                disabled={true}
+                                                size="small"
+                                                margin="normal"
+                                                helperText={"หน่วยลงทุนที่ซื้อได้จากจำนวนเงินที่ได้กรอก"}
+                                                value={calculatedUnitBuy}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={4} md={4}>
+                                        {fetchedNav && <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            <TextField
+                                                id={"asset-price"}
+                                                label="ราคาปัจจุบัน"
+                                                disabled={true}
+                                                size="small"
+                                                margin="normal"
+                                                helperText={
+                                                    fetchedNav &&
+                                                    "อัพเดทล่าสุดเมื่อ " +
+                                                    new Date(
+                                                        fetchedNav.last_upd_date
+                                                    ).toLocaleDateString()
+                                                }
+                                                value={fetchedNav && fetchedNav.last_val}
+                                            />
+                                        </Box>}
+
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        )}
+
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <ComponentLoading isLoading={isLoading} />
+
+                    </Box>
+                    <Container>
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid
                                 container
@@ -273,34 +460,16 @@ export const BuyAssetPage = () => {
                                         justifyContent="center"
                                         alignItems="center"
                                     >
-                                        {yearToDateGraphData && (
-                                            <LineChart
-                                                sx={{
-                                                    "& .MuiChartsAxis-tickContainer": {
-                                                        "&:not(:has(>.MuiChartsAxis-tickLabel))": {
-                                                            "& .MuiChartsAxis-tick": {
-                                                                strokeWidth: 0,
-                                                            },
-                                                        },
-                                                    },
-                                                }}
-                                                width={600}
-                                                height={400}
-                                                series={[
-                                                    {
-                                                        data: yearToDateGraphData[0],
-                                                        label: "ราคาต่อหน่วย",
-                                                        showMark: false,
-                                                    },
-                                                ]}
-                                                xAxis={[
-                                                    {
-                                                        scaleType: "point",
-                                                        data: yearToDateGraphData[1],
-                                                    },
-                                                ]}
-                                            />
-                                        )}
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                navigate(-1)
+                                            }}
+                                        >
+                                            <div>
+                                                <ArrowBackIcon /> กลับ
+                                            </div>
+                                        </Button>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={6} md={6}>
@@ -309,167 +478,48 @@ export const BuyAssetPage = () => {
                                         justifyContent="center"
                                         alignItems="center"
                                     >
-                                        {graphWithPredictionData && (
-                                            <LineChart
-                                                sx={{
-                                                    "& .MuiLineElement-series-Predict": {
-                                                        strokeDasharray: "5 2",
-                                                        strokeWidth: 2,
-                                                        color: "red",
-                                                    },
-                                                }}
-                                                width={600}
-                                                height={400}
-                                                series={[
-                                                    {
-                                                        data: graphWithPredictionData[0],
-                                                        label: "ราคาต่อหน่วย (จริง)",
-                                                        showMark: false,
-                                                    },
-                                                    {
-                                                        id: "Predict",
-                                                        data: graphWithPredictionData[2],
-                                                        label: "ราคาต่อหน่วย (ทำนาย)",
-                                                        showMark: false,
-                                                        color: "orange",
-                                                    },
-                                                ]}
-                                                xAxis={[
-                                                    {
-                                                        scaleType: "point",
-                                                        data: graphWithPredictionData[1].concat(
-                                                            graphWithPredictionData[3]
-                                                        ),
-                                                    },
-                                                ]}
-                                            />
-                                        )}
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                container
-                                spacing={0}
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="center"
-                            >
-                                <Grid item xs={4} md={4}>
-                                    <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                    >
-                                        <TextField
-                                            required
-                                            id={"asset-buy"}
-                                            label="เงินลงทุน"
-                                            size="small"
-                                            margin="normal"
-                                            helperText={
-                                                !inputBuyError
-                                                    ? "เงินที่ต้องการลงทุนในกองทุนนี้"
-                                                    : inputErrorText
-                                            }
-                                            type="number"
-                                            error={inputBuyError}
-                                            onChange={(e) => {
-                                                setUserInputBuyAmount(e.target.value);
-                                                setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
+                                        <Button
+                                            variant="primary"
+                                            onClick={async () => {
+                                                try {
+                                                    setIsOverlayLoading(true);
+                                                    handleOnSave(
+                                                        userInputBuyAmount,
+                                                        calculatedUnitBuy,
+                                                        fetchedNav,
+                                                        goalData,
+                                                        userStore,
+                                                        fundData
+                                                    )
+                                                        .then((res) => {
+                                                            navigate(-1)
+                                                            setIsOverlayLoading(false);
+                                                        })
+                                                        .catch((err) => {
+                                                            setIsOverlayLoading(false);
+                                                            console.log("err :: ", err);
+                                                        });
+                                                } catch (err) {
+                                                    setIsOverlayLoading(false);
+                                                    console.log("err :: ", err);
+                                                    alert(err);
+                                                }
                                             }}
-                                            // value={userInputBuyAmount}
-                                        />
+                                        >
+                                            <div>
+                                                <AddShoppingCartIcon /> ซื้อ
+                                            </div>
+                                        </Button>
+
                                     </Box>
-                                </Grid>
-                                <Grid item xs={4} md={4}>
-                                    <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                    >
-                                        <TextField
-                                            id={"asset-buy"}
-                                            label="หน่วยลงทุนที่ได้รับ"
-                                            disabled={true}
-                                            size="small"
-                                            margin="normal"
-                                            helperText={"หน่วยลงทุนที่ซื้อได้จากจำนวนเงินที่ได้กรอก"}
-                                            value={calculatedUnitBuy}
-                                        />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={4} md={4}>
-                                {fetchedNav && <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                    >
-                                        <TextField
-                                            id={"asset-price"}
-                                            label="ราคาปัจจุบัน"
-                                            disabled={true}
-                                            size="small"
-                                            margin="normal"
-                                            helperText={
-                                                fetchedNav &&
-                                                "อัพเดทล่าสุดเมื่อ " +
-                                                new Date(
-                                                    fetchedNav.last_upd_date
-                                                ).toLocaleDateString()
-                                            }
-                                            value={fetchedNav && fetchedNav.last_val}
-                                        />
-                                    </Box>}
-                                    
                                 </Grid>
                             </Grid>
+
+
                         </Box>
-                    )}
-                    <Container>
-                        <ComponentLoading isLoading={isLoading} />
                     </Container>
-                </Container>
-                <Container>
-                    <Button
-                        variant="secondary"
-                        onClick={() => {
-                        }}
-                    >
-                        กลับ
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={async () => {
-                            try {
-                                setIsOverlayLoading(true);
-                                handleOnSave(
-                                    userInputBuyAmount,
-                                    calculatedUnitBuy,
-                                    fetchedNav,
-                                    goalData,
-                                    userStore,
-                                    fundData
-                                )
-                                    .then((res) => {
-                                        setIsOverlayLoading(false);
-                                    })
-                                    .catch((err) => {
-                                        setIsOverlayLoading(false);
-                                        console.log("err :: ", err);
-                                    });
-                            } catch (err) {
-                                setIsOverlayLoading(false);
-                                console.log("err :: ", err);
-                                alert(err);
-                            }
-                        }}
-                    >
-                        <div>
-                            <AddShoppingCartIcon /> ซื้อ
-                        </div>
-                    </Button>
-                </Container>
-                <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
+                    <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
+                </Box>
             </Container>
         </>
     );
