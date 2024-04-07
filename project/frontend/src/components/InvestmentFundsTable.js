@@ -259,9 +259,6 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
         setPage(0);
     };
 
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
     const visibleRows = useMemo(() => {
         if (rows) {
             return stableSort(rows, getComparator(order, orderBy)).slice(
