@@ -6,6 +6,9 @@ import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 import { InvestmentFundsTable } from "components/InvestmentFundsTable";
 import { useParams } from "react-router-dom";
 import { AssetSummaryGoalTable } from "../components/AssetSummaryGoalTable_GoalBased";
+import Paper from "@mui/material/Paper";
+import { Container } from "react-bootstrap";
+import Box from "@mui/material/Box";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
 
@@ -33,6 +36,7 @@ async function fetchFundsData(userStore) {
 async function digestFundsData(userStore, fundsData) {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log('fundsData :: ', fundsData)
             const result = await axios.post(
                 `${baseURL}/db/get_and_calculate_fund_growth`,
                 {
@@ -68,21 +72,15 @@ export const GoalInvestment = () => {
             fetchGoal().then((res) => {
                 const fetchGoalData = res[0];
                 const fetchFundsData = res[1];
-                digestFundsData(userStore, fetchFundsData).then((resDigest) => {
+                const goalTypeFlag = fetchGoalData.type === "normal";
+                const neededDigestFunds = goalTypeFlag ? fetchFundsData.filter(
+                    (fund) => !(fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"))
+                ) : fetchFundsData.filter(
+                    (fund) => (fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"))
+                )
+                digestFundsData(userStore, neededDigestFunds).then((resDigest) => {
                     const digestedFundsData = resDigest.fundsData;
-                    let RMFSSFFunds = digestedFundsData.filter(
-                        (fund) =>
-                            fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")
-                    );
-                    let NotRMFSSFFunds = digestedFundsData.filter(
-                        (fund) =>
-                            !(
-                                fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")
-                            )
-                    );
-                    setFundData(
-                        fetchGoalData.type === "normal" ? NotRMFSSFFunds : RMFSSFFunds
-                    );
+                    setFundData(digestedFundsData);
                     setGoalData(fetchGoalData);
                 });
             });
@@ -94,7 +92,15 @@ export const GoalInvestment = () => {
             <Navigate />
             <CurrentUserRiskProfile />
             <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
-            <AssetSummaryGoalTable goalData={goalData}/>
+
+            {/* Because AssetSummaryGoalTable in sub Component inside another component it will need another container */}
+            <Container sx={{ maxWidth: "100%" }}>
+                <Box sx={{ width: "100%" }}>
+                    <Paper sx={{ width: "100%" }}>
+                        <AssetSummaryGoalTable goalData={goalData} mode={"specific"} />
+                    </Paper>
+                </Box>
+            </Container>
         </React.Fragment>
     );
 };
