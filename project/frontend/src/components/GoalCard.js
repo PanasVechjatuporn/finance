@@ -12,165 +12,18 @@ import { useNavigate } from "react-router-dom";
 
 function EachCard({ data }) {
     const token = useSelector((state) => state.userStore.userToken);
-    const [openStop, setOpenStop] = React.useState(false);
-    const handleOpenStop = () => setOpenStop(true);
-    const handleCloseStop = () => setOpenStop(false);
-    const ModalStop = ({ openStop, handleCloseStop }) => {
-        function handleStopGoal() {
-            axios.post(
-                `http://localhost:8000/db/stop_goal`,
-                {
-                    Name: data.Name,
-                    userId: data.userId,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                        UserId: data.userId,
-                    },
-                }
-            );
-            handleCloseStop();
-            window.location.reload(false);
-        }
-        if (data.isActive === true || data.isActive === undefined)
-            return (
-                <Modal
-                    open={openStop}
-                    onClose={handleCloseStop}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Container
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: 400,
-                            backgroundColor: "white",
-                            border: "0px solid #000",
-                            borderRadius: 7,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                        }}
-                    >
-                        <Typography id="modal-modal-title" variant="subtitile1">
-                            ยืนยันการหยุดเป้าหมาย
-                        </Typography>
-                        <Typography gutterBottom id="modal-modal-description" variant="h6">
-                            {data.Name || ""}
-                        </Typography>
-                        <Container
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "50%",
-                            }}
-                        >
-                            <Button
-                                onClick={handleStopGoal}
-                                sx={{ backgroundColor: "green" }}
-                                size="small"
-                            >
-                                <Typography color="white" variant="subtitile1">
-                                    ตกลง
-                                </Typography>
-                            </Button>
-                            <Button
-                                onClick={handleCloseStop}
-                                sx={{ backgroundColor: "brown" }}
-                                size="small"
-                            >
-                                <Typography color="white" variant="subtitile1">
-                                    ยกเลิก
-                                </Typography>
-                            </Button>
-                        </Container>
-                    </Container>
-                </Modal>
-            );
-        else if (data.isActive === false)
-            return (
-                <Modal
-                    open={openStop}
-                    onClose={handleCloseStop}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Container
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: 400,
-                            backgroundColor: "white",
-                            border: "0px solid #000",
-                            borderRadius: 7,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                        }}
-                    >
-                        <Typography id="modal-modal-title" variant="subtitile1">
-                            ดำเนินการลงทุนในเป้าหมายนี้ต่อ
-                        </Typography>
-                        <Typography gutterBottom id="modal-modal-description" variant="h6">
-                            {data.Name || ""}
-                        </Typography>
-                        <Container
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "50%",
-                            }}
-                        >
-                            <Button
-                                onClick={handleStopGoal}
-                                sx={{ backgroundColor: "green" }}
-                                size="small"
-                            >
-                                <Typography color="white" variant="subtitile1">
-                                    ตกลง
-                                </Typography>
-                            </Button>
-                            <Button
-                                onClick={handleCloseStop}
-                                sx={{ backgroundColor: "brown" }}
-                                size="small"
-                            >
-                                <Typography color="white" variant="subtitile1">
-                                    ยกเลิก
-                                </Typography>
-                            </Button>
-                        </Container>
-                    </Container>
-                </Modal>
-            );
-    };
     const navigate = useNavigate();
+
     const [openDelete, setOpenDelete] = React.useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
     const handleCloseDelete = () => setOpenDelete(false);
 
     const handleClickEdit = (data) => {
-        navigate("/Goal-Based/edit-normal-goal/"+data._id)
+        navigate("/Goal-Based/edit-normal-goal/" + data._id)
     }
 
     const handleClickInvest = (data) => {
-        navigate("/Goal-Based/invest-normal-goal/"+data._id)
+        navigate("/Goal-Based/invest-normal-goal/" + data._id)
     }
 
     const ModalDelete = ({ openDelete, handleCloseDelete }) => {
@@ -260,7 +113,7 @@ function EachCard({ data }) {
             <Card
                 sx={{
                     minHeight: 300,
-                    minWidth: 300,
+                    minWidth: 325,
                     paddingTop: 1,
                     paddingBottom: 1,
                     margin: 1,
@@ -268,9 +121,9 @@ function EachCard({ data }) {
             >
                 <CardMedia
                     component="img"
-                    sx={{ height: 140 }}
-                    image="./goalPlaceholder.jpg"
-                    alt="icon/image"
+                    sx={{ height: 140, objectFit: "contain", padding: 1.4 }}
+                    image={require("../invest.png")}
+                //alt="icon/image"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
@@ -307,7 +160,6 @@ function EachCard({ data }) {
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
-                    <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
                     <Button
                         onClick={() => {
                             handleClickEdit(data)
@@ -351,7 +203,7 @@ function EachCard({ data }) {
             <Card
                 sx={{
                     minHeight: 300,
-                    minWidth: 300,
+                    minWidth: 325,
                     paddingTop: 1,
                     paddingBottom: 1,
                     margin: 1,
@@ -359,8 +211,8 @@ function EachCard({ data }) {
             >
                 <CardMedia
                     component="img"
-                    sx={{ height: 140 }}
-                    image="./goalPlaceholder.jpg"
+                    sx={{ height: 140, objectFit: "contain", padding: 1.6 }}
+                    image={require("../tax.png")}
                     alt="icon/image"
                 />
                 <CardContent>
@@ -398,28 +250,6 @@ function EachCard({ data }) {
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
-                    {data.isActive === false ? (
-                        <Button
-                            onClick={handleOpenStop}
-                            sx={{ backgroundColor: "#4042cf" }}
-                            size="small"
-                        >
-                            <Typography color="white" variant="subtitile1">
-                                ลงทุนต่อ
-                            </Typography>
-                        </Button>
-                    ) : (
-                        <Button
-                            onClick={handleOpenStop}
-                            sx={{ backgroundColor: "#c1c702" }}
-                            size="small"
-                        >
-                            <Typography color="white" variant="subtitile1">
-                                หยุด
-                            </Typography>
-                        </Button>
-                    )}
-                    <ModalStop openStop={openStop} handleCloseStop={handleCloseStop} />
                     <Button
                         onClick={handleOpenDelete}
                         sx={{ backgroundColor: "brown" }}

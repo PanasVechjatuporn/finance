@@ -73,19 +73,19 @@ exports.createNewUserWithProvider = async (req, res) => {
     }
 };
 
-async function createUserNetSummary(userId){
+async function createUserNetSummary(userId) {
     const db = client.db(dbName);
     const collection = db.collection("usernetsummary");
-    const netSummaryFindResult = await collection.findOne({userId : userId});
-    if(!netSummaryFindResult){
+    const netSummaryFindResult = await collection.findOne({ userId: userId });
+    if (!netSummaryFindResult) {
         await collection.insertOne({
-            userId : userId,
-            netIncome : 0,
-            netExpense : 0,
-            netIncomeExpense : 0,
-            netBoughtAsset : 0,
-            netSoldAsset : 0,
-            netWealth : 0,
+            userId: userId,
+            netIncome: 0,
+            netExpense: 0,
+            netIncomeExpense: 0,
+            netBoughtAsset: 0,
+            netSoldAsset: 0,
+            netWealth: 0,
         });
     }
 }
@@ -94,7 +94,7 @@ exports.getUserDataIncomeExpense = async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection("income_expense");
     try {
-        query = { userId: req.params.uid, year: "2024" };
+        query = { userId: req.params.uid, year: new Date().getFullYear().toString() };
         var findResult = await collection.find(query).toArray();
         res.json(findResult);
     } catch (error) {
@@ -132,9 +132,9 @@ exports.saveTaxGoal = async (req, res) => {
         userId: req.body.userId,
         Name: req.body.Name,
         Funds: req.body.Funds,
-        Percentage: req.body.Percentage,
+        //Percentage: req.body.Percentage,
         CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-        isActive: true
+        //isActive: true
     };
     //const options = { upsert: true };
 
@@ -250,13 +250,13 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
     }
 };
 
-async function updateUserDiffIncomeExpense (uid) {
+async function updateUserDiffIncomeExpense(uid) {
     const db = client.db(dbName);
     const collectionIncomeExpense = db.collection("income_expense");
     const collectionUserNetSummary = db.collection("usernetsummary");
-    const netSummaryFindResult = await collectionUserNetSummary.findOne({userId : uid});
-    if(netSummaryFindResult){
-        const totalIncomeExpense = await collectionIncomeExpense.find({userId : uid}).toArray();
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({ userId: uid });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense.find({ userId: uid }).toArray();
         let tmpTotalIncome = 0;
         let tmpTotalExpense = 0;
         totalIncomeExpense.forEach((data) => {
@@ -271,10 +271,10 @@ async function updateUserDiffIncomeExpense (uid) {
         netSummaryFindResult.netExpense = tmpTotalExpense;
         netSummaryFindResult.netIncomeExpense = (netSummaryFindResult.netIncome - netSummaryFindResult.netExpense);
         netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset
-        await collectionUserNetSummary.updateOne({userId : uid},  {
+        await collectionUserNetSummary.updateOne({ userId: uid }, {
             $set: netSummaryFindResult,
         },
-        { upsert: true });
+            { upsert: true });
     }
 }
 
@@ -344,7 +344,10 @@ exports.getUserAsset = async (req, res) => {
     const collection = db.collection("assets");
 
     try {
-        query = { userId: req.params.uid };
+        query = {
+            userId: req.params.uid,
+            year: new Date().getFullYear().toString()
+        };
         var findResult = await collection.find(query).project({ Funds: 1 }).toArray();
         res.json(findResult);
     } catch (error) {

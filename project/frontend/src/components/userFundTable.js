@@ -12,30 +12,28 @@ export default function UserFundTable({ setFund, open }) {
   const [arr, setArr] = React.useState([]);
 
   React.useEffect(() => {
-    console.log("arr :: ", arr);
+    //console.log("arr :: ", arr);
     async function fetchData() {
       let sumFund = 0;
       if (arr.length === 0) {
         await axios
           .get(`http://localhost:8000/db/userassets=${uid}`)
           .then((response) => {
-            console.log('respose :: ',response.data)
-            //setArr(response.data);
-            if(response.data.length > 0){
-                setArr(
-                    response.data
-                      .map((obj) => {
-                        return obj.Funds.filter((fund) => {
-                          if (fund.spec_code) {
-                            return (
-                              fund.spec_code.includes("SSF") ||
-                              fund.spec_code.includes("RMF")
-                            );
-                          }
-                        });
-                      })
-                      .flat(1)
-                  );
+            if (response.data.length > 0) {
+              setArr(
+                response.data
+                  .map((obj) => {
+                    return obj.Funds.filter((fund) => {
+                      if (fund.spec_code) {
+                        return (
+                          fund.spec_code.includes("SSF") ||
+                          fund.spec_code.includes("RMF")
+                        );
+                      }
+                    });
+                  })
+                  .flat(1)
+              );
             }
           });
       }

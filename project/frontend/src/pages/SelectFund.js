@@ -22,8 +22,8 @@ export const SelectFund = () => {
     const location = useLocation();
     const netIncome = location.state.netIncome;
     const beforeReduction = location.state.beforeReduction;
-    const Percentage = location.state.Percentage;
-    const oldGoal = location.state.oldGoal;
+    // const Percentage = location.state.Percentage;
+    // const oldGoal = location.state.oldGoal;
 
     const token = useSelector((state) => state.userStore.userToken);
     const uid = useSelector((state) => state.userStore.userId);
@@ -51,7 +51,6 @@ export const SelectFund = () => {
         return tax;
     }
 
-    const investPercent = Percentage;
 
     const [tax, setTax] = React.useState(0);
     const [newTax, setNewTax] = React.useState(0);
@@ -76,10 +75,10 @@ export const SelectFund = () => {
                 });
                 avgIn = (sumOfInvest / userData.data.length);
                 setAvgInvest(avgIn);
-                const invest = Math.round((investPercent / 100) * avgIn);
-                setInvestAmount(invest);
+                //const invest = Math.round((investPercent / 100) * avgIn);
+                //setInvestAmount(invest);
                 setTax(calTax(netIncome));
-                setNewTax(calTax(netIncome - (invest * 12)));
+                //setNewTax(calTax(netIncome - (invest * 12)));
                 setIsloading(false);
             }
         }
@@ -147,21 +146,21 @@ export const SelectFund = () => {
             });
             if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
             else {
-                axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid, Percentage: Percentage })
+                axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid })
                     .then(navigate("/Goal-Based"));
-                axios.post(
-                    `http://localhost:8000/db/change_goal_percentage`,
-                    {
-                        userId: uid,
-                        goal: oldGoal,
-                    },
-                    {
-                        headers: {
-                            Authorization: token,
-                            UserId: uid
-                        },
-                    }
-                )
+                // axios.post(
+                //     `http://localhost:8000/db/change_goal_percentage`,
+                //     {
+                //         userId: uid,
+                //         goal: oldGoal,
+                //     },
+                //     {
+                //         headers: {
+                //             Authorization: token,
+                //             UserId: uid
+                //         },
+                //     }
+                // )
 
             };
         };
@@ -287,7 +286,7 @@ export const SelectFund = () => {
                                     เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography component={'span'}>
-                                    ลงทุนในสัดส่วน : {Percentage.toLocaleString("en-GB")} %
+                                    ลงทุนในสัดส่วน : {/*Percentage.toLocaleString("en-GB")*/} %
                                     {/* ลงทุนในสัดส่วน :
                                     <TextField inputProps={{ style: { textAlign: 'center', width: 50, fontSize: 14 } }} placeholder='0' id="standard-basic" label="" variant="standard" value={investPercent}
                                         onChange={(e) => {
