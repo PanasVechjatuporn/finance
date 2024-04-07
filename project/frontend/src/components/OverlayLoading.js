@@ -21,13 +21,22 @@ export function OverlayLoading({ isLoading }) {
     );
 }
 
-export function ComponentLoading({ isLoading }) {
+export function ComponentLoading({ isLoading, size }) {
     const [open, setOpen] = useState(false);
     useEffect(() => {
         setOpen(!isLoading);
     }, [isLoading]);
     return (
-        <Container style={{ display: open ? "none" : "block" }}>
+        <Container style={{ display: open ? "none" : "flex", }}
+            sx={
+                {
+                    alignItems: "center",
+                    justifyContent : "center",
+                    height : size,
+                    width : size
+            }
+            }
+        >
             <CircularProgress color="inherit" />
         </Container>
     );

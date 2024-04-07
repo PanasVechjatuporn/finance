@@ -426,7 +426,7 @@ export const BuyAssetPage = () => {
                                                     "อัพเดทล่าสุดเมื่อ " +
                                                     new Date(
                                                         fetchedNav.last_upd_date
-                                                    ).toLocaleDateString()
+                                                    ).toLocaleDateString("en-GB")
                                                 }
                                                 value={fetchedNav && fetchedNav.last_val}
                                             />
@@ -436,15 +436,7 @@ export const BuyAssetPage = () => {
                                 </Grid>
                             </Box>
                         )}
-
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <ComponentLoading isLoading={isLoading} />
-
-                    </Box>
+                        <ComponentLoading isLoading={isLoading} size={"500px"}/>
                     <Container>
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid
