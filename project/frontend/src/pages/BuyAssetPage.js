@@ -437,7 +437,7 @@ export const BuyAssetPage = () => {
                                 </Grid>
                             </Box>
                         )}
-                        <ComponentLoading isLoading={isLoading} size={"500px"}/>
+                        <ComponentLoading isLoading={isLoading} size={"75vh"}/>
                     <Container>
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid

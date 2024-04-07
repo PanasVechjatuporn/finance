@@ -301,7 +301,7 @@ export function TaxCal() {
         <React.Fragment>
             <Navigate />
             {isloading == false && data.length > 0 ?
-                (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center' }}>
+                (<div style={{ display: 'flex', marginTop: 20, flexDirection: 'column', alignItems: 'center', height: '95vh' }}>
                     <Typography marginBottom={5} marginTop={3} variant="h5" textAlign={"center"} fontWeight={'bold'}>Tax Calculation</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
@@ -915,6 +915,7 @@ export function TaxCal() {
 
                 </div>) : null
             }
+            
             <Footer/>
         </React.Fragment >
     )
