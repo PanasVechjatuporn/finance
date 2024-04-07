@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +10,11 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
 import Typography from "@mui/material/Typography";
+import { ComponentLoading } from "./OverlayLoading";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
+const baseURL = "http://localhost:8000";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -30,18 +35,47 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    // "&:nth-of-type(even)": {
-    //     backgroundColor: theme.palette.action.hover,
-    // },
     "&:last-child td, &:last-child th": {
         borderStyle: "hidden !important",
     },
 }));
 
-export const AssetSummaryGoalTable = ({ selectedData, goalData }) => {
-    useEffect(()=> {
-        console.log('goalData :: ',goalData)
-    },[goalData])
+async function fetchGoalAsset(userStore, goalData) {
+    try {
+        const res = await axios.get(`${baseURL}/db/get_user_asset_by_goal_id`, {
+            headers: {
+                userId: userStore.userId,
+                Authorization: userStore.userToken,
+                goalObjId: goalData._id,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        console.log("err :: ", err);
+    }
+}
+
+export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
+    const userStore = useSelector((state) => state.userStore);
+    const [isLoading, setIsLoading] = useState(false);
+    const [modeSpecificData, setModeSpecificData] = useState(null);
+
+    useEffect(() => {
+        if (mode === "specific" && goalData && userStore.userToken) {
+            setIsLoading(true);
+            const fetchData = async () => {
+                const fetchedData = await fetchGoalAsset(userStore, goalData);
+                setModeSpecificData(fetchedData);
+            };
+            fetchData();
+        }
+        setIsLoading(false);
+    }, [goalData, mode, userStore]);
+
+    useEffect(() => {
+        console.log("isLoading :: ", isLoading);
+    }, [isLoading]);
+
     return (
         <Container>
             <Typography
@@ -94,71 +128,176 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData }) => {
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        {selectedData ? (
-                            <>
-                                {selectedData.assets.map((asset, index) => (
-                                    <React.Fragment
-                                        key={asset.CreatedDate + "-" + index + "-fragment"}
-                                    >
-                                        <StyledTableRow
-                                            key={asset.CreatedDate + "-" + index + "-header"}
+                        {selectedData && mode !== "specific" ? (
+                            selectedData.assets.length > 0 ? (
+                                <>
+                                    {selectedData.assets.map((asset, index) => (
+                                        <React.Fragment
+                                            key={asset.CreatedDate + "-" + index + "-fragment"}
                                         >
-                                            <StyledTableCell rowSpan={asset.Funds.length + 1}>
-                                                {new Date(asset.timeStamp).toLocaleDateString("en-GB")}
-                                            </StyledTableCell>
-                                        </StyledTableRow>
-                                        {asset.Funds.map((subAsset, indexSubAsset) => (
                                             <StyledTableRow
-                                                key={
-                                                    asset.CreatedDate +
-                                                    "-" +
-                                                    index +
-                                                    "-body-" +
-                                                    subAsset.fundName
-                                                }
+                                                key={asset.CreatedDate + "-" + index + "-header"}
                                             >
-                                                <StyledTableCell>
-                                                    {subAsset.assetType === "deposit"
-                                                        ? "เงินฝากประจำ"
-                                                        : subAsset.assetType === "rmf"
-                                                            ? "กองทุนรวม RMF"
-                                                            : subAsset.assetType === "ssf"
-                                                                ? "กองทุนรวม SSF"
-                                                                : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                                                </StyledTableCell>
-                                                <StyledTableCell
-                                                    align={
-                                                        subAsset.assetType === "deposit" ? "center" : "left"
-                                                    }
-                                                >
-                                                    {subAsset.fundName && subAsset.assetType !== "deposit"
-                                                        ? subAsset.fundName
-                                                        : "-"}
-                                                </StyledTableCell>
-                                                <StyledTableCell>
-                                                    {formatNumberWithCommas(subAsset.amount)}
-                                                </StyledTableCell>
-                                                <StyledTableCell>
-                                                    {subAsset.buyPrice ? subAsset.buyPrice : "-"}
-                                                </StyledTableCell>
-                                                <StyledTableCell>
-                                                    {subAsset.buyPrice && subAsset.buyPrice !== 0
-                                                        ? roundNumber(subAsset.unit, 2)
-                                                        : "-"}
-                                                </StyledTableCell>
-                                                <StyledTableCell>
-                                                    {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                                <StyledTableCell rowSpan={asset.Funds.length + 1}>
+                                                    {new Date(asset.timeStamp).toLocaleDateString(
+                                                        "en-GB"
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
-                                        ))}
-                                    </React.Fragment>
-                                ))}
-                            </>
-                        ) : (
-                            <TableRow>
+                                            {asset.Funds.map((subAsset, indexSubAsset) => (
+                                                <StyledTableRow
+                                                    key={
+                                                        asset.CreatedDate +
+                                                        "-" +
+                                                        index +
+                                                        "-body-" +
+                                                        subAsset.fundName
+                                                    }
+                                                >
+                                                    <StyledTableCell>
+                                                        {subAsset.assetType === "deposit"
+                                                            ? "เงินฝากประจำ"
+                                                            : subAsset.assetType === "rmf"
+                                                                ? "กองทุนรวม RMF"
+                                                                : subAsset.assetType === "ssf"
+                                                                    ? "กองทุนรวม SSF"
+                                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell
+                                                        align={
+                                                            subAsset.assetType === "deposit"
+                                                                ? "center"
+                                                                : "left"
+                                                        }
+                                                    >
+                                                        {subAsset.fundName &&
+                                                            subAsset.assetType !== "deposit"
+                                                            ? subAsset.fundName
+                                                            : "-"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
+                                                        {formatNumberWithCommas(subAsset.amount)}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
+                                                        {subAsset.buyPrice ? subAsset.buyPrice : "-"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
+                                                        {subAsset.buyPrice && subAsset.buyPrice !== 0
+                                                            ? roundNumber(subAsset.unit, 2)
+                                                            : "-"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
+                                                        {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                                </>
+                            ) : (
                                 <TableCell colSpan={7} align="center">
                                     ไม่พบข้อมูล
                                 </TableCell>
+                            )
+                        ) : modeSpecificData ? (
+                            <>
+                                {modeSpecificData.length > 0 ? (
+                                    <>
+                                        {modeSpecificData.map((asset, index) => (
+                                            <React.Fragment
+                                                key={asset.CreatedDate + "-" + index + "-fragment"}
+                                            >
+                                                <StyledTableRow
+                                                    key={asset.CreatedDate + "-" + index + "-header"}
+                                                >
+                                                    <StyledTableCell rowSpan={asset.Funds.length + 1}>
+                                                        {new Date(asset.timeStamp).toLocaleDateString(
+                                                            "en-GB"
+                                                        )}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                                {asset.Funds.map((subAsset, indexSubAsset) => (
+                                                    <StyledTableRow
+                                                        key={
+                                                            asset.CreatedDate +
+                                                            "-" +
+                                                            index +
+                                                            "-body-" +
+                                                            subAsset.fundName
+                                                        }
+                                                    >
+                                                        <StyledTableCell>
+                                                            {subAsset.assetType === "deposit"
+                                                                ? "เงินฝากประจำ"
+                                                                : subAsset.assetType === "rmf"
+                                                                    ? "กองทุนรวม RMF"
+                                                                    : subAsset.assetType === "ssf"
+                                                                        ? "กองทุนรวม SSF"
+                                                                        : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell
+                                                            align={
+                                                                subAsset.assetType === "deposit"
+                                                                    ? "center"
+                                                                    : "left"
+                                                            }
+                                                        >
+                                                            {subAsset.fundName &&
+                                                                subAsset.assetType !== "deposit"
+                                                                ? subAsset.fundName
+                                                                : "-"}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
+                                                            {formatNumberWithCommas(subAsset.amount)}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
+                                                            {subAsset.buyPrice ? subAsset.buyPrice : "-"}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
+                                                            {subAsset.buyPrice && subAsset.buyPrice !== 0
+                                                                ? roundNumber(subAsset.unit, 2)
+                                                                : "-"}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
+                                                            {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                ))}
+                                            </React.Fragment>
+                                        ))}
+                                    </>
+                                ) : (
+                                    <TableRow>
+                                        {isLoading ? (
+                                            <TableRow>
+                                                <TableCell colSpan={7} align="center">
+                                                    <ComponentLoading
+                                                        isLoading={isLoading}
+                                                        size={"300px"}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : (
+                                            <TableCell colSpan={7} align="center">
+                                                ไม่พบข้อมูล
+                                            </TableCell>
+                                        )}
+                                    </TableRow>
+                                )}
+                            </>
+                        ) : (
+                            <TableRow>
+                                {isLoading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={7} align="center">
+                                            <ComponentLoading isLoading={isLoading} size={"300px"} />
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <TableCell colSpan={7} align="center">
+                                        ไม่พบข้อมูล
+                                    </TableCell>
+                                )}
                             </TableRow>
                         )}
                     </TableBody>
