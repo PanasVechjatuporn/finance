@@ -14,6 +14,7 @@ import { roundNumber } from "utils/numberUtil";
 import Navigate from "components/Navbar";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Footer } from "components/Footer";
 
 const baseURL = "http://localhost:8000";
 
@@ -513,6 +514,7 @@ export const BuyAssetPage = () => {
                     <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
                 </Box>
             </Container>
+            <Footer />
         </>
     );
 };

@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from "react-router-dom";
 import { Button } from '@mui/joy';
 import { useNavigate } from 'react-router-dom';
+import { Footer } from 'components/Footer';
 
 ////// มึงไปแก้ให้มันกดเข้ามาได้อยู่ แต่ handle case ที่มันไม่มี data แล้วมึงรบกวนช่วยบอก user ด้วยว่ามันไม่มี data ให้มึงกลับไปกรอกมาก่อน
 
@@ -914,6 +915,7 @@ export function TaxCal() {
 
                 </div>) : null
             }
+            <Footer/>
         </React.Fragment >
     )
     else if (isEnoughData === false) return (
@@ -927,6 +929,7 @@ export function TaxCal() {
                     </Container>
                 </Box>
             </div>
+            <Footer/>
         </React.Fragment>
     )
 }

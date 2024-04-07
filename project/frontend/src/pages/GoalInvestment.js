@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { AssetSummaryGoalTable } from "../components/AssetSummaryGoalTable_GoalBased";
 import Paper from "@mui/material/Paper";
 import { Container } from "react-bootstrap";
+import { Footer } from "components/Footer";
 import Box from "@mui/material/Box";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
@@ -108,6 +109,7 @@ export const GoalInvestment = () => {
                     </Paper>
                 </Box>
             </Container>
+            <Footer />
         </React.Fragment>
     );
 };

@@ -8,6 +8,7 @@ import { Grid } from "@mui/joy";
 import axios from "axios";
 import { Container } from "react-bootstrap";
 import { UserNetSummary } from "components/UserNetSummary";
+import { Footer } from "components/Footer";
 const baseURL = "http://localhost:8000";
 
 function fetchUserData(userStore) {
@@ -112,6 +113,7 @@ export const Dashboard = () => {
                     <MonthDataTable userData={userData} setUserData={setUserData} />
                     <PieChartComponent userData={userData} />
             </Container>
+            <Footer/>
         </React.Fragment>
     );
 };

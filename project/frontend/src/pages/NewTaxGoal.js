@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from '@mui/joy';
 import Tooltip from '@mui/material/Tooltip';
+import { Footer } from 'components/Footer';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -864,7 +865,7 @@ export function NewTaxGoal() {
                         </Container>
                     }
                 </div>)}
-
+            <Footer/>
         </React.Fragment >
     )
     else if (isEnough === false) return (
@@ -878,6 +879,7 @@ export function NewTaxGoal() {
                     </Container>
                 </Box>
             </div>
+            <Footer/>
         </React.Fragment>
     )
 }

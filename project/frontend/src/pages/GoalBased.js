@@ -16,6 +16,7 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import { RiskProfilePromptModal } from "components/RiskProfilePromptModal_GoalBased";
 import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 import  { UserNetSummary }  from "components/UserNetSummary";
+import { Footer } from "components/Footer";
 const baseURL = "http://localhost:8000";
 
 export const GoalBased = () => {
@@ -255,6 +256,7 @@ export const GoalBased = () => {
                 </Card>
             </Container>
             <AssetSummary></AssetSummary>
+            <Footer/>
         </React.Fragment>
     );
 };
