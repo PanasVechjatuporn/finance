@@ -186,6 +186,7 @@ export const BuyAssetPage = () => {
                                 buyMonth: navDate.getMonth(),
                                 year: navDate.getFullYear(),
                                 buyPrice: fetchedNav.last_val,
+                                proj_id : fundData.proj_id
                             },
                         ],
                         goalObjId: goalData._id

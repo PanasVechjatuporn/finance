@@ -1,7 +1,9 @@
 require("dotenv").config({ path: "../.env" });
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
+const secApiUtils = require("../utils/secApiUtils");
 const { ObjectId } = require("mongodb");
+const { all } = require("axios");
 // Database Name
 const dbName = "dev";
 
@@ -445,7 +447,24 @@ exports.deleteGoal = async (req, res) => {
                 userId: userId,
                 goalObjId: req.body.goalId,
             };
+
             // await collection.find(query).toArray().then(x => console.log(x))
+            const allAsset = await collectionAsset.find(queryAsset).toArray();
+            if (allAsset.length > 0) {
+                const allFundAsset = allAsset.filter((asset) => asset.Funds[0].assetType === "fund");
+                const allDepositAsset = allAsset.filter((asset) => asset.Funds[0].assetType !== "fund");
+
+                const assetSoldProfit = await Promise.all(allFundAsset.map(async (asset) => {
+                    const lastestNav = await secApiUtils.getLastestNav(asset.Funds[0].proj_id);
+                    const sellPrice = lastestNav[0].buy_price;
+                    const sellProfit = sellPrice * asset.Funds[0].unit + Number.EPSILON;
+                    return sellProfit;
+                }));
+
+                const allSoldFundProfitSum = assetSoldProfit.reduce((acc, curr) => acc + curr, 0);
+                await updateUserSoldAsset(userId, allSoldFundProfitSum)
+            }
+
             await collectionAsset.updateMany(queryAsset, {
                 $unset: { goalObjId: "" },
             });
@@ -456,7 +475,7 @@ exports.deleteGoal = async (req, res) => {
             };
             await collectionGoal.deleteOne(queryGoal);
 
-            res.status(200);
+            res.status(200).send();
         }
     } catch (err) {
         console.log("Error occured in mongoController.deleteGoal: ", err);
@@ -730,7 +749,7 @@ exports.getUserAssetByGoalId = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            const query = {goalObjId : goalObjId, userId : userId};
+            const query = { goalObjId: goalObjId, userId: userId };
             const findResult = await collection.find(query).toArray();
             res.status(200).json(findResult);
         }
@@ -740,7 +759,7 @@ exports.getUserAssetByGoalId = async (req, res) => {
     }
 }
 
-async function updateUserBoughtAsset(uid, amountBought){
+async function updateUserBoughtAsset(uid, amountBought) {
     const db = client.db(dbName);
     const collectionIncomeExpense = db.collection("income_expense");
     const collectionUserNetSummary = db.collection("usernetsummary");
@@ -765,6 +784,42 @@ async function updateUserBoughtAsset(uid, amountBought){
         netSummaryFindResult.netExpense = tmpTotalExpense;
         netSummaryFindResult.netIncomeExpense = netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
         netSummaryFindResult.netBoughtAsset += parseFloat(amountBought);
+        netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset;
+        await collectionUserNetSummary.updateOne(
+            { userId: uid },
+            {
+                $set: netSummaryFindResult,
+            },
+            { upsert: true }
+        );
+    }
+}
+
+async function updateUserSoldAsset(uid, amountSold) {
+    const db = client.db(dbName);
+    const collectionIncomeExpense = db.collection("income_expense");
+    const collectionUserNetSummary = db.collection("usernetsummary");
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({
+        userId: uid,
+    });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense
+            .find({ userId: uid })
+            .toArray();
+        let tmpTotalIncome = 0;
+        let tmpTotalExpense = 0;
+        totalIncomeExpense.forEach((data) => {
+            data.expenseData.forEach((expense) => {
+                tmpTotalExpense += parseFloat(expense.amount);
+            });
+            data.incomeData.forEach((income) => {
+                tmpTotalIncome += parseFloat(income.amount);
+            });
+        });
+        netSummaryFindResult.netIncome = tmpTotalIncome;
+        netSummaryFindResult.netExpense = tmpTotalExpense;
+        netSummaryFindResult.netIncomeExpense = netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
+        netSummaryFindResult.netSoldAsset += parseFloat(amountSold);
         netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset;
         await collectionUserNetSummary.updateOne(
             { userId: uid },

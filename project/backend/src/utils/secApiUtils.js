@@ -57,3 +57,33 @@ exports.getFundsLastestNav = async (req, res) => {
         res.status(401).json({ err });
     }
 }
+
+exports.getLastestNav = async(proj_id) => {
+    try {
+        let found = false;
+        let count = 0;
+            while (!found) {
+                const today = new Date();
+                const nav_date = formatDate(
+                    new Date(today.getFullYear(), today.getMonth(), today.getDate() - count)
+                );
+                count++;
+                const response = await axios.get(
+                    `https://api.sec.or.th/FundDailyInfo/${proj_id}/dailynav/${nav_date}`,
+                    {
+                        headers: secAPIFundDailyInfoHeader,
+                    }
+                );
+                await sleep(30);
+                if (response.status === 200) {
+                    return response.data;
+                }
+                if (count < -30) {
+                    throw new Error("Data Not Found more than 30 days")
+                }
+            }
+    } catch (err) {
+        console.log("err :: ", err);
+        return null;
+    }
+}
