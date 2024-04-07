@@ -9,6 +9,7 @@ import { Button, CardActions } from "@mui/material";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { formatNumberWithCommas } from "utils/numberUtil";
 
 function EachCard({ data }) {
     const token = useSelector((state) => state.userStore.userToken);
@@ -141,7 +142,7 @@ function EachCard({ data }) {
                         variant="subtitile1"
                         color="text.secondary"
                     >
-                        เป้าหมาย : {data.Goal || ""}
+                        เป้าหมาย : {formatNumberWithCommas(data.Goal)+" บาท" || ""}
                     </Typography>
                     <Typography
                         component="div"
