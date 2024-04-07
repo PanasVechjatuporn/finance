@@ -754,7 +754,26 @@ exports.insertUserBoughtAsset = async (req, res) => {
             res.status(200).json({ message: "SUCCESS" });
         }
     } catch (err) {
-        console.log("Error occured in mongoController.upsertGoal: ", err);
+        console.log("Error occured in mongoController.insertUserBoughtAsset: ", err);
         res.status(401).json({ message: err });
     }
 };
+
+exports.getUserAssetByGoalId = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("assets");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const goalObjId = req.header("goalObjId");
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const query = {goalObjId : goalObjId, userId : userId};
+            const findResult = await collection.find(query).toArray();
+            res.status(200).json(findResult);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserAssetByGoalId: ", err);
+        res.status(401).json({ message: err });
+    }
+}

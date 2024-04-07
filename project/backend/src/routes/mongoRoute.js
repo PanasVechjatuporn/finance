@@ -60,4 +60,6 @@ router.post(
 router.get("/get_nav", mongoController.getFundsDailyNav);
 
 router.post("/insert_asset", mongoController.insertUserBoughtAsset);
+
+router.get("/get_user_asset_by_goal_id",mongoController.getUserAssetByGoalId);
 module.exports = router;
