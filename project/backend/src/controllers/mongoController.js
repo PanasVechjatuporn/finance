@@ -245,45 +245,6 @@ exports.upsertUserMultipleMonthlyData = async (req, res) => {
     }
 };
 
-async function updateUserDiffIncomeExpense(uid) {
-    const db = client.db(dbName);
-    const collectionIncomeExpense = db.collection("income_expense");
-    const collectionUserNetSummary = db.collection("usernetsummary");
-    const netSummaryFindResult = await collectionUserNetSummary.findOne({
-        userId: uid,
-    });
-    if (netSummaryFindResult) {
-        const totalIncomeExpense = await collectionIncomeExpense
-            .find({ userId: uid })
-            .toArray();
-        let tmpTotalIncome = 0;
-        let tmpTotalExpense = 0;
-        totalIncomeExpense.forEach((data) => {
-            data.expenseData.forEach((expense) => {
-                tmpTotalExpense += parseFloat(expense.amount);
-            });
-            data.incomeData.forEach((income) => {
-                tmpTotalIncome += parseFloat(income.amount);
-            });
-        });
-        netSummaryFindResult.netIncome = tmpTotalIncome;
-        netSummaryFindResult.netExpense = tmpTotalExpense;
-        netSummaryFindResult.netIncomeExpense =
-            netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
-        netSummaryFindResult.netWealth =
-            netSummaryFindResult.netIncomeExpense -
-            netSummaryFindResult.netBoughtAsset +
-            netSummaryFindResult.netSoldAsset;
-        await collectionUserNetSummary.updateOne(
-            { userId: uid },
-            {
-                $set: netSummaryFindResult,
-            },
-            { upsert: true }
-        );
-    }
-}
-
 exports.getUserDataDashboard = async (req, res) => {
     const userId = req.header("userId");
     const userToken = req.header("Authorization");
@@ -751,6 +712,7 @@ exports.insertUserBoughtAsset = async (req, res) => {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
             await collection.insertOne(insertAssetObj);
+            await updateUserBoughtAsset(userId, insertAssetObj.Funds[0].amount);
             res.status(200).json({ message: "SUCCESS" });
         }
     } catch (err) {
@@ -775,5 +737,80 @@ exports.getUserAssetByGoalId = async (req, res) => {
     } catch (err) {
         console.log("Error occured in mongoController.getUserAssetByGoalId: ", err);
         res.status(401).json({ message: err });
+    }
+}
+
+async function updateUserBoughtAsset(uid, amountBought){
+    const db = client.db(dbName);
+    const collectionIncomeExpense = db.collection("income_expense");
+    const collectionUserNetSummary = db.collection("usernetsummary");
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({
+        userId: uid,
+    });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense
+            .find({ userId: uid })
+            .toArray();
+        let tmpTotalIncome = 0;
+        let tmpTotalExpense = 0;
+        totalIncomeExpense.forEach((data) => {
+            data.expenseData.forEach((expense) => {
+                tmpTotalExpense += parseFloat(expense.amount);
+            });
+            data.incomeData.forEach((income) => {
+                tmpTotalIncome += parseFloat(income.amount);
+            });
+        });
+        netSummaryFindResult.netIncome = tmpTotalIncome;
+        netSummaryFindResult.netExpense = tmpTotalExpense;
+        netSummaryFindResult.netIncomeExpense = netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
+        netSummaryFindResult.netBoughtAsset += parseFloat(amountBought);
+        netSummaryFindResult.netWealth = netSummaryFindResult.netIncomeExpense - netSummaryFindResult.netBoughtAsset + netSummaryFindResult.netSoldAsset;
+        await collectionUserNetSummary.updateOne(
+            { userId: uid },
+            {
+                $set: netSummaryFindResult,
+            },
+            { upsert: true }
+        );
+    }
+}
+
+async function updateUserDiffIncomeExpense(uid) {
+    const db = client.db(dbName);
+    const collectionIncomeExpense = db.collection("income_expense");
+    const collectionUserNetSummary = db.collection("usernetsummary");
+    const netSummaryFindResult = await collectionUserNetSummary.findOne({
+        userId: uid,
+    });
+    if (netSummaryFindResult) {
+        const totalIncomeExpense = await collectionIncomeExpense
+            .find({ userId: uid })
+            .toArray();
+        let tmpTotalIncome = 0;
+        let tmpTotalExpense = 0;
+        totalIncomeExpense.forEach((data) => {
+            data.expenseData.forEach((expense) => {
+                tmpTotalExpense += parseFloat(expense.amount);
+            });
+            data.incomeData.forEach((income) => {
+                tmpTotalIncome += parseFloat(income.amount);
+            });
+        });
+        netSummaryFindResult.netIncome = tmpTotalIncome;
+        netSummaryFindResult.netExpense = tmpTotalExpense;
+        netSummaryFindResult.netIncomeExpense =
+            netSummaryFindResult.netIncome - netSummaryFindResult.netExpense;
+        netSummaryFindResult.netWealth =
+            netSummaryFindResult.netIncomeExpense -
+            netSummaryFindResult.netBoughtAsset +
+            netSummaryFindResult.netSoldAsset;
+        await collectionUserNetSummary.updateOne(
+            { userId: uid },
+            {
+                $set: netSummaryFindResult,
+            },
+            { upsert: true }
+        );
     }
 }
