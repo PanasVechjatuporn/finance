@@ -211,8 +211,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rows, setRows] = useState(null);
-    const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
-    const [modalData, setModalData] = useState(null);
+    // const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
+    // const [modalData, setModalData] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation()

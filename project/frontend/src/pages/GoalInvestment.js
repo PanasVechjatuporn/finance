@@ -36,7 +36,6 @@ async function fetchFundsData(userStore) {
 async function digestFundsData(userStore, fundsData) {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log('fundsData :: ', fundsData)
             const result = await axios.post(
                 `${baseURL}/db/get_and_calculate_fund_growth`,
                 {
@@ -61,6 +60,7 @@ export const GoalInvestment = () => {
     const { goalObjId } = useParams();
     const [goalData, setGoalData] = useState(null);
     const [fundsData, setFundData] = useState(null);
+
     useEffect(() => {
         if (goalObjId && userStore.userId !== null) {
             const fetchGoal = async () => {
@@ -73,11 +73,18 @@ export const GoalInvestment = () => {
                 const fetchGoalData = res[0];
                 const fetchFundsData = res[1];
                 const goalTypeFlag = fetchGoalData.type === "normal";
-                const neededDigestFunds = goalTypeFlag ? fetchFundsData.filter(
-                    (fund) => !(fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"))
-                ) : fetchFundsData.filter(
-                    (fund) => (fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF"))
-                )
+                const neededDigestFunds = goalTypeFlag
+                    ? fetchFundsData.filter(
+                        (fund) =>
+                            !(
+                                fund.spec_code.includes("RMF") ||
+                                fund.spec_code.includes("SSF")
+                            )
+                    )
+                    : fetchFundsData.filter(
+                        (fund) =>
+                            fund.spec_code.includes("RMF") || fund.spec_code.includes("SSF")
+                    );
                 digestFundsData(userStore, neededDigestFunds).then((resDigest) => {
                     const digestedFundsData = resDigest.fundsData;
                     setFundData(digestedFundsData);
