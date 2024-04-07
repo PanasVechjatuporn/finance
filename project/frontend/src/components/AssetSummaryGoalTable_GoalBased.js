@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -38,7 +38,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const AssetSummaryGoalTable = ({ selectedData }) => {
+export const AssetSummaryGoalTable = ({ selectedData, goalData }) => {
+    useEffect(()=> {
+        console.log('goalData :: ',goalData)
+    },[goalData])
     return (
         <Container>
             <Typography

@@ -104,26 +104,43 @@ export function TaxCal() {
         return tax;
     }
 
+    const [benefitObj, setBenefitObj] = React.useState(0);
+    const [incomeObj, setIncomeObj] = React.useState(0);
+    const [incomeSum, setIncomeSum] = React.useState(0);
+    const [benefitSum, setBenefitSum] = React.useState(0);
+
+
+
+    const [fund, setFund] = React.useState('');
+    const [totalReduce, setTotalReduce] = React.useState('');
+
     const [data, setData] = React.useState([]);
+    const [isEnoughData, setIsEnoughData] = React.useState();
     React.useEffect(() => {
+        setIsloading(true)
         async function fetchData() {
-            if (uid != null) {
+            if (uid != null && data.length === 0) {
                 await axios
                     .get(`http://localhost:8000/db/userdata=${uid}`)
                     .then((response) => {
-                        setData(response.data);
+                        if (response.data.length != 12) {
+                            setIsEnoughData(false);
+                        } else {
+                            setIsEnoughData(true);
+                            setData(response.data);
+                        }
                     });
             }
         }
         fetchData();
         makeIncomeArr();
-        setTax(calTax(incomeSum - benefitSum - personal - insurance - charity - fund));
+        //console.log(tax)
     }, [uid, data]);
 
+    //console.log(tax);
 
-    const [fund, setFund] = React.useState('');
-    const [totalReduce, setTotalReduce] = React.useState('');
     React.useEffect(() => {
+        setIsloading(true)
         const sumPersonal = Number(personal1.replace(/,/g, '') || 0) + Number(personal2.replace(/,/g, '') || 0) + Number(personal3.replace(/,/g, '') || 0) + Number(personal4.replace(/,/g, '') || 0) + Number(personal5.replace(/,/g, '') || 0) + Number(personal6.replace(/,/g, '') || 0);
         setPersonal(sumPersonal);
         const sumInsurance = Number(insurance1.replace(/,/g, '') || 0) + Number(insurance2.replace(/,/g, '') || 0) + Number(insurance3.replace(/,/g, '') || 0) + Number(insurance4.replace(/,/g, '') || 0) + Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance8.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0);
@@ -132,21 +149,17 @@ export function TaxCal() {
         setCharity(sumCharity);
         const sumAll = Number(personal || 0) + Number(insurance || 0) + Number(charity || 0);
         setTotalReduce(sumAll);
-        if (Number(insurance2 || 0) + Number(insurance3 || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
-        if (Number(insurance5 || 0) + Number(insurance6 || 0) + Number(insurance7 || 0) + Number(insurance9 || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
+        if (Number(insurance2.replace(/,/g, '') || 0) + Number(insurance3.replace(/,/g, '') || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
+        if (Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
+        setTax(calTax(incomeSum - benefitSum - personal - insurance - charity - fund));
         setIsloading(false)
-    }, [personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
+    }, [fund, incomeObj, personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
     );
 
     // Helper function to create a deep copy of an object
     function deepCopy(obj) {
         return JSON.parse(JSON.stringify(obj));
     }
-
-    const [benefitObj, setBenefitObj] = React.useState(0);
-    const [incomeObj, setIncomeObj] = React.useState(0);
-    const [incomeSum, setIncomeSum] = React.useState(0);
-    const [benefitSum, setBenefitSum] = React.useState(0);
 
 
     async function makeIncomeArr() {
@@ -270,8 +283,6 @@ export function TaxCal() {
         setIncomeObj(sumByType);
         setIncomeSum(sumOfIncome);
         setBenefitSum(sumOfBenefit);
-
-        setIsloading(false);
     }
 
     //console.log(benefitObj);
@@ -285,7 +296,7 @@ export function TaxCal() {
         }
     }
 
-    return (
+    if (isEnoughData === true) return (
         <React.Fragment>
             <Navigate />
             {isloading == false && data.length > 0 ?
@@ -303,7 +314,7 @@ export function TaxCal() {
                             <TableBody>
 
                                 {/*เงินได้พึงประเมิน*/}
-                                <TableRow sx={{ '& > *': { borderBottom: 'unset' }, width: '100%' }}>
+                                <TableRow sx={{ borderBottom: 'unset', width: '100%' }}>
                                     <TableCell style={{ width: '10%' }}>
                                         <IconButton
                                             aria-label="expand row"
@@ -321,7 +332,7 @@ export function TaxCal() {
                                 <IncomeTable obj={incomeObj} open={open} />
 
                                 {/*ค่าใช้จ่าย*/}
-                                <TableRow sx={{ '& > *': { borderBottom: 'unset' }, width: '100%' }}>
+                                <TableRow sx={{ borderBottom: 'unset', width: '100%' }}>
                                     <TableCell style={{ width: '10%' }}>
                                         <IconButton
                                             aria-label="expand row"
@@ -339,7 +350,7 @@ export function TaxCal() {
                                 <ExpenseBenefitTable obj={benefitObj} open={open1} />
 
                                 {/*ค่าลดหย่อน*/}
-                                <TableRow sx={{ '& > *': { borderBottom: 'unset' }, width: '100%' }}>
+                                <TableRow sx={{ borderBottom: 'unset', width: '100%' }}>
                                     <TableCell style={{ width: '10%' }}>
                                         <IconButton
                                             aria-label="expand row"
@@ -386,114 +397,115 @@ export function TaxCal() {
                                                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
                                                             <Collapse in={open3} timeout="auto" unmountOnExit>
                                                                 <Table>
-                                                                    <TableRow>
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                    <TableBody>
+                                                                        <TableRow>
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนส่วนตัว
-                                                                        </TableCell>
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนส่วนตัว
+                                                                            </TableCell>
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            60,000
-                                                                        </TableCell>                                                                    </TableRow>
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                60,000
+                                                                            </TableCell>                                                                    </TableRow>
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนคู่สมรส
-                                                                        </TableCell>
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนคู่สมรส
+                                                                            </TableCell>
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal2}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setPersonal2(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setPersonal2('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal2}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setPersonal2(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setPersonal2('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนฝากครรภ์ และคลอดบุตร
-                                                                        </TableCell>
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนฝากครรภ์ และคลอดบุตร
+                                                                            </TableCell>
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal3}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setPersonal3(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setPersonal3('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal3}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setPersonal3(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setPersonal3('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนภาษีบุตร
-                                                                        </TableCell>
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนภาษีบุตร
+                                                                            </TableCell>
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal4}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setPersonal4(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setPersonal4('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal4}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setPersonal4(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setPersonal4('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนสำหรับเลี้ยงดูบิดามารดาของตนเองและของคู่สมรส
-                                                                        </TableCell>
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนสำหรับเลี้ยงดูบิดามารดาของตนเองและของคู่สมรส
+                                                                            </TableCell>
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 120,000' id="standard-basic" label="" variant="standard" value={personal5}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setPersonal5(Number(Math.min(120000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setPersonal5('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 120,000' id="standard-basic" label="" variant="standard" value={personal5}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setPersonal5(Number(Math.min(120000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setPersonal5('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            ค่าลดหย่อนภาษีกรณีอุปการะผู้พิการ หรือบุคคลทุพพลภาพ
-                                                                        </TableCell>
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal6}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setPersonal6(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setPersonal6('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-
+                                                                            <TableCell align="left" style={{ width: "70%" }}>
+                                                                                ค่าลดหย่อนภาษีกรณีอุปการะผู้พิการ หรือบุคคลทุพพลภาพ
+                                                                            </TableCell>
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal6}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setPersonal6(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setPersonal6('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    </TableBody>
                                                                 </Table>
                                                             </Collapse>
                                                         </TableCell>
@@ -523,232 +535,233 @@ export function TaxCal() {
                                                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
                                                             <Collapse in={open4} timeout="auto" unmountOnExit>
                                                                 <Table>
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                    <TableBody>
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
 
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            เงินประกันสังคม
-                                                                        </TableCell>
-
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance1(Number(Math.min(9000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance1('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            เงินลงทุนธุรกิจ Social Enterprise (วิสาหกิจเพื่อสังคม)
-                                                                        </TableCell>
-
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance8(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance8('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-
-                                                                        <TableCell align="left" style={{ width: "70%" }}>
-                                                                            เบี้ยประกันสุขภาพของบิดามารดา
-                                                                        </TableCell>
-
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance4(Number(Math.min(15000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance4('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-                                                                        {warning1 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
-                                                                            </TableCell>
-                                                                            :
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                เงินประกันสังคม
                                                                             </TableCell>
-                                                                        }
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance2(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance2('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-
-                                                                        {warning1 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance1(Number(Math.min(9000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance1('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                            :
+                                                                        </TableRow>
+
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                เงินลงทุนธุรกิจ Social Enterprise (วิสาหกิจเพื่อสังคม)
                                                                             </TableCell>
-                                                                        }
 
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance3(Number(Math.min(25000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance3('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
-
-                                                                    {warning1 == true ? <TableRow  >
-                                                                        <TableCell style={{ width: "10%" }} />
-
-                                                                        <TableCell align="center" style={{ width: "70%", color: 'red' }}>
-                                                                            *** รวมกันไม่เกิน 100000 ***
-                                                                        </TableCell>
-
-                                                                        <TableCell style={{ width: "20%" }} />
-                                                                    </TableRow> : null}
-
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-                                                                        {warning2 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance8(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance8('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                            :
+                                                                        </TableRow>
+
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                เบี้ยประกันสุขภาพของบิดามารดา
                                                                             </TableCell>
-                                                                        }
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance5(Number(Math.min(200000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance5('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-                                                                        {warning2 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance4(Number(Math.min(15000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance4('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                            :
-                                                                            <TableCell align="left" style={{ width: "70%" }}>
-                                                                                กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                        </TableRow>
+
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+                                                                            {warning1 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'red' }}>
+                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                </TableCell>
+                                                                            }
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance2(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance2('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                        }
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance6(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance6('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
+                                                                        </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-                                                                        {warning2 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                กองทุนบำเหน็จบำนาญราชการ
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+
+                                                                            {warning1 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'red' }}>
+                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                </TableCell>
+                                                                            }
+
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance3(Number(Math.min(25000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance3('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                            :
-                                                                            <TableCell align="left" style={{ width: "70%" }}>
-                                                                                กองทุนบำเหน็จบำนาญราชการ
+                                                                        </TableRow>
+
+                                                                        {warning1 == true ? <TableRow  >
+                                                                            <TableCell style={{ width: "10%" }} />
+
+                                                                            <TableCell align="center" style={{ width: "70%", color: 'red' }}>
+                                                                                *** รวมกันไม่เกิน 100000 ***
                                                                             </TableCell>
-                                                                        }
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance9(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance9('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
 
-                                                                    <TableRow >
-                                                                        <TableCell style={{ width: "10%" }} />
-                                                                        {warning2 == true ?
-                                                                            <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                กองทุนการออมแห่งชาติ (กอช.)
+                                                                            <TableCell style={{ width: "20%" }} />
+                                                                        </TableRow> : null}
+
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+                                                                            {warning2 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
+                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                </TableCell>
+                                                                            }
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance5(Number(Math.min(200000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance5('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                            :
-                                                                            <TableCell align="left" style={{ width: "70%" }}>
-                                                                                กองทุนการออมแห่งชาติ (กอช.)
+                                                                        </TableRow>
+
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+                                                                            {warning2 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
+                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                </TableCell>
+                                                                            }
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance6(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance6('')
+                                                                                        }
+                                                                                    }} />
                                                                             </TableCell>
-                                                                        }
-                                                                        <TableCell align="center" style={{ width: "20%" }} >
-                                                                            <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
-                                                                                onChange={(e) => {
-                                                                                    if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
-                                                                                        setInsurance7(Number(Math.min(30000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
-                                                                                    }
-                                                                                    else if (!e.target.value) {
-                                                                                        setInsurance7('')
-                                                                                    }
-                                                                                }} />
-                                                                        </TableCell>
-                                                                    </TableRow>
+                                                                        </TableRow>
 
-                                                                    {warning2 == true ? <TableRow  >
-                                                                        <TableCell style={{ width: "10%" }} />
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+                                                                            {warning2 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
+                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                </TableCell>
+                                                                            }
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance9(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance9('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
 
-                                                                        <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
-                                                                            *** รวมกันไม่เกิน 500000 ***
-                                                                        </TableCell>
+                                                                        <TableRow >
+                                                                            <TableCell style={{ width: "10%" }} />
+                                                                            {warning2 == true ?
+                                                                                <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
+                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                </TableCell>
+                                                                                :
+                                                                                <TableCell align="left" style={{ width: "70%" }}>
+                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                </TableCell>
+                                                                            }
+                                                                            <TableCell align="center" style={{ width: "20%" }} >
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
+                                                                                            setInsurance7(Number(Math.min(30000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
+                                                                                        }
+                                                                                        else if (!e.target.value) {
+                                                                                            setInsurance7('')
+                                                                                        }
+                                                                                    }} />
+                                                                            </TableCell>
+                                                                        </TableRow>
 
-                                                                        <TableCell style={{ width: "20%" }} />
-                                                                    </TableRow> : null}
+                                                                        {warning2 == true ? <TableRow  >
+                                                                            <TableCell style={{ width: "10%" }} />
 
+                                                                            <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
+                                                                                *** รวมกันไม่เกิน 500000 ***
+                                                                            </TableCell>
+
+                                                                            <TableCell style={{ width: "20%" }} />
+                                                                        </TableRow> : null}
+                                                                    </TableBody>
                                                                 </Table>
                                                             </Collapse>
                                                         </TableCell>
@@ -842,7 +855,7 @@ export function TaxCal() {
                                 </TableRow>
 
                                 {/*ค่าลดหย่อนจากการลงทุน*/}
-                                <TableRow sx={{ '& > *': { borderBottom: 'unset' }, width: '100%' }}>
+                                <TableRow sx={{ borderBottom: 'unset', width: '100%' }}>
                                     <TableCell style={{ width: '10%' }}>
                                         <IconButton
                                             aria-label="expand row"
@@ -902,5 +915,18 @@ export function TaxCal() {
                 </div>) : null
             }
         </React.Fragment >
-    );
+    )
+    else if (isEnoughData === false) return (
+        <React.Fragment>
+            <Navigate />
+            <div style={{ display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
+                <Box sx={{ display: 'flex', padding: 5, backgroundColor: '#FAFAFA', borderRadius: 5, borderWidth: 1, borderStyle: 'solid', alignItems: 'center', justifyContent: 'center', boxShadow: 6, flexDirection: 'column' }}>
+                    <Typography style={{ fontWeight: "bold", fontSize: 22, textAlign: 'center' }}>กรุณากรอกรายได้ของคุณให้ครบทั้งปีเพื่อคำนวนภาษีของคุณ</Typography>
+                    <Container style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <Button onClick={() => navigate('/')} sx={{ backgroundColor: '#2E3B55', marginTop: 2 }}>ตกลง</Button>
+                    </Container>
+                </Box>
+            </div>
+        </React.Fragment>
+    )
 }

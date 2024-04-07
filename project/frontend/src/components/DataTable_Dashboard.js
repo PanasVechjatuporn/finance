@@ -275,7 +275,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 )}
               </TableBody>
 
-              <TableFooter stickyFooter>
+              <TableFooter>
                 <TableRow>
                   <TableCell
                     colSpan={3}

@@ -142,7 +142,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
 
     const [userInputBuyAmount, setUserInputBuyAmount] = useState(0);
     const [inputBuyError, setInputBuyError] = useState(false);
-    const [inputErrorText, setInputErrorText] = useState(null);
+    const [inputErrorText, setInputErrorText] = useState("");
     const [calculatedUnitBuy, setCalculatedUnitBuy] = useState(0);
 
     const handleClose = () => {
@@ -150,11 +150,6 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
         setUserInputBuyAmount(0);
         setCalculatedUnitBuy(0);
         setInputBuyError(false);
-    };
-
-    const handleUserInputChange = (amount, price) => {
-        setUserInputBuyAmount(amount);
-        setCalculatedUnitBuy(roundNumber(amount / price + Number.EPSILON, 6));
     };
 
     const handleOnSave = async (buy, amount, fetchedNav, goalData, userStore) => {
@@ -191,7 +186,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                 buyPrice: fetchedNav.last_val,
                             },
                         ],
-                        goalObjId : goalData._id
+                        goalObjId: goalData._id
                     };
                     axios
                         .post(
@@ -383,19 +378,17 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                             size="small"
                                             margin="normal"
                                             helperText={
-                                                inputBuyError
+                                                !inputBuyError
                                                     ? "เงินที่ต้องการลงทุนในกองทุนนี้"
                                                     : inputErrorText
                                             }
                                             type="number"
                                             error={inputBuyError}
                                             onChange={(e) => {
-                                                handleUserInputChange(
-                                                    e.target.value,
-                                                    fetchedNav.last_val
-                                                );
+                                                setUserInputBuyAmount(e.target.value);
+                                                setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
                                             }}
-                                            value={userInputBuyAmount}
+                                            // value={userInputBuyAmount}
                                         />
                                     </Box>
                                 </Grid>
@@ -417,7 +410,7 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={4} md={4}>
-                                    <Box
+                                {fetchedNav && <Box
                                         display="flex"
                                         justifyContent="center"
                                         alignItems="center"
@@ -437,7 +430,8 @@ export const BuyAssetModal = ({ fundData, open, setOpen, goalData }) => {
                                             }
                                             value={fetchedNav && fetchedNav.last_val}
                                         />
-                                    </Box>
+                                    </Box>}
+                                    
                                 </Grid>
                             </Grid>
                         </Box>

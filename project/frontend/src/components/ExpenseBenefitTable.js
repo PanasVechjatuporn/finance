@@ -6,6 +6,42 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
 export default function ExpenseBenefitTable({ obj, open }) {
+    const ExpenseType = {
+        '0': {
+            '0': 'ประเภท 40(1) เงินเดือน และ 40(2) ค่าจ้างทั่วไป'
+        },
+        '1': {
+            '0': 'ประเภท 40(1) เงินเดือน'
+        },
+        '2': {
+            '0': 'ประเภท 40(2) ค่าจ้างทั่วไป'
+        },
+        '3': {
+            '0': 'ประเภท 40(3) ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา'
+        },
+        '5': {
+            '1': 'ประเภท 40(5) ค่าเช่าบ้านหรือสิ่งปลูกสร้างอื่น',
+            '2': 'ประเภท 40(5) ค่าเช่าที่ดินที่ใช้ในการเกษตรกรรม',
+            '3': 'ประเภท 40(5) ค่าเช่าที่ดินที่ไม่ได้ใช้ในการเกษตรกรรม',
+            '4': 'ประเภท 40(5) ค่าเช่ายานพาหนะ',
+            '5': 'ประเภท 40(5) ค่าเช่าทรัพย์สินอื่นๆ',
+            '6': 'ประเภท 40(5) รายได้จากการที่มีคนผิดสัญญาเช้าซื้อ/ซื้อขายเงินผ่อน'
+        },
+        '6': {
+            '1': 'ประเภท 40(6) การประกอบวิชาชีพอิสระ โดยประกอบโรคศิลปะ',
+            '2': 'ประเภท 40(6) การประกอบวิชาชีพอิสระ ที่ไม่ใช่การประกอบโรคศิลปะ'
+        },
+        '7': {
+            '0': 'ประเภท 40(6) ค่ารับเหมาทั้งค่าแรงและค่าของ'
+        }
+    };
+
+    function renderExpense(Type, subtype) {
+        if (ExpenseType[Type] && ExpenseType[Type][subtype]) {
+            return ExpenseType[Type][subtype]
+        }
+    }
+
     return (
         Object.entries(obj).map(([Type, subtypeObj]) => (
             Object.entries(subtypeObj).map(([subtype, value]) => (
@@ -14,28 +50,15 @@ export default function ExpenseBenefitTable({ obj, open }) {
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Table>
                                 <TableBody>
-                                    {Type === 0 ? (
-                                        <TableRow >
-                                            <TableCell style={{ width: "10%" }} />
-                                            <TableCell align="left" style={{ width: "70%" }}>
-                                                หักค่าใช้จ่ายประเภทที่ 1.0 และ 2.0
-                                            </TableCell>
-                                            <TableCell key={subtype} align="center" style={{ width: "20%" }}>
-                                                {value.toLocaleString("en-GB")}
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                        : (
-                                            <TableRow >
-                                                <TableCell style={{ width: "10%" }} />
-                                                <TableCell align="left" style={{ width: "70%" }}>
-                                                    หักค่าใช้จ่ายประเภทที่ {Type}.{subtype}
-                                                </TableCell>
-                                                <TableCell key={subtype} align="center" style={{ width: "20%" }}>
-                                                    {value.toLocaleString("en-GB")}
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
+                                    <TableRow >
+                                        <TableCell style={{ width: "10%" }} />
+                                        <TableCell align="left" style={{ width: "70%" }}>
+                                            {renderExpense(Type, subtype)}
+                                        </TableCell>
+                                        <TableCell key={subtype} align="center" style={{ width: "20%" }}>
+                                            {value.toLocaleString("en-GB")}
+                                        </TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </Collapse>
