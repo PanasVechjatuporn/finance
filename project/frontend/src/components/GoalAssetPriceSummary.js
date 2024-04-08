@@ -77,8 +77,10 @@ async function fetchLastestPrice(assetsData, userStore) {
 export const GoalAssetPriceSummary = ({ goalData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [assetSummaryGoalData, setAssetSummaryGoalData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         async function fetchAndDigestData() {
+            setIsLoading(true);
             const fetchedGoalAsset = await fetchGoalAsset(goalData, userStore);
             const allFundsMap = new Map();
             fetchedGoalAsset.forEach((asset) => {
@@ -110,12 +112,13 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
             });
             const digestedFundsData = await fetchLastestPrice(allFunds, userStore);
             setAssetSummaryGoalData(digestedFundsData);
+            setIsLoading(false);
             console.log("digestedFundsData :: ", digestedFundsData);
         }
         if (goalData && userStore.userToken) {
             fetchAndDigestData();
         }
-    }, [goalData,userStore]);
+    }, [goalData, userStore]);
 
     return (
         <Container>
@@ -134,7 +137,7 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                     fontWeight: "bold",
                 }}
             >
-                ตารางสรุปการลงทุนภายในเป้าหมาย
+                สรุปการลงทุนภายในเป้าหมาย
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
@@ -158,15 +161,38 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                 ราคาปัจจุบัน&nbsp;(บาท)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่า&nbsp;(บาท)
+                                อัปเดตราคาล่าสุด
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                อัปเดตล่าสุด
+                                มูลค่า&nbsp;(บาท)
                             </StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={6}>
+                                    <ComponentLoading isLoading={isLoading} size={"300px"} />
+                                </TableCell>
+                            </TableRow>
+                        ) : assetSummaryGoalData ? (
+                            <>
+                                {assetSummaryGoalData.map((data, index) => (
+                                    <TableRow key={data.nav_date+"-"+index}>
+                                        <TableCell>{data.fundName}</TableCell>
+                                        <TableCell>{data.spec_code}</TableCell>
+                                        <TableCell>{data.unit}</TableCell>
+                                        <TableCell>{data.lastestNav}</TableCell>
+                                        <TableCell>{new Date(data.nav_date).toLocaleDateString("en-GB")}</TableCell>
+                                        <TableCell>{(roundNumber(data.value,6))}</TableCell>
+                                    </TableRow>)
+                                )}
+                            </>
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={6}>ไม่พบข้อมูล</TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
