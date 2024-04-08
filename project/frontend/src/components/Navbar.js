@@ -58,28 +58,6 @@ function Navigate() {
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
             <Navbar.Brand
-              href={"/Goal-Based"}
-              onClick={(e) => {
-                if (!userStore.isLogIn) {
-                  setShowNotLoggedIn(true);
-                  e.preventDefault();
-                }
-              }}
-            >
-              Goal-Based
-            </Navbar.Brand>
-            <SignUpModal
-              show={showNotLoggedIn}
-              setShow={setShowNotLoggedIn}
-              mode="notloggedin"
-            />
-          </Typography>
-          <Typography
-            variant="h8"
-            component="div"
-            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
-          >
-            <Navbar.Brand
               href={"/tax-calculation"}
               onClick={(e) => {
                 if (!userStore.isLogIn) {
@@ -96,6 +74,29 @@ function Navigate() {
               mode="notloggedin"
             />
           </Typography>
+          <Typography
+            variant="h8"
+            component="div"
+            sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
+          >
+            <Navbar.Brand
+              href={"/Goal-Based"}
+              onClick={(e) => {
+                if (!userStore.isLogIn) {
+                  setShowNotLoggedIn(true);
+                  e.preventDefault();
+                }
+              }}
+            >
+              Goal-Based
+            </Navbar.Brand>
+            <SignUpModal
+              show={showNotLoggedIn}
+              setShow={setShowNotLoggedIn}
+              mode="notloggedin"
+            />
+          </Typography>
+          
           <Typography
             variant="h8"
             component="div"
