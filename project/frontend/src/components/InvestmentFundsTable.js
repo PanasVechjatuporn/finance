@@ -329,8 +329,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     />
                                                 </TableCell>
                                                 <TableCell align="right">{row.last_val}</TableCell>
-                                                <TableCell align="right">{row.last_update}</TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="center">{new Date(row.last_update).toLocaleDateString("en-GB")}</TableCell>
+                                                <TableCell align="center">
                                                     <IconButton
                                                         children={<AddShoppingCartIcon />}
                                                         onClick={(e) => {
