@@ -129,12 +129,8 @@ exports.saveTaxGoal = async (req, res) => {
     const updateDoc = {
         userId: req.body.userId,
         Name: req.body.Name,
-        Funds: req.body.Funds,
-        //Percentage: req.body.Percentage,
-        CreatedDate: new Date().toLocaleDateString("en-GB").split(" ")[0],
-        isActive: true,
+        CreatedDate: new Date()
     };
-    //const options = { upsert: true };
 
     try {
         await collection.insertOne(updateDoc);
