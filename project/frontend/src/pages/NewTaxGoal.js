@@ -22,17 +22,19 @@ import UserFundTable from 'components/userFundTable';
 import StartIcon from '@mui/icons-material/Start';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from '@mui/joy';
+import { Button } from "@mui/material";
 import Tooltip from '@mui/material/Tooltip';
 import { Footer } from 'components/Footer';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
+
 
 
 export function NewTaxGoal() {
 
     const navigate = useNavigate();
-    //const uid = useSelector(state => state.userStore.userId)
+    const uid = useSelector(state => state.userStore.userId)
     const [isEnough, setIsEnough] = React.useState();
     const location = useLocation();
     const data = location.state.data;
@@ -248,6 +250,10 @@ export function NewTaxGoal() {
 
     //console.log(benefitObj);
     //console.log(incomeObj);
+    function saveTaxGoal() {
+        axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', userId: uid })
+            .then(navigate("/Goal-Based"));
+    }
 
     if (isEnough === true) return (
         <React.Fragment>
@@ -847,21 +853,25 @@ export function NewTaxGoal() {
                             </Tooltip>
                         </Container>
                         :
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
-                            <Tooltip title="ต่อไป" arrow placement='right'>
-                                <Link
-                                    state={{
-                                        netIncome: incomeSum - benefitSum - personal - insurance - charity - fund,
-                                        beforeReduction: incomeSum - benefitSum,
-                                    }}
-                                    to={"./select-fund"}
-                                    style={{ textDecoration: "none", color: "black" }}
-                                >
-                                    <IconButton>
-                                        <StartIcon color='action' />
-                                    </IconButton>
-                                </Link>
-                            </Tooltip>
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 10, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
+                            {/* <Link
+                                // state={{
+                                //     netIncome: incomeSum - benefitSum - personal - insurance - charity - fund,
+                                //     beforeReduction: incomeSum - benefitSum,
+                                // }}
+                                to={"./select-fund"}
+                                style={{ textDecoration: "none", color: "black" }}
+                            > */}
+                            <Button
+                                variant="contained"
+                                endIcon={<SaveIcon />}
+                                onClick={(e) => {
+                                    saveTaxGoal()
+                                }}
+                            >
+                                บันทึกเป้าหมาย
+                            </Button>
+                            {/* </Link> */}
                         </Container>
                     }
                 </div>)}
