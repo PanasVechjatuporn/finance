@@ -175,7 +175,7 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                     <ComponentLoading isLoading={isLoading} size={"300px"} />
                                 </TableCell>
                             </TableRow>
-                        ) : assetSummaryGoalData ? (
+                        ) : assetSummaryGoalData && assetSummaryGoalData.length > 0 ? (
                             <>
                                 {assetSummaryGoalData.map((data, index) => (
                                     <TableRow key={data.nav_date+"-"+index}>
@@ -188,9 +188,10 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                     </TableRow>)
                                 )}
                             </>
-                        ) : (
+                        ) 
+                        : (
                             <TableRow>
-                                <TableCell colSpan={6}>ไม่พบข้อมูล</TableCell>
+                                <TableCell colSpan={6} align="center">ไม่พบข้อมูล</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
