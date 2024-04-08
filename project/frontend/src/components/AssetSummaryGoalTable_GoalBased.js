@@ -114,6 +114,9 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                 ชื่อกองทุน
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
+                                ประเภทของกองทุน
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
                                 จำนวนเงินที่ซื้อ&nbsp;(บาท)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
@@ -122,9 +125,7 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                             <StyledTableCell className="subHeader">
                                 จำนวนหน่วยลงทุน
                             </StyledTableCell>
-                            <StyledTableCell className="subHeader">
-                                ประเภทของกองทุน
-                            </StyledTableCell>
+                            
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
@@ -248,6 +249,9 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                                                 : "-"}
                                                         </StyledTableCell>
                                                         <StyledTableCell>
+                                                            {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
                                                             {formatNumberWithCommas(subAsset.amount)}
                                                         </StyledTableCell>
                                                         <StyledTableCell>
@@ -257,9 +261,6 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                                             {subAsset.buyPrice && subAsset.buyPrice !== 0
                                                                 ? roundNumber(subAsset.unit, 2)
                                                                 : "-"}
-                                                        </StyledTableCell>
-                                                        <StyledTableCell>
-                                                            {subAsset.spec_code ? subAsset.spec_code : "-"}
                                                         </StyledTableCell>
                                                     </StyledTableRow>
                                                 ))}
