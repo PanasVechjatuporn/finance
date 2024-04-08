@@ -23,11 +23,12 @@ function EachCard({ data }) {
     const handleCloseDelete = () => setOpenDelete(false);
 
     const handleClickEdit = (data) => {
-        navigate("/Goal-Based/edit-normal-goal/" + data._id)
+        navigate("/Goal-Based/edit-goal/" + data._id)
     }
 
     const handleClickInvest = (data) => {
-        navigate("/Goal-Based/invest-normal-goal/" + data._id)
+            navigate("/Goal-Based/invest-goal/" + data._id)
+
     }
 
     const ModalDelete = ({ openDelete, handleCloseDelete }) => {
@@ -263,6 +264,18 @@ function EachCard({ data }) {
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
+                    
+                    <Button
+                        onClick={() => {
+                            handleClickInvest(data)
+                        }}
+                        sx={{ backgroundColor: "#ffc200" }}
+                        size="small"
+                    >
+                        <Typography color="white" variant="subtitile1">
+                            ลงทุน
+                        </Typography>
+                    </Button>
                     <Button
                         onClick={handleOpenDelete}
                         sx={{ backgroundColor: "brown" }}

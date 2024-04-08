@@ -7,6 +7,7 @@ import { InvestmentFundsTable } from "components/InvestmentFundsTable";
 import { useParams } from "react-router-dom";
 import { AssetSummaryGoalTable } from "../components/AssetSummaryGoalTable_GoalBased";
 import { GoalAssetPriceSummary } from "components/GoalAssetPriceSummary";
+import { ReductionGoalBuyInformation } from "components/ReductionGoalBuyInformation";
 import Paper from "@mui/material/Paper";
 import { Container } from "react-bootstrap";
 import { Footer } from "components/Footer";
@@ -100,8 +101,8 @@ export const GoalInvestment = () => {
         <React.Fragment>
             <Navigate />
             <CurrentUserRiskProfile />
+            {<ReductionGoalBuyInformation goalData={goalData}></ReductionGoalBuyInformation>}
             <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
-
             {/* Because AssetSummaryGoalTable in sub Component inside another component it will need another container */}
             <Container sx={{ maxWidth: "100%" }}>
                 <Box sx={{ width: "100%" }}>
