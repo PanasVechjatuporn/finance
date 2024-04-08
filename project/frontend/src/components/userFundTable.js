@@ -38,7 +38,7 @@ export default function UserFundTable({ setFund, open }) {
           });
       }
       await Promise.all(arr.map((asset) => (sumFund += Number(asset.amount))));
-      setFund(sumFund);
+      if (sumFund !== 0) setFund(sumFund);
     }
     fetchData();
   }, [arr]);

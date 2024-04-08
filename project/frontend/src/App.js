@@ -88,7 +88,7 @@ function App() {
           element={<RequireAuth redirectTo="/">{<TaxCal />}</RequireAuth>}
         />
         <Route path="/Goal-Based/edit-goal/:goalObjId" element={<NormalGoal />} />
-        
+
         <Route path="/Goal-Based/invest-goal/:goalObjId" element={<GoalInvestment />} />
 
         <Route path="/Goal-Based/invest-goal/:goalObjId/buy/:proj_id" element={<BuyAssetPage />} />

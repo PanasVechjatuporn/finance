@@ -131,6 +131,9 @@ exports.saveTaxGoal = async (req, res) => {
     const updateDoc = {
         userId: req.body.userId,
         Name: req.body.Name,
+        //netIncome: req.body.netIncome,
+        totalReduce: req.body.totalReduce,
+        incomeFourSubtractor: req.body.incomeFourSubtractor,
         CreatedDate: new Date()
     };
 
@@ -755,7 +758,7 @@ exports.getUserAssetByGoalId = async (req, res) => {
     }
 }
 
-exports.getGoalAssetLastestNav = async (req,res) => {
+exports.getGoalAssetLastestNav = async (req, res) => {
     const userToken = req.header("Authorization");
     const userId = req.header("UserId");
     const assetsData = req.body.assetsData;
@@ -768,9 +771,9 @@ exports.getGoalAssetLastestNav = async (req,res) => {
                 const sellProfit = sellPrice * asset.unit + Number.EPSILON;
                 return {
                     ...asset,
-                    value : sellProfit,
-                    lastestNav : sellPrice,
-                    nav_date : lastestNav[0].last_upd_date
+                    value: sellProfit,
+                    lastestNav: sellPrice,
+                    nav_date: lastestNav[0].last_upd_date
                 };
             }));
             res.status(200).json(assetsDataWithNav);

@@ -80,7 +80,7 @@ export const SelectFund = () => {
                 //setInvestAmount(invest);
                 setTax(calTax(netIncome));
                 //setNewTax(calTax(netIncome - (invest * 12)));
-                setIsloading(false);
+                //setIsloading(false);
             }
         }
         fetchData();
@@ -276,7 +276,7 @@ export const SelectFund = () => {
                                     เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} บาท/เดือน
                                 </Typography>
                                 <Typography>
-                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
+                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                                 </Typography>
                                 <Typography component={'span'}>
                                     คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
@@ -345,7 +345,7 @@ export const SelectFund = () => {
                         variant="plain"
                     />
                 </Container>}
-            <Footer/>
+            <Footer />
         </React.Fragment >
     )
 }
