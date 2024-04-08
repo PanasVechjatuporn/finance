@@ -63,8 +63,8 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
     return (
         <Container
             sx={{
-                marginTop: 5,
-                minHeight: "50vh",
+                marginTop: "10%",
+                minHeight: "55vh",
                 display: "ruby-text",
             }}
         >
@@ -127,6 +127,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                         type="number"
                         margin="normal"
                         error={goalError}
+                        disabled = {mode === "edit" ? true : false}
                         helperText={goalError ? "กรุณากรอกจำนวนเงิน" : ""}
                         onChange={(e) => {
                             let tmp = JSON.parse(JSON.stringify(goalData))
@@ -146,6 +147,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                         margin="normal"
                         type="number"
                         error={timeError}
+                        disabled = {mode === "edit" ? true : false}
                         helperText={timeError ? "ระยะเวลาเก็บต้องมากกว่า 0" : ""}
                         onChange={(e) => {
                             let tmp = JSON.parse(JSON.stringify(goalData))

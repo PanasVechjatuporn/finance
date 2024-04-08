@@ -4,11 +4,12 @@ import { useSelector } from "react-redux";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
+import { formatNumberWithCommas } from "utils/numberUtil";
 import axios from "axios";
 
 const baseURL = "http://localhost:8000";
 
-async function fetchUserNetSummary(userStore){
+async function fetchUserNetSummary(userStore) {
     const getResult = await axios.get(`${baseURL}/db/get_user_net_summary`, {
         headers: {
             Authorization: userStore.userToken,
@@ -18,13 +19,13 @@ async function fetchUserNetSummary(userStore){
     return getResult.data;
 }
 
-export const UserNetSummary = ({userData}) => {
+export const UserNetSummary = ({ userData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [userNetSummary, setUserNetSummary] = useState(null);
-    useEffect(()=> {
+    useEffect(() => {
         const fetchData = async () => {
             try {
-                if(userStore.userId){
+                if (userStore.userId) {
                     const userNetSummary = await fetchUserNetSummary(userStore);
                     setUserNetSummary(userNetSummary);
                 }
@@ -33,7 +34,7 @@ export const UserNetSummary = ({userData}) => {
             }
         };
         fetchData()
-    },[userData, userStore])
+    }, [userData, userStore])
     return (
         <Box>
             <Container>
@@ -55,14 +56,18 @@ export const UserNetSummary = ({userData}) => {
                     }}
                 >ยอดสรุปเงินของคุณ</Typography>
                 <>
-                รายรับทั้งหมดของคุณ = {userNetSummary && userNetSummary.netIncome} 
-                <br/>
-                รายจ่ายทั้งหมดของคุณ = {userNetSummary && userNetSummary.netExpense} 
-                <br/>
-                รายรับทั้งหมด - รายจ่ายทั้งหมด = {userNetSummary && userNetSummary.netIncomeExpense} 
-                <br/>
-                ความมั่งคั่งของคุณ = {userNetSummary && userNetSummary.netWealth}
-                <br/>
+                    รายรับทั้งหมดของคุณ = {userNetSummary && formatNumberWithCommas(userNetSummary.netIncome)+" บาท"}
+                    <br />
+                    รายจ่ายทั้งหมดของคุณ = {userNetSummary && formatNumberWithCommas(userNetSummary.netExpense)+" บาท"}
+                    <br />
+                    รายรับทั้งหมด - รายจ่ายทั้งหมด = {userNetSummary && formatNumberWithCommas(userNetSummary.netIncomeExpense)+" บาท"}
+                    <br />
+                    ซื้อกองทุนไปทั้งหมด = {userNetSummary && formatNumberWithCommas(userNetSummary.netBoughtAsset)+" บาท"}
+                    <br />
+                    ขายกองทุนไปทั้งหมด = {userNetSummary && formatNumberWithCommas(userNetSummary.netSoldAsset)+" บาท"}
+                    <br />
+                    ความมั่งคั่งของคุณ = {userNetSummary && formatNumberWithCommas(userNetSummary.netWealth)+" บาท"}
+                    <br />
                 </>
             </Container>
         </Box>

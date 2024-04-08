@@ -123,35 +123,43 @@ export const AssetSummary = () => {
                 }}
             >
                 {userData && (
-                    <FormControl
+                    <Box
                         sx={{
-                            width: "10%",
-                            position: "absolute",
-                            right: "5.5%",
-                            top: "3%",
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
                     >
-                        <InputLabel id="select-goal-label">Goals</InputLabel>
-                        <Select
-                            labelId="select-goal"
-                            id="select-goal"
-                            value={selectGoalValue}
-                            label="Goals"
-                            onChange={(e) => {
-                                setSelectGoalValue(e.target.value);
+                        <FormControl
+                            sx={{
+                                // width: "10%",
+                                // position: "absolute",
+                                // right : "0"
+                                // right: "5.5%",
+                                // top: "3%",
                             }}
-                            disabled={userData.length > 0 ? false : true}
                         >
-                            {userData.map((data, index) => (
-                                <MenuItem
-                                    key={data._id + "-select-item-" + index}
-                                    value={data.Name}
-                                >
-                                    {data.Name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                            <InputLabel id="select-goal-label">เป้าหมาย</InputLabel>
+                            <Select
+                                labelId="select-goal"
+                                id="select-goal"
+                                value={selectGoalValue}
+                                label="Goals"
+                                onChange={(e) => {
+                                    setSelectGoalValue(e.target.value);
+                                }}
+                                disabled={userData.length > 0 ? false : true}
+                            >
+                                {userData.map((data, index) => (
+                                    <MenuItem
+                                        key={data._id + "-select-item-" + index}
+                                        value={data.Name}
+                                    >
+                                        {data.Name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 )}
                 <AssetSummaryGoalTable
                     selectedData={selectedData}

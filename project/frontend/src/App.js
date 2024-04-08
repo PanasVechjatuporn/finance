@@ -87,11 +87,12 @@ function App() {
           path="/tax-calculation"
           element={<RequireAuth redirectTo="/">{<TaxCal />}</RequireAuth>}
         />
-        <Route path="/Goal-Based/edit-normal-goal/:goalObjId" element={<NormalGoal />} />
+        <Route path="/Goal-Based/edit-goal/:goalObjId" element={<NormalGoal />} />
         
-        <Route path="/Goal-Based/invest-normal-goal/:goalObjId" element={<GoalInvestment />} />
+        <Route path="/Goal-Based/invest-goal/:goalObjId" element={<GoalInvestment />} />
 
-        <Route path="/Goal-Based/invest-normal-goal/:goalObjId/buy/:proj_id" element={<BuyAssetPage />} />
+        <Route path="/Goal-Based/invest-goal/:goalObjId/buy/:proj_id" element={<BuyAssetPage />} />
+
       </Routes>
     </BrowserRouter>
   );

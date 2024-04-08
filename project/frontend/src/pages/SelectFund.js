@@ -17,6 +17,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CircularProgress } from "@mui/joy";
+import { Footer } from "components/Footer";
 
 export const SelectFund = () => {
     const location = useLocation();
@@ -344,6 +345,7 @@ export const SelectFund = () => {
                         variant="plain"
                     />
                 </Container>}
+            <Footer/>
         </React.Fragment >
     )
 }

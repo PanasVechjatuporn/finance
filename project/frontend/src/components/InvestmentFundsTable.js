@@ -129,7 +129,7 @@ const headCells = [
         id: "last_update",
         numeric: false,
         disablePadding: false,
-        label: "วันที่อัพเดทล่าสุด",
+        label: "วันที่อัปเดตล่าสุด",
     },
     {
         id: "buy_asset",
@@ -155,7 +155,7 @@ function EnhancedTableHead(props) {
                         // padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.id ? order : false}
                         width={headCell.id === "proj_name_th" ? "15%" : "9.4%"}
-                        sx={{backgroundColor : "#7a8fb8", color : "white" , fontWeight : "bold", fontSize : 14}}
+                        sx={{ backgroundColor: "#7a8fb8", color: "white", fontWeight: "bold", fontSize: 14 }}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
@@ -189,8 +189,8 @@ function EnhancedTableToolbar() {
             sx={{
                 pl: { sm: 2 },
                 pr: { xs: 1, sm: 1 },
-                backgroundColor : "#3e5074",
-                color : "white"
+                backgroundColor: "#3e5074",
+                color: "white"
             }}
         >
             <Typography
@@ -211,8 +211,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rows, setRows] = useState(null);
-    const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
-    const [modalData, setModalData] = useState(null);
+    // const [isModalAssetOpen, setIsModalAssetOpen] = useState(false);
+    // const [modalData, setModalData] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation()
@@ -306,7 +306,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     id={labelId}
                                                     scope="row"
                                                     padding="none"
-                                                    style={{ padding : "10px"}}
+                                                    style={{ padding: "10px" }}
                                                 >
                                                     {row.proj_name_th}
                                                 </TableCell>
@@ -316,7 +316,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                 <TableCell align="right">{row.risk_spectrum}</TableCell>
                                                 <TableCell align="center">{row.spec_code}</TableCell>
                                                 <TableCell align="center"
-                                                    style={{color: row.growth_rate > 0 ? "green" : "red"}}
+                                                    style={{ color: row.growth_rate > 0 ? "green" : "red" }}
                                                 >
                                                     {roundNumber(row.growth_rate, 2)} %
                                                 </TableCell>
@@ -337,11 +337,12 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                             // setModalData(row);
                                                             // setIsModalAssetOpen(true);
 
-                                                            navigate(`${location.pathname}/buy/${row.proj_id}`,{ 
-                                                               state :{
-                                                                row,
-                                                                goalData
-                                                            }})
+                                                            navigate(`${location.pathname}/buy/${row.proj_id}`, {
+                                                                state: {
+                                                                    row,
+                                                                    goalData
+                                                                }
+                                                            })
                                                         }}
                                                     />
                                                 </TableCell>
@@ -349,9 +350,13 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                         );
                                     })
                                 ) : (
-                                    <Container>
-                                        <ComponentLoading isLoading={true} />
-                                    </Container>
+                                    <TableRow>
+                                        <TableCell colSpan={9} align="center">
+                                            <Container>
+                                                <ComponentLoading isLoading={true} size={"300px"}/>
+                                            </Container>
+                                        </TableCell>
+                                    </TableRow>
                                 )}
                             </TableBody>
                         </Table>

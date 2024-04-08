@@ -4,6 +4,7 @@ import "./NormalGoal.css";
 import { useSelector } from "react-redux";
 import { NormalGoalCreateEdit } from "components/NormalGoalCreateEdit";
 import { useParams } from "react-router-dom";
+import { Footer } from "components/Footer";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
 async function fetchGoalData(userStore, goalObjId) {
@@ -49,6 +50,7 @@ export const NormalGoal = () => {
         setGoalData={setGoalData}
         mode={mode}
       />
+      <Footer/>
     </React.Fragment>
   );
 };

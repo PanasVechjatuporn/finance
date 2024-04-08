@@ -4,6 +4,7 @@ import Navigate from "components/Navbar";
 import { RiskLevel } from "components/RiskLevel_RiskEvalNormal";
 import { EvaluationForm } from "components/RiskEvalForm_RiskEvalNormal";
 import "./NormalGoal.css";
+import { Footer } from "components/Footer";
 
 export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
   const [showRiskLevel, setshowRiskLevel] = useState(false);
@@ -23,6 +24,7 @@ export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
           setshowRiskLevel={setshowRiskLevel}
         />
       )}
+      <Footer/>
     </React.Fragment>
   );
 };

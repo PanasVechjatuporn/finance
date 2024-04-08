@@ -174,7 +174,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             marginTop: "5%"
                         }}
                     >
-                        สรุปการลงทุนในกองทุนทั้งหมด
+                        สรุปเงินฝากทั้งหมด
                     </Typography>
                 </div>
                 <TableContainer component={Paper} >

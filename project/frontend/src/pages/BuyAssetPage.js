@@ -14,6 +14,7 @@ import { roundNumber } from "utils/numberUtil";
 import Navigate from "components/Navbar";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Footer } from "components/Footer";
 
 const baseURL = "http://localhost:8000";
 
@@ -185,6 +186,7 @@ export const BuyAssetPage = () => {
                                 buyMonth: navDate.getMonth(),
                                 year: navDate.getFullYear(),
                                 buyPrice: fetchedNav.last_val,
+                                proj_id : fundData.proj_id
                             },
                         ],
                         goalObjId: goalData._id
@@ -423,10 +425,10 @@ export const BuyAssetPage = () => {
                                                 margin="normal"
                                                 helperText={
                                                     fetchedNav &&
-                                                    "อัพเดทล่าสุดเมื่อ " +
+                                                    "อัปเดตล่าสุดเมื่อ " +
                                                     new Date(
                                                         fetchedNav.last_upd_date
-                                                    ).toLocaleDateString()
+                                                    ).toLocaleDateString("en-GB")
                                                 }
                                                 value={fetchedNav && fetchedNav.last_val}
                                             />
@@ -436,15 +438,7 @@ export const BuyAssetPage = () => {
                                 </Grid>
                             </Box>
                         )}
-
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <ComponentLoading isLoading={isLoading} />
-
-                    </Box>
+                        <ComponentLoading isLoading={isLoading} size={"75vh"}/>
                     <Container>
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid
@@ -521,6 +515,7 @@ export const BuyAssetPage = () => {
                     <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
                 </Box>
             </Container>
+            <Footer />
         </>
     );
 };

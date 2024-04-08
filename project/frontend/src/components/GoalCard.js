@@ -9,25 +9,33 @@ import { Button, CardActions } from "@mui/material";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { formatNumberWithCommas } from "utils/numberUtil";
+import { OverlayLoading } from "./OverlayLoading";
 
 function EachCard({ data }) {
     const token = useSelector((state) => state.userStore.userToken);
     const navigate = useNavigate();
 
     const [openDelete, setOpenDelete] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const handleOpenDelete = () => setOpenDelete(true);
     const handleCloseDelete = () => setOpenDelete(false);
 
     const handleClickEdit = (data) => {
-        navigate("/Goal-Based/edit-normal-goal/" + data._id)
+        navigate("/Goal-Based/edit-goal/" + data._id)
     }
 
     const handleClickInvest = (data) => {
-        navigate("/Goal-Based/invest-normal-goal/" + data._id)
+            navigate("/Goal-Based/invest-goal/" + data._id)
+
     }
 
     const ModalDelete = ({ openDelete, handleCloseDelete }) => {
         function handleDeleteGoal() {
+            console.log('CLICKED')
+            setIsLoading(true);
+            handleCloseDelete();
             axios.post(
                 `http://localhost:8000/db/delete_goal`,
                 {
@@ -40,9 +48,13 @@ function EachCard({ data }) {
                         UserId: data.userId,
                     },
                 }
-            );
-            handleCloseDelete();
-            window.location.reload(false);
+            ).then((res) => {
+                setIsLoading(false);
+                window.location.reload(false);
+            }).catch((err) => {
+                console.log('err :: ', err);
+                setIsLoading(false);
+            })
         }
         return (
             <Modal
@@ -104,6 +116,7 @@ function EachCard({ data }) {
                         </Button>
                     </Container>
                 </Container>
+                {/* <OverlayLoading isLoading={isLoading}/> */}
             </Modal>
         );
     };
@@ -141,7 +154,7 @@ function EachCard({ data }) {
                         variant="subtitile1"
                         color="text.secondary"
                     >
-                        เป้าหมาย : {data.Goal || ""}
+                        เป้าหมาย : {formatNumberWithCommas(data.Goal) + " บาท" || ""}
                     </Typography>
                     <Typography
                         component="div"
@@ -196,6 +209,7 @@ function EachCard({ data }) {
                         handleCloseDelete={handleCloseDelete}
                     />
                 </CardActions>
+                <OverlayLoading isLoading={isLoading} />
             </Card>
         );
     } else {
@@ -250,6 +264,18 @@ function EachCard({ data }) {
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
+                    
+                    <Button
+                        onClick={() => {
+                            handleClickInvest(data)
+                        }}
+                        sx={{ backgroundColor: "#ffc200" }}
+                        size="small"
+                    >
+                        <Typography color="white" variant="subtitile1">
+                            ลงทุน
+                        </Typography>
+                    </Button>
                     <Button
                         onClick={handleOpenDelete}
                         sx={{ backgroundColor: "brown" }}
@@ -264,6 +290,7 @@ function EachCard({ data }) {
                         handleCloseDelete={handleCloseDelete}
                     />
                 </CardActions>
+                <OverlayLoading isLoading={isLoading} />
             </Card>
         );
     }
