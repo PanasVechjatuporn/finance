@@ -6,6 +6,7 @@ import { CurrentUserRiskProfile } from "components/CurrentUserRiskProfile";
 import { InvestmentFundsTable } from "components/InvestmentFundsTable";
 import { useParams } from "react-router-dom";
 import { AssetSummaryGoalTable } from "../components/AssetSummaryGoalTable_GoalBased";
+import { GoalAssetPriceSummary } from "components/GoalAssetPriceSummary";
 import Paper from "@mui/material/Paper";
 import { Container } from "react-bootstrap";
 import { Footer } from "components/Footer";
@@ -105,6 +106,7 @@ export const GoalInvestment = () => {
             <Container sx={{ maxWidth: "100%" }}>
                 <Box sx={{ width: "100%" }}>
                     <Paper sx={{ width: "100%" }}>
+                        <GoalAssetPriceSummary goalData={goalData}/>
                         <AssetSummaryGoalTable goalData={goalData} mode={"specific"} />
                     </Paper>
                 </Box>

@@ -425,7 +425,7 @@ export const BuyAssetPage = () => {
                                                 margin="normal"
                                                 helperText={
                                                     fetchedNav &&
-                                                    "อัพเดทล่าสุดเมื่อ " +
+                                                    "อัปเดตล่าสุดเมื่อ " +
                                                     new Date(
                                                         fetchedNav.last_upd_date
                                                     ).toLocaleDateString("en-GB")

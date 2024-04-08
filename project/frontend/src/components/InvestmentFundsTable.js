@@ -129,7 +129,7 @@ const headCells = [
         id: "last_update",
         numeric: false,
         disablePadding: false,
-        label: "วันที่อัพเดทล่าสุด",
+        label: "วันที่อัปเดตล่าสุด",
     },
     {
         id: "buy_asset",
