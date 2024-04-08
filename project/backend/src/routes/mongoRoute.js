@@ -62,4 +62,6 @@ router.get("/get_nav", mongoController.getFundsDailyNav);
 router.post("/insert_asset", mongoController.insertUserBoughtAsset);
 
 router.get("/get_user_asset_by_goal_id",mongoController.getUserAssetByGoalId);
+
+router.post("/get_goal_asset_lastest_price", mongoController.getGoalAssetLastestNav);
 module.exports = router;

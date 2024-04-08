@@ -759,6 +759,32 @@ exports.getUserAssetByGoalId = async (req, res) => {
     }
 }
 
+exports.getGoalAssetLastestNav = async (req,res) => {
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    const assetsData = req.body.assetsData;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const assetsDataWithNav = await Promise.all(assetsData.map(async (asset) => {
+                const lastestNav = await secApiUtils.getLastestNav(asset.proj_id);
+                const sellPrice = lastestNav[0].buy_price;
+                const sellProfit = sellPrice * asset.unit + Number.EPSILON;
+                return {
+                    ...asset,
+                    value : sellProfit,
+                    lastestNav : sellPrice,
+                    nav_date : lastestNav[0].last_upd_date
+                };
+            }));
+            res.status(200).json(assetsDataWithNav);
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.getUserAssetByGoalId: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
 async function updateUserBoughtAsset(uid, amountBought) {
     const db = client.db(dbName);
     const collectionIncomeExpense = db.collection("income_expense");
