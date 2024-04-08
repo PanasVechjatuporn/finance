@@ -72,10 +72,6 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
         setIsLoading(false);
     }, [goalData, mode, userStore]);
 
-    useEffect(() => {
-        console.log("isLoading :: ", isLoading);
-    }, [isLoading]);
-
     return (
         <Container>
             <Typography
