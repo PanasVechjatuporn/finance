@@ -390,7 +390,7 @@ export const DataTableRow = ({
                                                     key={item.type + index + dataMonth.date}
                                                     align="center"
                                                 >
-                                                    {item.type}
+                                                    {expenseType.filter(obj => obj.category === item.type)[0].name}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
