@@ -9,46 +9,41 @@ function CarouselInterval() {
           <div className="image-item">
             <img src="/landing/1.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="First slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
           <div className="image-item">
             <img src="/landing/2.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="Second slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
           <div className="image-item">
             <img src="/landing/3.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
           <div className="image-item">
             <img src="/landing/4.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
           <div className="image-item">
             <img src="/landing/5.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
           <div className="image-item">
             <img src="/landing/6.process.png" className="image"></img>
           </div>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
         </Carousel.Item>
         <Carousel.Item className="slide-item">
             <img src="/landing/7.process.png" className="image"></img>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        {/* <Carousel.Item className="slide-item">
+            <img src="/landing/8.process.png" className="image"></img>
         </Carousel.Item>
         <Carousel.Item className="slide-item">
-            <img src="/landing/8.process.png" className="image"></img>
-          {/* <ExampleCarouselImage text="Third slide" /> */}
-        </Carousel.Item>
+            <img src="/landing/9.process.png" className="image"></img>
+        </Carousel.Item> */}
       </Carousel>
     </div>
   );
