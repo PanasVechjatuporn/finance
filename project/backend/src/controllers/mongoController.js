@@ -766,12 +766,12 @@ exports.getGoalAssetLastestNav = async (req, res) => {
             const assetsDataWithNav = await Promise.all(assetsData.map(async (asset) => {
                 const lastestNav = await secApiUtils.getLastestNav(asset.proj_id);
                 const sellPrice = lastestNav[0].buy_price;
-                const sellProfit = sellPrice * asset.unit + Number.EPSILON;
+                const lastVal = lastestNav[0].last_val;
+                const sellProfit = sellPrice !== 0 ? sellPrice*asset.unit + Number.EPSILON : lastVal*asset.unit + Number.EPSILON;
                 return {
                     ...asset,
                     value: sellProfit,
-                    lastestNav: sellPrice,
-                    nav_date: lastestNav[0].last_upd_date
+                    ...lastestNav[0]
                 };
             }));
             res.status(200).json(assetsDataWithNav);

@@ -11,6 +11,21 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { formatNumberWithCommas } from "utils/numberUtil";
 import { OverlayLoading } from "./OverlayLoading";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+    components: {
+      MuiCardContent: {
+        styleOverrides: {
+            root:{
+                padding: 0,
+                paddingLeft:16,
+                paddingRight:16
+            }
+        },
+      },
+    },
+  });
 
 function EachCard({ data }) {
     const token = useSelector((state) => state.userStore.userToken);
@@ -27,7 +42,7 @@ function EachCard({ data }) {
     }
 
     const handleClickInvest = (data) => {
-            navigate("/Goal-Based/invest-goal/" + data._id)
+        navigate("/Goal-Based/invest-goal/" + data._id)
 
     }
 
@@ -134,10 +149,17 @@ function EachCard({ data }) {
             >
                 <CardMedia
                     component="img"
-                    sx={{ height: 140, objectFit: "contain", padding: 1.4 }}
+                    sx={{
+                        height: 140,
+                        objectFit: "contain",
+                        padding: 1.4,
+
+                    }}
                     image={require("../invest.png")}
                 //alt="icon/image"
                 />
+                <ThemeProvider
+                theme={theme}>
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
                         ชื่อ : {data.Name || ""}
@@ -161,6 +183,13 @@ function EachCard({ data }) {
                         variant="subtitile1"
                         color="text.secondary"
                     >
+                        สถานะ : <span style={{ color: data.hasOwnProperty("goalStatus") ? data.goalStatus ? "green" : "red" : null }}>{data.hasOwnProperty("goalStatus") ? data.goalStatus ? "สำเร็จ" : "ยังไม่บรรลุเป้าหมาย" : "-"}</span>
+                    </Typography>
+                    <Typography
+                        component="div"
+                        variant="subtitile1"
+                        color="text.secondary"
+                    >
                         วันที่สร้าง :{" "}
                         {new Date(data.CreatedDate).toLocaleDateString("th-TH", {
                             weekday: "long",
@@ -170,6 +199,7 @@ function EachCard({ data }) {
                         }) || ""}
                     </Typography>
                 </CardContent>
+                </ThemeProvider>
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
@@ -201,7 +231,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ
+                            ลบ/ขาย
                         </Typography>
                     </Button>
                     <ModalDelete
@@ -264,7 +294,7 @@ function EachCard({ data }) {
                 <CardActions
                     style={{ width: "100%", justifyContent: "center", gap: "10%" }}
                 >
-                    
+
                     <Button
                         onClick={() => {
                             handleClickInvest(data)
@@ -282,7 +312,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ
+                            ลบ/ขาย
                         </Typography>
                     </Button>
                     <ModalDelete

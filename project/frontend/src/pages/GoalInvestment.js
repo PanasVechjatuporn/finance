@@ -14,6 +14,7 @@ import { Container } from "react-bootstrap";
 import { Footer } from "components/Footer";
 import Box from "@mui/material/Box";
 import axios from "axios";
+import { roundNumber } from "utils/numberUtil";
 const baseURL = "http://localhost:8000";
 
 async function fetchGoalData(userStore, goalObjId) {
@@ -153,7 +154,7 @@ export const GoalInvestment = () => {
             const { unit, fundName, spec_code, proj_id } = asset.Funds[0];
             if (allFundsMap.has(fundName)) {
                 allFundsMap.set(fundName, {
-                    unit: allFundsMap.get(fundName).unit + unit,
+                    unit: roundNumber(allFundsMap.get(fundName).unit + unit +Number.EPSILON,6),
                     fundName: fundName,
                     spec_code: spec_code,
                     proj_id: proj_id,
