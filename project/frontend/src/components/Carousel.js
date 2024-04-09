@@ -38,10 +38,10 @@ function CarouselInterval() {
         <Carousel.Item className="slide-item">
             <img src="/landing/7.process.png" className="image"></img>
         </Carousel.Item>
-        {/* <Carousel.Item className="slide-item">
+        <Carousel.Item className="slide-item">
             <img src="/landing/8.process.png" className="image"></img>
         </Carousel.Item>
-        <Carousel.Item className="slide-item">
+        {/* <Carousel.Item className="slide-item">
             <img src="/landing/9.process.png" className="image"></img>
         </Carousel.Item> */}
       </Carousel>
