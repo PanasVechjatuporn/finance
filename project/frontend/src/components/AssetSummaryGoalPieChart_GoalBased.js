@@ -158,7 +158,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                     </Table>
                 </TableContainer>
 
-                <div>
+                {/* <div>
                     <Typography
                         variant="h5"
                         style={{
@@ -176,8 +176,8 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                     >
                         สรุปเงินฝากทั้งหมด
                     </Typography>
-                </div>
-                <TableContainer component={Paper} >
+                </div> */}
+                {/* <TableContainer component={Paper} >
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
                             <StyledTableRow>
@@ -217,7 +217,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             )}
                         </TableBody>
                     </Table>
-                </TableContainer>
+                </TableContainer> */}
             </Container>
         );
 };

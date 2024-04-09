@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
+import { roundNumber } from "utils/numberUtil";
 import Typography from "@mui/material/Typography";
 import { ComponentLoading } from "./OverlayLoading";
 import { useSelector } from "react-redux";
@@ -77,8 +77,10 @@ async function fetchLastestPrice(assetsData, userStore) {
 export const GoalAssetPriceSummary = ({ goalData }) => {
     const userStore = useSelector((state) => state.userStore);
     const [assetSummaryGoalData, setAssetSummaryGoalData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         async function fetchAndDigestData() {
+            setIsLoading(true);
             const fetchedGoalAsset = await fetchGoalAsset(goalData, userStore);
             const allFundsMap = new Map();
             fetchedGoalAsset.forEach((asset) => {
@@ -110,12 +112,12 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
             });
             const digestedFundsData = await fetchLastestPrice(allFunds, userStore);
             setAssetSummaryGoalData(digestedFundsData);
-            console.log("digestedFundsData :: ", digestedFundsData);
+            setIsLoading(false);
         }
         if (goalData && userStore.userToken) {
             fetchAndDigestData();
         }
-    }, [goalData,userStore]);
+    }, [goalData, userStore]);
 
     return (
         <Container>
@@ -134,10 +136,11 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                     fontWeight: "bold",
                 }}
             >
-                ตารางสรุปการลงทุนภายในเป้าหมาย
+                สรุปการลงทุนภายในเป้าหมาย
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                    <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell align="center" colSpan={6}>
@@ -158,15 +161,39 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                 ราคาปัจจุบัน&nbsp;(บาท)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่า&nbsp;(บาท)
+                                อัปเดตราคาล่าสุด
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                อัปเดตล่าสุด
+                                มูลค่า&nbsp;(บาท)
                             </StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={6}>
+                                    <ComponentLoading isLoading={isLoading} size={"300px"} />
+                                </TableCell>
+                            </TableRow>
+                        ) : assetSummaryGoalData && assetSummaryGoalData.length > 0 ? (
+                            <>
+                                {assetSummaryGoalData.map((data, index) => (
+                                    <TableRow key={data.nav_date+"-"+index}>
+                                        <TableCell>{data.fundName}</TableCell>
+                                        <TableCell>{data.spec_code}</TableCell>
+                                        <TableCell>{data.unit}</TableCell>
+                                        <TableCell>{data.lastestNav}</TableCell>
+                                        <TableCell>{new Date(data.nav_date).toLocaleDateString("en-GB")}</TableCell>
+                                        <TableCell>{(roundNumber(data.value,6))}</TableCell>
+                                    </TableRow>)
+                                )}
+                            </>
+                        ) 
+                        : (
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">ไม่พบข้อมูล</TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

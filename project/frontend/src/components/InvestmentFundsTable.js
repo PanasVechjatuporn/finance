@@ -283,6 +283,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                             size={"medium"}
                             stickyHeader
                         >
+                                        <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}
@@ -329,8 +330,8 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                                                     />
                                                 </TableCell>
                                                 <TableCell align="right">{row.last_val}</TableCell>
-                                                <TableCell align="right">{row.last_update}</TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="center">{new Date(row.last_update).toLocaleDateString("en-GB")}</TableCell>
+                                                <TableCell align="center">
                                                     <IconButton
                                                         children={<AddShoppingCartIcon />}
                                                         onClick={(e) => {

@@ -30,6 +30,27 @@ import { useNavigate } from 'react-router-dom';
 import { Footer } from 'components/Footer';
 
 ////// มึงไปแก้ให้มันกดเข้ามาได้อยู่ แต่ handle case ที่มันไม่มี data แล้วมึงรบกวนช่วยบอก user ด้วยว่ามันไม่มี data ให้มึงกลับไปกรอกมาก่อน
+export function calTax(netIncome) {
+    let tax;
+    if (netIncome <= 150000) {
+        tax = 0;
+    } else if (netIncome > 150000 && netIncome <= 300000) {
+        tax = (netIncome - 150000) * 0.05;
+    } else if (netIncome > 300000 && netIncome <= 500000) {
+        tax = (netIncome - 300000) * 0.1 + 7500;
+    } else if (netIncome > 500000 && netIncome <= 750000) {
+        tax = (netIncome - 500000) * 0.15 + 27500;
+    } else if (netIncome > 750000 && netIncome <= 1000000) {
+        tax = (netIncome - 750000) * 0.2 + 65000;
+    } else if (netIncome > 1000000 && netIncome <= 2000000) {
+        tax = (netIncome - 1000000) * 0.25 + 115000;
+    } else if (netIncome > 2000000 && netIncome <= 5000000) {
+        tax = (netIncome - 2000000) * 0.3 + 365000;
+    } else if (netIncome > 5000000) {
+        tax = (netIncome - 5000000) * 0.35 + 1265000;
+    }
+    return tax;
+}
 
 export function TaxCal() {
 
@@ -83,27 +104,6 @@ export function TaxCal() {
 
     const [tax, setTax] = React.useState(0);
 
-    function calTax(netIncome) {
-        let tax;
-        if (netIncome <= 150000) {
-            tax = 0;
-        } else if (netIncome > 150000 && netIncome <= 300000) {
-            tax = (netIncome - 150000) * 0.05;
-        } else if (netIncome > 300000 && netIncome <= 500000) {
-            tax = (netIncome - 300000) * 0.1 + 7500;
-        } else if (netIncome > 500000 && netIncome <= 750000) {
-            tax = (netIncome - 500000) * 0.15 + 27500;
-        } else if (netIncome > 750000 && netIncome <= 1000000) {
-            tax = (netIncome - 750000) * 0.2 + 65000;
-        } else if (netIncome > 1000000 && netIncome <= 2000000) {
-            tax = (netIncome - 1000000) * 0.25 + 115000;
-        } else if (netIncome > 2000000 && netIncome <= 5000000) {
-            tax = (netIncome - 2000000) * 0.3 + 365000;
-        } else if (netIncome > 5000000) {
-            tax = (netIncome - 5000000) * 0.35 + 1265000;
-        }
-        return tax;
-    }
 
     const [benefitObj, setBenefitObj] = React.useState(0);
     const [incomeObj, setIncomeObj] = React.useState(0);
@@ -151,7 +151,7 @@ export function TaxCal() {
         const sumAll = Number(personal || 0) + Number(insurance || 0) + Number(charity || 0);
         setTotalReduce(sumAll);
         if (Number(insurance2.replace(/,/g, '') || 0) + Number(insurance3.replace(/,/g, '') || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
-        if (Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
+        if (Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0) + Number(fund || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
         setTax(calTax(incomeSum - benefitSum - personal - insurance - charity - fund));
         setIsloading(false)
     }, [fund, incomeObj, personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
@@ -219,6 +219,8 @@ export function TaxCal() {
             ExpenseBenefit[0] = {};
             ExpenseBenefit[0][0] = Math.min(100000, (ExpenseBenefit[1][0] + ExpenseBenefit[2][0]) * 0.5);
             sumOfBenefit += ExpenseBenefit[0][0];
+            delete ExpenseBenefit[1]
+            delete ExpenseBenefit[2]
         }
         else if (sumByType[1] || sumByType[2]) {
             if (sumByType[1]) {
@@ -289,13 +291,13 @@ export function TaxCal() {
     //console.log(benefitObj);
     //console.log(incomeObj);
 
-    function handleClick() {
-        if (warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund <= 150000) {
-            alert("เงินได้สุทธิของคุณอยู่ในเกณฑ์ที่ไม่ต้องเสียภาษี")
-        } else {
-            navigate('../Goal-Based')
-        }
-    }
+    // function handleClick() {
+    //     if (warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund <= 150000) {
+    //         alert("เงินได้สุทธิของคุณอยู่ในเกณฑ์ที่ไม่ต้องเสียภาษี")
+    //     } else {
+    //         navigate('../Goal-Based')
+    //     }
+    // }
 
     if (isEnoughData === true) return (
         <React.Fragment>
@@ -651,7 +653,7 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'red' }}>
-                                                                                *** รวมกันไม่เกิน 100000 ***
+                                                                                *** กลุ่มค่าลดหย่อนรวมกันไม่เกิน 100,000 บาท ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -757,7 +759,7 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
-                                                                                *** รวมกันไม่เกิน 500000 ***
+                                                                                *** กลุ่มค่าลดหย่อน + เงินลงทุนใน RMF และ SSF รวมกันไม่เกิน 500,000 บาท ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -869,7 +871,7 @@ export function TaxCal() {
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
                                         ลดภาษีจากการลงทุนในกองทุนรวม
                                     </TableCell>
-                                    <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{fund.toLocaleString("en-GB")}</TableCell>
+                                    <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
                                 <UserFundTable setFund={setFund} open={open6} />
 
@@ -899,24 +901,30 @@ export function TaxCal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            ภาษีที่ต้องจ่ายในปีนี้
+                            ภาษีที่คุณต้องจ่าย
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
                             {(tax).toLocaleString("en-GB")} บาท
                         </Typography>
                     </Container>
 
-
-                    <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                        <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                            <Button onClick={handleClick} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
-                        </Tooltip>
-                    </Container>
+                    {fund !== '' ? null : (warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - Number(fund || 0) <= 150000) ?
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
+                            <Tooltip title="Goal-Based Feature !" arrow placement='right'>
+                                <Button disabled={true} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                            </Tooltip>
+                        </Container>
+                        :
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
+                            <Tooltip title="Goal-Based Feature !" arrow placement='right'>
+                                <Button onClick={e => navigate('../Goal-Based')} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                            </Tooltip>
+                        </Container>}
 
                 </div>) : null
             }
-            
-            <Footer/>
+
+            <Footer />
         </React.Fragment >
     )
     else if (isEnoughData === false) return (
@@ -930,7 +938,7 @@ export function TaxCal() {
                     </Container>
                 </Box>
             </div>
-            <Footer/>
+            <Footer />
         </React.Fragment>
     )
 }

@@ -3,6 +3,7 @@ import Navigate from "components/Navbar";
 
 import { RiskLevel } from "components/RiskLevel_RiskEvalNormal";
 import { EvaluationForm } from "components/RiskEvalForm_RiskEvalNormal";
+import Container from "@mui/material/Container";
 import "./NormalGoal.css";
 import { Footer } from "components/Footer";
 
@@ -13,6 +14,7 @@ export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
   return (
     <React.Fragment>
       <Navigate />
+      <Container sx={{height : "65vh"}}>
       {!showRiskLevel ? (
         <EvaluationForm
           setshowRiskLevel={setshowRiskLevel}
@@ -24,6 +26,7 @@ export const RiskEvalNormalPage = ({ setAllowedToAccessNormalGoal }) => {
           setshowRiskLevel={setshowRiskLevel}
         />
       )}
+      </Container>
       <Footer/>
     </React.Fragment>
   );

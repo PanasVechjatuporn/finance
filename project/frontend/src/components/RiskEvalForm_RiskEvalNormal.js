@@ -60,7 +60,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
 
   return (
     <React.Fragment>
-      <Container fixed>
+      <Container >
         <div>
           <div className="MultipleChoiceForm">
             <FormControl>

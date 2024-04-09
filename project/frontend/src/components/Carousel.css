@@ -1,3 +1,30 @@
-.Slide {
-    
-  }
+.carousel{
+  background: #ffffff;
+  min-height: 50%;
+  min-width: 100vh;
+  padding: 20px;
+}
+
+.carousel-caption{
+  color: #000000
+}
+
+a.carousel-control-prev{
+  background: #ffffffad;
+  opacity: 1;
+}
+
+a.carousel-control-next{
+  background: #ffffffad;
+  opacity: 1;
+}
+
+.carousel-inner{
+  color: #fe0000
+}
+
+
+.image-item img{
+  width: 100%;
+  width: 100%;
+}

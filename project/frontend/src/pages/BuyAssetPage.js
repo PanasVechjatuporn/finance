@@ -186,7 +186,7 @@ export const BuyAssetPage = () => {
                                 buyMonth: navDate.getMonth(),
                                 year: navDate.getFullYear(),
                                 buyPrice: fetchedNav.last_val,
-                                proj_id : fundData.proj_id
+                                proj_id: fundData.proj_id
                             },
                         ],
                         goalObjId: goalData._id
@@ -254,191 +254,258 @@ export const BuyAssetPage = () => {
                         justifyContent: "center",
                     }}
                 >
-                        <div>
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    color: "#757575",
-                                    textDecoration: "underline",
-                                    textDecorationColor: "transparent",
-                                    display: "inline-block",
-                                    width: "100%",
-                                    userSelect: "none",
-                                    fontWeight: "bold",
-                                }}
+                    <div>
+                        <Typography
+                            variant="h5"
+                            style={{
+                                color: "#757575",
+                                textDecoration: "underline",
+                                textDecorationColor: "transparent",
+                                display: "inline-block",
+                                width: "100%",
+                                userSelect: "none",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            {fundData && fundData.proj_name_th}
+                        </Typography>
+                    </div>
+                    {!isLoading && (
+                        <Box sx={{ flexGrow: 1, justifyContent: "center" }}>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
                             >
-                                {fundData && fundData.proj_name_th}
-                            </Typography>
-                        </div>
-                        {!isLoading && (
-                            <Box sx={{ flexGrow: 1 }}>
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    direction="row"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
 
-                                    <Grid item xs={6} md={6}>
-                                        <Box
-                                            display="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
+                                <Grid item xs={6} md={6} sx={{ position: "relative" }}>
+                                    <Box
+                                        width={"100%"}
+                                    >
+                                        <Typography
+                                            variant="h8"
+                                            style={{
+                                                color: "#757575",
+                                                textDecoration: "underline",
+                                                textDecorationColor: "transparent",
+                                                userSelect: "none",
+                                                position: "absolute",
+                                                left: "34%",
+                                                top: "10%"
+                                            }}
                                         >
-                                            {yearToDateGraphData && (
-                                                <LineChart
-                                                    sx={{
-                                                        "& .MuiChartsAxis-tickContainer": {
-                                                            "&:not(:has(>.MuiChartsAxis-tickLabel))": {
-                                                                "& .MuiChartsAxis-tick": {
-                                                                    strokeWidth: 0,
-                                                                },
+                                            กราฟแสดงราคาตั้งแต่จัดตั้ง
+                                        </Typography>
+                                    </Box>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        {yearToDateGraphData && (
+                                            <LineChart
+                                                sx={{
+                                                    "& .MuiChartsAxis-tickContainer": {
+                                                        "&:not(:has(>.MuiChartsAxis-tickLabel))": {
+                                                            "& .MuiChartsAxis-tick": {
+                                                                strokeWidth: 0,
                                                             },
                                                         },
-                                                    }}
-                                                    width={800}
-                                                    height={600}
-                                                    series={[
-                                                        {
-                                                            data: yearToDateGraphData[0],
-                                                            label: "ราคาต่อหน่วย",
-                                                            showMark: false,
-                                                        },
-                                                    ]}
-                                                    xAxis={[
-                                                        {
-                                                            scaleType: "point",
-                                                            data: yearToDateGraphData[1],
-                                                        },
-                                                    ]}
-                                                />
-                                            )}
-                                        </Box>
-                                    </Grid>
-
-                                    <Grid item xs={6} md={6}>
-                                        <Box
-                                            display="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            {graphWithPredictionData && (
-                                                <LineChart
-                                                    sx={{
-                                                        "& .MuiLineElement-series-Predict": {
-                                                            strokeDasharray: "5 2",
-                                                            strokeWidth: 2,
-                                                            color: "red",
-                                                        },
-                                                    }}
-                                                    width={800}
-                                                    height={600}
-                                                    series={[
-                                                        {
-                                                            data: graphWithPredictionData[0],
-                                                            label: "ราคาต่อหน่วย (จริง)",
-                                                            showMark: false,
-                                                        },
-                                                        {
-                                                            id: "Predict",
-                                                            data: graphWithPredictionData[2],
-                                                            label: "ราคาต่อหน่วย (ทำนาย)",
-                                                            showMark: false,
-                                                            color: "orange",
-                                                        },
-                                                    ]}
-                                                    xAxis={[
-                                                        {
-                                                            scaleType: "point",
-                                                            data: graphWithPredictionData[1].concat(
-                                                                graphWithPredictionData[3]
-                                                            ),
-                                                        },
-                                                    ]}
-                                                />
-                                            )}
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    direction="row"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    <Grid item xs={4} md={4}>
-                                        <Box
-                                            display="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <TextField
-                                                required
-                                                id={"asset-buy"}
-                                                label="เงินลงทุน"
-                                                size="small"
-                                                margin="normal"
-                                                helperText={
-                                                    !inputBuyError
-                                                        ? "เงินที่ต้องการลงทุนในกองทุนนี้"
-                                                        : inputErrorText
-                                                }
-                                                type="number"
-                                                error={inputBuyError}
-                                                onChange={(e) => {
-                                                    setUserInputBuyAmount(e.target.value);
-                                                    setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
+                                                    },
+                                                    ".MuiChartsAxis-directionY .MuiChartsAxis-label": {
+                                                        transform: "translateX(-10px) !important"
+                                                    }
                                                 }}
+                                                width={800}
+                                                height={600}
+                                                series={[
+                                                    {
+                                                        data: yearToDateGraphData[0],
+                                                        label: "ราคาต่อหน่วย",
+                                                        showMark: false,
+                                                    },
+                                                ]}
+                                                xAxis={[
+                                                    {
+                                                        scaleType: "point",
+                                                        data: yearToDateGraphData[1],
+                                                        label: 'วันที่ (ปี/เดือน/วัน)'
+                                                    },
+                                                ]}
+                                                yAxis={[
+                                                    {
+                                                        label: 'ราคาต่อหน่วย (บาท)'
+                                                    }
+                                                ]}
                                             />
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={4} md={4}>
-                                        <Box
-                                            display="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <TextField
-                                                id={"asset-buy"}
-                                                label="หน่วยลงทุนที่ได้รับ"
-                                                disabled={true}
-                                                size="small"
-                                                margin="normal"
-                                                helperText={"หน่วยลงทุนที่ซื้อได้จากจำนวนเงินที่ได้กรอก"}
-                                                value={calculatedUnitBuy}
-                                            />
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={4} md={4}>
-                                        {fetchedNav && <Box
-                                            display="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <TextField
-                                                id={"asset-price"}
-                                                label="ราคาปัจจุบัน"
-                                                disabled={true}
-                                                size="small"
-                                                margin="normal"
-                                                helperText={
-                                                    fetchedNav &&
-                                                    "อัปเดตล่าสุดเมื่อ " +
-                                                    new Date(
-                                                        fetchedNav.last_upd_date
-                                                    ).toLocaleDateString("en-GB")
-                                                }
-                                                value={fetchedNav && fetchedNav.last_val}
-                                            />
-                                        </Box>}
-
-                                    </Grid>
+                                        )}
+                                    </Box>
                                 </Grid>
+
+                                <Grid item xs={6} md={6} sx={{ position: "relative" }}>
+                                    <Box
+                                        width={"100%"}
+                                    >
+                                        <Typography
+                                            variant="h8"
+                                            style={{
+                                                color: "#757575",
+                                                textDecoration: "underline",
+                                                textDecorationColor: "transparent",
+                                                userSelect: "none",
+                                                position: "absolute",
+                                                left: "20%",
+                                                top: "10%"
+                                            }}
+                                        >
+                                            กราฟแสดงราคาย้อนหลัง 1 ปี, ทำนายไปข้างหน้า 1 ปี
+                                        </Typography>
+                                    </Box>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        {graphWithPredictionData && (
+                                            <LineChart
+                                                sx={{
+                                                    "& .MuiLineElement-series-Predict": {
+                                                        strokeDasharray: "5 2",
+                                                        strokeWidth: 2,
+                                                        color: "red",
+                                                    },
+                                                    ".MuiChartsAxis-directionY .MuiChartsAxis-label": {
+                                                        transform: "translateX(-10px) !important"
+                                                    }
+                                                }}
+                                                width={800}
+                                                height={600}
+                                                series={[
+                                                    {
+                                                        data: graphWithPredictionData[0],
+                                                        label: "ราคาต่อหน่วย (จริง)",
+                                                        showMark: false,
+                                                    },
+                                                    {
+                                                        id: "Predict",
+                                                        data: graphWithPredictionData[2],
+                                                        label: "ราคาต่อหน่วย (ทำนาย)",
+                                                        showMark: false,
+                                                        color: "orange",
+                                                    },
+                                                ]}
+                                                xAxis={[
+                                                    {
+                                                        scaleType: "point",
+                                                        data: graphWithPredictionData[1].concat(
+                                                            graphWithPredictionData[3]
+                                                        ),
+                                                        label: 'วันที่ (ปี/เดือน/วัน)'
+                                                    },
+                                                ]}
+                                                yAxis={[
+                                                    {
+                                                        label: 'ราคาต่อหน่วย (บาท)'
+                                                    }
+                                                ]}
+                                            />
+                                        )}
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <Box display="flex" justifyContent="center">
+                                <Typography
+                                    variant="h8"
+                                    style={{
+                                        color: "#757575",
+                                        textDecoration: "underline",
+                                        textDecorationColor: "#757575",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    ผู้ลงทุนควรตรวจสอบราคาที่ได้รับจริงกับ บลจ. อีกครั้ง เนื่องจากราคาของกองทุนจะอัพเดทหลังจากสิ้นสุดวันทำการ
+                                    </Typography>
                             </Box>
-                        )}
-                        <ComponentLoading isLoading={isLoading} size={"75vh"}/>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Grid item xs={4} md={4}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            required
+                                            id={"asset-buy"}
+                                            label="เงินลงทุน"
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                !inputBuyError
+                                                    ? "เงินที่ต้องการลงทุนในกองทุนนี้"
+                                                    : inputErrorText
+                                            }
+                                            type="number"
+                                            error={inputBuyError}
+                                            onChange={(e) => {
+                                                setUserInputBuyAmount(e.target.value);
+                                                setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
+                                            }}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={4} md={4}>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            id={"asset-buy"}
+                                            label="หน่วยลงทุนที่ได้รับ"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={"*หน่วยลงทุนที่ซื้อได้จากเงินที่กรอกโดยอ้างอิงจากราคาปิดล่าสุด"}
+                                            value={calculatedUnitBuy}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={4} md={4}>
+                                    {fetchedNav && <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            id={"asset-price"}
+                                            label="ราคาปัจจุบัน"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                fetchedNav &&
+                                                "อัปเดตล่าสุดเมื่อ " +
+                                                new Date(
+                                                    fetchedNav.last_upd_date
+                                                ).toLocaleDateString("en-GB")
+                                            }
+                                            value={fetchedNav && fetchedNav.last_val}
+                                        />
+                                    </Box>}
+
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    )}
+                    <ComponentLoading isLoading={isLoading} size={"75vh"} />
                     <Container>
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid
@@ -508,8 +575,6 @@ export const BuyAssetPage = () => {
                                     </Box>
                                 </Grid>
                             </Grid>
-
-
                         </Box>
                     </Container>
                     <OverlayLoading isLoading={isOverlayLoading}></OverlayLoading>
