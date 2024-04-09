@@ -22,9 +22,18 @@ import { OverlayLoading } from "./OverlayLoading";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import { formatNumberWithCommas } from "utils/numberUtil";
+import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 
 const baseURL = "http://localhost:8000";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  "&.freeSpace": {
+    backgroundColor: "white",
+    color: "white",
+    borderStyle: "hidden !important",
+  },
+}));
 
 function fetchUserData(userStore) {
   return new Promise((resolve, reject) => {
@@ -255,26 +264,70 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <></>
                 )}
                 {currentYearData.data.length !== 12 ? (
-                  <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-                    <TableCell
-                      colSpan={7}
-                      align="center"
-                      onClick={(e) => {
-                        handleNewMonthClick();
-                      }}
-                      style={{ cursor: "pointer" }}
-                      key={"add-new-month-data"}
-                    >
-                      <IconButton
-                        children={<AddCircleOutlineIcon></AddCircleOutlineIcon>}
-                      ></IconButton>
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+                      <TableCell
+                        colSpan={7}
+                        align="center"
+                        onClick={(e) => {
+                          handleNewMonthClick();
+                        }}
+                        style={{ cursor: "pointer" }}
+                        key={"add-new-month-data"}
+                      >
+                        <IconButton
+                          children={
+                            <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                          }
+                        ></IconButton>
+                      </TableCell>
+                    </TableRow>
+                    <>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                      <TableRow>
+                        <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
+                      </TableRow>
+                    </>
+                  </>
                 ) : (
                   <></>
                 )}
               </TableBody>
-
               <TableFooter>
                 <TableRow>
                   <TableCell
@@ -308,9 +361,11 @@ export default function MonthDataTable({ userData, setUserData }) {
                       fontWeight: "bold",
                       fontSize: 18,
                     }}
+                    colSpan={2}
                   >
                     {formatNumberWithCommas(sumExpense)}
                   </TableCell>
+
                 </TableRow>
               </TableFooter>
             </Table>

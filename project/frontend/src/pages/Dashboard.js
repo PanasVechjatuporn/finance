@@ -109,6 +109,7 @@ export const Dashboard = () => {
             <Navigate />
             <Container>
                     <UserNetSummary userData={userData} />
+                    <br/>
                     <MonthDataTable userData={userData} setUserData={setUserData} />
                     <PieChartComponent userData={userData} />
             </Container>
