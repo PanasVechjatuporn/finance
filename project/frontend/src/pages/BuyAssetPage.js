@@ -27,6 +27,7 @@ async function getFundsLastestNav(proj_id, userStore) {
                 userToken: userStore.userToken,
             },
         });
+        console.log('res.data :: ',res.data)
         return res.data[0];
     } catch (err) {
         console.log("err :: ", err);
@@ -279,7 +280,6 @@ export const BuyAssetPage = () => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-
                                 <Grid item xs={6} md={6} sx={{ position: "relative" }}>
                                     <Box
                                         width={"100%"}
@@ -415,6 +415,85 @@ export const BuyAssetPage = () => {
                                     </Box>
                                 </Grid>
                             </Grid>
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Grid item xs={4} md={4}>
+                                    {fetchedNav && <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            id={"asset-price"}
+                                            label="มูลค่าล่าสุด"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                fetchedNav &&
+                                                "อัปเดตล่าสุดเมื่อ " +
+                                                new Date(
+                                                    fetchedNav.last_upd_date
+                                                ).toLocaleDateString("en-GB")
+                                            }
+                                            value={fetchedNav && fetchedNav.last_val}
+                                        />
+                                    </Box>}
+                                </Grid>
+                                <Grid item xs={4} md={4}>
+                                    {fetchedNav && <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            id={"asset-price"}
+                                            label="ราคาขาย"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                fetchedNav &&
+                                                "อัปเดตล่าสุดเมื่อ " +
+                                                new Date(
+                                                    fetchedNav.last_upd_date
+                                                ).toLocaleDateString("en-GB")
+                                            }
+                                            value={fetchedNav && fetchedNav.sell_price}
+                                        />
+                                    </Box>}
+                                </Grid>
+                                <Grid item xs={4} md={4}>
+                                    {fetchedNav && <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <TextField
+                                            id={"asset-price"}
+                                            label="ราคาซื้อคืน"
+                                            disabled={true}
+                                            size="small"
+                                            margin="normal"
+                                            helperText={
+                                                fetchedNav &&
+                                                "อัปเดตล่าสุดเมื่อ " +
+                                                new Date(
+                                                    fetchedNav.last_upd_date
+                                                ).toLocaleDateString("en-GB")
+                                            }
+                                            variant="outlined"
+                                            value={fetchedNav && fetchedNav.buy_price}
+                                        />
+                                    </Box>}
+                                </Grid>
+                                
+                            </Grid>
                             <Box display="flex" justifyContent="center">
                                 <Typography
                                     variant="h8"
@@ -435,7 +514,7 @@ export const BuyAssetPage = () => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Grid item xs={4} md={4}>
+                                <Grid item xs={4} md={6}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
@@ -461,7 +540,7 @@ export const BuyAssetPage = () => {
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={4} md={4}>
+                                <Grid item xs={4} md={6}>
                                     <Box
                                         display="flex"
                                         justifyContent="center"
@@ -473,12 +552,12 @@ export const BuyAssetPage = () => {
                                             disabled={true}
                                             size="small"
                                             margin="normal"
-                                            helperText={"*หน่วยลงทุนที่ซื้อได้จากเงินที่กรอกโดยอ้างอิงจากราคาปิดล่าสุด"}
+                                            helperText={"*หน่วยลงทุนที่ซื้อได้จากเงินที่กรอกโดยอ้างอิงจากราคาขายล่าสุด"}
                                             value={calculatedUnitBuy}
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={4} md={4}>
+                                {/* <Grid item xs={4} md={4}>
                                     {fetchedNav && <Box
                                         display="flex"
                                         justifyContent="center"
@@ -500,8 +579,8 @@ export const BuyAssetPage = () => {
                                             value={fetchedNav && fetchedNav.last_val}
                                         />
                                     </Box>}
-
-                                </Grid>
+                                </Grid> */}
+                                
                             </Grid>
                         </Box>
                     )}
