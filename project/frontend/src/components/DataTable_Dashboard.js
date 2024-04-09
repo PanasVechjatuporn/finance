@@ -76,8 +76,9 @@ export default function MonthDataTable({ userData, setUserData }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [allYear, setAllYear] = useState(null);
   const [currentYearData, setCurrentYearData] = useState(null);
-  const [sumIncome, setSumIncome] = useState(null);
-  const [sumExpense, setSumExpense] = useState(null);
+  const [sumIncome, setSumIncome] = useState(0);
+  const [sumExpense, setSumExpense] = useState(0);
+  const [remain, setRemain] = useState(0);
   const [openNewMonthModal, setOpenNewMonthModal] = useState(false);
 
   const handleNewMonthClick = () => {
@@ -153,6 +154,9 @@ export default function MonthDataTable({ userData, setUserData }) {
       });
       dataYear.data = tmpMonthArray;
       setCurrentYearData(dataYear);
+      setSumExpense(0);
+      setSumIncome(0);
+      setRemain(0);
     }
   }, [selectedYear, userData]);
 
@@ -171,6 +175,7 @@ export default function MonthDataTable({ userData, setUserData }) {
         });
         setSumIncome(tmpSumIncome);
         setSumExpense(tmpSumExpense);
+        setRemain(tmpSumIncome-tmpSumExpense);
       }
     }
   }, [currentYearData]);
@@ -282,7 +287,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                         ></IconButton>
                       </TableCell>
                     </TableRow>
-                    <>
+                    {/* <>
                       <TableRow>
                         <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
                       </TableRow>
@@ -322,7 +327,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                       <TableRow>
                         <StyledTableCell className="freeSpace" colSpan={7}></StyledTableCell>
                       </TableRow>
-                    </>
+                    </> */}
                   </>
                 ) : (
                   <></>
@@ -338,6 +343,8 @@ export default function MonthDataTable({ userData, setUserData }) {
                       backgroundColor: "#009e00",
                       fontWeight: "bold",
                       fontSize: 18,
+                      top: 0,
+                      bottom:0
                     }}
                   >
                     รวม&nbsp;(บาท)
@@ -346,9 +353,11 @@ export default function MonthDataTable({ userData, setUserData }) {
                     align="center"
                     sx={{
                       color: "black",
-                      backgroundColor: "#cdf5c3",
+                      backgroundColor: "#fbf898",
                       fontWeight: "bold",
                       fontSize: 18,
+                      top: 0,
+                      bottom:0
                     }}
                   >
                     {formatNumberWithCommas(sumIncome)}
@@ -357,15 +366,58 @@ export default function MonthDataTable({ userData, setUserData }) {
                     align="center"
                     sx={{
                       color: "black",
-                      backgroundColor: "#ffcfd5",
+                      backgroundColor: "#fbf898",
                       fontWeight: "bold",
                       fontSize: 18,
+                      top: 0,
+                      bottom:0
                     }}
-                    colSpan={2}
                   >
                     {formatNumberWithCommas(sumExpense)}
                   </TableCell>
-
+                  <TableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#fbf898",
+                    }}
+                  >
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    align="center"
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#009e00",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                      top: 0,
+                      bottom:0
+                    }}
+                  >
+                    รายรับ - รายจ่าย (บาท)
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "black",
+                      backgroundColor: "#fbf898",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                      top: 0,
+                      bottom:0
+                    }}
+                  >
+                    {formatNumberWithCommas(remain)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#fbf898",
+                    }}
+                  >
+                  </TableCell>
                 </TableRow>
               </TableFooter>
             </Table>

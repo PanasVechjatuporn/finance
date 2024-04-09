@@ -55,7 +55,7 @@ export const UserNetSummary = ({ userData }) => {
                         padding: 1,
                     }}
                 >
-                    ยอดสรุปเงินของคุณ
+                    ยอดสรุปเงินของคุณทั้งหมด
                 </Typography>
                 <Grid
                     container
