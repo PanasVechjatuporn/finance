@@ -1,67 +1,30 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import FacebookIcon from '@mui/icons-material/Facebook';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import GitHubIcon from "@mui/icons-material/GitHub";
 import "./Footer.css";
 
 export const Footer = () => {
   return (
     <Navbar
       sticky="bottom"
+      fixed="bottom"
       style={{
-        background: "#2E3B55",
-        minHeight: "100px",
+        background: "#2e3b55",
+        minHeight: "30vh",
         position: "static",
         width: "100%",
+        marginTop: "20px",
       }}
     >
       <Container>
         <div className="container">
-          <div style={{display : "flex"}}>
-            <div className="footer-col">
-              <h4>company</h4>
-              <ul>
-                <li>
-                  <a href="#">about us</a>
-                </li>
-                <li>
-                  <a href="#">our services</a>
-                </li>
-                <li>
-                  <a href="#">privacy policy</a>
-                </li>
-                <li>
-                  <a href="#">affiliate program</a>
-                </li>
-              </ul>
+          <div style={{ display: "flex"}}>
+            <div className="footer-col-logo">
+              <img src="https://mahidol.ac.th/documents/CI/update/Mahidol/1.png"></img>
             </div>
             <div className="footer-col">
-              <h4>get help</h4>
+              <h4>Limitation of the program</h4>
               <ul>
-                <li>
-                  <a href="#">FAQ</a>
-                </li>
-                <li>
-                  <a href="#">shipping</a>
-                </li>
-                <li>
-                  <a href="#">returns</a>
-                </li>
-                <li>
-                  <a href="#">order status</a>
-                </li>
-                <li>
-                  <a href="#">payment options</a>
-                </li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>online shop</h4>
-              <ul>
-                <li>
-                  <a href="#">watch</a>
-                </li>
                 <li>
                   <a href="#">bag</a>
                 </li>
@@ -76,17 +39,14 @@ export const Footer = () => {
             <div className="footer-col">
               <h4>follow us</h4>
               <div className="social-links">
-                <a href="">
-                  <FacebookIcon/>
-                </a>
-                <a href="">
-                  <InstagramIcon/>
-                </a>
-                <a href="">
-                  <GitHubIcon/>
+                <a href="https://github.com/Chokchai213/web-modules" target="_blank">
+                  <GitHubIcon />
                 </a>
               </div>
             </div>
+          </div>
+          <div className="end-of-footer">
+            <h5>Asset of Mahidol University, 2024</h5>
           </div>
         </div>
       </Container>
