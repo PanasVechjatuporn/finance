@@ -283,6 +283,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData }) => {
                             size={"medium"}
                             stickyHeader
                         >
+                                        <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}

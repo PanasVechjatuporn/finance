@@ -35,9 +35,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:last-child td, &:last-child th": {
-        borderStyle: "hidden !important",
-    },
+    // "&:last-child td, &:last-child th": {
+    //     borderStyle: "hidden !important",
+    // },
 }));
 
 async function fetchGoalAsset(userStore, goalData) {
@@ -93,6 +93,7 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                    <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell rowSpan={2}>
@@ -173,6 +174,9 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                                             : "-"}
                                                     </StyledTableCell>
                                                     <StyledTableCell>
+                                                        {subAsset.spec_code ? subAsset.spec_code : "-"}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell>
                                                         {formatNumberWithCommas(subAsset.amount)}
                                                     </StyledTableCell>
                                                     <StyledTableCell>
@@ -182,9 +186,6 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                                         {subAsset.buyPrice && subAsset.buyPrice !== 0
                                                             ? roundNumber(subAsset.unit, 2)
                                                             : "-"}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        {subAsset.spec_code ? subAsset.spec_code : "-"}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             ))}
