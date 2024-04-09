@@ -2,14 +2,26 @@ import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { ComponentLoading } from "./OverlayLoading";
 import { roundNumber } from "utils/numberUtil";
+import { useSelector } from "react-redux";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
 const baseURL = "http://localhost:8000";
 
-async function setCurrentGoalStatus(goalStatus,goalData){
-    // await axios.post()
-    
+async function setCurrentGoalStatus(goalStatus,goalData, userStore){
+    await axios.post(
+        `${baseURL}/db/update_goal_status_flag`,
+        {
+            goalData,
+            goalStatus
+        },
+        {
+            headers: {
+                Authorization: userStore.userToken,
+                UserId: userStore.userId,
+            },
+        }
+    );
 }
 
 
@@ -18,6 +30,7 @@ export const GoalPercentageAchieved = ({
     assetSummaryGoalData,
     isLoading,
 }) => {
+    const userStore = useSelector((state) => state.userStore);
     const [percentAchieved, setPercentAchieved] = useState(null);
     const [goalStatus, setGoalStatus] = useState(null);
     const [goalValueAchieved, setGoalValueAchieved] = useState(null);
@@ -28,12 +41,12 @@ export const GoalPercentageAchieved = ({
                 valueInsideGoal += asset.value;
             });
             const percentAchieved = Math.trunc(((valueInsideGoal / goalData.Goal) * 100 + Number.EPSILON )*100)/100;
-            valueInsideGoal > goalData.Goal ? setCurrentGoalStatus(valueInsideGoal > goalData.Goal, goalData) : setCurrentGoalStatus(valueInsideGoal > goalData.Goal, goalData)
+            valueInsideGoal > goalData.Goal ? setCurrentGoalStatus(valueInsideGoal > goalData.Goal, goalData, userStore) : setCurrentGoalStatus(valueInsideGoal > goalData.Goal, goalData, userStore)
             setGoalStatus(valueInsideGoal > goalData.Goal);
             setGoalValueAchieved(roundNumber(valueInsideGoal,6));
             setPercentAchieved(percentAchieved);
         }
-    }, [goalData, assetSummaryGoalData, isLoading]);
+    }, [goalData, assetSummaryGoalData, isLoading, userStore]);
     return (
         <Container
             sx={{

@@ -172,7 +172,6 @@ exports.upsertUserMonthlyData = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            console.log("upsertData :: ", upsertData);
             query = { userId: userId, date: upsertData.currentDate };
             await collection.updateOne(
                 query,
@@ -781,6 +780,34 @@ exports.getGoalAssetLastestNav = async (req, res) => {
         }
     } catch (err) {
         console.log("Error occured in mongoController.getUserAssetByGoalId: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.updateGoalStatusFlag = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    let goalData = req.body.goalData;
+    const goalStatus = req.body.goalStatus;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const query = {_id : new ObjectId(goalData._id),userId : userId}
+            goalData.goalStatus = goalStatus;
+            delete goalData._id
+            await collection.updateOne(
+                query,
+                {
+                    $set: goalData,
+                },
+                { upsert: true }
+            );
+            res.status(200).send();
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.updateGoalStatusFlag: ", err);
         res.status(401).json({ message: err });
     }
 }

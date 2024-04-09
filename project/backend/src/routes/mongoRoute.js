@@ -64,4 +64,7 @@ router.post("/insert_asset", mongoController.insertUserBoughtAsset);
 router.get("/get_user_asset_by_goal_id",mongoController.getUserAssetByGoalId);
 
 router.post("/get_goal_asset_lastest_price", mongoController.getGoalAssetLastestNav);
+
+router.post("/update_goal_status_flag", mongoController.updateGoalStatusFlag);
+
 module.exports = router;
