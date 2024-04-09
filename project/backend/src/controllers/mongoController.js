@@ -463,9 +463,7 @@ exports.deleteGoal = async (req, res) => {
                 await updateUserSoldAsset(userId, allSoldFundProfitSum)
             }
 
-            await collectionAsset.updateMany(queryAsset, {
-                $unset: { goalObjId: "" },
-            });
+            await collectionAsset.deleteMany(queryAsset);
 
             const queryGoal = {
                 userId: userId,
