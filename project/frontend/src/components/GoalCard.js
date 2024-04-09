@@ -231,7 +231,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ
+                            ลบ/ขาย
                         </Typography>
                     </Button>
                     <ModalDelete
@@ -312,7 +312,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ
+                            ลบ/ขาย
                         </Typography>
                     </Button>
                     <ModalDelete
