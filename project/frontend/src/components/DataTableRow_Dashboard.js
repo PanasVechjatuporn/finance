@@ -346,13 +346,14 @@ export const DataTableRow = ({
                                                     }
                                                     align="center"
                                                 >
-                                                    {item.type}
+                                                    {/* taxableIncome.filter(obj => obj.category === incomeData[index].type).some(filtered => filtered.hasOwnProperty('subcategory')) */}
+                                                    {taxableIncome.filter(obj => obj.category === item.type)[0].label}
                                                 </TableCell>
                                                 <TableCell
                                                     key={item.amount + Math.random(10, 10)}
                                                     align="center"
                                                 >
-                                                    -
+                                                    {item.hasOwnProperty("subType") ? item.subType : "-"}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
