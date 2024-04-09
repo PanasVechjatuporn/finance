@@ -224,15 +224,15 @@ export const ReductionGoalBuyInformation = ({ goalData }) => {
                         {seperate === true ?
                             <>
                                 <Typography fontSize={20}>
-                                    สามารถซื้อกองทุน RMF เพื่อลดภาษีได้อีก : {Math.max(0, Math.min(500000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} บาท {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                    คุณสามารถซื้อกองทุน RMF ได้อีก : {Math.max(0, Math.min(500000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset)).toLocaleString("en-GB")} บาท {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                                 </Typography>
                                 <Typography fontSize={20}>
-                                    และซื้อกองทุน SSF เพื่อลดภาษีได้อีก : {Math.max(0, Math.min(200000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} บาท
+                                    หรือซื้อกองทุน SSF ได้อีก : {Math.max(0, Math.min(200000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset)).toLocaleString("en-GB")} บาท
                                 </Typography>
                             </>
                             :
                             <Typography fontSize={20}>
-                                คุณสามารถซื้อกองทุน RMF หรือ SSF สำหรับการลดภาษีได้อีก : {Math.max(0, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset).toLocaleString("en-GB")} บาท {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                คุณสามารถซื้อกองทุน RMF หรือ SSF ได้อีก : {Math.max(0, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset).toLocaleString("en-GB")} บาท {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                             </Typography>}
                     </Box>
                 </Container>}
