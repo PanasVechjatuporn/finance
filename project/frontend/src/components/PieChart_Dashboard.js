@@ -389,12 +389,12 @@ export default function PieChartComponent({ userData }) {
                             marginTop : "2%"
                         }}
                     >
-                        <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
+                        <InputLabel id="demo-simple-select-label">เลือกปี</InputLabel>
                         <Select
                             labelId="select-label"
                             id="select-year"
                             value={currentYear ? currentYear : ""}
-                            label="Select Year"
+                            label="เลือกปี"
                             onChange={(e) => {
                                 setCurrentYear(e.target.value);
                             }}

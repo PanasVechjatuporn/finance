@@ -336,7 +336,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 id="year-selection-input-label"
                 sx={{ color: "white" }}
               >
-                Year
+                ปี
               </InputLabel>
               <Select
                 labelId="year-selection"
@@ -367,7 +367,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 </MenuItem>
               </Select>
               <FormHelperText sx={{ color: "white" }}>
-                Select year to create or edit data
+                เลือกปีที่ต้องการเพิ่มหรือแก้ไขข้อมูล
               </FormHelperText>
             </FormControl>
           </Box>
