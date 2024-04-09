@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,9 +11,6 @@ import Container from "@mui/material/Container";
 import { roundNumber } from "utils/numberUtil";
 import Typography from "@mui/material/Typography";
 import { ComponentLoading } from "./OverlayLoading";
-import { useSelector } from "react-redux";
-import axios from "axios";
-const baseURL = "http://localhost:8000";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -39,86 +36,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-async function fetchGoalAsset(goalData, userStore) {
-    try {
-        const res = await axios.get(`${baseURL}/db/get_user_asset_by_goal_id`, {
-            headers: {
-                userId: userStore.userId,
-                Authorization: userStore.userToken,
-                goalObjId: goalData._id,
-            },
-        });
-        return res.data;
-    } catch (err) {
-        console.log("err :: ", err);
-    }
-}
 
-async function fetchLastestPrice(assetsData, userStore) {
-    try {
-        const res = await axios.post(
-            `${baseURL}/db/get_goal_asset_lastest_price`,
-            {
-                assetsData: assetsData,
-            },
-            {
-                headers: {
-                    userId: userStore.userId,
-                    Authorization: userStore.userToken,
-                },
-            }
-        );
-        return res.data;
-    } catch (err) {
-        console.log("err :: ", err);
-    }
-}
 
-export const GoalAssetPriceSummary = ({ goalData }) => {
-    const userStore = useSelector((state) => state.userStore);
-    const [assetSummaryGoalData, setAssetSummaryGoalData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        async function fetchAndDigestData() {
-            setIsLoading(true);
-            const fetchedGoalAsset = await fetchGoalAsset(goalData, userStore);
-            const allFundsMap = new Map();
-            fetchedGoalAsset.forEach((asset) => {
-                const { unit, fundName, spec_code, proj_id } = asset.Funds[0];
-                if (allFundsMap.has(fundName)) {
-                    allFundsMap.set(fundName, {
-                        unit: allFundsMap.get(fundName).unit + unit,
-                        fundName: fundName,
-                        spec_code: spec_code,
-                        proj_id: proj_id,
-                    });
-                } else {
-                    allFundsMap.set(fundName, {
-                        unit: unit,
-                        fundName: fundName,
-                        spec_code: spec_code,
-                        proj_id: proj_id,
-                    });
-                }
-            });
-            const allFunds = [];
-            allFundsMap.forEach((object, fundName) => {
-                allFunds.push({
-                    fundName: fundName,
-                    unit: object.unit,
-                    spec_code: object.spec_code,
-                    proj_id: object.proj_id,
-                });
-            });
-            const digestedFundsData = await fetchLastestPrice(allFunds, userStore);
-            setAssetSummaryGoalData(digestedFundsData);
-            setIsLoading(false);
-        }
-        if (goalData && userStore.userToken) {
-            fetchAndDigestData();
-        }
-    }, [goalData, userStore]);
-
+export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
+    console.log('assetSummaryGoalData :: ',assetSummaryGoalData)
     return (
         <Container>
             <Typography
@@ -143,7 +64,7 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                     <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                     <TableHead>
                         <StyledTableRow>
-                            <StyledTableCell align="center" colSpan={6}>
+                            <StyledTableCell align="center" colSpan={9}>
                                 กองทุนรวม
                             </StyledTableCell>
                         </StyledTableRow>
@@ -158,20 +79,29 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                 จำนวนหน่วยลงทุน&nbsp;(หน่วย)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ราคาปัจจุบัน&nbsp;(บาท)
+                                มูลค่าหน่วยลงทุนล่าสุด<br/>&nbsp;(บาท/หน่วย)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ราคาขายล่าสุด&nbsp;(บาท/หน่วย)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ราคาซื้อคืนล่าสุด&nbsp;(บาท/หน่วย)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
                                 อัปเดตราคาล่าสุด
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่า&nbsp;(บาท)
+                                มูลค่าสุทธิ&nbsp;(บาท)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                หมายเหตุ
                             </StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
                         {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={6}>
+                                <TableCell colSpan={9}>
                                     <ComponentLoading isLoading={isLoading} size={"300px"} />
                                 </TableCell>
                             </TableRow>
@@ -182,16 +112,19 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
                                         <TableCell>{data.fundName}</TableCell>
                                         <TableCell>{data.spec_code}</TableCell>
                                         <TableCell>{data.unit}</TableCell>
-                                        <TableCell>{data.lastestNav}</TableCell>
-                                        <TableCell>{new Date(data.nav_date).toLocaleDateString("en-GB")}</TableCell>
+                                        <TableCell>{data.last_val}</TableCell>
+                                        <TableCell>{data.sell_price}</TableCell>
+                                        <TableCell>{data.buy_price}</TableCell>
+                                        <TableCell>{new Date(data.last_upd_date).toLocaleDateString("en-GB")}</TableCell>
                                         <TableCell>{(roundNumber(data.value,6))}</TableCell>
+                                        <TableCell>{data.sell_price === 0 ? "มูลค่าสุทธิที่ได้เกิดจากนำหน่วยลงทุนที่มีคูณมูลค่าล่าสุด" : "-"}</TableCell>
                                     </TableRow>)
                                 )}
                             </>
                         ) 
                         : (
                             <TableRow>
-                                <TableCell colSpan={6} align="center">ไม่พบข้อมูล</TableCell>
+                                <TableCell colSpan={9} align="center">ไม่พบข้อมูล</TableCell>
                             </TableRow>
                         )}
                     </TableBody>

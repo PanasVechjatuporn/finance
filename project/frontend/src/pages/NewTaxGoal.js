@@ -111,6 +111,46 @@ export function NewTaxGoal() {
     }, [fund, personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
     );
 
+    const [arr, setArr] = React.useState([]);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            if (arr.length === 0) {
+                let sumFund = 0;
+                await axios
+                    .get(`http://localhost:8000/db/userassets=${uid}`)
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data.length > 0) {
+                            const filteredAssets = response.data
+                                .map((obj) => {
+                                    return obj.Funds.filter((fund) => {
+                                        if (fund.spec_code) {
+                                            return (
+                                                fund.spec_code.includes("SSF") ||
+                                                fund.spec_code.includes("RMF")
+                                            );
+                                        }
+                                    });
+                                })
+                                .flat(1);
+
+                            setArr(filteredAssets);
+
+                            // Calculating sum using filtered assets
+                            filteredAssets.forEach(asset => {
+                                sumFund += Number(asset.amount);
+                            });
+                            setFund(sumFund);
+                            console.log(sumFund)
+                        }
+                    });
+            }
+        }
+        fetchData();
+    }, [uid]);
+
+
     // Helper function to create a deep copy of an object
     function deepCopy(obj) {
         return JSON.parse(JSON.stringify(obj));
@@ -133,24 +173,24 @@ export function NewTaxGoal() {
             // Iterate over each income object within the item
             item.incomeData.map(incomeItem => {
                 if (Object.keys(incomeItem).length > 0) {
-                    const { type, sub_type, amount } = incomeItem;
+                    const { type, subType, amount } = incomeItem;
 
                     // Increment sumOfIncome
                     sumOfIncome += parseInt(amount);
-                    if (sub_type) {
+                    if (subType) {
 
                         // Initialize nested object for type if not present
                         if (!sumByType[type]) {
                             sumByType[type] = {};
                         }
 
-                        // Initialize nested object for sub_type if not present
-                        if (!sumByType[type][sub_type]) {
-                            sumByType[type][sub_type] = 0;
+                        // Initialize nested object for subType if not present
+                        if (!sumByType[type][subType]) {
+                            sumByType[type][subType] = 0;
                         }
 
-                        // Convert amount to number and add it to the sum corresponding to its type and sub_type
-                        sumByType[type][sub_type] += parseInt(amount);
+                        // Convert amount to number and add it to the sum corresponding to its type and subType
+                        sumByType[type][subType] += parseInt(amount);
                     }
                     else {
                         // Initialize nested object for type if not present
@@ -158,12 +198,12 @@ export function NewTaxGoal() {
                             sumByType[type] = {};
                         }
 
-                        // Initialize nested object for sub_type if not present
+                        // Initialize nested object for subType if not present
                         if (!sumByType[type][0]) {
                             sumByType[type][0] = 0;
                         }
 
-                        // Convert amount to number and add it to the sum corresponding to its type and sub_type
+                        // Convert amount to number and add it to the sum corresponding to its type and subType
                         sumByType[type][0] += parseInt(amount);
                     }
                 }
@@ -194,10 +234,18 @@ export function NewTaxGoal() {
         }
 
         if (sumByType[3]) {
-            if (sumByType[3][0]) {
-                ExpenseBenefit[3][0] *= 0.5;
-                ExpenseBenefit[3][0] = Math.min(100000, ExpenseBenefit[3][0]);
-                sumOfBenefit += ExpenseBenefit[3][0];
+            if (sumByType[3][1]) {
+                ExpenseBenefit[3][1] *= 0.5;
+                ExpenseBenefit[3][1] = Math.min(100000, ExpenseBenefit[3][1]);
+                sumOfBenefit += ExpenseBenefit[3][1];
+            }
+            if (sumByType[3][2]) {
+                delete ExpenseBenefit[3][2]
+            }
+        }
+        if (sumByType[4]) {
+            if (sumByType[4][0]) {
+                delete ExpenseBenefit[4][0]
             }
         }
         if (sumByType[5]) {
@@ -246,6 +294,7 @@ export function NewTaxGoal() {
         setIncomeObj(sumByType);
         setIncomeSum(sumOfIncome);
         setBenefitSum(sumOfBenefit);
+        console.log(sumByType, ExpenseBenefit)
 
         setIsloading(false);
     }
@@ -839,7 +888,7 @@ export function NewTaxGoal() {
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
-                                <UserFundTable setFund={setFund} open={open6} />
+                                <UserFundTable open={open6} arr={arr} />
 
                             </TableBody>
                         </Table>

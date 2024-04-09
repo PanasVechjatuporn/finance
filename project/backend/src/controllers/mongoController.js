@@ -172,7 +172,6 @@ exports.upsertUserMonthlyData = async (req, res) => {
     try {
         const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
         if (isVerify) {
-            console.log("upsertData :: ", upsertData);
             query = { userId: userId, date: upsertData.currentDate };
             await collection.updateOne(
                 query,
@@ -464,9 +463,7 @@ exports.deleteGoal = async (req, res) => {
                 await updateUserSoldAsset(userId, allSoldFundProfitSum)
             }
 
-            await collectionAsset.updateMany(queryAsset, {
-                $unset: { goalObjId: "" },
-            });
+            await collectionAsset.deleteMany(queryAsset);
 
             const queryGoal = {
                 userId: userId,
@@ -575,6 +572,7 @@ exports.upsertGoal = async (req, res) => {
                 );
             } else {
                 goalData.type = "normal";
+                goalData.goalStatus = false;
                 let query = { userId: userId, Name: goalData.Name };
                 await collection.updateOne(
                     query,
@@ -768,18 +766,46 @@ exports.getGoalAssetLastestNav = async (req, res) => {
             const assetsDataWithNav = await Promise.all(assetsData.map(async (asset) => {
                 const lastestNav = await secApiUtils.getLastestNav(asset.proj_id);
                 const sellPrice = lastestNav[0].buy_price;
-                const sellProfit = sellPrice * asset.unit + Number.EPSILON;
+                const lastVal = lastestNav[0].last_val;
+                const sellProfit = sellPrice !== 0 ? sellPrice*asset.unit + Number.EPSILON : lastVal*asset.unit + Number.EPSILON;
                 return {
                     ...asset,
                     value: sellProfit,
-                    lastestNav: sellPrice,
-                    nav_date: lastestNav[0].last_upd_date
+                    ...lastestNav[0]
                 };
             }));
             res.status(200).json(assetsDataWithNav);
         }
     } catch (err) {
         console.log("Error occured in mongoController.getUserAssetByGoalId: ", err);
+        res.status(401).json({ message: err });
+    }
+}
+
+exports.updateGoalStatusFlag = async (req, res) => {
+    const db = client.db(dbName);
+    const collection = db.collection("goal");
+    const userToken = req.header("Authorization");
+    const userId = req.header("UserId");
+    let goalData = req.body.goalData;
+    const goalStatus = req.body.goalStatus;
+    try {
+        const isVerify = await firebaseAuth.verifyIdToken(userToken, userId);
+        if (isVerify) {
+            const query = {_id : new ObjectId(goalData._id),userId : userId}
+            goalData.goalStatus = goalStatus;
+            delete goalData._id
+            await collection.updateOne(
+                query,
+                {
+                    $set: goalData,
+                },
+                { upsert: true }
+            );
+            res.status(200).send();
+        }
+    } catch (err) {
+        console.log("Error occured in mongoController.updateGoalStatusFlag: ", err);
         res.status(401).json({ message: err });
     }
 }

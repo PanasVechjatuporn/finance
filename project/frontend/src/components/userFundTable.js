@@ -7,41 +7,10 @@ import TableRow from "@mui/material/TableRow";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-export default function UserFundTable({ setFund, open }) {
+export default function UserFundTable({ setFund, open, arr }) {
   const uid = useSelector((state) => state.userStore.userId);
-  const [arr, setArr] = React.useState([]);
+  //const [arr, setArr] = React.useState([]);
 
-  React.useEffect(() => {
-    //console.log("arr :: ", arr);
-    async function fetchData() {
-      let sumFund = 0;
-      if (arr.length === 0) {
-        await axios
-          .get(`http://localhost:8000/db/userassets=${uid}`)
-          .then((response) => {
-            if (response.data.length > 0) {
-              setArr(
-                response.data
-                  .map((obj) => {
-                    return obj.Funds.filter((fund) => {
-                      if (fund.spec_code) {
-                        return (
-                          fund.spec_code.includes("SSF") ||
-                          fund.spec_code.includes("RMF")
-                        );
-                      }
-                    });
-                  })
-                  .flat(1)
-              );
-            }
-          });
-      }
-      await Promise.all(arr.map((asset) => (sumFund += Number(asset.amount))));
-      if (sumFund !== 0) setFund(sumFund);
-    }
-    fetchData();
-  }, [arr]);
 
   if (arr.length > 0) {
     return Object.entries(arr).map(([objKey, eachAsset], index) => (
