@@ -39,85 +39,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-async function fetchGoalAsset(goalData, userStore) {
-    try {
-        const res = await axios.get(`${baseURL}/db/get_user_asset_by_goal_id`, {
-            headers: {
-                userId: userStore.userId,
-                Authorization: userStore.userToken,
-                goalObjId: goalData._id,
-            },
-        });
-        return res.data;
-    } catch (err) {
-        console.log("err :: ", err);
-    }
-}
 
-async function fetchLastestPrice(assetsData, userStore) {
-    try {
-        const res = await axios.post(
-            `${baseURL}/db/get_goal_asset_lastest_price`,
-            {
-                assetsData: assetsData,
-            },
-            {
-                headers: {
-                    userId: userStore.userId,
-                    Authorization: userStore.userToken,
-                },
-            }
-        );
-        return res.data;
-    } catch (err) {
-        console.log("err :: ", err);
-    }
-}
 
-export const GoalAssetPriceSummary = ({ goalData }) => {
-    const userStore = useSelector((state) => state.userStore);
-    const [assetSummaryGoalData, setAssetSummaryGoalData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        async function fetchAndDigestData() {
-            setIsLoading(true);
-            const fetchedGoalAsset = await fetchGoalAsset(goalData, userStore);
-            const allFundsMap = new Map();
-            fetchedGoalAsset.forEach((asset) => {
-                const { unit, fundName, spec_code, proj_id } = asset.Funds[0];
-                if (allFundsMap.has(fundName)) {
-                    allFundsMap.set(fundName, {
-                        unit: allFundsMap.get(fundName).unit + unit,
-                        fundName: fundName,
-                        spec_code: spec_code,
-                        proj_id: proj_id,
-                    });
-                } else {
-                    allFundsMap.set(fundName, {
-                        unit: unit,
-                        fundName: fundName,
-                        spec_code: spec_code,
-                        proj_id: proj_id,
-                    });
-                }
-            });
-            const allFunds = [];
-            allFundsMap.forEach((object, fundName) => {
-                allFunds.push({
-                    fundName: fundName,
-                    unit: object.unit,
-                    spec_code: object.spec_code,
-                    proj_id: object.proj_id,
-                });
-            });
-            const digestedFundsData = await fetchLastestPrice(allFunds, userStore);
-            setAssetSummaryGoalData(digestedFundsData);
-            setIsLoading(false);
-        }
-        if (goalData && userStore.userToken) {
-            fetchAndDigestData();
-        }
-    }, [goalData, userStore]);
+export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
 
     return (
         <Container>
