@@ -10,21 +10,27 @@
 }
 
 a.carousel-control-prev{
-  background: #ffffffad;
-  opacity: 1;
+  /* background: #ffffffad; */
+  /* opacity: 1; */
 }
 
 a.carousel-control-next{
-  background: #ffffffad;
-  opacity: 1;
+  /* background: #ffffffad; */
+  /* opacity: 1; */
 }
 
 .carousel-inner{
-  color: #fe0000
+  width: 100%;
+  min-height: 85vh;
+  max-height: 85vh;
 }
 
 
 .image-item img{
-  width: 100%;
-  width: 100%;
+  width: 80%;
+}
+
+.image{
+  max-width: 100%;
+  max-height: 50%;
 }

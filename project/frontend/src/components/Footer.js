@@ -10,7 +10,7 @@ export const Footer = () => {
       fixed="bottom"
       style={{
         background: "#2e3b55",
-        minHeight: "30vh",
+        minHeight: "33vh",
         position: "static",
         width: "100%",
         marginTop: "20px",

@@ -3,32 +3,54 @@ import "components/Carousel.css";
 
 function CarouselInterval() {
   return (
-    <Carousel slide={false}>
-      <Carousel.Item className="slide-item">
-        <div className="image-item">
-          <h1>How to use</h1>
-          <img src="/test_image.png"></img>
-        </div>
-        {/* <ExampleCarouselImage text="First slide" /> */}
-        <Carousel.Caption></Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item className="slide-item">
-        <div className="image-item">
-          <h1>Services</h1>
-          <img src="/test_image.png"></img>
-        </div>
-        {/* <ExampleCarouselImage text="Second slide" /> */}
-        <Carousel.Caption></Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item className="slide-item">
-        <div className="image-item">
-          <h1>About us</h1>
-          <img src="/test_image.png"></img>
-        </div>
-        {/* <ExampleCarouselImage text="Third slide" /> */}
-        <Carousel.Caption></Carousel.Caption>
-      </Carousel.Item>
-    </Carousel>
+    <div className="container">
+      <Carousel data-bs-theme="dark">
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/1.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="First slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/2.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="Second slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/3.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/4.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/5.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+          <div className="image-item">
+            <img src="/landing/6.process.png" className="image"></img>
+          </div>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+            <img src="/landing/7.process.png" className="image"></img>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+        <Carousel.Item className="slide-item">
+            <img src="/landing/8.process.png" className="image"></img>
+          {/* <ExampleCarouselImage text="Third slide" /> */}
+        </Carousel.Item>
+      </Carousel>
+    </div>
   );
 }
 
