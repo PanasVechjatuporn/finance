@@ -138,7 +138,44 @@ export function TaxCal() {
         //console.log(tax)
     }, [uid, data]);
 
-    //console.log(tax);
+    const [arr, setArr] = React.useState([]);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            if (arr.length === 0) {
+                let sumFund = 0;
+                await axios
+                    .get(`http://localhost:8000/db/userassets=${uid}`)
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data.length > 0) {
+                            const filteredAssets = response.data
+                                .map((obj) => {
+                                    return obj.Funds.filter((fund) => {
+                                        if (fund.spec_code) {
+                                            return (
+                                                fund.spec_code.includes("SSF") ||
+                                                fund.spec_code.includes("RMF")
+                                            );
+                                        }
+                                    });
+                                })
+                                .flat(1);
+
+                            setArr(filteredAssets);
+
+                            // Calculating sum using filtered assets
+                            filteredAssets.forEach(asset => {
+                                sumFund += Number(asset.amount);
+                            });
+                            setFund(sumFund);
+                            console.log(sumFund)
+                        }
+                    });
+            }
+        }
+        fetchData();
+    }, [uid]);
 
     React.useEffect(() => {
         setIsloading(true)
@@ -882,7 +919,7 @@ export function TaxCal() {
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
-                                <UserFundTable setFund={setFund} open={open6} />
+                                <UserFundTable open={open6} arr={arr} />
 
                             </TableBody>
                         </Table>
