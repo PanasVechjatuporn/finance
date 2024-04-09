@@ -575,6 +575,7 @@ exports.upsertGoal = async (req, res) => {
                 );
             } else {
                 goalData.type = "normal";
+                goalData.goalStatus = false;
                 let query = { userId: userId, Name: goalData.Name };
                 await collection.updateOne(
                     query,
