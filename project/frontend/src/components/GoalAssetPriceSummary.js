@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-import { formatNumberWithCommas, roundNumber } from "utils/numberUtil";
+import { roundNumber } from "utils/numberUtil";
 import Typography from "@mui/material/Typography";
 import { ComponentLoading } from "./OverlayLoading";
 import { useSelector } from "react-redux";
@@ -113,7 +113,6 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
             const digestedFundsData = await fetchLastestPrice(allFunds, userStore);
             setAssetSummaryGoalData(digestedFundsData);
             setIsLoading(false);
-            console.log("digestedFundsData :: ", digestedFundsData);
         }
         if (goalData && userStore.userToken) {
             fetchAndDigestData();
@@ -141,6 +140,7 @@ export const GoalAssetPriceSummary = ({ goalData }) => {
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
+                    <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell align="center" colSpan={6}>
