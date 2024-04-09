@@ -186,7 +186,7 @@ export const BuyAssetPage = () => {
                                 buyDay: navDate.getDate(),
                                 buyMonth: navDate.getMonth(),
                                 year: navDate.getFullYear(),
-                                buyPrice: fetchedNav.last_val,
+                                buyPrice: fetchedNav.sell_price,
                                 proj_id: fundData.proj_id
                             },
                         ],
@@ -535,7 +535,7 @@ export const BuyAssetPage = () => {
                                             error={inputBuyError}
                                             onChange={(e) => {
                                                 setUserInputBuyAmount(e.target.value);
-                                                setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.last_val + Number.EPSILON, 6));
+                                                setCalculatedUnitBuy(roundNumber(e.target.value / fetchedNav.sell_price + Number.EPSILON, 6));
                                             }}
                                         />
                                     </Box>
