@@ -28,7 +28,7 @@ import { Footer } from 'components/Footer';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
 import SaveIcon from '@mui/icons-material/Save';
-
+import { calTax } from './TaxCalculation';
 
 
 export function NewTaxGoal() {
@@ -106,8 +106,8 @@ export function NewTaxGoal() {
         setCharity(sumCharity);
         const sumAll = Number(personal || 0) + Number(insurance || 0) + Number(charity || 0);
         setTotalReduce(sumAll);
-        if (Number(insurance2 || 0) + Number(insurance3 || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
-        if (Number(insurance5 || 0) + Number(insurance6 || 0) + Number(insurance7 || 0) + Number(insurance9 || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
+        if (Number(insurance2.replace(/,/g, '') || 0) + Number(insurance3.replace(/,/g, '') || 0) > 100000) { setWarning1(true) } else { setWarning1(false) };
+        if (Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0) + Number(fund || 0) > 500000) { setWarning2(true) } else { setWarning2(false) };
     }, [fund, personal, insurance, charity, personal1, personal2, personal3, personal4, personal5, personal6, insurance1, insurance2, insurance3, insurance4, insurance5, insurance6, insurance7, insurance8, insurance9, charities]
     );
 
@@ -179,6 +179,8 @@ export function NewTaxGoal() {
             ExpenseBenefit[0] = {};
             ExpenseBenefit[0][0] = Math.min(100000, (ExpenseBenefit[1][0] + ExpenseBenefit[2][0]) * 0.5);
             sumOfBenefit += ExpenseBenefit[0][0];
+            delete ExpenseBenefit[1]
+            delete ExpenseBenefit[2]
         }
         else if (sumByType[1] || sumByType[2]) {
             if (sumByType[1]) {
@@ -249,9 +251,17 @@ export function NewTaxGoal() {
     }
 
     //console.log(benefitObj);
-    //console.log(incomeObj);
+    // console.log('income : ', incomeObj);
+    // console.log('expense : ', benefitObj);
     function saveTaxGoal() {
-        axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', userId: uid })
+        axios.post('http://localhost:8000/db/save_tax_goal', {
+            Name: 'ลดหย่อนภาษี',
+            userId: uid,
+            //netIncome: incomeSum - benefitSum - personal - insurance - charity - fund,
+            //beforeReduction: incomeSum,
+            totalReduce: totalReduce,
+            incomeFourSubtractor: Number(insurance5.replace(/,/g, '') || 0) + Number(insurance6.replace(/,/g, '') || 0) + Number(insurance7.replace(/,/g, '') || 0) + Number(insurance9.replace(/,/g, '') || 0)
+        })
             .then(navigate("/Goal-Based"));
     }
 
@@ -609,7 +619,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'red' }}>
-                                                                                *** รวมกันไม่เกิน 100000 ***
+                                                                                *** กลุ่มค่าลดหย่อนรวมกันไม่เกิน 100,000 บาท ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -715,7 +725,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
-                                                                                *** รวมกันไม่เกิน 500000 ***
+                                                                                *** กลุ่มค่าลดหย่อน + เงินลงทุนใน RMF และ SSF รวมกันไม่เกิน 500,000 บาท ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -827,7 +837,7 @@ export function NewTaxGoal() {
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
                                         ลดภาษีจากการลงทุนในกองทุนรวม
                                     </TableCell>
-                                    <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{fund.toLocaleString("en-GB")}</TableCell>
+                                    <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
                                 <UserFundTable setFund={setFund} open={open6} />
 
@@ -844,13 +854,27 @@ export function NewTaxGoal() {
                         </Typography>
                     </Container>
 
-                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - fund <= 150000) ?
-                        <Container style={{ display: 'flex', width: '50%', marginTop: 5, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
-                            <Tooltip title="เงินได้ของคุณอยู่ในเกณฑ์ที่ไม่ต้องเสียภาษี" arrow placement='right'>
-                                <IconButton >
-                                    <StartIcon color='error' />
-                                </IconButton>
-                            </Tooltip>
+                    <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            ภาษีที่คุณต้องจ่าย
+                        </Typography>
+                        <Typography variant="subtitile1" style={{ fontSize: 17 }}>
+                            {(calTax(incomeSum - benefitSum - personal - insurance - charity - fund)).toLocaleString("en-GB")} บาท
+                        </Typography>
+                    </Container>
+
+                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - Number(fund || 0) <= 150000) ?
+                        <Container style={{ display: 'flex', width: '50%', marginTop: 10, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
+                            <Button
+                                disabled={true}
+                                variant="contained"
+                                endIcon={<SaveIcon />}
+                                onClick={(e) => {
+                                    saveTaxGoal()
+                                }}
+                            >
+                                บันทึกเป้าหมาย
+                            </Button>
                         </Container>
                         :
                         <Container style={{ display: 'flex', width: '50%', marginTop: 10, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
@@ -875,7 +899,7 @@ export function NewTaxGoal() {
                         </Container>
                     }
                 </div>)}
-            <Footer/>
+            <Footer />
         </React.Fragment >
     )
     else if (isEnough === false) return (
@@ -889,7 +913,7 @@ export function NewTaxGoal() {
                     </Container>
                 </Box>
             </div>
-            <Footer/>
+            <Footer />
         </React.Fragment>
     )
 }
