@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,9 +11,6 @@ import Container from "@mui/material/Container";
 import { roundNumber } from "utils/numberUtil";
 import Typography from "@mui/material/Typography";
 import { ComponentLoading } from "./OverlayLoading";
-import { useSelector } from "react-redux";
-import axios from "axios";
-const baseURL = "http://localhost:8000";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,7 +39,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
-
+    console.log('assetSummaryGoalData :: ',assetSummaryGoalData)
     return (
         <Container>
             <Typography
@@ -67,7 +64,7 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                     <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
                     <TableHead>
                         <StyledTableRow>
-                            <StyledTableCell align="center" colSpan={6}>
+                            <StyledTableCell align="center" colSpan={9}>
                                 กองทุนรวม
                             </StyledTableCell>
                         </StyledTableRow>
@@ -82,20 +79,29 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                                 จำนวนหน่วยลงทุน&nbsp;(หน่วย)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ราคาปัจจุบัน&nbsp;(บาท)
+                                มูลค่าหน่วยลงทุนล่าสุด<br/>&nbsp;(บาท/หน่วย)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ราคาขายล่าสุด&nbsp;(บาท/หน่วย)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                ราคาซื้อคืนล่าสุด&nbsp;(บาท/หน่วย)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
                                 อัปเดตราคาล่าสุด
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่า&nbsp;(บาท)
+                                มูลค่าสุทธิ&nbsp;(บาท)
+                            </StyledTableCell>
+                            <StyledTableCell className="subHeader">
+                                หมายเหตุ
                             </StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
                         {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={6}>
+                                <TableCell colSpan={9}>
                                     <ComponentLoading isLoading={isLoading} size={"300px"} />
                                 </TableCell>
                             </TableRow>
@@ -106,16 +112,19 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                                         <TableCell>{data.fundName}</TableCell>
                                         <TableCell>{data.spec_code}</TableCell>
                                         <TableCell>{data.unit}</TableCell>
-                                        <TableCell>{data.lastestNav}</TableCell>
-                                        <TableCell>{new Date(data.nav_date).toLocaleDateString("en-GB")}</TableCell>
+                                        <TableCell>{data.last_val}</TableCell>
+                                        <TableCell>{data.sell_price}</TableCell>
+                                        <TableCell>{data.buy_price}</TableCell>
+                                        <TableCell>{new Date(data.last_upd_date).toLocaleDateString("en-GB")}</TableCell>
                                         <TableCell>{(roundNumber(data.value,6))}</TableCell>
+                                        <TableCell>{data.sell_price === 0 ? "มูลค่าสุทธิที่ได้เกิดจากนำหน่วยลงทุนที่มีคูณมูลค่าล่าสุด" : "-"}</TableCell>
                                     </TableRow>)
                                 )}
                             </>
                         ) 
                         : (
                             <TableRow>
-                                <TableCell colSpan={6} align="center">ไม่พบข้อมูล</TableCell>
+                                <TableCell colSpan={9} align="center">ไม่พบข้อมูล</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
