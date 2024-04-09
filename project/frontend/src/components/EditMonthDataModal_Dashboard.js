@@ -118,49 +118,49 @@ const expenseType = [
         name: "อาหาร",
         category: 1,
         color: "#95c2dc",
-        index: 1
+        index: 1,
     },
     {
         name: "ที่พักอาศัย",
         category: 2,
         color: "#ec843e",
-        index: 2
+        index: 2,
     },
     {
         name: "สิ่งบันเทิง",
         category: 3,
         color: "#e7dc8c",
-        index: 3
+        index: 3,
     },
     {
         name: "ท่องเที่ยว",
         category: 4,
         color: "#84ceb9",
-        index: 4
+        index: 4,
     },
     {
         name: "การศึกษา",
         category: 5,
         color: "#6681a5",
-        index: 5
+        index: 5,
     },
     {
         name: "ค่าเดินทาง",
         category: 6,
         color: "#fb7d7e",
-        index: 6
+        index: 6,
     },
     {
         name: "ค่าใช้จ่ายจิปาถะ",
         category: 7,
         color: "#485ea1",
-        index: 7
+        index: 7,
     },
     {
         name: "อื่นๆ",
         category: 8,
         color: "#b7f1a5",
-        index: 8
+        index: 8,
     },
 ];
 
@@ -179,8 +179,9 @@ async function onSaveMonthData(
 ) {
     try {
         setisLoading(true);
-        await validateMonthData(incomeData,
-            expenseData,
+        await validateMonthData(
+            incomeData,
+            expenseData
             // investmentData
         );
         if (isUseSameData === true) {
@@ -188,13 +189,16 @@ async function onSaveMonthData(
             for (let i = 0; i < 12 - currentYearData.data.length; i++) {
                 upsertData.push({
                     user: {
-                        userId: userStore.userId
+                        userId: userStore.userId,
                     },
-                    currentDate: currentDate.split("-")[0] + "-" + String(parseInt(currentDate.split("-")[1]) + i).padStart(2, '0'),
+                    currentDate:
+                        currentDate.split("-")[0] +
+                        "-" +
+                        String(parseInt(currentDate.split("-")[1]) + i).padStart(2, "0"),
                     incomeData,
                     expenseData,
                     // investmentData,
-                })
+                });
             }
             const resUpsert = await axios.post(
                 `${baseURL}/db/upsert_multiple`,
@@ -202,10 +206,10 @@ async function onSaveMonthData(
                 {
                     headers: {
                         Authorization: userStore.userToken,
-                        UserId: userStore.userId
+                        UserId: userStore.userId,
                     },
                 }
-            )
+            );
             const resFetchNewData = await axios.get(
                 `${baseURL}/db/userdata_dashboard`,
                 {
@@ -239,7 +243,7 @@ async function onSaveMonthData(
                 {
                     headers: {
                         Authorization: userStore.userToken,
-                        UserId: userStore.userId
+                        UserId: userStore.userId,
                     },
                 }
             );
@@ -270,10 +274,7 @@ async function onSaveMonthData(
 
 function validateMonthData(incomeData, expenseData, investmentData) {
     return new Promise((resolve, reject) => {
-        if (
-            incomeData.length === 0 ||
-            expenseData.length === 0
-        ) {
+        if (incomeData.length === 0 || expenseData.length === 0) {
             reject("Please fill in all the required fields");
         } else {
             resolve();
@@ -305,14 +306,30 @@ const EditMonthDataModal = ({
 }) => {
     const userStore = useSelector((state) => state.userStore);
     //set initial state
-    const dataMonthCopy = dataMonth ? JSON.parse(JSON.stringify(dataMonth)) : dataMonth;
-    const [incomeData, setIncomeData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.incomeData : [{}]);
-    const [expenseData, setExpenseData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.expenseData : [{}]);
+    const dataMonthCopy = dataMonth
+        ? JSON.parse(JSON.stringify(dataMonth))
+        : dataMonth;
+    const [incomeData, setIncomeData] = useState(
+        dataMonthCopy && mode === "editexisting" ? dataMonthCopy.incomeData : [{}]
+    );
+    const [expenseData, setExpenseData] = useState(
+        dataMonthCopy && mode === "editexisting" ? dataMonthCopy.expenseData : [{}]
+    );
     // const [investmentData, setInvestmentData] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.investmentData : null);
     const [isLoading, setisLoading] = useState(false);
-    const [currentDate, setCurrentDate] = useState((dataMonthCopy && mode === "editexisting") ? dataMonthCopy.date : null);
-    const [newMonthString, setNewMonthString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).toLocaleString("th-TH", { month: "long" }) : "");
-    const [newYearString, setNewYearString] = useState((dataMonthCopy && mode === "editexisting") ? new Date(dataMonthCopy.date).getFullYear() : "");
+    const [currentDate, setCurrentDate] = useState(
+        dataMonthCopy && mode === "editexisting" ? dataMonthCopy.date : null
+    );
+    const [newMonthString, setNewMonthString] = useState(
+        dataMonthCopy && mode === "editexisting"
+            ? new Date(dataMonthCopy.date).toLocaleString("th-TH", { month: "long" })
+            : ""
+    );
+    const [newYearString, setNewYearString] = useState(
+        dataMonthCopy && mode === "editexisting"
+            ? new Date(dataMonthCopy.date).getFullYear()
+            : ""
+    );
     const [isUseSameData, setIsUseSameData] = useState(false);
 
     //back to initial state
@@ -322,8 +339,7 @@ const EditMonthDataModal = ({
             setExpenseData([{}]);
             // setInvestmentData(null);
             setIsUseSameData(false);
-        }
-        else {
+        } else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);
             setExpenseData(dataMonthCopy.expenseData);
@@ -356,8 +372,7 @@ const EditMonthDataModal = ({
                     month: "long",
                 })
             );
-        }
-        else {
+        } else {
             setCurrentDate(dataMonthCopy.date);
             setIncomeData(dataMonthCopy.incomeData);
             setExpenseData(dataMonthCopy.expenseData);
@@ -390,6 +405,13 @@ const EditMonthDataModal = ({
     const handleIncomeTypeChange = (e, index) => {
         let tmpIncomeData = [...incomeData];
         tmpIncomeData[index].type = e.target.value;
+        setIncomeData(tmpIncomeData);
+    };
+
+    const handleIncomeSubTypeChange = (e, index) => {
+        let tmpIncomeData = [...incomeData];
+        tmpIncomeData[index].subType = e.target.value;
+        console.log('incomedata[index] :: ',tmpIncomeData[index])
         setIncomeData(tmpIncomeData);
     };
 
@@ -503,7 +525,7 @@ const EditMonthDataModal = ({
                                             <Grid item>
                                                 <FormControl
                                                     variant="standard"
-                                                    sx={{ m: 1, minWidth: 200, maxWidth: 200 }}
+                                                    sx={{ m: 1, minWidth: 160, maxWidth: 160 }}
                                                 >
                                                     <InputLabel id="income-type-label">
                                                         ประเภทของรายได้
@@ -529,6 +551,48 @@ const EditMonthDataModal = ({
                                                                 {type.label}
                                                             </MenuItem>
                                                         ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item>
+                                                <FormControl
+                                                    variant="standard"
+                                                    sx={{ m: 1, minWidth: 160, maxWidth: 160 }}
+                                                >
+                                                    <InputLabel id="income-type-sub-label">
+                                                        ประเภทย่อยของรายได้
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId={"income-select-sub-label" + index}
+                                                        id="income-type-sub-field"
+                                                        onChange={(e) => {
+                                                            console.log('e :: ',e.target.value)
+                                                            handleIncomeSubTypeChange(e, index);
+                                                        }}
+                                                        label="ประเภทของรายได้ย่อย"
+                                                        value={
+                                                            incomeData[index].subType
+                                                                ? incomeData[index].subType
+                                                                : ""
+                                                        }
+                                                        disabled={!taxableIncome.filter(obj => obj.category === incomeData[index].type).some(filtered => filtered.hasOwnProperty('subcategory'))}
+                                                    >
+                                                        {
+                                                            taxableIncome.map((type) => {
+                                                                if (incomeData[index].type === type.category && type && type.hasOwnProperty("subcategory")) {
+                                                                    return type.subcategory.map((subType) => (
+                                                                        <MenuItem
+                                                                            value={subType.subcategorycategory}
+                                                                            key={subType.subcategorycategory + index + subType.subcategorylabel}
+                                                                        >
+                                                                            {subType.subcategorylabel}
+                                                                        </MenuItem>
+                                                                    ));
+                                                                } else {
+                                                                    return null; // Return null if the conditions are not met
+                                                                }
+                                                            })
+                                                        }
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
@@ -721,9 +785,8 @@ const EditMonthDataModal = ({
                                 <Checkbox
                                     checked={isUseSameData}
                                     onChange={(e) => {
-                                        setIsUseSameData(e.target.checked)
-                                    }
-                                    }
+                                        setIsUseSameData(e.target.checked);
+                                    }}
                                 />
                             }
                             label="ใช้ข้อมูลเดียวกันทั้งปี"
