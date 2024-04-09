@@ -206,8 +206,8 @@ function EnhancedTableToolbar() {
 }
 
 export const InvestmentFundsTable = ({ fundsData, goalData, isLoading}) => {
-    const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("proj_name_th");
+    const [order, setOrder] = useState("desc");
+    const [orderBy, setOrderBy] = useState("growth_rate");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rows, setRows] = useState(null);
