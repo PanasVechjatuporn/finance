@@ -101,7 +101,7 @@ export const GoalInvestment = () => {
         <React.Fragment>
             <Navigate />
             <CurrentUserRiskProfile />
-            {<ReductionGoalBuyInformation goalData={goalData}></ReductionGoalBuyInformation>}
+            {goalData && goalData.Name === "ลดหย่อนภาษี" && <ReductionGoalBuyInformation goalData={goalData}></ReductionGoalBuyInformation>}
             <InvestmentFundsTable fundsData={fundsData} goalData={goalData} />
             {/* Because AssetSummaryGoalTable in sub Component inside another component it will need another container */}
             <Container sx={{ maxWidth: "100%" }}>

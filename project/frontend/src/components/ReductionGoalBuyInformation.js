@@ -53,6 +53,7 @@ export const ReductionGoalBuyInformation = ({ goalData }) => {
             }
         };
         if (goalData) {
+            setIsloading(true)
             fetchData();
             fetchGoalAsset();
             makeIncomeArr();
@@ -192,7 +193,7 @@ export const ReductionGoalBuyInformation = ({ goalData }) => {
 
     return (
         <React.Fragment>
-            {goalData === null ? <ComponentLoading isLoading={isloading} size={400} />
+            {goalData === null || isloading ? <ComponentLoading isLoading={isloading} size={400} />
                 :
                 <Container
                     sx={{
