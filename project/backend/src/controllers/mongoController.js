@@ -1,4 +1,5 @@
-require("dotenv").config({ path: "../.env" });
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const client = require("../utils/mongoUtils");
 const firebaseAuth = require("../controllers/firebaseAuth");
 const secApiUtils = require("../utils/secApiUtils");
