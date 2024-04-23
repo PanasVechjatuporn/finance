@@ -11,146 +11,146 @@ import PieChartInfoModal from "./PieChartInfoModal_Dashboard";
 import { formatNumberWithCommas } from "utils/numberUtil";
 const taxableIncome = [
     {
-        name: "เงินได้ประเภทที่ 1",
+        name: "Salary type 1",
         category: 1,
-        label: "เงินเดือน",
+        label: "Salary",
         color: "#ac00fd",
     },
     {
-        name: "เงินได้ประเภทที่ 2",
+        name: "Salary type 2",
         category: 2,
-        label: "ค่าจ้างทั่วไป",
+        label: "General Income",
         color: "#e000d7",
     },
     {
-        name: "เงินได้ประเภทที่ 3",
+        name: "Salary type 3",
         category: 3,
-        label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
+        label: "Intellectual property rights and assets",
         color: "#ff56c1",
         subcategory: [
             {
                 subcategorylabel:
-                    "ค่าลิขสิทธิ์/ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา/ค่าGoodwill",
+                    "Copyright fees/intellectual property rights and assets/intangible assets/Goodwill expenses",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 50% แต่ไม่เกิน 100,000 บาท หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 50%, but not exceeding 100,000 baht, or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "เงินปีและเงินรายปีจากนิติกรรมหรือคำพิพากษาของศาล",
+                subcategorylabel: "Annual and periodic payments from legal settlements or court judgments",
                 subcategorycategory: 2,
                 subcategoryinfo: "-",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 4",
+        name: "Salary type 4",
         category: 4,
-        label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
+        label: "Interest/dividends/investment returns",
         color: "#ff266a",
     },
     {
-        name: "เงินได้ประเภทที่ 5",
+        name: "Salary type 5",
         category: 5,
-        label: "เงินได้จากการให้เช่าทรัพย์สิน",
+        label: "Income from property rental",
         color: "#fd7a1a",
         subcategory: [
             {
-                subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
+                subcategorylabel: "House/building/structure/building/pond rental expenses",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 30% or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินเกษตรกรรม",
+                subcategorylabel: "Agricultural land rental expenses",
                 subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 20% หรือหักตามจริง",
+                subcategoryinfo: "educt at a flat rate of 20% or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินไม่ใช้ในเกษตรกรรม",
+                subcategorylabel: "Land rental not used in agriculture",
                 subcategorycategory: 3,
-                subcategoryinfo: "หักแบบเหมา 15% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 15% or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "ค่าเช่ายานพาหนะ",
+                subcategorylabel: "Vehicle rental expenses",
                 subcategorycategory: 4,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 30% or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "ค่าเช่าอื่นๆ",
+                subcategorylabel: "Other rental expenses",
                 subcategorycategory: 5,
-                subcategoryinfo: "หักแบบเหมา 10% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 10% or deduct based on actual expenses.",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 6",
+        name: "Salary type 6",
         category: 6,
-        label: "เงินได้จากวิชาชีพอิสระ",
+        label: "Income from freelance profession",
         color: "#32a6fb",
         subcategory: [
             {
-                subcategorylabel: "การประกอบโรคศิลปะ",
+                subcategorylabel: "The practice of medicine.",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 60% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 60% or deduct based on actual expenses.",
             },
             {
-                subcategorylabel: "กฎหมาย/วิศวกรรม/สถาปัตยกรรม/บัญชี/ประณีตศิลปกรรม",
+                subcategorylabel: "Law/Engineering/Architecture/Accounting/Fine Arts",
                 subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct at a flat rate of 30% or deduct based on actual expenses.",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 7",
+        name: "Salary type 7",
         category: 7,
-        label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
+        label: "Earnings from contracts (construction/manufacturing)",
         color: "#566dff",
     },
 ];
 
 const expenseType = [
     {
-        name: "อาหาร",
+        name: "Food",
         category: 1,
         color: "#95c2dc",
         index: 1
     },
     {
-        name: "ที่พักอาศัย",
+        name: "Residence",
         category: 2,
         color: "#ec843e",
         index: 2
     },
     {
-        name: "สิ่งบันเทิง",
+        name: "Entertainment",
         category: 3,
         color: "#e7dc8c",
         index: 3
     },
     {
-        name: "ท่องเที่ยว",
+        name: "Travel/Tourism",
         category: 4,
         color: "#84ceb9",
         index: 4
     },
     {
-        name: "การศึกษา",
+        name: "Education",
         category: 5,
         color: "#6681a5",
         index: 5
     },
     {
-        name: "ค่าเดินทาง",
+        name: "Travel expenses",
         category: 6,
         color: "#fb7d7e",
         index: 6
     },
     {
-        name: "ค่าใช้จ่ายจิปาถะ",
+        name: "Miscellaneous expenses",
         category: 7,
         color: "#485ea1",
         index: 7
     },
     {
-        name: "อื่นๆ",
+        name: "Etcetera",
         category: 8,
         color: "#818181",
         index: 8
