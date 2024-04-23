@@ -343,7 +343,7 @@ export function NewTaxGoal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        เงินได้พึงประเมิน
+                                        Assessable Income
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{incomeSum.toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -361,7 +361,7 @@ export function NewTaxGoal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        หักค่าใช้จ่าย
+                                        Deduct Expenses
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{benefitSum.toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -379,7 +379,7 @@ export function NewTaxGoal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        ค่าลดหย่อน
+                                        Tax Deduction
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">
                                         {totalReduce.toLocaleString("en-GB")}
@@ -404,7 +404,7 @@ export function NewTaxGoal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีส่วนตัวและครอบครัว
+                                                            Personal & Family Income Tax Deductions
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -420,7 +420,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนส่วนตัว
+                                                                                Personal Income Tax Deductions for Individuals
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -430,7 +430,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนคู่สมรส
+                                                                                Personal Income Tax Deductions for Spouse
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -449,7 +449,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนฝากครรภ์ และคลอดบุตร
+                                                                                Personal Income Tax Deductions for Pregnancy and Maternity
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -469,7 +469,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนภาษีบุตร
+                                                                                Personal Income Tax Allowance per Child
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -489,7 +489,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนสำหรับเลี้ยงดูบิดามารดาของตนเองและของคู่สมรส
+                                                                                PIT Deductions for your own parents and your spouse
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -509,7 +509,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนภาษีกรณีอุปการะผู้พิการ หรือบุคคลทุพพลภาพ
+                                                                                Personal Tax Income Deduction for a Disabled Person
                                                                             </TableCell>
                                                                             <TableCell align="center" style={{ width: "20%" }} >
                                                                                 <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal6}
@@ -542,7 +542,7 @@ export function NewTaxGoal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีกลุ่มประกัน กองทุน และการลงทุน
+                                                            Personal Income Tax Deductions for insurance groups, funds and investments
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -558,7 +558,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เงินประกันสังคม
+                                                                                Social Securities
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -578,7 +578,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เงินลงทุนธุรกิจ Social Enterprise (วิสาหกิจเพื่อสังคม)
+                                                                                Investment for Social Enterprise (วิสาหกิจเพื่อสังคม)
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -598,7 +598,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เบี้ยประกันสุขภาพของบิดามารดา
+                                                                                Health Insurance Premiums for the Elderly
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -618,11 +618,11 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning1 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                    Life insurance premiums and savings insurance with a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                    Life insurance premiums and savings insurance with a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -643,11 +643,11 @@ export function NewTaxGoal() {
 
                                                                             {warning1 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                    Health insurance premiums and accident insurance premiums that cover health
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                    Health insurance premiums and accident insurance premiums that cover health
                                                                                 </TableCell>
                                                                             }
 
@@ -668,7 +668,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'red' }}>
-                                                                                *** กลุ่มค่าลดหย่อนรวมกันไม่เกิน 100,000 บาท ***
+                                                                                *** Personal Income Tax Deductions does not exceed 100,000 baht ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -678,11 +678,11 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                    The Pension Life Insurance premiums with a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                    The Pension Life Insurance premiums with a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -702,11 +702,11 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                    Provident Fund (PVD) / Private School Teacher Welfare Fund
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                    Provident Fund (PVD) / Private School Teacher Welfare Fund
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -726,11 +726,11 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                    Government Pension Fund (GPF)
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                    Government Pension Fund (GPF)
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -750,11 +750,11 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                    National Savings Fund (กอช.)
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                    National Savings Fund (กอช.)
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -774,7 +774,7 @@ export function NewTaxGoal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
-                                                                                *** กลุ่มค่าลดหย่อน + เงินลงทุนใน RMF และ SSF รวมกันไม่เกิน 500,000 บาท ***
+                                                                                *** Personal Tax Income Deductions + Investment in RMF and SSF totaling not exceeding 500,000 baht ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -798,7 +798,7 @@ export function NewTaxGoal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีกลุ่มเงินบริจาค
+                                                            Charitable Contribution Deductions
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -884,7 +884,7 @@ export function NewTaxGoal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        ลดภาษีจากการลงทุนในกองทุนรวม
+                                        Deductions from Investing in Mutual Funds
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -896,7 +896,7 @@ export function NewTaxGoal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            เงินได้สุทธิ
+                            Net Income
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
                             {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
@@ -905,7 +905,7 @@ export function NewTaxGoal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            ภาษีที่คุณต้องจ่าย
+                            Tax Payable
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
                             {(calTax(incomeSum - benefitSum - personal - insurance - charity - fund)).toLocaleString("en-GB")} บาท
@@ -922,7 +922,7 @@ export function NewTaxGoal() {
                                     saveTaxGoal()
                                 }}
                             >
-                                บันทึกเป้าหมาย
+                                Save this goal!
                             </Button>
                         </Container>
                         :
@@ -942,7 +942,7 @@ export function NewTaxGoal() {
                                     saveTaxGoal()
                                 }}
                             >
-                                บันทึกเป้าหมาย
+                                Save this goal!
                             </Button>
                             {/* </Link> */}
                         </Container>
