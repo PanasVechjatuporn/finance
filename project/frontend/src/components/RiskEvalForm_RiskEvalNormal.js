@@ -64,7 +64,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
         <div>
           <div className="MultipleChoiceForm">
             <FormControl>
-              <h2>คำถาม ข้อที่ {currentQuestionIndex + 1}</h2>
+              <h2>Question {currentQuestionIndex + 1}</h2>
               <div>
                 <FormLabel id="question" className="QuestionHeader">
                   <h4>{question}</h4>

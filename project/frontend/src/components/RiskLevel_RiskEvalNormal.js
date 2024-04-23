@@ -61,15 +61,15 @@ export const RiskLevel = ({ evaluationResult, setshowRiskLevel }) => {
   return (
     <React.Fragment>
       <div className="EvaluationResult">
-        <p>คะแนนของคุณคือ : {score}</p>
+        <p>Your final score is : {score}</p>
       </div>
       <div className="EvaluationResult">
-        <p>ระดับความเสี่ยงของคุณคือ : {riskProfileMasterData !== null && (riskProfileMasterData.find(data => data.level === risk_profile).labelTH)}</p>
+        <p>Your risk level is : {riskProfileMasterData !== null && (riskProfileMasterData.find(data => data.level === risk_profile).labelTH)}</p>
       </div>
       <div className="BackAndCreateGoalButton">
         <Stack spacing={2} direction="row">
           <Button variant="outlined" onClick={handleBackButton}>
-            ประเมินความเสี่ยงใหม่
+            Redo the questionaire
           </Button>
           <Button
             variant="contained"
@@ -77,7 +77,7 @@ export const RiskLevel = ({ evaluationResult, setshowRiskLevel }) => {
               await saveUserRiskProfile();
             }}
           >
-            บันทึกและกลับไปสร้างเป้าหมาย
+            Save and then return to Goal-Based
           </Button>
         </Stack>
       </div>
