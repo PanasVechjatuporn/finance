@@ -96,7 +96,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
             <Stack spacing={2} direction="row">
               {currentQuestionIndex > 0 && (
                 <Button variant="outlined" onClick={prevQuestion}>
-                  กลับ
+                  Back
                 </Button>
               )}
               {currentQuestionIndex < questions.length - 1 ? (
@@ -105,7 +105,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
                   onClick={nextQuestion}
                   disabled={!isOptionSelected}
                 >
-                  ต่อไป
+                  Next
                 </Button>
               ) : (
                 <Button
@@ -113,7 +113,7 @@ export const EvaluationForm = ({ setshowRiskLevel, setEvaluationResult }) => {
                   onClick={calculateScore}
                   disabled={!isOptionSelected}
                 >
-                  ประเมินผล
+                  Evaluate
                 </Button>
               )}
             </Stack>
