@@ -206,7 +206,7 @@ function EachCard({ data }) {
                             color="text.secondary"
                         >
                             วันที่สร้าง :{" "}
-                            {new Date(data.CreatedDate).toLocaleDateString("th-TH", {
+                            {new Date(data.CreatedDate).toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
                                 month: "long",
@@ -299,7 +299,7 @@ function EachCard({ data }) {
                             color="text.secondary"
                         >
                             วันที่สร้าง :{" "}
-                            {new Date(data.CreatedDate).toLocaleDateString("th-TH", {
+                            {new Date(data.CreatedDate).toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
                                 month: "long",

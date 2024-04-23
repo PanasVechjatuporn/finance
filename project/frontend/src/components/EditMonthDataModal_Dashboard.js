@@ -322,7 +322,7 @@ const EditMonthDataModal = ({
     );
     const [newMonthString, setNewMonthString] = useState(
         dataMonthCopy && mode === "editexisting"
-            ? new Date(dataMonthCopy.date).toLocaleString("th-TH", { month: "long" })
+            ? new Date(dataMonthCopy.date).toLocaleString("en-US", { month: "long" })
             : ""
     );
     const [newYearString, setNewYearString] = useState(
@@ -346,7 +346,7 @@ const EditMonthDataModal = ({
             // setInvestmentData(dataMonthCopy.investmentData);
             setNewYearString(new Date(dataMonthCopy.date).getFullYear());
             setNewMonthString(
-                new Date(dataMonthCopy.date).toLocaleString("th-TH", {
+                new Date(dataMonthCopy.date).toLocaleString("en-US", {
                     month: "long",
                 })
             );
@@ -368,7 +368,7 @@ const EditMonthDataModal = ({
             setNewMonthString(
                 new Date(
                     new Date().setMonth(currentYearData.data.length)
-                ).toLocaleString("th-TH", {
+                ).toLocaleString("en-US", {
                     month: "long",
                 })
             );
@@ -379,7 +379,7 @@ const EditMonthDataModal = ({
             // setInvestmentData(dataMonthCopy.investmentData);
             setNewYearString(new Date(dataMonthCopy.date).getFullYear());
             setNewMonthString(
-                new Date(dataMonthCopy.date).toLocaleString("th-TH", {
+                new Date(dataMonthCopy.date).toLocaleString("en-US", {
                     month: "long",
                 })
             );
