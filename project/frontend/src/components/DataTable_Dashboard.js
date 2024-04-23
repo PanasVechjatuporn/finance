@@ -205,7 +205,7 @@ export default function MonthDataTable({ userData, setUserData }) {
             padding: 1,
           }}
         >
-          เพิ่มหรือแก้ไขข้อมูล รายรับ/รายจ่าย/การลงทุน
+          Add or edit data for income, expenses, or investments.
         </Typography>
         <Paper
           style={{
@@ -235,10 +235,10 @@ export default function MonthDataTable({ userData, setUserData }) {
                   <TableCell style={{ width: "1%" }}></TableCell>
                   <TableCell style={{ width: "1%" }}></TableCell>
                   <TableCell align="center" style={{ width: "10%" }}>
-                    เดือน
+                    Month
                   </TableCell>
-                  <TableCell align="center">รายรับ&nbsp;(บาท)</TableCell>
-                  <TableCell align="center">รายจ่าย&nbsp;(บาท)</TableCell>
+                  <TableCell align="center">Income&nbsp;(Baht)</TableCell>
+                  <TableCell align="center">Expense&nbsp;(Baht)</TableCell>
                   {/* <TableCell align="center">เงินลงทุน</TableCell> */}
                   <TableCell align="center" style={{ width: "2%" }}></TableCell>
                 </TableRow>
@@ -347,7 +347,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                       bottom:0
                     }}
                   >
-                    รวม&nbsp;(บาท)
+                    Total&nbsp;(Baht)
                   </TableCell>
                   <TableCell
                     align="center"
@@ -396,7 +396,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                       bottom:0
                     }}
                   >
-                    รายรับ - รายจ่าย (บาท)
+                    Income - Expense (Baht)
                   </TableCell>
                   <TableCell
                     align="center"
@@ -443,7 +443,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 id="year-selection-input-label"
                 sx={{ color: "white" }}
               >
-                ปี
+                Year
               </InputLabel>
               <Select
                 labelId="year-selection"
@@ -474,7 +474,7 @@ export default function MonthDataTable({ userData, setUserData }) {
                 </MenuItem>
               </Select>
               <FormHelperText sx={{ color: "white" }}>
-                เลือกปีที่ต้องการเพิ่มหรือแก้ไขข้อมูล
+              Select the year you want to add or edit data.
               </FormHelperText>
             </FormControl>
           </Box>

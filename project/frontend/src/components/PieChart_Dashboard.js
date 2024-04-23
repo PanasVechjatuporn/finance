@@ -378,7 +378,7 @@ export default function PieChartComponent({ userData }) {
                             paddingTop: 1,
                         }}
                     >
-                        สรุปรายรับ ปี {currentYear}
+                        Summary of Income of the Year : {currentYear}
                     </Typography>
                 </Container>
                 <Container>
@@ -389,7 +389,7 @@ export default function PieChartComponent({ userData }) {
                             marginTop : "2%"
                         }}
                     >
-                        <InputLabel id="demo-simple-select-label">เลือกปี</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Select Year</InputLabel>
                         <Select
                             labelId="select-label"
                             id="select-year"
@@ -451,7 +451,7 @@ export default function PieChartComponent({ userData }) {
                                 textAlign: 'center',
                             }}
                         >
-                            รายรับสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalIncome)} บาท
+                            Net Income for the Year: {currentYear} : {formatNumberWithCommas(totalIncome)} Baht
                         </Typography>
                     </Container>
 
@@ -471,7 +471,7 @@ export default function PieChartComponent({ userData }) {
                                 textAlign: 'center',
                             }}
                         >
-                            ไม่พบข้อมูล
+                            Data not found
                         </Typography>
                     </Container>
                 )}
@@ -492,7 +492,7 @@ export default function PieChartComponent({ userData }) {
                             padding: 1
                         }}
                     >
-                        สรุปรายจ่าย ปี {currentYear}
+                        Summary of Income of the Year : {currentYear}
                     </Typography>
                 </Container>
                 {pieExpenseParams ? (
@@ -533,7 +533,7 @@ export default function PieChartComponent({ userData }) {
                                 textAlign: 'center',
                             }}
                         >
-                            รายจ่ายสุทธิ ปี {currentYear} : {formatNumberWithCommas(totalExpense)} บาท
+                            Net Expense of the Year :{currentYear} : {formatNumberWithCommas(totalExpense)} Baht
                         </Typography>
                     </Container>
 
@@ -553,7 +553,7 @@ export default function PieChartComponent({ userData }) {
                                 textAlign: 'center',
                             }}
                         >
-                            ไม่พบข้อมูล
+                            Data not found
                         </Typography>
                     </Container>
                 )}
