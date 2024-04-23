@@ -158,7 +158,7 @@ export const GoalBased = () => {
                     }}
                 >
                     <Typography gutterBottom id="modal-modal-title" variant="subtitile1">
-                        สร้างเป้าหมาย
+                        Goal Setting
                     </Typography>
                     <Container
                         style={{
@@ -174,7 +174,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                เพื่อเก็บออมเงิน
+                                For Saving
                             </Typography>
                         </Button>
                         <Button
@@ -183,7 +183,7 @@ export const GoalBased = () => {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                เพื่อลดหย่อนภาษี
+                                For Tax Deduction
                             </Typography>
                         </Button>
                     </Container>
@@ -256,7 +256,7 @@ export const GoalBased = () => {
                             size="large"
                         >
                             <Typography color="white" variant="subtitile1">
-                                สร้างเป้าหมาย
+                                Goal Setting
                             </Typography>
                         </Button>
                             :
