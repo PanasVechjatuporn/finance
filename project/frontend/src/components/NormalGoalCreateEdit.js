@@ -97,18 +97,18 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        {mode === "new" ? "สร้างเป้าหมายของคุณ" : "แก้ไขเป้าหมาย " + tempGoalName}
+                        {mode === "new" ? "Create a goal" : "แก้ไขเป้าหมาย " + tempGoalName}
                     </Typography>
                 </div>
                 <Container>
                     <TextField
                         required
                         id={"goal-name"}
-                        label="ชื่อเป้าหมาย"
+                        label="Goal name"
                         size="small"
                         margin="normal"
                         error={nameError}
-                        helperText={nameError ? "กรุณากรอกชื่อเป้าหมาย" : ""}
+                        helperText={nameError ? "Please fill a name" : ""}
                         onChange={(e) => {
                             let tmp = JSON.parse(JSON.stringify(goalData))
                             tmp.Name = e.target.value
@@ -122,13 +122,13 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                     <TextField
                         required
                         id={"goal-goal"}
-                        label="จำนวนเงิน (บาท)"
+                        label="Price (Baht)"
                         size="small"
                         type="number"
                         margin="normal"
                         error={goalError}
                         disabled = {mode === "edit" ? true : false}
-                        helperText={goalError ? "กรุณากรอกจำนวนเงิน" : ""}
+                        helperText={goalError ? "Please fill a goal" : ""}
                         onChange={(e) => {
                             let tmp = JSON.parse(JSON.stringify(goalData))
                             tmp.Goal = e.target.value
@@ -142,13 +142,13 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                     <TextField
                         required
                         id={"goal-time"}
-                        label="ระยะเวลาเก็บเงิน (ปี)"
+                        label="Duration (Year)"
                         size="small"
                         margin="normal"
                         type="number"
                         error={timeError}
                         disabled = {mode === "edit" ? true : false}
-                        helperText={timeError ? "ระยะเวลาเก็บต้องมากกว่า 0" : ""}
+                        helperText={timeError ? "More than 0" : ""}
                         onChange={(e) => {
                             let tmp = JSON.parse(JSON.stringify(goalData))
                             let goalCreatedDate = new Date(goalData.CreatedDate)
@@ -170,7 +170,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                             onSaveNewGoal(goalData)
                         }}
                     >
-                        บันทึกเป้าหมาย
+                        Save
                     </Button>
                 </Container>
             </Box>
