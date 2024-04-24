@@ -86,7 +86,7 @@ export default function PieChartInfoModal({
                                         fontWeight: "bold"
                                     }}
                                 >
-                                    Conclude {modalType==='income' ? ("รายรับ") : ("รายจ่าย")} {modalParams.label}
+                                    Conclude {modalType==='income' ? ("Income") : ("Expense")} {modalParams.label}
                                 </Typography>
                             </div>
                             <TableContainer component={Paper}>
