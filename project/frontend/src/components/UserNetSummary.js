@@ -55,7 +55,7 @@ export const UserNetSummary = ({ userData }) => {
                         padding: 1,
                     }}
                 >
-                    ยอดสรุปเงินของคุณทั้งหมด
+                    Summary Fund
                 </Typography>
                 <Grid
                     container
@@ -66,17 +66,17 @@ export const UserNetSummary = ({ userData }) => {
                 >
                     <Grid item xs={4} md={6}>
                         <Typography style={{ fontSize: 18 }}>
-                            รายรับทั้งหมดของคุณ ={" "}
+                            Total income ={" "}
                             {userNetSummary &&
-                                formatNumberWithCommas(userNetSummary.netIncome) + " บาท"}
+                                formatNumberWithCommas(userNetSummary.netIncome) + " Baht"}
                         </Typography>
                         <Typography style={{ fontSize: 18 }}>
-                            รายจ่ายทั้งหมดของคุณ ={" "}
+                            Total expense ={" "}
                             {userNetSummary &&
-                                formatNumberWithCommas(userNetSummary.netExpense) + " บาท"}
+                                formatNumberWithCommas(userNetSummary.netExpense) + " Baht"}
                         </Typography>
                         <Typography style={{ fontSize: 18 }}>
-                            รายรับทั้งหมด - รายจ่ายทั้งหมด ={" "}
+                        Total income - Total expense ={" "}
                             {userNetSummary && (
                                 <span
                                     style={{
@@ -89,22 +89,22 @@ export const UserNetSummary = ({ userData }) => {
                                         " "}
                                 </span>
                             )}
-                            บาท
+                            Baht
                         </Typography>
                     </Grid>
                     <Grid item xs={4} md={4}>
                         <Typography style={{ fontSize: 18 }}>
-                            ซื้อกองทุนไปทั้งหมด ={" "}
+                            Total bought fund ={" "}
                             {userNetSummary &&
-                                formatNumberWithCommas(userNetSummary.netBoughtAsset) + " บาท"}
+                                formatNumberWithCommas(userNetSummary.netBoughtAsset) + " Baht"}
                         </Typography>
                         <Typography style={{ fontSize: 18 }}>
-                            ขายกองทุนไปทั้งหมด ={" "}
+                            Total sold fund ={" "}
                             {userNetSummary &&
-                                formatNumberWithCommas(userNetSummary.netSoldAsset) + " บาท"}
+                                formatNumberWithCommas(userNetSummary.netSoldAsset) + " Baht"}
                         </Typography>
                         <Typography style={{ fontSize: 18 }}>
-                            ความมั่งคั่งของคุณ ={" "}
+                            Summary ={" "}
                             {userNetSummary && (
                                 <span
                                     style={{
@@ -116,7 +116,7 @@ export const UserNetSummary = ({ userData }) => {
                                     {formatNumberWithCommas(userNetSummary.netWealth) + " "}
                                 </span>
                             )}
-                            บาท
+                            Baht
                         </Typography>
                     </Grid>
                 </Grid>
