@@ -25,144 +25,144 @@ const baseURL = "http://localhost:8000";
 
 const taxableIncome = [
     {
-        name: "เงินได้ประเภทที่ 1",
-        category: 1,
-        label: "เงินเดือน",
+        "name": "Type of Income 1",
+        "category": 1,
+        "label": "Salary"
     },
     {
-        name: "เงินได้ประเภทที่ 2",
-        category: 2,
-        label: "ค่าจ้างทั่วไป",
+        "name": "Type of Income 2",
+        "category": 2,
+        "label": "General wages"
     },
     {
-        name: "เงินได้ประเภทที่ 3",
-        category: 3,
-        label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
-        subcategory: [
+        "name": "Type of Income 3",
+        "category": 3,
+        "label": "Royalties and intellectual property rights",
+        "subcategory": [
             {
-                subcategorylabel:
-                    "ค่าลิขสิทธิ์/ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา/ค่าGoodwill",
-                subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 50% แต่ไม่เกิน 100,000 บาท หรือหักตามจริง",
+                "subcategorylabel": "Royalties/Intellectual Property Rights/Goodwill",
+                "subcategorycategory": 1,
+                "subcategoryinfo": "Flat rate deduction 50%, but not exceeding 100,000 Baht or actual deduction"
             },
             {
-                subcategorylabel: "เงินปีและเงินรายปีจากนิติกรรมหรือคำพิพากษาของศาล",
-                subcategorycategory: 2,
-                subcategoryinfo: "-",
-            },
-        ],
+                "subcategorylabel": "Annual and periodic payments from deeds or court judgments",
+                "subcategorycategory": 2,
+                "subcategoryinfo": "-"
+            }
+        ]
     },
     {
-        name: "เงินได้ประเภทที่ 4",
-        category: 4,
-        label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
+        "name": "Type of Income 4",
+        "category": 4,
+        "label": "Interest/Dividends/Investment returns"
     },
     {
-        name: "เงินได้ประเภทที่ 5",
-        category: 5,
-        label: "เงินได้จากการให้เช่าทรัพย์สิน",
-        subcategory: [
+        "name": "Type of Income 5",
+        "category": 5,
+        "label": "Income from property rental",
+        "subcategory": [
             {
-                subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
-                subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                "subcategorylabel": "House/building/structure/field/building/boat rental",
+                "subcategorycategory": 1,
+                "subcategoryinfo": "Flat rate deduction 30% or actual deduction"
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินเกษตรกรรม",
-                subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 20% หรือหักตามจริง",
+                "subcategorylabel": "Agricultural land rental",
+                "subcategorycategory": 2,
+                "subcategoryinfo": "Flat rate deduction 20% or actual deduction"
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินไม่ใช้ในเกษตรกรรม",
-                subcategorycategory: 3,
-                subcategoryinfo: "หักแบบเหมา 15% หรือหักตามจริง",
+                "subcategorylabel": "Non-agricultural land rental",
+                "subcategorycategory": 3,
+                "subcategoryinfo": "Flat rate deduction 15% or actual deduction"
             },
             {
-                subcategorylabel: "ค่าเช่ายานพาหนะ",
-                subcategorycategory: 4,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                "subcategorylabel": "Vehicle rental",
+                "subcategorycategory": 4,
+                "subcategoryinfo": "Flat rate deduction 30% or actual deduction"
             },
             {
-                subcategorylabel: "ค่าเช่าอื่นๆ",
-                subcategorycategory: 5,
-                subcategoryinfo: "หักแบบเหมา 10% หรือหักตามจริง",
-            },
-        ],
+                "subcategorylabel": "Other rentals",
+                "subcategorycategory": 5,
+                "subcategoryinfo": "Flat rate deduction 10% or actual deduction"
+            }
+        ]
     },
     {
-        name: "เงินได้ประเภทที่ 6",
-        category: 6,
-        label: "เงินได้จากวิชาชีพอิสระ",
-        subcategory: [
+        "name": "Type of Income 6",
+        "category": 6,
+        "label": "Income from freelance work",
+        "subcategory": [
             {
-                subcategorylabel: "การประกอบโรคศิลปะ",
-                subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 60% หรือหักตามจริง",
+                "subcategorylabel": "Fine arts",
+                "subcategorycategory": 1,
+                "subcategoryinfo": "Flat rate deduction 60% or actual deduction"
             },
             {
-                subcategorylabel: "กฎหมาย/วิศวกรรม/สถาปัตยกรรม/บัญชี/ประณีตศิลปกรรม",
-                subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
-            },
-        ],
+                "subcategorylabel": "Legal/Engineering/Architecture/Accounting/Visual Arts",
+                "subcategorycategory": 2,
+                "subcategoryinfo": "Flat rate deduction 30% or actual deduction"
+            }
+        ]
     },
     {
-        name: "เงินได้ประเภทที่ 7",
-        category: 7,
-        label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
-    },
+        "name": "Type of Income 7",
+        "category": 7,
+        "label": "Income from contracts (construction/manufacturing)"
+    }
 ];
 
 const expenseType = [
     {
-        name: "อาหาร",
-        category: 1,
-        color: "#95c2dc",
-        index: 1,
+        "name": "Food",
+        "category": 1,
+        "color": "#95c2dc",
+        "index": 1
     },
     {
-        name: "ที่พักอาศัย",
-        category: 2,
-        color: "#ec843e",
-        index: 2,
+        "name": "Accommodation",
+        "category": 2,
+        "color": "#ec843e",
+        "index": 2
     },
     {
-        name: "สิ่งบันเทิง",
-        category: 3,
-        color: "#e7dc8c",
-        index: 3,
+        "name": "Entertainment",
+        "category": 3,
+        "color": "#e7dc8c",
+        "index": 3
     },
     {
-        name: "ท่องเที่ยว",
-        category: 4,
-        color: "#84ceb9",
-        index: 4,
+        "name": "Travel",
+        "category": 4,
+        "color": "#84ceb9",
+        "index": 4
     },
     {
-        name: "การศึกษา",
-        category: 5,
-        color: "#6681a5",
-        index: 5,
+        "name": "Education",
+        "category": 5,
+        "color": "#6681a5",
+        "index": 5
     },
     {
-        name: "ค่าเดินทาง",
-        category: 6,
-        color: "#fb7d7e",
-        index: 6,
+        "name": "Transportation",
+        "category": 6,
+        "color": "#fb7d7e",
+        "index": 6
     },
     {
-        name: "ค่าใช้จ่ายจิปาถะ",
-        category: 7,
-        color: "#485ea1",
-        index: 7,
+        "name": "Miscellaneous expenses",
+        "category": 7,
+        "color": "#485ea1",
+        "index": 7
     },
     {
-        name: "อื่นๆ",
-        category: 8,
-        color: "#b7f1a5",
-        index: 8,
-    },
+        "name": "Others",
+        "category": 8,
+        "color": "#b7f1a5",
+        "index": 8
+    }
 ];
+
 
 async function onSaveMonthData(
     userStore,
@@ -454,11 +454,11 @@ const EditMonthDataModal = ({
             <Modal.Header closeButton>
                 {mode === "editexisting" ? (
                     <Modal.Title>
-                        แก้ไขเดือน {newMonthString} ปี {newYearString}
+                        Edit for the month {newMonthString} Year {newYearString}
                     </Modal.Title>
                 ) : currentYearData ? (
                     <Modal.Title>
-                        เพิ่มเดือน {newMonthString} ปี {newYearString}
+                        Add month {newMonthString} ปี {newYearString}
                     </Modal.Title>
                 ) : null}
             </Modal.Header>
@@ -487,7 +487,7 @@ const EditMonthDataModal = ({
                                         userSelect: "none",
                                     }}
                                 >
-                                    รายรับ
+                                    Income
                                 </Typography>
                                 <Typography
                                     variant="h8"
@@ -498,7 +498,7 @@ const EditMonthDataModal = ({
                                         userSelect: "none",
                                     }}
                                 >
-                                    เพิ่ม/แก้ไข แหล่งรายได้
+                                    Add/Modify revenue sources
                                 </Typography>
                             </div>
                             <Container>
@@ -509,7 +509,7 @@ const EditMonthDataModal = ({
                                                 <TextField
                                                     required
                                                     id={"income-amount" + index}
-                                                    label="รายได้"
+                                                    label="Income"
                                                     size="small"
                                                     margin="normal"
                                                     onChange={(e) => {
@@ -528,7 +528,7 @@ const EditMonthDataModal = ({
                                                     sx={{ m: 1, minWidth: 160, maxWidth: 160 }}
                                                 >
                                                     <InputLabel id="income-type-label">
-                                                        ประเภทของรายได้
+                                                        Income type
                                                     </InputLabel>
                                                     <Select
                                                         labelId={"income-select-label" + index}
@@ -536,7 +536,7 @@ const EditMonthDataModal = ({
                                                         onChange={(e) => {
                                                             handleIncomeTypeChange(e, index);
                                                         }}
-                                                        label="ประเภทของรายได้"
+                                                        label="Income type"
                                                         value={
                                                             incomeData[index].type
                                                                 ? incomeData[index].type
@@ -560,7 +560,7 @@ const EditMonthDataModal = ({
                                                     sx={{ m: 1, minWidth: 160, maxWidth: 160 }}
                                                 >
                                                     <InputLabel id="income-type-sub-label">
-                                                        ประเภทย่อยของรายได้
+                                                        Income Subcategories
                                                     </InputLabel>
                                                     <Select
                                                         labelId={"income-select-sub-label" + index}
@@ -677,7 +677,7 @@ const EditMonthDataModal = ({
                                         paddingBottom: "8px",
                                     }}
                                 >
-                                    รายจ่าย
+                                    Expenses
                                 </Typography>
                                 <Typography
                                     variant="h8"
@@ -687,7 +687,7 @@ const EditMonthDataModal = ({
                                         width: "100%",
                                     }}
                                 >
-                                    เพิ่ม/แก้ไข รายจ่ายเดือนนี้
+                                    Increase/Edit expenses for this month
                                 </Typography>
                                 <Container>
                                     {expenseData.length > 0 ? (
@@ -702,7 +702,7 @@ const EditMonthDataModal = ({
                                                     <TextField
                                                         required
                                                         id={"expense-amount" + index}
-                                                        label="รายจ่าย"
+                                                        label="Expense"
                                                         size="small"
                                                         margin="normal"
                                                         onChange={(e) => {
@@ -722,7 +722,7 @@ const EditMonthDataModal = ({
                                                         sx={{ m: 1, maxWidth: 125, minWidth: 125 }}
                                                     >
                                                         <InputLabel id="expense-type-label">
-                                                            ประเภทของรายจ่าย
+                                                            Expense catergory
                                                         </InputLabel>
                                                         <Select
                                                             labelId={"expense-select-label" + index}
