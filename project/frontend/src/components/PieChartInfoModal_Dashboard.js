@@ -86,15 +86,15 @@ export default function PieChartInfoModal({
                                         fontWeight: "bold"
                                     }}
                                 >
-                                    สรุป{modalType==='income' ? ("รายรับ") : ("รายจ่าย")} {modalParams.label}
+                                    Conclude {modalType==='income' ? ("รายรับ") : ("รายจ่าย")} {modalParams.label}
                                 </Typography>
                             </div>
                             <TableContainer component={Paper}>
                                 <Table sx={{ minWidth: "50%" }} aria-label="customized table">
                                     <TableHead>
                                         <StyledTableRow>
-                                            <StyledTableCell align="center"><b>ปี-เดือน</b></StyledTableCell>
-                                            <StyledTableCell align="center"><b>จำนวน&nbsp;(บาท)</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>Year-Month</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>Amount&nbsp;(Baht)</b></StyledTableCell>
                                         </StyledTableRow>
                                     </TableHead>
                                     <TableBody>

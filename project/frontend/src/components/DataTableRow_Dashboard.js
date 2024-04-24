@@ -20,139 +20,139 @@ const baseURL = "http://localhost:8000";
 
 const taxableIncome = [
     {
-        name: "เงินได้ประเภทที่ 1",
+        name: "Income Type 1",
         category: 1,
-        label: "เงินเดือน",
+        label: "Salary",
     },
     {
-        name: "เงินได้ประเภทที่ 2",
+        name: "Income Type 2",
         category: 2,
-        label: "ค่าจ้างทั่วไป",
+        label: "General wages",
     },
     {
-        name: "เงินได้ประเภทที่ 3",
+        name: "Income Type 3",
         category: 3,
-        label: "ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา",
+        label: "Copyright and intellectual property rights",
         subcategory: [
             {
                 subcategorylabel:
-                    "ค่าลิขสิทธิ์/ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา/ค่าGoodwill",
+                    "Copyright/Intellectual property rights/Goodwill",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 50% แต่ไม่เกิน 100,000 บาท หรือหักตามจริง",
+                subcategoryinfo: "Deduct 50% lump sum, not exceeding 100,000 Baht, or actual deduction",
             },
             {
-                subcategorylabel: "เงินปีและเงินรายปีจากนิติกรรมหรือคำพิพากษาของศาล",
+                subcategorylabel: "Annual and periodic income from deeds or court judgments",
                 subcategorycategory: 2,
                 subcategoryinfo: "-",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 4",
+        name: "Income Type 4",
         category: 4,
-        label: "ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน",
+        label: "Interest/Dividends/Investment benefits",
     },
     {
-        name: "เงินได้ประเภทที่ 5",
+        name: "Income Type 5",
         category: 5,
-        label: "เงินได้จากการให้เช่าทรัพย์สิน",
+        label: "Income from property rental",
         subcategory: [
             {
-                subcategorylabel: "ค่าเช่าบ้าน/อาคาร/ตึก/สิ่งปลูกสร้าง/แพ",
+                subcategorylabel: "House/building/structure/land/boat rent",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 30% lump sum or actual deduction",
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินเกษตรกรรม",
+                subcategorylabel: "Agricultural land rent",
                 subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 20% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 20% lump sum or actual deduction",
             },
             {
-                subcategorylabel: "ค่าเช่าที่ดินไม่ใช้ในเกษตรกรรม",
+                subcategorylabel: "Non-agricultural land rent",
                 subcategorycategory: 3,
-                subcategoryinfo: "หักแบบเหมา 15% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 15% lump sum or actual deduction",
             },
             {
-                subcategorylabel: "ค่าเช่ายานพาหนะ",
+                subcategorylabel: "Vehicle rent",
                 subcategorycategory: 4,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 30% lump sum or actual deduction",
             },
             {
-                subcategorylabel: "ค่าเช่าอื่นๆ",
+                subcategorylabel: "Other rent",
                 subcategorycategory: 5,
-                subcategoryinfo: "หักแบบเหมา 10% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 10% lump sum or actual deduction",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 6",
+        name: "Income Type 6",
         category: 6,
-        label: "เงินได้จากวิชาชีพอิสระ",
+        label: "Income from freelance professions",
         subcategory: [
             {
-                subcategorylabel: "การประกอบโรคศิลปะ",
+                subcategorylabel: "Artistic endeavors",
                 subcategorycategory: 1,
-                subcategoryinfo: "หักแบบเหมา 60% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 60% lump sum or actual deduction",
             },
             {
-                subcategorylabel: "กฎหมาย/วิศวกรรม/สถาปัตยกรรม/บัญชี/ประณีตศิลปกรรม",
+                subcategorylabel: "Law/engineering/architecture/accounting/industrial design",
                 subcategorycategory: 2,
-                subcategoryinfo: "หักแบบเหมา 30% หรือหักตามจริง",
+                subcategoryinfo: "Deduct 30% lump sum or actual deduction",
             },
         ],
     },
     {
-        name: "เงินได้ประเภทที่ 7",
+        name: "Income Type 7",
         category: 7,
-        label: "เงินได้จากการรับเหมา (ก่อสร้าง/รับผลิตสินค้า)",
+        label: "Income from contracts (construction/manufacturing)",
     },
 ];
 
 const expenseType = [
     {
-        name: "อาหาร",
+        name: "Food",
         category: 1,
         color: "#95c2dc",
         index: 1
     },
     {
-        name: "ที่พักอาศัย",
+        name: "Accommodation",
         category: 2,
         color: "#ec843e",
         index: 2
     },
     {
-        name: "สิ่งบันเทิง",
+        name: "Entertainment",
         category: 3,
         color: "#e7dc8c",
         index: 3
     },
     {
-        name: "ท่องเที่ยว",
+        name: "Travel",
         category: 4,
         color: "#84ceb9",
         index: 4
     },
     {
-        name: "การศึกษา",
+        name: "Education",
         category: 5,
         color: "#6681a5",
         index: 5
     },
     {
-        name: "ค่าเดินทาง",
+        name: "Transportation",
         category: 6,
         color: "#fb7d7e",
         index: 6
     },
     {
-        name: "ค่าใช้จ่ายจิปาถะ",
+        name: "Miscellaneous expenses",
         category: 7,
         color: "#485ea1",
         index: 7
     },
     {
-        name: "อื่นๆ",
+        name: "Others",
         category: 8,
         color: "#b7f1a5",
         index: 8
@@ -307,7 +307,7 @@ export const DataTableRow = ({
                                                     backgroundColor: "#CBFFA9",
                                                 }}
                                             >
-                                                รายรับเดือนนี้
+                                                Income this month
                                             </TableCell>
                                         </TableRow>
                                         <TableRow key={"sub-table-header-" + dataMonth.date}>
@@ -315,19 +315,19 @@ export const DataTableRow = ({
                                                 align="center"
                                                 key={"header-amount-" + dataMonth.date}
                                             >
-                                                จำนวน&nbsp;(บาท)
+                                                Amout&nbsp;(Baht)
                                             </TableCell>
                                             <TableCell
                                                 align="center"
                                                 key={"header-type-" + dataMonth.date}
                                             >
-                                                ประเภท
+                                                Category
                                             </TableCell>
                                             <TableCell
                                                 align="center"
                                                 key={"header-subtype-" + dataMonth.date}
                                             >
-                                                ประเภทย่อย
+                                                Subcategory
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -369,12 +369,12 @@ export const DataTableRow = ({
                                                     backgroundColor: "#FF9B9B",
                                                 }}
                                             >
-                                                รายจ่ายเดือนนี้
+                                                Expenses this month
                                             </TableCell>
                                         </TableRow>
                                         <TableRow key={"sub-table-head-row-expense-amount-type-"+dataMonth.date}>
-                                            <TableCell align="center">จำนวน&nbsp;(บาท)</TableCell>
-                                            <TableCell align="center">ประเภท</TableCell>
+                                            <TableCell align="center">Amount&nbsp;(Baht)</TableCell>
+                                            <TableCell align="center">Category</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
