@@ -109,7 +109,7 @@ export default function PieChartInfoModal({
                                             </StyledTableRow>
                                         ))}
                                         <StyledTableRow>
-                                            <StyledTableCell align="center"><b>ทั้งหมด</b></StyledTableCell>
+                                            <StyledTableCell align="center"><b>Total</b></StyledTableCell>
                                             <StyledTableCell align="center">
                                                 <b>
                                                     {formatNumberWithCommas(modalParams.value)}
