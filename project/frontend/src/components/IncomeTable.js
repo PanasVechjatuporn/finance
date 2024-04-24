@@ -7,33 +7,36 @@ import TableRow from '@mui/material/TableRow';
 
 export default function IncomeTable({ obj, open }) {
     const incomeType = {
+        '0': {
+            '0': 'Type 40(1) Salary และ 40(2) General Wages'
+        },
         '1': {
-            '0': 'ประเภท 40(1) เงินเดือน'
+            '0': 'Type 40(1) Salary'
         },
         '2': {
-            '0': 'ประเภท 40(2) ค่าจ้างทั่วไป'
+            '0': 'Type 40(2) General Wages'
         },
         '3': {
-            '1': 'ประเภท 40(3) ค่าลิขสิทธิ์/ค่าลิขสิทธิ์และทรัพย์สินทางปัญญา/ค่าGoodwill',
-            '2': 'ประเภท 40(3) เงินปีและเงินรายปีจากนิติกรรมหรือคำพิพากษาของศาล'
+            '1': 'Type 40(3) Royalty fees/Royalty and intellectual property fees/Goodwill fees',
+            '2': 'Type 40(3) Annuities and annuities from legal acts or court judgments'
         },
         '4': {
-            '0': 'ประเภท 40(4) ดอกเบี้ย/เงินปันผล/ผลประโยชน์จากการลงทุน'
+            '0': 'Type 40(4) Interest/dividends/investment benefits'
         },
         '5': {
-            '1': 'ประเภท 40(5) ค่าเช่าบ้านหรือสิ่งปลูกสร้างอื่น',
-            '2': 'ประเภท 40(5) ค่าเช่าที่ดินที่ใช้ในการเกษตรกรรม',
-            '3': 'ประเภท 40(5) ค่าเช่าที่ดินที่ไม่ได้ใช้ในการเกษตรกรรม',
-            '4': 'ประเภท 40(5) ค่าเช่ายานพาหนะ',
-            '5': 'ประเภท 40(5) ค่าเช่าทรัพย์สินอื่นๆ',
-            '6': 'ประเภท 40(5) รายได้จากการที่มีคนผิดสัญญาเช้าซื้อ/ซื้อขายเงินผ่อน'
+            '1': 'Type 40(5) Rent of a house or other building',
+            '2': 'Type 40(5) Rent for land used for agriculture',
+            '3': 'Type 40(5) Rent for land not used for agriculture',
+            '4': 'Type 40(5) Vehicle rental',
+            '5': 'Type 40(5) Other property rental fees',
+            '6': 'Type 40(5) Income from people breaking their contract to buy/sell installment payments.'
         },
         '6': {
-            '1': 'ประเภท 40(6) การประกอบวิชาชีพอิสระ โดยประกอบโรคศิลปะ',
-            '2': 'ประเภท 40(6) การประกอบวิชาชีพอิสระ ที่ไม่ใช่การประกอบโรคศิลปะ'
+            '1': 'Type 40(6) Independent professional practice by practicing the art',
+            '2': 'Type 40(6) Independent professional practice that is not an art'
         },
         '7': {
-            '0': 'ประเภท 40(7) ค่ารับเหมาทั้งค่าแรงและค่าของ'
+            '0': 'Type 40(6) Contractor costs both labor and goods'
         }
     };
 
