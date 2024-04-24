@@ -458,7 +458,7 @@ const EditMonthDataModal = ({
                     </Modal.Title>
                 ) : currentYearData ? (
                     <Modal.Title>
-                        Add month {newMonthString} ปี {newYearString}
+                        Add month {newMonthString} Year {newYearString}
                     </Modal.Title>
                 ) : null}
             </Modal.Header>
@@ -789,7 +789,7 @@ const EditMonthDataModal = ({
                                     }}
                                 />
                             }
-                            label="ใช้ข้อมูลเดียวกันทั้งปี"
+                            label="Use the same data for whole year"
                         />
                     </FormGroup>
                 ) : null}
