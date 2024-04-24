@@ -109,10 +109,10 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                     <Table sx={{ minWidth: "100%" }} aria-label="customized table">
                         <TableHead>
                             <StyledTableRow>
-                                <StyledTableCell>ชื่อกองทุน</StyledTableCell>
-                                <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
-                                <StyledTableCell>จำนวนหน่วยลงทุน</StyledTableCell>
-                                <StyledTableCell>ประเภทของกองทุน</StyledTableCell>
+                                <StyledTableCell>Fund name</StyledTableCell>
+                                <StyledTableCell>Asset type</StyledTableCell>
+                                <StyledTableCell>Units</StyledTableCell>
+                                <StyledTableCell>Fund type</StyledTableCell>
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>

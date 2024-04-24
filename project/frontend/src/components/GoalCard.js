@@ -184,7 +184,7 @@ function EachCard({ data }) {
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            Duration : {parseInt(new Date(data.GoalTime).getFullYear()) - parseInt(new Date(data.CreatedDate).getFullYear()) + " ปี" || ""}
+                            Duration : {parseInt(new Date(data.GoalTime).getFullYear()) - parseInt(new Date(data.CreatedDate).getFullYear()) + " Year" || ""}
                         </Typography>
                         <Typography
                             component="div"
@@ -226,7 +226,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            แก้ไข
+                            Edit
                         </Typography>
                     </Button>
                     <Button
@@ -237,7 +237,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลงทุน
+                            Invest
                         </Typography>
                     </Button>
                     <Button
@@ -246,7 +246,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ/ขาย
+                            Delete
                         </Typography>
                     </Button>
                     <ModalDelete

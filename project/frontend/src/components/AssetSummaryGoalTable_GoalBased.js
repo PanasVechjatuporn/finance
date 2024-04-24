@@ -98,30 +98,30 @@ The actual value may change depending on the buying/selling price that investors
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell rowSpan={2}>
-                                วันที่ซื้อ&nbsp;(วว/ดด/ปป)
+                                Date&nbsp;(DD/MM/YY)
                             </StyledTableCell>
                             <StyledTableCell align="center" colSpan={6}>
-                                สินทรัพย์ที่ลงทุน
+                                Invested assets
                             </StyledTableCell>
                         </StyledTableRow>
                         <StyledTableRow>
                             <StyledTableCell className="subHeader">
-                                ประเภทของสินทรัพย์ที่ลงทุน
+                                Type of assets invested
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ชื่อกองทุน
+                                Fund name
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ประเภทของกองทุน
+                                Fund type
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                จำนวนเงินที่ซื้อ&nbsp;(บาท)
+                                Net&nbsp;(Baht)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ราคาที่ซื้อ&nbsp;(บาท)
+                                Buy price&nbsp;(Baht)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                จำนวนหน่วยลงทุน
+                                Amount
                             </StyledTableCell>
                             
                         </StyledTableRow>

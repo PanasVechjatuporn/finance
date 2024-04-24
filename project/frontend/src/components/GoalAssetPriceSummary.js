@@ -70,31 +70,31 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                         </StyledTableRow>
                         <StyledTableRow>
                             <StyledTableCell className="subHeader">
-                                ชื่อกองทุน&nbsp;(ไทย)
+                                Fund name&nbsp;(Baht)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ประเภทของกองทุน
+                                Fund type
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                จำนวนหน่วยลงทุน&nbsp;(หน่วย)
+                                Amount&nbsp;
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่าหน่วยลงทุนล่าสุด<br/>&nbsp;(บาท/หน่วย)
+                                Latest price<br/>&nbsp;(Baht/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ราคาขายล่าสุด&nbsp;(บาท/หน่วย)
+                                Latest sell price&nbsp;(บาท/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                ราคาซื้อคืนล่าสุด&nbsp;(บาท/หน่วย)
+                                Latest buy price&nbsp;(บาท/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                อัปเดตราคาล่าสุด
+                                Last update
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                มูลค่าสุทธิ&nbsp;(บาท)
+                                Net&nbsp;(Baht)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                หมายเหตุ
+                                Note
                             </StyledTableCell>
                         </StyledTableRow>
                     </TableHead>

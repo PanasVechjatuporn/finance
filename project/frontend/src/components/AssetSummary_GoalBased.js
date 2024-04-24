@@ -138,7 +138,7 @@ export const AssetSummary = () => {
                                 // top: "3%",
                             }}
                         >
-                            <InputLabel id="select-goal-label">เป้าหมาย</InputLabel>
+                            <InputLabel id="select-goal-label">Goal</InputLabel>
                             <Select
                                 labelId="select-goal"
                                 id="select-goal"
