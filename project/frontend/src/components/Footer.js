@@ -36,7 +36,6 @@ export const Footer = () => {
               </ul>
             </div> */}
             <div className="footer-col">
-              <h4>follow us</h4>
               <div className="social-links">
               
               </div>
