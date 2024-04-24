@@ -178,10 +178,10 @@ export const SelectFund = () => {
                 <form onSubmit={e => { saveTaxGoal(e) }}>
                     <Container style={{ display: 'flex', marginTop: 30, width: "70%", flexDirection: 'column', alignItems: 'center' }}>
                         {/*<Typography fontWeight={'bold'} marginBottom={1}>
-                    เงินได้ที่ต้องเสียภาษี: {beforeReduction} บาท
+                    เงินได้ที่ต้องเสียภาษี: {beforeReduction} Baht
                 </Typography>
                 <Typography>
-                    หลังหักค่าลดหย่อนเป็นเงินได้สุทธิ : {netIncome} บาท
+                    หลังหักค่าลดหย่อนเป็นเงินได้สุทธิ : {netIncome} Baht
                 </Typography>*/}
                         <Typography marginBottom={2} fontWeight={'bold'}>กองทุนที่จะลงทุนเพื่อการลดภาษี</Typography>
                         {dropdowns.map((dropdown, index) => (
@@ -208,7 +208,7 @@ export const SelectFund = () => {
                                         )}
                                     />
                                 </div>
-                                <TextField required label="จำนวนเงิน (บาท)" style={{ width: "20%" }}
+                                <TextField required label="จำนวนเงิน (Baht)" style={{ width: "20%" }}
                                     value={dropdown.amount}
                                     onChange={e => { handleDropdownChange(index, e.target.value, "amount"); console.log(e.target.innerHTML) }}
                                 />
@@ -256,15 +256,15 @@ export const SelectFund = () => {
                         <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    สรุปภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} บาท
+                                    สรุปภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} Baht
                                 </Typography>
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    เงินลงทุนของคุณ : {investAmount.toLocaleString("en-GB")} บาท/เดือน
+                                    เงินลงทุนของคุณ : {investAmount.toLocaleString("en-GB")} Baht/เดือน
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
-                                    ซึ่งจะลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} บาท
+                                    ซึ่งจะลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} Baht
                                 </Typography>
                             </div>
                         </div>
@@ -273,18 +273,18 @@ export const SelectFund = () => {
                         <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} บาท/เดือน
+                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} Baht/เดือน
                                 </Typography>
                                 <Typography>
-                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ปี {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                                 </Typography>
                                 <Typography component={'span'}>
-                                    คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} บาท/ปี
+                                    คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ปี
                                 </Typography>
                             </div>
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} บาท/เดือน
+                                    เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} Baht/เดือน
                                 </Typography>
                                 <Typography component={'span'}>
                                     ลงทุนในสัดส่วน : {/*Percentage.toLocaleString("en-GB")*/} %
@@ -298,14 +298,14 @@ export const SelectFund = () => {
                                                 setInvestPercent('')
                                             }
                                         }} />
-                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} บาท */}
+                                    % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} Baht */}
                                 </Typography>
-                                <Typography> คิดเป็นเงินประมาณ {investAmount.toLocaleString("en-GB")} บาท/เดือน</Typography>
+                                <Typography> คิดเป็นเงินประมาณ {investAmount.toLocaleString("en-GB")} Baht/เดือน</Typography>
                             </div>
                         </Container>
 
                         {/*<Typography >
-                    เงินได้สุทธิจะเป็น : {netIncome - investAmount} บาท
+                    เงินได้สุทธิจะเป็น : {netIncome - investAmount} Baht
                 </Typography>*/}
 
                         <div className='suggestion'>

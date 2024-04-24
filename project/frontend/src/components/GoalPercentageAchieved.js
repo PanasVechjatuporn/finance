@@ -105,7 +105,7 @@ export const GoalPercentageAchieved = ({
                                 }}
                             >
                                 <span>ขณะนี้คุณลงทุนไปในเป้าหมายแล้ว</span>
-                                 <span style={{fontWeight : "bold", fontSize : "22px"}}> {percentAchieved}%</span> / 100%, คิดเป็นเงิน {goalValueAchieved} บาท จากเป้าหมาย {goalData.Goal} บาท
+                                 <span style={{fontWeight : "bold", fontSize : "22px"}}> {percentAchieved}%</span> / 100%, คิดเป็นเงิน {goalValueAchieved} Baht จากเป้าหมาย {goalData.Goal} Baht
                             </Typography>
                         </>)
                     }

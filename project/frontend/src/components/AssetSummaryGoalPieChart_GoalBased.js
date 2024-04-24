@@ -182,7 +182,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
-                                <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(บาท)</StyledTableCell>
+                                <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(Baht)</StyledTableCell>
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>

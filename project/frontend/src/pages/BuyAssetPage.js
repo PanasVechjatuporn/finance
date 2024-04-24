@@ -340,7 +340,7 @@ export const BuyAssetPage = () => {
                                                 ]}
                                                 yAxis={[
                                                     {
-                                                        label: 'ราคาต่อหน่วย (บาท)'
+                                                        label: 'ราคาต่อหน่วย (Baht)'
                                                     }
                                                 ]}
                                             />
@@ -411,7 +411,7 @@ export const BuyAssetPage = () => {
                                                 ]}
                                                 yAxis={[
                                                     {
-                                                        label: 'ราคาต่อหน่วย (บาท)'
+                                                        label: 'ราคาต่อหน่วย (Baht)'
                                                     }
                                                 ]}
                                             />

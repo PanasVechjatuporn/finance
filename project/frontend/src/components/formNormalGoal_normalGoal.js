@@ -72,10 +72,10 @@ export const FormGoal = ({ sendData }) => {
       <div className="Container">
         <div className="TextField">
           <div>
-            <p>ชื่อเป้าหมาย</p>
+            <p>Goal name</p>
             {createTextField(
               "name",
-              "ชื่อเป้าหมาย",
+              "Goal name",
               "outlined",
               alphabetFields,
               handleAlphabetChange
@@ -86,7 +86,7 @@ export const FormGoal = ({ sendData }) => {
         <div className="TextField">
           <div>
             <div>
-              <p>ระยะเวลาลงทุน</p>
+              <p>Duration</p>
               {createTextField(
                 "year",
                 "ปี",
@@ -101,10 +101,10 @@ export const FormGoal = ({ sendData }) => {
         <div className="TextField">
           <div>
             <div>
-              <p>เงินเป้าหมาย</p>
+              <p>Goal</p>
               {createTextField(
                 "amount",
-                "บาท",
+                "Baht",
                 "outlined",
                 numbersFields.amount,
                 handleNumberChange
@@ -116,10 +116,10 @@ export const FormGoal = ({ sendData }) => {
         <div className="TextField">
           <div>
             <div>
-              <p>อายุผู้ลงทุน</p>
+              <p>Age</p>
               {createTextField(
                 "age",
-                "ปี",
+                "year",
                 "outlined",
                 numbersFields.age,
                 handleNumberChange

@@ -82,10 +82,10 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                                 Latest price<br/>&nbsp;(Baht/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                Latest sell price&nbsp;(บาท/Unit)
+                                Latest sell price&nbsp;(Baht/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
-                                Latest buy price&nbsp;(บาท/Unit)
+                                Latest buy price&nbsp;(Baht/Unit)
                             </StyledTableCell>
                             <StyledTableCell className="subHeader">
                                 Last update

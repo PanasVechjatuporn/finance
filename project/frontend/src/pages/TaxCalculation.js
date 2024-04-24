@@ -940,7 +940,7 @@ export function TaxCal() {
                                 เงินได้สุทธิ
                             </Typography>
                             <Typography variant="subtitile1" style={{ fontSize: 17, color: 'red' }}>
-                                {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
+                                {(incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} Baht
                             </Typography>
                         </Container>
                     } */}

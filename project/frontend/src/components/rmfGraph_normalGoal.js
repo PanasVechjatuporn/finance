@@ -298,7 +298,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
         <p>{JSON.stringify(memoizedData.data.selectedValue)}</p>
       </div>
       <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {minInvest} บาท</p>
+        <p>เงินลงทุนขั้นต่ำต่อเดือน {minInvest} Baht</p>
       </div>
       <div className="resultGraph">
         {isLoading ? (
@@ -323,7 +323,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       </div>
 
       <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {UserInvestAmount} บาท</p>
+        <p>เงินลงทุนขั้นต่ำต่อเดือน {UserInvestAmount} Baht</p>
       </div>
       <div className="resultGraph">
         {isLoading ? (
@@ -447,7 +447,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
               </div>
               <TextField
                 required
-                label="จำนวนเงิน (บาท)"
+                label="จำนวนเงิน (Baht)"
                 style={{ width: "20%" }}
                 value={dropdown.amount}
                 onChange={(e) => {
