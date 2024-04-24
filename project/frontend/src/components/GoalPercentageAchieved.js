@@ -95,7 +95,7 @@ export const GoalPercentageAchieved = ({
                                         สถานะของเป้าหมาย 
                                         <span style={{color : "#d1973e"}}>{" "+goalData.Name+" "}</span>
                                         <span>:</span>
-                                        <span style={{ color: goalStatus ? "green" : "red" }}>{goalStatus ? " บรรลุเป้าหมาย" : " ยังไม่บรรลุเป้าหมาย"}</span>
+                                        <span style={{ color: goalStatus ? "green" : "red" }}>{goalStatus ? " Success" : " On going"}</span>
                                     </span>
                                 )}
                             </Typography>

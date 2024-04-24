@@ -57,11 +57,11 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                     fontWeight: "bold",
                 }}
             >
-                สรุปการลงทุนภายในเป้าหมาย
+                Goal Investment Summary
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
-                    <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
+                    <caption>*The actual value may change depending on the buying/selling price that investors receive when buying/selling. Investors should check the price received and the latest price with the asset management company again</caption>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell align="center" colSpan={9}>

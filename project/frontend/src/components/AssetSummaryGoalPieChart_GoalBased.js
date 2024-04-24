@@ -101,7 +101,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        สรุปการลงทุนในกองทุนทั้งหมด
+                        Fund Investment Summary
                     </Typography>
                 </div>
 
@@ -151,7 +151,7 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                                         </StyledTableRow>
                                     )
                             )}</>) : (<TableCell colSpan={4} align="center">
-                                ไม่พบข้อมูล
+                                No data found
                             </TableCell>)}
 
                         </TableBody>

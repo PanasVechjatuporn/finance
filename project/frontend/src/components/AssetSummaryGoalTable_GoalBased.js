@@ -89,11 +89,12 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                     fontWeight: "bold",
                 }}
             >
-                ตารางแสดงการลงทุนภายในเป้าหมาย {selectedData && selectedData.Name}
+                Goal Investment Table {selectedData && selectedData.Name}
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "100%" }} aria-label="customized table">
-                    <caption>*มูลค่าจริงอาจมีการเปลี่ยนแปลงโดยขึ้นกับราคา ซื้อ/ขาย ที่ผู้ลงทุนได้รับเมื่อทำการ ซื้อ/ขาย โดยผู้ลงทุนควรตรวจสอบราคาที่ได้รับและราคาล่าสุดกับ บลจ. อีกครั้ง</caption>
+                    <caption>*
+The actual value may change depending on the buying/selling price that investors receive when buying/selling. Investors should check the price received and the latest price with the asset management company again.</caption>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell rowSpan={2}>
@@ -194,7 +195,7 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                 </>
                             ) : (
                                 <TableCell colSpan={7} align="center">
-                                    ไม่พบข้อมูล
+                                    No data found
                                 </TableCell>
                             )
                         ) : modeSpecificData ? (
@@ -277,7 +278,7 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                             </TableRow>
                                         ) : (
                                             <TableCell colSpan={7} align="center">
-                                                ไม่พบข้อมูล
+                                                No data found
                                             </TableCell>
                                         )}
                                     </TableRow>
@@ -293,7 +294,7 @@ export const AssetSummaryGoalTable = ({ selectedData, goalData, mode }) => {
                                     </TableRow>
                                 ) : (
                                     <TableCell colSpan={7} align="center">
-                                        ไม่พบข้อมูล
+                                        No data found
                                     </TableCell>
                                 )}
                             </TableRow>

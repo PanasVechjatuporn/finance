@@ -319,14 +319,14 @@ export function NewTaxGoal() {
             <Navigate />
             {isloading == false &&
                 (<div style={{ display: 'flex', marginTop: 30, flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography marginBottom={2} fontWeight={'bold'}>การคำนวนเงินได้สุทธิเพื่อนำไปคำนวนภาษี</Typography>
+                    <Typography marginBottom={2} fontWeight={'bold'}>Calculating net income to evaluate taxes</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
                         <Table aria-label="collapsible table">
                             <TableHead>
                                 <TableRow style={{ backgroundColor: "#0d5415" }}>
                                     <TableCell />
                                     <TableCell />
-                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>จำนวนเงิน (บาท)</TableCell>
+                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>Net (Baht)</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -899,7 +899,7 @@ export function NewTaxGoal() {
                             Net Income
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
+                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} Baht
                         </Typography>
                     </Container>
 
@@ -908,7 +908,7 @@ export function NewTaxGoal() {
                             Tax Payable
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            {(calTax(incomeSum - benefitSum - personal - insurance - charity - fund)).toLocaleString("en-GB")} บาท
+                            {(calTax(incomeSum - benefitSum - personal - insurance - charity - fund)).toLocaleString("en-GB")} Baht
                         </Typography>
                     </Container>
 

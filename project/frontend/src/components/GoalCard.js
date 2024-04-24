@@ -177,35 +177,35 @@ function EachCard({ data }) {
                     theme={themeNormalGoal}>
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="div">
-                            ชื่อ : {data.Name || ""}
+                            Name : {data.Name || ""}
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            ระยะเวลาการลงทุน : {parseInt(new Date(data.GoalTime).getFullYear()) - parseInt(new Date(data.CreatedDate).getFullYear()) + " ปี" || ""}
+                            Duration : {parseInt(new Date(data.GoalTime).getFullYear()) - parseInt(new Date(data.CreatedDate).getFullYear()) + " ปี" || ""}
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            เป้าหมาย : {formatNumberWithCommas(data.Goal) + " บาท" || ""}
+                            Net : {formatNumberWithCommas(data.Goal) + " Baht" || ""}
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            สถานะ : <span style={{ color: data.hasOwnProperty("goalStatus") ? data.goalStatus ? "green" : "red" : null }}>{data.hasOwnProperty("goalStatus") ? data.goalStatus ? "สำเร็จ" : "ยังไม่บรรลุเป้าหมาย" : "-"}</span>
+                            Status : <span style={{ color: data.hasOwnProperty("goalStatus") ? data.goalStatus ? "green" : "red" : null }}>{data.hasOwnProperty("goalStatus") ? data.goalStatus ? "Success" : "In progress" : "-"}</span>
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            วันที่สร้าง :{" "}
+                            Start:{" "}
                             {new Date(data.CreatedDate).toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
