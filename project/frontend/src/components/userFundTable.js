@@ -44,7 +44,7 @@ export default function UserFundTable({ setFund, open, arr }) {
                 <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
                   <TableCell style={{ width: "10%" }} />
                   <TableCell align="left" style={{ width: "70%" }}>
-                    ยังไม่มีการลงทุนในกองทุนที่สามารถลดหย่อนภาษีได้
+                  You have not made any investments in funds eligible for tax deduction yet.
                   </TableCell>
                   <TableCell
                     align="center"

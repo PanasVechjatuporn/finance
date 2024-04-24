@@ -66,7 +66,7 @@ export const CurrentUserRiskProfile = () => {
                 }}
             >
                 {(userRiskProfile === null ) ? (
-                    <Typography>คุณยังไม่ได้ทำแบบประเมินความเสี่ยง</Typography>
+                    <Typography>You haven't done the risk assessment yet.</Typography>
                 ) : (
                     <>
                         <Typography>
@@ -88,7 +88,7 @@ export const CurrentUserRiskProfile = () => {
                 >
                     <Typography color="white" variant="subtitile1">
                         {userRiskProfile === null ? (
-                            <>เริ่มทำแบบประเมินความเสี่ยง</>
+                            <>Start doing the risk assessment.</>
                         ) : (
                             <>ประเมินความเสี่ยงใหม่</>
                         )}

@@ -91,9 +91,9 @@ export function TaxCal() {
 
     const [charity, setCharity] = React.useState('');
     const [charities, setCharities] = React.useState([
-        { name: 'เงินบริจาคทั่วไป', value: '' },
-        { name: 'เงินบริจาคเพื่อการศึกษา การกีฬา การพัฒนาสังคม เพื่อประโยชน์สาธารณะ และบริจาคเพื่อสถานพยาบาลของรัฐ', value: '' },
-        { name: 'เงินบริจาคให้กับพรรคการเมือง', value: '' }
+        { name: 'General donations', value: '' },
+        { name: 'Contributions for education, sports, social development, public benefits, and donations to state hospitals.', value: '' },
+        { name: 'Donations to political parties', value: '' }
     ]);
 
     const handleCharityChange = (index, value) => {
@@ -357,7 +357,7 @@ export function TaxCal() {
                                 <TableRow style={{ backgroundColor: '#0d5415' }}>
                                     <TableCell />
                                     <TableCell />
-                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>จำนวนเงิน (บาท)</TableCell>
+                                    <TableCell align="center" style={{ fontWeight: "bold", color: 'white' }}>Amount of money (Baht)</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -374,7 +374,7 @@ export function TaxCal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        เงินได้พึงประเมิน
+                                    Income to be assessed
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{incomeSum.toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -392,7 +392,7 @@ export function TaxCal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        หักค่าใช้จ่าย
+                                    Deductible expenses
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{benefitSum.toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -410,7 +410,7 @@ export function TaxCal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        ค่าลดหย่อน
+                                    Tax deductions
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">
                                         {totalReduce.toLocaleString("en-GB")}
@@ -435,7 +435,7 @@ export function TaxCal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีส่วนตัวและครอบครัว
+                                                        Personal and family tax deductions
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -451,7 +451,7 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนส่วนตัว
+                                                                            Personal tax deductions
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
@@ -461,11 +461,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนคู่สมรส
+                                                                             Spousal tax deductions
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal2}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 60,000' id="standard-basic" label="" variant="standard" value={personal2}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal2(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -480,11 +480,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนฝากครรภ์ และคลอดบุตร
+                                                                            Maternity and Childbirth tax deductions
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal3}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 60,000' id="standard-basic" label="" variant="standard" value={personal3}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal3(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -500,11 +500,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนภาษีบุตร
+                                                                            Child tax deductions
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal4}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='Actual cost' id="standard-basic" label="" variant="standard" value={personal4}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal4(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
@@ -520,11 +520,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนสำหรับเลี้ยงดูบิดามารดาของตนเองและของคู่สมรส
+                                                                            Tax deductions for supporting one's own parents and those of the spouse.
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 120,000' id="standard-basic" label="" variant="standard" value={personal5}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 120,000' id="standard-basic" label="" variant="standard" value={personal5}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal5(Number(Math.min(120000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -540,10 +540,10 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                ค่าลดหย่อนภาษีกรณีอุปการะผู้พิการ หรือบุคคลทุพพลภาพ
+                                                                            Tax deductions for supporting disabled individuals or dependents
                                                                             </TableCell>
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal6}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='Actual cost' id="standard-basic" label="" variant="standard" value={personal6}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal6(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
@@ -573,7 +573,7 @@ export function TaxCal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีกลุ่มประกัน กองทุน และการลงทุน
+                                                        Tax deductions for insurance, funds, and investments
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -589,11 +589,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เงินประกันสังคม
+                                                                            Social security contributions
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance1(Number(Math.min(9000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -609,11 +609,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เงินลงทุนธุรกิจ Social Enterprise (วิสาหกิจเพื่อสังคม)
+                                                                            Investment in social enterprise
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance8(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -629,11 +629,11 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="left" style={{ width: "70%" }}>
-                                                                                เบี้ยประกันสุขภาพของบิดามารดา
+                                                                            Health insurance  for parents
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance4(Number(Math.min(15000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -649,15 +649,15 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning1 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                Life insurance premium and investment-linked insurance with a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันชีวิต และประกันแบบสะสมทรัพย์ที่มีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                    Life insurance premium and investment-linked insurance with a coverage period of 10 years or more" in English.
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance2(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -674,16 +674,16 @@ export function TaxCal() {
 
                                                                             {warning1 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
-                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                Health insurance and accident insurance premium that covers health
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันสุขภาพ และเบี้ยประกันอุบัติเหตุที่คุ้มครองสุขภาพ
+                                                                                Health insurance and accident insurance premium that covers health
                                                                                 </TableCell>
                                                                             }
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance3(Number(Math.min(25000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -699,7 +699,7 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'red' }}>
-                                                                                *** กลุ่มค่าลดหย่อนรวมกันไม่เกิน 100,000 บาท ***
+                                                                                *** Total deductions group not exceeding 100,000 baht ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -709,15 +709,15 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                Life insurance premium with retirement benefits and a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    เบี้ยประกันชีวิตแบบบำนาญที่มีมีระยะเวลาคุ้มครอง 10 ปีขึ้นไป
+                                                                                Life insurance premium with retirement benefits and a coverage period of 10 years or more
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance5(Number(Math.min(200000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -733,15 +733,15 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                Provident Fund (PVD) / Private School Teacher Welfare Fund
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนสำรองเลี้ยงชีพ (PVD) / กองทุนสงเคราะห์ครูโรงเรียนเอกชน
+                                                                                Provident Fund (PVD) / Private School Teacher Welfare Fund
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance6(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -757,15 +757,15 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                Government Employee Pension Fund
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนบำเหน็จบำนาญราชการ
+                                                                                Government Employee Pension Fund
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance9(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -781,15 +781,15 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
                                                                             {warning2 == true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
-                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                Government Savings Bank (GSB)
                                                                                 </TableCell>
                                                                                 :
                                                                                 <TableCell align="left" style={{ width: "70%" }}>
-                                                                                    กองทุนการออมแห่งชาติ (กอช.)
+                                                                                Government Savings Bank (GSB)
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance7(Number(Math.min(30000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -805,7 +805,7 @@ export function TaxCal() {
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
-                                                                                *** กลุ่มค่าลดหย่อน + เงินลงทุนใน RMF และ SSF รวมกันไม่เกิน 500,000 บาท ***
+                                                                                *** Group deductions + investment in RMF (Retirement Mutual Fund) and SSF (Super Saving Fund) together not exceeding 500,000 baht. ***
                                                                             </TableCell>
 
                                                                             <TableCell style={{ width: "20%" }} />
@@ -829,7 +829,7 @@ export function TaxCal() {
                                                         </TableCell>
 
                                                         <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                                            ค่าลดหย่อนภาษีกลุ่มเงินบริจาค
+                                                        Tax deductions for donations
                                                         </TableCell>
 
                                                         <TableCell align="center" style={{ width: "20%" }} >
@@ -850,10 +850,10 @@ export function TaxCal() {
                                                                                             {charity.name}
                                                                                         </TableCell>
                                                                                         <TableCell align="center" style={{ width: "20%" }}>
-                                                                                            {charity.name == 'เงินบริจาคให้กับพรรคการเมือง' ?
+                                                                                            {charity.name == 'Donations to political parties' ?
                                                                                                 (<TextField
                                                                                                     inputProps={{ style: { textAlign: 'center', fontSize: 14 } }}
-                                                                                                    placeholder='ไม่เกิน 10,000'
+                                                                                                    placeholder='No more than 10,000'
                                                                                                     id="standard-basic"
                                                                                                     label=""
                                                                                                     variant="standard"
@@ -870,7 +870,7 @@ export function TaxCal() {
                                                                                                 :
                                                                                                 (<TextField
                                                                                                     inputProps={{ style: { textAlign: 'center', fontSize: 14 } }}
-                                                                                                    placeholder='ตามจริง'
+                                                                                                    placeholder='Actual cost'
                                                                                                     id="standard-basic"
                                                                                                     label=""
                                                                                                     variant="standard"
@@ -915,7 +915,7 @@ export function TaxCal() {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell align="left" style={{ fontWeight: "bold", width: "70%" }}>
-                                        ลดภาษีจากการลงทุนในกองทุนรวม
+                                    Tax deduction from investments in mutual funds
                                     </TableCell>
                                     <TableCell style={{ fontWeight: "bold", width: "20%" }} align="center">{Number(fund || 0).toLocaleString("en-GB")}</TableCell>
                                 </TableRow>
@@ -928,10 +928,10 @@ export function TaxCal() {
                     {/* {!(incomeSum - benefitSum - personal - insurance - charity < 0) ? */}
                     <Container style={{ display: 'flex', width: '50%', marginTop: 20, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            เงินได้สุทธิ
+                        Net income
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} บาท
+                            {(incomeSum - benefitSum - personal - insurance - charity - fund) < 0 ? 0 : (incomeSum - benefitSum - personal - insurance - charity - fund).toLocaleString("en-GB")} Baht
                         </Typography>
                     </Container>
                     {/* :
@@ -947,23 +947,23 @@ export function TaxCal() {
 
                     <Container style={{ display: 'flex', width: '50%', marginTop: 15, justifyContent: 'space-between' }}>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            ภาษีที่คุณต้องจ่าย
+                        Taxes you must pay
                         </Typography>
                         <Typography variant="subtitile1" style={{ fontSize: 17 }}>
-                            {(tax).toLocaleString("en-GB")} บาท
+                            {(tax).toLocaleString("en-GB")} Baht
                         </Typography>
                     </Container>
 
                     {fund !== '' ? null : (warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - Number(fund || 0) <= 150000) ?
                         <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
                             <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                                <Button disabled={true} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                                <Button disabled={true} style={{ fontWeight: 'normal' }}>Additional tax deductions !</Button>
                             </Tooltip>
                         </Container>
                         :
                         <Container style={{ display: 'flex', width: '50%', marginTop: 20, marginBottom: 20, justifyContent: 'right', alignItems: 'center' }}>
                             <Tooltip title="Goal-Based Feature !" arrow placement='right'>
-                                <Button onClick={e => navigate('../Goal-Based')} style={{ fontWeight: 'normal' }}>ลดหย่อนภาษีเพิ่มเติม !</Button>
+                                <Button onClick={e => navigate('../Goal-Based')} style={{ fontWeight: 'normal' }}>Additional tax deductions !</Button>
                             </Tooltip>
                         </Container>}
 
@@ -978,9 +978,9 @@ export function TaxCal() {
             <Navigate />
             <div style={{ display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
                 <Box sx={{ display: 'flex', padding: 5, backgroundColor: '#FAFAFA', borderRadius: 5, borderWidth: 1, borderStyle: 'solid', alignItems: 'center', justifyContent: 'center', boxShadow: 6, flexDirection: 'column' }}>
-                    <Typography style={{ fontWeight: "bold", fontSize: 22, textAlign: 'center' }}>กรุณากรอกรายได้ของคุณให้ครบทั้งปีเพื่อคำนวนภาษีของคุณ</Typography>
+                    <Typography style={{ fontWeight: "bold", fontSize: 22, textAlign: 'center' }}>Please fill in your income for the entire year to calculate your taxes.</Typography>
                     <Container style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                        <Button onClick={() => navigate('/')} sx={{ backgroundColor: '#2E3B55', marginTop: 2 }}>ตกลง</Button>
+                        <Button onClick={() => navigate('/')} sx={{ backgroundColor: '#2E3B55', marginTop: 2 }}>Next</Button>
                     </Container>
                 </Box>
             </div>

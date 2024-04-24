@@ -83,9 +83,9 @@ export function NewTaxGoal() {
 
     const [charity, setCharity] = React.useState('');
     const [charities, setCharities] = React.useState([
-        { name: 'เงินบริจาคทั่วไป', value: '' },
-        { name: 'เงินบริจาคเพื่อการศึกษา การกีฬา การพัฒนาสังคม เพื่อประโยชน์สาธารณะ และบริจาคเพื่อสถานพยาบาลของรัฐ', value: '' },
-        { name: 'เงินบริจาคให้กับพรรคการเมือง', value: '' }
+        { name: 'General donations', value: '' },
+        { name: 'Contributions for education, sports, social development, public benefits, and donations to state hospitals.', value: '' },
+        { name: 'Donations to political partiesง', value: '' }
     ]);
 
     const handleCharityChange = (index, value) => {
@@ -434,7 +434,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal2}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 60,000' id="standard-basic" label="" variant="standard" value={personal2}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal2(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -453,7 +453,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 60,000' id="standard-basic" label="" variant="standard" value={personal3}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 60,000' id="standard-basic" label="" variant="standard" value={personal3}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal3(Number(Math.min(60000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -473,7 +473,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal4}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='Actual Cost' id="standard-basic" label="" variant="standard" value={personal4}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal4(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
@@ -493,7 +493,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 120,000' id="standard-basic" label="" variant="standard" value={personal5}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 120,000' id="standard-basic" label="" variant="standard" value={personal5}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal5(Number(Math.min(120000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -512,7 +512,7 @@ export function NewTaxGoal() {
                                                                                 Personal Tax Income Deduction for a Disabled Person
                                                                             </TableCell>
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ตามจริง' id="standard-basic" label="" variant="standard" value={personal6}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='Actual Cost' id="standard-basic" label="" variant="standard" value={personal6}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setPersonal6(Number(e.target.value.replace(/,/g, '')).toLocaleString("en-GB"));
@@ -562,7 +562,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 9,000' id="standard-basic" label="" variant="standard" value={insurance1}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance1(Number(Math.min(9000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -582,7 +582,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 100,000' id="standard-basic" label="" variant="standard" value={insurance8}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance8(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -602,7 +602,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 15,000' id="standard-basic" label="" variant="standard" value={insurance4}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance4(Number(Math.min(15000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -626,7 +626,7 @@ export function NewTaxGoal() {
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 100,000' id="standard-basic" label="" variant="standard" value={insurance2}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance2(Number(Math.min(100000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -652,7 +652,7 @@ export function NewTaxGoal() {
                                                                             }
 
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 25,000' id="standard-basic" label="" variant="standard" value={insurance3}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance3(Number(Math.min(25000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -686,7 +686,7 @@ export function NewTaxGoal() {
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 200,000' id="standard-basic" label="" variant="standard" value={insurance5}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance5(Number(Math.min(200000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -710,7 +710,7 @@ export function NewTaxGoal() {
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 500,000' id="standard-basic" label="" variant="standard" value={insurance6}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance6(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -734,7 +734,7 @@ export function NewTaxGoal() {
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 500,000' id="standard-basic" label="" variant="standard" value={insurance9}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance9(Number(Math.min(500000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -758,7 +758,7 @@ export function NewTaxGoal() {
                                                                                 </TableCell>
                                                                             }
                                                                             <TableCell align="center" style={{ width: "20%" }} >
-                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='ไม่เกิน 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
+                                                                                <TextField inputProps={{ style: { textAlign: 'center', fontSize: 14 } }} placeholder='No more than 30,000' id="standard-basic" label="" variant="standard" value={insurance7}
                                                                                     onChange={(e) => {
                                                                                         if (e.target.value.match(/^[1-9,][0-9,]{0,7}$/)) {
                                                                                             setInsurance7(Number(Math.min(30000, parseInt(e.target.value.replace(/,/g, '')))).toLocaleString("en-GB"));
@@ -819,10 +819,10 @@ export function NewTaxGoal() {
                                                                                             {charity.name}
                                                                                         </TableCell>
                                                                                         <TableCell align="center" style={{ width: "20%" }}>
-                                                                                            {charity.name == 'เงินบริจาคให้กับพรรคการเมือง' ?
+                                                                                            {charity.name == 'onations to political parties' ?
                                                                                                 (<TextField
                                                                                                     inputProps={{ style: { textAlign: 'center', fontSize: 14 } }}
-                                                                                                    placeholder='ไม่เกิน 10,000'
+                                                                                                    placeholder='No more than 10,000'
                                                                                                     id="standard-basic"
                                                                                                     label=""
                                                                                                     variant="standard"
@@ -839,7 +839,7 @@ export function NewTaxGoal() {
                                                                                                 :
                                                                                                 (<TextField
                                                                                                     inputProps={{ style: { textAlign: 'center', fontSize: 14 } }}
-                                                                                                    placeholder='ตามจริง'
+                                                                                                    placeholder='Actual Cost'
                                                                                                     id="standard-basic"
                                                                                                     label=""
                                                                                                     variant="standard"
