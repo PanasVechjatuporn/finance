@@ -28,7 +28,7 @@ function Navigate() {
             component="div"
             sx={{ flexGrow: 0.1, display: { xs: "none", sm: "block" } }}
           >
-            <Navbar.Brand href="/">Finance made easy</Navbar.Brand>
+            <Navbar.Brand href="/">TaxSmart</Navbar.Brand>
           </Typography>
           <Typography
             variant="h8"
