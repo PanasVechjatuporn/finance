@@ -304,7 +304,7 @@ export function NewTaxGoal() {
     // console.log('expense : ', benefitObj);
     function saveTaxGoal() {
         axios.post('http://localhost:8000/db/save_tax_goal', {
-            Name: 'ลดหย่อนภาษี',
+            Name: 'Tax Deduction',
             userId: uid,
             //netIncome: incomeSum - benefitSum - personal - insurance - charity - fund,
             //beforeReduction: incomeSum,

@@ -147,7 +147,7 @@ export const SelectFund = () => {
             });
             if (Funds.includes('')) { alert('กรุณาใส่ข้อมูลให้ครบ') }
             else {
-                axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'ลดหย่อนภาษี', Funds: { ...Funds }, userId: uid })
+                axios.post('http://localhost:8000/db/save_tax_goal', { Name: 'Tax Deduction', Funds: { ...Funds }, userId: uid })
                     .then(navigate("/Goal-Based"));
                 // axios.post(
                 //     `http://localhost:8000/db/change_goal_percentage`,
