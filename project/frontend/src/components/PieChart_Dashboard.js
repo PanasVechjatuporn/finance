@@ -394,7 +394,7 @@ export default function PieChartComponent({ userData }) {
                             labelId="select-label"
                             id="select-year"
                             value={currentYear ? currentYear : ""}
-                            label="เลือกปี"
+                            label="Year Selection"
                             onChange={(e) => {
                                 setCurrentYear(e.target.value);
                             }}

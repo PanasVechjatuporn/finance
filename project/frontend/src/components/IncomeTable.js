@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 export default function IncomeTable({ obj, open }) {
     const incomeType = {
         '0': {
-            '0': 'Type 40(1) Salary และ 40(2) General Wages'
+            '0': 'Type 40(1) Salary and 40(2) General Wages'
         },
         '1': {
             '0': 'Type 40(1) Salary'

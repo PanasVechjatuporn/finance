@@ -97,7 +97,7 @@ export const NormalGoalCreateEdit = ({ goalData, setGoalData, mode }) => {
                             fontWeight: "bold",
                         }}
                     >
-                        {mode === "new" ? "Create a goal" : "แก้ไขเป้าหมาย " + tempGoalName}
+                        {mode === "new" ? "Create a goal" : "Edit goal " + tempGoalName}
                     </Typography>
                 </div>
                 <Container>

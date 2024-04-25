@@ -569,7 +569,7 @@ const EditMonthDataModal = ({
                                                             console.log('e :: ',e.target.value)
                                                             handleIncomeSubTypeChange(e, index);
                                                         }}
-                                                        label="ประเภทของรายได้ย่อย"
+                                                        label="Type of sub-income"
                                                         value={
                                                             incomeData[index].subType
                                                                 ? incomeData[index].subType
@@ -730,7 +730,7 @@ const EditMonthDataModal = ({
                                                             onChange={(e) => {
                                                                 handleExpenseTypeChange(e, index);
                                                             }}
-                                                            label="ประเภทของรายจ่าย"
+                                                            label="Type of expense"
                                                             value={
                                                                 expenseData[index].type
                                                                     ? expenseData[index].type

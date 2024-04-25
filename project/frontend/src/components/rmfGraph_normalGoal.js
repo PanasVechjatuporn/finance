@@ -34,7 +34,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
   const [UserInvestAmount, setUserInvestAmount] = React.useState(0);
 
   const [minAxisX, setMinAxisX] = useState([]); // ปี [1, 2, 3, ..., data.year]
-  const [minAxisY, setMinAxisY] = useState([]); // เงินต่อเดือน [2000, 4020.12, 6283.44, ..., data.goal]
+  const [minAxisY, setMinAxisY] = useState([]); // per a month [2000, 4020.12, 6283.44, ..., data.goal]
   const [userAxisX, setUserAxisX] = useState([]);
   const [userAxisY, setUserAxisY] = useState([]);
 
@@ -307,11 +307,11 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
             series={[
               {
                 data: minAxisY,
-                label: "เงินลงทุนที่แนะนำ",
+                label: "Recommended investment",
               },
               {
                 data: userAxisY,
-                label: "เงินลงทุน",
+                label: "Investment",
               },
             ]}
             width={500}
@@ -381,7 +381,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
                       Growth Rate : {item.growthrat_lastmonth}
                     </Typography>
                     <div style={{ position: "absolute", right: 0, top: 0 }}>
-                      <Tooltip title="ข้อมูลกองทุน" placement="right">
+                      <Tooltip title="Fund Information" placement="right">
                         <Link
                           to={item.url_factsheet}
                           style={{ textDecoration: "none", color: "white" }}
@@ -436,7 +436,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
                     <TextField
                       required
                       {...params}
-                      label="กองทุน"
+                      label="Funds"
                       InputProps={{
                         ...params.InputProps,
                         type: "search",
@@ -447,7 +447,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
               </div>
               <TextField
                 required
-                label="จำนวนเงิน (Baht)"
+                label="Amount (Baht)"
                 style={{ width: "20%" }}
                 value={dropdown.amount}
                 onChange={(e) => {

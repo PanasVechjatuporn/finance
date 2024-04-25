@@ -92,7 +92,7 @@ export const GoalPercentageAchieved = ({
                             >
                                 {goalData && (
                                     <span>
-                                        สถานะของเป้าหมาย 
+                                        Goal Status 
                                         <span style={{color : "#d1973e"}}>{" "+goalData.Name+" "}</span>
                                         <span>:</span>
                                         <span style={{ color: goalStatus ? "green" : "red" }}>{goalStatus ? " Success" : " On going"}</span>
@@ -104,8 +104,8 @@ export const GoalPercentageAchieved = ({
                                     fontSize: "18px"
                                 }}
                             >
-                                <span>ขณะนี้คุณลงทุนไปในเป้าหมายแล้ว</span>
-                                 <span style={{fontWeight : "bold", fontSize : "22px"}}> {percentAchieved}%</span> / 100%, คิดเป็นเงิน {goalValueAchieved} Baht จากเป้าหมาย {goalData.Goal} Baht
+                                <span>You have now achieved your investment goals!</span>
+                                 <span style={{fontWeight : "bold", fontSize : "22px"}}> {percentAchieved}%</span> / 100%, What you achieved is {goalValueAchieved} Baht from a goal which is {goalData.Goal} Baht
                             </Typography>
                         </>)
                     }

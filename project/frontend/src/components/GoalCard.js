@@ -112,7 +112,7 @@ function EachCard({ data }) {
                     }}
                 >
                     <Typography id="modal-modal-title" variant="subtitile1">
-                        ยืนยันการลบเป้าหมาย
+                        Confirm to Delete
                     </Typography>
                     <Typography gutterBottom id="modal-modal-description" variant="h6">
                         {data.Name || ""}
@@ -132,7 +132,7 @@ function EachCard({ data }) {
                                 color="white"
                                 variant="subtitile1"
                             >
-                                ตกลง
+                                Okay
                             </Typography>
                         </Button>
                         <Button
@@ -141,7 +141,7 @@ function EachCard({ data }) {
                             size="small"
                         >
                             <Typography color="white" variant="subtitile1">
-                                ยกเลิก
+                                Cancel
                             </Typography>
                         </Button>
                     </Container>
@@ -151,7 +151,7 @@ function EachCard({ data }) {
         );
     };
 
-    if (data.Name !== "ลดหย่อนภาษี") {
+    if (data.Name !== "Tax Deduction") {
         return (
             <Card
                 sx={{
@@ -277,28 +277,28 @@ function EachCard({ data }) {
                 <ThemeProvider theme={themeReductionGoal}>
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="div">
-                            ชื่อ : {data.Name || ""}
+                            Name : {data.Name || ""}
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            ระยะเวลาการลงทุน : -
+                            Investment Period : -
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            เป้าหมาย : ลดหย่อนภาษีให้ได้มากที่สุด
+                            Goal: Deduct taxes as much as possible
                         </Typography>
                         <Typography
                             component="div"
                             variant="subtitile1"
                             color="text.secondary"
                         >
-                            วันที่สร้าง :{" "}
+                            Date :{" "}
                             {new Date(data.CreatedDate).toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
@@ -322,7 +322,7 @@ function EachCard({ data }) {
                     >
 
                         <Typography color="white" variant="subtitile1">
-                            ลงทุน
+                            Invest
                         </Typography>
                     </Button>
                     <Button
@@ -331,7 +331,7 @@ function EachCard({ data }) {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ลบ/ขาย
+                            Delete/Sell
                         </Typography>
                     </Button>
                     <ModalDelete
