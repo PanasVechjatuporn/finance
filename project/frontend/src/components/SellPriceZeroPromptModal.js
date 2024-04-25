@@ -33,7 +33,7 @@ export const SellPriceZeroPromptModal = ({open, fundData}) => {
                             textAlign: "center"
                         }}
                     >
-                        ไม่สามารถทำรายการได้ !
+                        Unable to complete the transaction!
                     </Typography>
             </Modal.Header>
             <Modal.Body>
@@ -44,7 +44,7 @@ export const SellPriceZeroPromptModal = ({open, fundData}) => {
                             textAlign: "center"
                         }}
                     >                
-                        ขณะนี้ราคาขายของกองทุน <span style={{fontWeight : "bold"}}>{fundData && fundData.proj_name_th}</span> เท่ากับ 0 จึงไม่สามารถทำรายการได้
+                        Currently, the selling price of the fund <span style={{fontWeight : "bold"}}>{fundData && fundData.proj_name_th}</span> Equivalent to 0, therefore cannot complete the transaction.
                     </Typography>
             </Modal.Body>
             <Modal.Footer>
@@ -55,7 +55,7 @@ export const SellPriceZeroPromptModal = ({open, fundData}) => {
                                 navigate(-1);
                             }}
                         >
-                            กลับ
+                            Back
                         </Button>
                     </Container>
             </Modal.Footer>

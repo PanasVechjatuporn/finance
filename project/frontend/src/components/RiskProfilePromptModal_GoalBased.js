@@ -35,8 +35,8 @@ export const RiskProfilePromptModal = ({ isOpen, setIsOpen }) => {
                 }}
             >
                 <Typography gutterBottom id="modal-modal-title" variant="subtitile1">
-                    คุณยังไม่ได้เริ่มทำแบบสอบถามความเสี่ยงในการลงทุน
-                    ต้องการเริ่มทำแบบสอบถามก่อนหรือไม่
+                    You haven't started the investment risk questionnaire yet. 
+                    Do you want to start taking it first?
                 </Typography>
                 <Container
                     style={{
@@ -56,7 +56,7 @@ export const RiskProfilePromptModal = ({ isOpen, setIsOpen }) => {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ใช่
+                            Yes
                         </Typography>
                     </Button>
                     <Button
@@ -65,7 +65,7 @@ export const RiskProfilePromptModal = ({ isOpen, setIsOpen }) => {
                         size="small"
                     >
                         <Typography color="white" variant="subtitile1">
-                            ไม่
+                            No
                         </Typography>
                     </Button>
                 </Container>

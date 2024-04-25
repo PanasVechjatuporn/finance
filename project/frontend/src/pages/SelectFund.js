@@ -183,7 +183,7 @@ export const SelectFund = () => {
                 <Typography>
                     หลังหักค่าลดหย่อนเป็นเงินได้สุทธิ : {netIncome} Baht
                 </Typography>*/}
-                        <Typography marginBottom={2} fontWeight={'bold'}>กองทุนที่จะลงทุนเพื่อการลดภาษี</Typography>
+                        <Typography marginBottom={2} fontWeight={'bold'}>Investing Funds for Tax Deduction</Typography>
                         {dropdowns.map((dropdown, index) => (
                             <div key={index} style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
                                 <div style={{ width: "50%", marginRight: 5 }}>
@@ -256,15 +256,15 @@ export const SelectFund = () => {
                         <div style={{ textAlign: 'center', width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div className="tax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    สรุปภาษีที่ต้องจ่าย : {tax.toFixed(2).toLocaleString("en-GB")} Baht
+                                    Tax Payable : {tax.toFixed(2).toLocaleString("en-GB")} Baht
                                 </Typography>
                             </div>
                             <div className="newTax" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component={'span'} variant="h6">
-                                    เงินลงทุนของคุณ : {investAmount.toLocaleString("en-GB")} Baht/เดือน
+                                    Your Investment : {investAmount.toLocaleString("en-GB")} Baht/a month
                                 </Typography>
                                 <Typography component={'span'} variant="h6" >
-                                    ซึ่งจะลดภาษีได้ : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} Baht
+                                    Tax Deductible : {(tax - newTax).toFixed(2).toLocaleString("en-GB")} Baht
                                 </Typography>
                             </div>
                         </div>
@@ -273,21 +273,21 @@ export const SelectFund = () => {
                         <Container style={{ display: 'flex', justifyContent: 'space-between' }} className="percentage">
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เพื่อลดหย่อนภาษีให้ได้สูงสุด ต้องซื้อกองทุน {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} Baht/เดือน
+                                    To deduct taxes to the maximum, you must purchase funds {((netIncome - 150000) / 12).toFixed(2).toLocaleString("en-GB")} Baht/เดือน
                                 </Typography>
                                 <Typography>
-                                    คุณซื้อกองทุน RMF ได้สูงสุด : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ปี {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                    Your maximum RMF funds : {Math.min(500000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ a year {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                                 </Typography>
                                 <Typography component={'span'}>
-                                    คุณซื้อกองทุน SSF ได้สูงสุด : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ปี
+                                    Your maximum SSF funds : {Math.min(200000, beforeReduction * 0.3).toLocaleString("en-GB")} Baht/ a year
                                 </Typography>
                             </div>
                             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', textAlign: 'center', }} >
                                 <Typography component={'span'} fontWeight={'bold'} marginBottom={1}>
-                                    เงินลงทุนโดยเฉลี่ยของคุณ : {Math.round(avgInvest).toLocaleString("en-GB")} Baht/เดือน
+                                    Your average investment : {Math.round(avgInvest).toLocaleString("en-GB")} Baht/เดือน
                                 </Typography>
                                 <Typography component={'span'}>
-                                    ลงทุนในสัดส่วน : {/*Percentage.toLocaleString("en-GB")*/} %
+                                    Invest in proportion : {/*Percentage.toLocaleString("en-GB")*/} %
                                     {/* ลงทุนในสัดส่วน :
                                     <TextField inputProps={{ style: { textAlign: 'center', width: 50, fontSize: 14 } }} placeholder='0' id="standard-basic" label="" variant="standard" value={investPercent}
                                         onChange={(e) => {
@@ -300,7 +300,7 @@ export const SelectFund = () => {
                                         }} />
                                     % คิดเป็นเงิน {investAmount.toString().padStart(Math.round(avgInvest).toString().length, '0')} Baht */}
                                 </Typography>
-                                <Typography> คิดเป็นเงินประมาณ {investAmount.toLocaleString("en-GB")} Baht/เดือน</Typography>
+                                <Typography> Approximately {investAmount.toLocaleString("en-GB")} Baht/a month</Typography>
                             </div>
                         </Container>
 
@@ -310,7 +310,7 @@ export const SelectFund = () => {
 
                         <div className='suggestion'>
                             <Typography marginBottom={2} fontWeight={'bold'}>
-                                กองทุนที่แนะนำ
+                                Recommended Funds
                             </Typography>
                             <div style={{ marginLeft: 5 }}>
                                 {funds.slice(0, 4).map((item, index) => (

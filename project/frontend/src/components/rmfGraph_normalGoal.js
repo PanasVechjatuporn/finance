@@ -249,11 +249,11 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
     );
 
     if (Funds.includes("")) {
-      alert("กรุณาใส่ข้อมูลให้ครบ");
+      alert("Please enter complete information!");
     } else if (totalFundAmount > UserInvestAmount) {
-      alert("ห้ามกรอกเกินเงินลงทุนต่อเดือน");
+      alert("Do not enter more than the monthly investment amount!");
     } else if (totalFundAmount < UserInvestAmount) {
-      alert("ผลรวมของกองทุนที่เลือก ต้องเท่ากับเงินลงทุนต่อเดือน")
+      alert("The sum of the selected funds must be equal to the monthly investment")
     }
     else {
       axios
@@ -298,7 +298,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
         <p>{JSON.stringify(memoizedData.data.selectedValue)}</p>
       </div>
       <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {minInvest} Baht</p>
+        <p>Your Minimum Monthly Investment {minInvest} Baht</p>
       </div>
       <div className="resultGraph">
         {isLoading ? (
@@ -323,7 +323,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
       </div>
 
       <div className="resultGraph">
-        <p>เงินลงทุนขั้นต่ำต่อเดือน {UserInvestAmount} Baht</p>
+        <p>Your Minimum Monthly Investment {UserInvestAmount} Baht</p>
       </div>
       <div className="resultGraph">
         {isLoading ? (
@@ -349,7 +349,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
         <div className="resultGraph">
           <div className="suggestion">
             <Typography marginBottom={2} fontWeight={"bold"}>
-              กองทุนที่แนะนำ
+              Recommended Funds
             </Typography>
             <div style={{ marginLeft: 5 }}>
               {funds.slice(0, 4).map((item, index) => (
@@ -378,7 +378,7 @@ export const RmfFactsheet = (data, setShowChooseFund) => {
                     <Typography>{item.proj_name_th}</Typography>
                     <Typography>{item.proj_name_en}</Typography>
                     <Typography>
-                      อัตราการเติบโต : {item.growthrat_lastmonth}
+                      Growth Rate : {item.growthrat_lastmonth}
                     </Typography>
                     <div style={{ position: "absolute", right: 0, top: 0 }}>
                       <Tooltip title="ข้อมูลกองทุน" placement="right">

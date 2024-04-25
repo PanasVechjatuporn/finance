@@ -224,22 +224,22 @@ export const ReductionGoalBuyInformation = ({ goalData }) => {
                         display: 'flex',
                         flexDirection: 'column'
                     }}>
-                        <Typography variant="h5" gutterBottom>การคำนวนภาษีจากรายได้และการลงทุนในปีนี้</Typography>
-                        <Typography fontSize={20}>ภาษีที่คุณต้องจ่าย : {Math.max(0, tax).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
-                        <Typography fontSize={20}>เงินที่แนะนำให้ซื้อกองทุน : {Math.max(0, recommend).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
-                        <Typography fontSize={20}>ปัจจุบันคุณซื้อกองทุนไปแล้ว : {Math.max(0, sumAsset).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
+                        <Typography variant="h5" gutterBottom>Calculation of taxes on this year's income and investments</Typography>
+                        <Typography fontSize={20}>Tax Payable : {Math.max(0, tax).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
+                        <Typography fontSize={20}>Recommended amount to purchase funds: {Math.max(0, recommend).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
+                        <Typography fontSize={20}>Current number of funds you have purchased : {Math.max(0, sumAsset).toLocaleString("en-GB", { maximumFractionDigits: 2 })} Baht</Typography>
                         {seperate === true ?
                             <>
                                 <Typography fontSize={20}>
-                                    เพดานในการซื้อกองทุน RMF สูงสุดของคุณคือ : {Math.max(0, Math.min(500000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} Baht {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                    Your maximum limit for purchasing RMF funds is: {Math.max(0, Math.min(500000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} Baht {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                                 </Typography>
                                 <Typography fontSize={20}>
-                                    เพดานในการซื้อกองทุน SSF สูงสุดของคุณคือ : {Math.max(0, Math.min(200000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} Baht
+                                    Your maximum limit for purchasing SSF funds is : {Math.max(0, Math.min(200000 - goalData.incomeFourSubtractor, (incomeSum * 0.3) - goalData.incomeFourSubtractor)).toLocaleString("en-GB")} Baht
                                 </Typography>
                             </>
                             :
                             <Typography fontSize={20}>
-                                เพดานในการซื้อกองทุน RMF และ SSF สูงสุดของคุณคือ : {Math.max(0, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset).toLocaleString("en-GB")} Baht {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
+                                Your maximum limit for purchasing RMF and SSF funds is : {Math.max(0, (incomeSum * 0.3) - goalData.incomeFourSubtractor - sumAsset).toLocaleString("en-GB")} Baht {/*เพิ่ม min 500,000 - กลุ่มค่าลดหย่อน 4 ตัว*/}
                             </Typography>}
                     </Box>
                 </Container>}
