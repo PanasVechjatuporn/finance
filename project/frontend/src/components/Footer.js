@@ -21,20 +21,14 @@ export const Footer = () => {
           <div style={{ display: "flex"}}>
             <div className="footer-col-logo">
             </div>
-            {/* <div className="footer-col">
-              <h4>Limitation of the program</h4>
+            <div className="footer-col">
+              <h4>Members:</h4>
               <ul>
-                <li>
-                  <a href="#">bag</a>
-                </li>
-                <li>
-                  <a href="#">shoes</a>
-                </li>
-                <li>
-                  <a href="#">dress</a>
-                </li>
+                <li>Travis Numpa 6322771641</li>
+                <li>Gwyn Jaranahut 6322771864</li>
+                <li>Panas Vechjatuporn 6322773852</li>
               </ul>
-            </div> */}
+            </div>
             <div className="footer-col">
               <div className="social-links">
               
