@@ -65,7 +65,7 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell align="center" colSpan={9}>
-                                กองทุนรวม
+                                Mutual Funds
                             </StyledTableCell>
                         </StyledTableRow>
                         <StyledTableRow>
@@ -117,14 +117,14 @@ export const GoalAssetPriceSummary = ({ isLoading, assetSummaryGoalData }) => {
                                         <TableCell>{data.buy_price}</TableCell>
                                         <TableCell>{new Date(data.last_upd_date).toLocaleDateString("en-GB")}</TableCell>
                                         <TableCell>{(roundNumber(data.value,6))}</TableCell>
-                                        <TableCell>{data.sell_price === 0 ? "มูลค่าสุทธิที่ได้เกิดจากนำหน่วยลงทุนที่มีคูณมูลค่าล่าสุด" : "-"}</TableCell>
+                                        <TableCell>{data.sell_price === 0 ? "The net value obtained by multiplying the available investment units with the latest value." : "-"}</TableCell>
                                     </TableRow>)
                                 )}
                             </>
                         ) 
                         : (
                             <TableRow>
-                                <TableCell colSpan={9} align="center">ไม่พบข้อมูล</TableCell>
+                                <TableCell colSpan={9} align="center">Data not found</TableCell>
                             </TableRow>
                         )}
                     </TableBody>

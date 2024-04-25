@@ -327,7 +327,7 @@ export const BuyAssetPage = () => {
                                                 series={[
                                                     {
                                                         data: yearToDateGraphData[0],
-                                                        label: "ราคาต่อหน่วย",
+                                                        label: "Unit Price",
                                                         showMark: false,
                                                     },
                                                 ]}
@@ -335,12 +335,12 @@ export const BuyAssetPage = () => {
                                                     {
                                                         scaleType: "point",
                                                         data: yearToDateGraphData[1],
-                                                        label: 'วันที่ (ปี/เดือน/วัน)'
+                                                        label: 'Date (Y/M/D)'
                                                     },
                                                 ]}
                                                 yAxis={[
                                                     {
-                                                        label: 'ราคาต่อหน่วย (Baht)'
+                                                        label: 'Unit Price (Baht)'
                                                     }
                                                 ]}
                                             />
@@ -389,13 +389,13 @@ export const BuyAssetPage = () => {
                                                 series={[
                                                     {
                                                         data: graphWithPredictionData[0],
-                                                        label: "ราคาต่อหน่วย (จริง)",
+                                                        label: "Unit Price (Actual)",
                                                         showMark: false,
                                                     },
                                                     {
                                                         id: "Predict",
                                                         data: graphWithPredictionData[2],
-                                                        label: "ราคาต่อหน่วย (ทำนาย)",
+                                                        label: "Unit Price (Predict)",
                                                         showMark: false,
                                                         color: "orange",
                                                     },
@@ -406,12 +406,12 @@ export const BuyAssetPage = () => {
                                                         data: graphWithPredictionData[1].concat(
                                                             graphWithPredictionData[3]
                                                         ),
-                                                        label: 'วันที่ (ปี/เดือน/วัน)'
+                                                        label: 'Date (Y/M/D)'
                                                     },
                                                 ]}
                                                 yAxis={[
                                                     {
-                                                        label: 'ราคาต่อหน่วย (Baht)'
+                                                        label: 'Unit Price (Baht)'
                                                     }
                                                 ]}
                                             />
@@ -434,13 +434,13 @@ export const BuyAssetPage = () => {
                                     >
                                         <TextField
                                             id={"asset-price"}
-                                            label="มูลค่าล่าสุด"
+                                            label="Latest Price"
                                             disabled={true}
                                             size="small"
                                             margin="normal"
                                             helperText={
                                                 fetchedNav &&
-                                                "อัปเดตล่าสุดเมื่อ " +
+                                                "Last updated on " +
                                                 new Date(
                                                     fetchedNav.last_upd_date
                                                 ).toLocaleDateString("en-GB")
@@ -457,13 +457,13 @@ export const BuyAssetPage = () => {
                                     >
                                         <TextField
                                             id={"asset-price"}
-                                            label="ราคาขาย"
+                                            label="Selling price"
                                             disabled={true}
                                             size="small"
                                             margin="normal"
                                             helperText={
                                                 fetchedNav &&
-                                                "อัปเดตล่าสุดเมื่อ " +
+                                                "Last updated on " +
                                                 new Date(
                                                     fetchedNav.last_upd_date
                                                 ).toLocaleDateString("en-GB")
@@ -480,13 +480,13 @@ export const BuyAssetPage = () => {
                                     >
                                         <TextField
                                             id={"asset-price"}
-                                            label="ราคาซื้อคืน"
+                                            label="Redemption Price"
                                             disabled={true}
                                             size="small"
                                             margin="normal"
                                             helperText={
                                                 fetchedNav &&
-                                                "อัปเดตล่าสุดเมื่อ " +
+                                                "Last updated on " +
                                                 new Date(
                                                     fetchedNav.last_upd_date
                                                 ).toLocaleDateString("en-GB")
@@ -508,7 +508,7 @@ export const BuyAssetPage = () => {
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    ผู้ลงทุนควรตรวจสอบราคาที่ได้รับจริงกับ บลจ. อีกครั้ง เนื่องจากราคาของกองทุนจะอัพเดทหลังจากสิ้นสุดวันทำการ
+                                    Investors should check the actual price received with the asset management company as fund prices are updated after the end of the business day.
                                     </Typography>
                             </Box>
                             <Grid
@@ -527,12 +527,12 @@ export const BuyAssetPage = () => {
                                         <TextField
                                             required
                                             id={"asset-buy"}
-                                            label="เงินลงทุน"
+                                            label="Investment"
                                             size="small"
                                             margin="normal"
                                             helperText={
                                                 !inputBuyError
-                                                    ? "เงินที่ต้องการลงทุนในกองทุนนี้"
+                                                    ? "The amount of money you want to invest in this fund"
                                                     : inputErrorText
                                             }
                                             type="number"
@@ -552,11 +552,11 @@ export const BuyAssetPage = () => {
                                     >
                                         <TextField
                                             id={"asset-buy"}
-                                            label="หน่วยลงทุนที่ได้รับ"
+                                            label="Investment units received"
                                             disabled={true}
                                             size="small"
                                             margin="normal"
-                                            helperText={"*หน่วยลงทุนที่ซื้อได้จากเงินที่กรอกโดยอ้างอิงจากราคาขายล่าสุด"}
+                                            helperText={"*Investment units that can be purchased from the entered funds based on the latest selling price."}
                                             value={calculatedUnitBuy}
                                         />
                                     </Box>
@@ -587,7 +587,7 @@ export const BuyAssetPage = () => {
                                             }}
                                         >
                                             <div>
-                                                <ArrowBackIcon /> กลับ
+                                                <ArrowBackIcon /> Back
                                             </div>
                                         </Button>
                                     </Box>
@@ -627,7 +627,7 @@ export const BuyAssetPage = () => {
                                             }}
                                         >
                                             <div>
-                                                <AddShoppingCartIcon /> ซื้อ
+                                                <AddShoppingCartIcon /> Buy
                                             </div>
                                         </Button>
 

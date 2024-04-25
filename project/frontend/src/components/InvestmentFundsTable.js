@@ -87,55 +87,55 @@ const headCells = [
         id: "proj_name_th",
         numeric: false,
         disablePadding: false,
-        label: "ชื่อกองทุน (ไทย)",
+        label: "Fund Name (Thai)",
     },
     {
         id: "proj_abbr_name",
         numeric: false,
         disablePadding: true,
-        label: "ชื่อย่อกองทุน",
+        label: "Fund's Abbreviation",
     },
     {
         id: "risk_spectrum",
         numeric: true,
         disablePadding: false,
-        label: "ระดับความเสี่ยง",
+        label: "Risk Level",
     },
     {
         id: "spec_code",
         numeric: false,
         disablePadding: false,
-        label: "รหัสลักษณะพิเศษ",
+        label: "Special feature code",
     },
     {
         id: "growth_rate",
         numeric: false,
         disablePadding: false,
-        label: "ผลตอบแทนตั้งแต่จัดตั้ง",
+        label: "Returns since establishment",
     },
     {
         id: "fact_sheet",
         numeric: false,
         disablePadding: false,
-        label: "หนังสือชี้ชวน",
+        label: "Prospectus",
     },
     {
         id: "last_val",
         numeric: true,
         disablePadding: false,
-        label: "ราคาต่อหน่วย",
+        label: "Unit Price",
     },
     {
         id: "last_update",
         numeric: false,
         disablePadding: false,
-        label: "วันที่อัปเดตล่าสุด",
+        label: "Last updated date",
     },
     {
         id: "buy_asset",
         numeric: false,
         disablePadding: false,
-        label: "ซื้อ",
+        label: "Buy",
     },
 ];
 
@@ -199,7 +199,7 @@ function EnhancedTableToolbar() {
                 id="tableTitle"
                 component="div"
             >
-                กองทุนที่สามารถซื้อได้
+                Available Funds
             </Typography>
         </Toolbar>
     );
@@ -283,8 +283,7 @@ export const InvestmentFundsTable = ({ fundsData, goalData, isLoading}) => {
                             size={"medium"}
                             stickyHeader
                         >
-                                        <caption>*
-The actual value may change depending on the buying/selling price that investors receive when buying/selling. Investors should check the price received and the latest price with the asset management company again.</caption>
+                                        <caption>*The actual value may change depending on the buying/selling price that investors receive when buying/selling. Investors should check the price received and the latest price with the asset management company again.</caption>
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}
