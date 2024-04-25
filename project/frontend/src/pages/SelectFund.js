@@ -199,7 +199,7 @@ export const SelectFund = () => {
                                             <TextField
                                                 required
                                                 {...params}
-                                                label="กองทุน"
+                                                label="Fund"
                                                 InputProps={{
                                                     ...params.InputProps,
                                                     type: 'search',
@@ -208,7 +208,7 @@ export const SelectFund = () => {
                                         )}
                                     />
                                 </div>
-                                <TextField required label="จำนวนเงิน (Baht)" style={{ width: "20%" }}
+                                <TextField required label="Amount (Baht)" style={{ width: "20%" }}
                                     value={dropdown.amount}
                                     onChange={e => { handleDropdownChange(index, e.target.value, "amount"); console.log(e.target.innerHTML) }}
                                 />
@@ -244,7 +244,7 @@ export const SelectFund = () => {
                                 open={cantSave}
                             >
                                 <div>
-                                    <Tooltip title="บันทึกการสร้างเป้าหมาย" placement="right">
+                                    <Tooltip title="Goal-setting record" placement="right">
                                         <IconButton type='submit' >
                                             <SaveIcon color='action' />
                                         </IconButton>
@@ -320,7 +320,7 @@ export const SelectFund = () => {
                                             <Typography gutterBottom>{item.proj_name_en}</Typography>
                                             <Typography variant="body2">อัตราการเติบโตของกองทุน : {parseFloat(item.growthrat_lastmonth).toFixed(2).toLocaleString("en-GB")} %</Typography>
                                             <div style={{ position: 'absolute', right: 0, top: 0 }}>
-                                                <Tooltip title="ข้อมูลกองทุน" placement="right">
+                                                <Tooltip title="Fund information" placement="right">
                                                     <Link
                                                         to={item.url_factsheet}
                                                         style={{ textDecoration: "none", color: "white" }}

@@ -133,12 +133,12 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 {asset.assetType === "deposit"
-                                                    ? "เงินฝากประจำ"
+                                                    ? "Fixed deposit"
                                                     : asset.assetType === "rmf"
-                                                        ? "กองทุนรวม RMF"
+                                                        ? "RMF fund"
                                                         : asset.assetType === "ssf"
-                                                            ? "กองทุนรวม SSF"
-                                                            : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
+                                                            ? "SSF mutual funds"
+                                                            : "Non-tax-advantaged mutual funds"}
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 {asset.buyPrice && asset.buyPrice !== 0
@@ -157,67 +157,6 @@ export const AssetSummaryGoalPieChart = ({ assetData }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
-                {/* <div>
-                    <Typography
-                        variant="h5"
-                        style={{
-                            color: "#757575",
-                            textDecoration: "underline",
-                            textDecorationColor: "transparent",
-                            borderBottom: "2px solid #757575",
-                            width: "100%",
-                            paddingBottom: "8px",
-                            userSelect: "none",
-                            marginBottom: "15px",
-                            fontWeight: "bold",
-                            marginTop: "5%"
-                        }}
-                    >
-                        สรุปเงินฝากทั้งหมด
-                    </Typography>
-                </div> */}
-                {/* <TableContainer component={Paper} >
-                    <Table sx={{ minWidth: "100%" }} aria-label="customized table">
-                        <TableHead>
-                            <StyledTableRow>
-                                <StyledTableCell>ประเภทของสินทรัพย์ที่ลงทุน</StyledTableCell>
-                                <StyledTableCell>จำนวนเงินที่ซื้อ&nbsp;(Baht)</StyledTableCell>
-                            </StyledTableRow>
-                        </TableHead>
-                        <TableBody>
-                            {allFundsObj.length > 0 ? (
-                                <>
-                                    {allFundsObj.map(
-                                        (asset, index) =>
-                                            asset.assetType === "deposit" && (
-                                                <StyledTableRow
-                                                    key={asset.assetType + "-row-data-" + index}
-                                                >
-                                                    <StyledTableCell>
-                                                        {asset.assetType === "deposit"
-                                                            ? "เงินฝากประจำ"
-                                                            : asset.assetType === "rmf"
-                                                                ? "กองทุนรวม RMF"
-                                                                : asset.assetType === "ssf"
-                                                                    ? "กองทุนรวม SSF"
-                                                                    : "กองทุนที่ไม่มีมีสิทธิประโยชน์ทางภาษี"}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        {formatNumberWithCommas(asset.amount)}
-                                                    </StyledTableCell>
-                                                </StyledTableRow>
-                                            )
-                                    )}
-                                </>
-                            ) : (
-                                <TableCell colSpan={2} align="center">
-                                    ไม่พบข้อมูล
-                                </TableCell>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer> */}
             </Container>
         );
 };

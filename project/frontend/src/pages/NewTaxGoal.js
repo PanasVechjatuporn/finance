@@ -317,7 +317,7 @@ export function NewTaxGoal() {
     if (isEnough === true) return (
         <React.Fragment>
             <Navigate />
-            {isloading == false &&
+            {isloading === false &&
                 (<div style={{ display: 'flex', marginTop: 30, flexDirection: 'column', alignItems: 'center' }}>
                     <Typography marginBottom={2} fontWeight={'bold'}>Calculating net income to evaluate taxes</Typography>
                     <TableContainer component={Paper} sx={{ width: '50%' }}>
@@ -616,7 +616,7 @@ export function NewTaxGoal() {
 
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
-                                                                            {warning1 == true ?
+                                                                            {warning1 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
                                                                                     Life insurance premiums and savings insurance with a coverage period of 10 years or more
                                                                                 </TableCell>
@@ -641,7 +641,7 @@ export function NewTaxGoal() {
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
 
-                                                                            {warning1 == true ?
+                                                                            {warning1 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'red' }}>
                                                                                     Health insurance premiums and accident insurance premiums that cover health
                                                                                 </TableCell>
@@ -664,7 +664,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
                                                                         </TableRow>
 
-                                                                        {warning1 == true ? <TableRow  >
+                                                                        {warning1 === true ? <TableRow  >
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'red' }}>
@@ -676,7 +676,7 @@ export function NewTaxGoal() {
 
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
-                                                                            {warning2 == true ?
+                                                                            {warning2 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
                                                                                     The Pension Life Insurance premiums with a coverage period of 10 years or more
                                                                                 </TableCell>
@@ -700,7 +700,7 @@ export function NewTaxGoal() {
 
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
-                                                                            {warning2 == true ?
+                                                                            {warning2 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
                                                                                     Provident Fund (PVD) / Private School Teacher Welfare Fund
                                                                                 </TableCell>
@@ -724,7 +724,7 @@ export function NewTaxGoal() {
 
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
-                                                                            {warning2 == true ?
+                                                                            {warning2 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
                                                                                     Government Pension Fund (GPF)
                                                                                 </TableCell>
@@ -748,7 +748,7 @@ export function NewTaxGoal() {
 
                                                                         <TableRow >
                                                                             <TableCell style={{ width: "10%" }} />
-                                                                            {warning2 == true ?
+                                                                            {warning2 === true ?
                                                                                 <TableCell align="left" style={{ width: "70%", color: 'blue' }}>
                                                                                     National Savings Fund (กอช.)
                                                                                 </TableCell>
@@ -770,7 +770,7 @@ export function NewTaxGoal() {
                                                                             </TableCell>
                                                                         </TableRow>
 
-                                                                        {warning2 == true ? <TableRow  >
+                                                                        {warning2 === true ? <TableRow  >
                                                                             <TableCell style={{ width: "10%" }} />
 
                                                                             <TableCell align="center" style={{ width: "70%", color: 'blue' }}>
@@ -819,7 +819,7 @@ export function NewTaxGoal() {
                                                                                             {charity.name}
                                                                                         </TableCell>
                                                                                         <TableCell align="center" style={{ width: "20%" }}>
-                                                                                            {charity.name == 'onations to political parties' ?
+                                                                                            {charity.name === 'onations to political parties' ?
                                                                                                 (<TextField
                                                                                                     inputProps={{ style: { textAlign: 'center', fontSize: 14 } }}
                                                                                                     placeholder='No more than 10,000'
@@ -912,7 +912,7 @@ export function NewTaxGoal() {
                         </Typography>
                     </Container>
 
-                    {(warning1 == true || warning2 == true || incomeSum - benefitSum - personal - insurance - charity - Number(fund || 0) <= 150000) ?
+                    {(warning1 === true || warning2 === true || incomeSum - benefitSum - personal - insurance - charity - Number(fund || 0) <= 150000) ?
                         <Container style={{ display: 'flex', width: '50%', marginTop: 10, marginBottom: 20, justifyContent: 'right', flexDirection: 'row', alignItems: 'center' }}>
                             <Button
                                 disabled={true}

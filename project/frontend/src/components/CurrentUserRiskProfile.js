@@ -70,9 +70,9 @@ export const CurrentUserRiskProfile = () => {
                 ) : (
                     <>
                         <Typography>
-                            ความเสี่ยงปัจจุบันของคุณคือ : {riskProfileMasterData[0].labelTH}
+                        Your current risk level is : {riskProfileMasterData[0].labelTH}
                         </Typography>
-                        <Typography>แนะนำให้ซื้อกองทุนภายในระดับความเสี่ยง : {riskProfileMasterData[0].recommendBuy.map((data,index) => (
+                        <Typography> Advising on purchasing funds that align with a specific risk level or risk tolerance : {riskProfileMasterData[0].recommendBuy.map((data,index) => (
                        <React.Fragment key={index}>
                        {(data).toLocaleString()}
                        {index !== riskProfileMasterData[0].recommendBuy.length - 1 && ", "}
@@ -90,7 +90,7 @@ export const CurrentUserRiskProfile = () => {
                         {userRiskProfile === null ? (
                             <>Start doing the risk assessment.</>
                         ) : (
-                            <>ประเมินความเสี่ยงใหม่</>
+                            <>Redo the risk assessment.</>
                         )}
                     </Typography>
                 </Button>
