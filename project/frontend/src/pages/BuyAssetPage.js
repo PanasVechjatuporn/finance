@@ -300,7 +300,7 @@ export const BuyAssetPage = () => {
                                                 top: "10%"
                                             }}
                                         >
-                                            กราฟแสดงราคาตั้งแต่จัดตั้ง
+                                            Graph showing prices since establishment.
                                         </Typography>
                                     </Box>
                                     <Box
@@ -364,7 +364,7 @@ export const BuyAssetPage = () => {
                                                 top: "10%"
                                             }}
                                         >
-                                            กราฟแสดงราคาย้อนหลัง 1 ปี, ทำนายไปข้างหน้า 1 ปี
+                                            Graph showing prices for the past 1 year, forecasted for the next 1 year.
                                         </Typography>
                                     </Box>
                                     <Box

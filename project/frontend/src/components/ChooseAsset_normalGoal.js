@@ -54,7 +54,7 @@ export const ChooseAsset = ({ sendData, data }) => {
 
       <div className="AssetChoice">
         <FormControl>
-          <FormLabel id="asset-choice">เลือกลงทุนใน</FormLabel>
+          <FormLabel id="asset-choice">Investing in</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             name="options"
@@ -64,22 +64,22 @@ export const ChooseAsset = ({ sendData, data }) => {
             <FormControlLabel
               value="deposit"
               control={<Radio />}
-              label="เงินฝากประจำ"
+              label="Fixed deposit"
             />
             <FormControlLabel
               value="fund"
               control={<Radio />}
-              label="กองทุนรวมที่ไม่มีสิทธิประโยชน์ทางภาษี"
+              label="Non-tax-advantaged mutual funds"
             />
             <FormControlLabel
               value="rmf"
               control={<Radio />}
-              label="กองทุน RMF"
+              label="RMF fund"
             />
             <FormControlLabel
               value="ssf"
               control={<Radio />}
-              label="กองทุน SSF"
+              label="SSF fund"
             />
           </RadioGroup>
         </FormControl>

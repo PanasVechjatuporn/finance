@@ -19,7 +19,7 @@ export const DepositFactsheet = (data) => {
       <div>{JSON.stringify(data)}</div>
       <div className="header">
         <Stack direction="row" spacing={2}>
-          <p>ความเสี่ยงรับได้ของกองทุนคือ</p>
+          <p>The acceptable risk level of the fund is</p>
           <p>{JSON.stringify(data.data.data.risk_profile).replace(/"/g, "")}</p>
         </Stack>
       </div>
